@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity
@@ -39,11 +40,11 @@ public class GameActivity extends AppCompatActivity
         for (int i = 0; i < givenLetters.size(); i++) {
             givenLettersSTR += givenLetters.get(i);
         }
-
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         givenLettersTV.setText(givenLettersSTR);
 
         writeToGuessGrid(givenLetters);
+
 
         resetTV = (TextView) findViewById(R.id.resetButton);
         submitTV = (TextView) findViewById(R.id.submitButton);
@@ -100,6 +101,26 @@ public class GameActivity extends AppCompatActivity
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
+                    ArrayList<String> givenLetters = new ArrayList<String>();
+                    TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
+                    String givenLettersSTR = (String) givenLettersTV.getText();
+
+                    for (int i = 0; i < givenLettersSTR.length(); i++) {
+//                        givenLettersSTR += givenLetters.get(i);
+                        Log.d(MONITOR_TAG, "subStr: " + givenLettersSTR.substring(i, i+1));
+                        givenLetters.add(givenLettersSTR.substring(i, i+1));
+                    }
+                    Collections.shuffle(givenLetters);
+
+                    givenLettersSTR = "";
+                    for (int i = 0; i < givenLetters.size(); i++) {
+                        givenLettersSTR += givenLetters.get(i);
+                    }
+//                    Log.d(MONITOR_TAG, "Shuf letters: " + givenLettersSTR);
+
+//
+                    givenLettersTV.setText(givenLettersSTR);
+                    writeToGuessGrid(givenLetters);
                 }
                 return true;
             }
