@@ -175,7 +175,8 @@ tools:showIn="@layout/app_bar_game">
             android:id="@+id/longestAttempt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Longest"
+            android:hint="Your Guess"
+            android:text=""
             android:textSize="15sp"
             tools:layout_editor_absoluteX="8dp" />
 
@@ -184,8 +185,8 @@ tools:showIn="@layout/app_bar_game">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="200dp"
-
-            android:text="7"
+            android:hint="Word Length"
+            android:text=""
             android:textSize="10sp" />
 
     </LinearLayout>

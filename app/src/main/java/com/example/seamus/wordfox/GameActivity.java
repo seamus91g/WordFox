@@ -69,21 +69,34 @@ public class GameActivity extends AppCompatActivity
                 }
 
             });
+
+
             submitTV.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                        TextView current = (TextView) findViewById(R.id.currentAttempt);
-                        String currentStr = (String) current.getText();
-                        TextView longest = (TextView) findViewById(R.id.longestAttempt);
-                        longest.setText(currentStr);
-                        int strLength = currentStr.length();
-                        String sStrLength = Integer.toString(strLength);
-                        TextView lengthLongest = (TextView) findViewById(R.id.lengthLongestAttempt);
+                        TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
+                        String currentStr = (String) currentTV.getText();
+                        int currentStrLen = currentStr.length();
 
-                        lengthLongest.setText(sStrLength);
-                        // lengthLongestAttempt
+                        TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
+                        String longestStr = (String) longestTV.getText();
+                        int longestStrLen = longestStr.length();
+
+                        currentTV.setText("");
+
+                        if (currentStrLen > longestStrLen)
+                        {
+                            longestTV.setText(currentStr);
+
+                            String currentStrLenSTR = Integer.toString(currentStrLen);
+                            TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
+                            lengthLongestTV.setText(currentStrLenSTR);
+                        }else{
+                            //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
+                            // buzz vibrate and blink the screen or something
+                        }
                     }
                     return true;
                 }
