@@ -48,6 +48,7 @@ tools:showIn="@layout/app_bar_game">
 
             <TextView
                 android:id="@+id/guessGridCell1"
+                android:onClick="gridCellClicked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -58,6 +59,7 @@ tools:showIn="@layout/app_bar_game">
             <TextView
                 android:id="@+id/guessGridCell2"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:text="A"
@@ -66,6 +68,7 @@ tools:showIn="@layout/app_bar_game">
             <TextView
                 android:id="@+id/guessGridCell3"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:text="C"
@@ -80,6 +83,7 @@ tools:showIn="@layout/app_bar_game">
 
             <TextView
                 android:id="@+id/guessGridCell4"
+                android:onClick="gridCellClicked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="B"
@@ -88,6 +92,7 @@ tools:showIn="@layout/app_bar_game">
             <TextView
                 android:id="@+id/guessGridCell5"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:text="A"
                 android:textSize="80sp" />
@@ -95,6 +100,7 @@ tools:showIn="@layout/app_bar_game">
             <TextView
                 android:id="@+id/guessGridCell6"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:text="C"
                 android:textSize="80sp" />
@@ -110,12 +116,14 @@ tools:showIn="@layout/app_bar_game">
                 android:id="@+id/guessGridCell7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="gridCellClicked"
                 android:text="B"
                 android:textSize="80sp" />
 
             <TextView
                 android:id="@+id/guessGridCell8"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:text="A"
                 android:textSize="80sp" />
@@ -123,6 +131,7 @@ tools:showIn="@layout/app_bar_game">
             <TextView
                 android:id="@+id/guessGridCell9"
                 android:layout_width="wrap_content"
+                android:onClick="gridCellClicked"
                 android:layout_height="wrap_content"
                 android:text="C"
                 android:textSize="80sp" />

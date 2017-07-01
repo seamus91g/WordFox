@@ -25,16 +25,6 @@ public class GameActivity extends AppCompatActivity
         private TextView resetTV;
         private TextView submitTV;
         private TextView shuffleTV;
-        private TextView cell1;
-        private TextView cell2;
-        private TextView cell3;
-        private TextView cell4;
-        private TextView cell5;
-        private TextView cell6;
-        private TextView cell7;
-        private TextView cell8;
-        private TextView cell9;
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -111,116 +101,7 @@ public class GameActivity extends AppCompatActivity
                 }
             });
 
-            cell1 = (TextView) findViewById(R.id.guessGridCell1);
-            cell2 = (TextView) findViewById(R.id.guessGridCell2);
-            cell3 = (TextView) findViewById(R.id.guessGridCell3);
-            cell4 = (TextView) findViewById(R.id.guessGridCell4);
-            cell5 = (TextView) findViewById(R.id.guessGridCell5);
-            cell6 = (TextView) findViewById(R.id.guessGridCell6);
-            cell7 = (TextView) findViewById(R.id.guessGridCell7);
-            cell8 = (TextView) findViewById(R.id.guessGridCell8);
-            cell9 = (TextView) findViewById(R.id.guessGridCell9);
 
-            cell1.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell1);
-                        String cellLetter = (String) cell.getText();
-
-                        TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt);
-                        String currentGuess = (String) currentGuessTV.getText();
-
-                        currentGuess += cellLetter;
-                        currentGuessTV.setText(currentGuess);
-                        Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell2.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell2);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell3.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell3);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell4.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell4);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell5.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell5);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell6.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell6);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell7.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell7);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell8.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell8);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-            cell9.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        TextView cell = (TextView) findViewById(R.id.guessGridCell9);
-                        String cellLetter = (String) cell.getText(); TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt); String currentGuess = (String) currentGuessTV.getText(); currentGuess += cellLetter; currentGuessTV.setText(currentGuess); Log.d(MONITOR_TAG, "Guessing letter: " + cellLetter);
-                    }
-                    return false;
-                }
-            });
-
-
-            // cell3.setOnTouchListener(this);
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -254,6 +135,25 @@ public class GameActivity extends AppCompatActivity
         cell9.setText(givenLetters.get(8));
 
         return true;
+    }
+
+
+    public void gridCellClicked(View v) {
+
+        String cellID = getResources().getResourceName(v.getId());
+        int resID = getResources().getIdentifier(cellID, "id", getPackageName());
+        TextView cellGridTV = (TextView) findViewById(resID);
+        String cellLetter = (String) cellGridTV.getText();
+
+        TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt);
+        String currentGuess = (String) currentGuessTV.getText();
+
+        currentGuess += cellLetter;
+        currentGuessTV.setText(currentGuess);
+        Log.d(MONITOR_TAG, "v ID: " + v.getId());
+        Log.d(MONITOR_TAG, "ID: " + cellID);
+        Log.d(MONITOR_TAG, "res ID: " + resID);
+        Log.d(MONITOR_TAG, "Text: " + cellGridTV.getText());
     }
 
     public ArrayList<String> getGivenLetters() {
