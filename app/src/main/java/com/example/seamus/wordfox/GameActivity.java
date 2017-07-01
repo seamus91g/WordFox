@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import static java.util.Collections.shuffle;
+
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
@@ -187,19 +189,44 @@ public class GameActivity extends AppCompatActivity
 
     public ArrayList<String> getGivenLetters() {
         ArrayList<String> givenLetters = new ArrayList<String>();
-        for (int i = 0; i < 9; i++) {
-            givenLetters.add(randLetter());
+        String consonants = randLetter("consonants");
+        String vowels = randLetter("vowels");
+        String letters = consonants + vowels;
+        int lettersLen = letters.length();
+
+        for (int i=0; i<lettersLen; i++)
+        {
+            givenLetters.add((letters.substring(i, i+1)));
         }
+
+        shuffle(givenLetters);
         return givenLetters;
     }
 
-    public String randLetter() {
-        final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        final int N = alphabet.length();
-        Random r = new Random();
-        int charIndex = r.nextInt(N);
-        char ranChar = (char) alphabet.charAt(charIndex);
-        return Character.toString(ranChar);
+    public String randLetter(String choice) {
+        String letters = "";
+        String set = "";
+        int times = 0;
+
+        if (choice.equals("consonants")) {
+            letters = "BCDFGHJKLMNPQRSTVWXYZ";
+            times = 6;
+        }else if(choice.equals("vowels")) {
+            letters = "AEIOU";
+            times = 3;
+        }
+
+        int letterLen = letters.length();
+
+        for (int i=0; i<times; i++)
+        {
+            int random = (int)(Math.random() * letterLen);
+            char randomLetter = letters.charAt(random);
+            set += randomLetter;
+        }
+
+        return set;
+
     }
 
     /////////////////////////////////
