@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         resetTV = (TextView) findViewById(R.id.resetButton);
         submitTV = (TextView) findViewById(R.id.submitButton);
         shuffleTV = (TextView) findViewById(R.id.shuffleButton);
-
+// consider changing to xml function onClick
         resetTV.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -210,15 +210,6 @@ public class MainActivity extends AppCompatActivity
 
 
         // cell3.setOnTouchListener(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
