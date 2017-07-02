@@ -1,6 +1,8 @@
 package com.example.seamus.wordfox;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -36,6 +38,59 @@ public class GameActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+//                TextView mTextField = (TextView) findViewById(R.id.timeTextField);
+                int time = (int) millisUntilFinished / 1000;
+                switch (time){
+                    case 24:
+                        TextView box1 = (TextView) findViewById(R.id.timeblock1);
+                        box1.setBackgroundColor(0);
+                        break;
+                    case 18:
+                        TextView box2 = (TextView) findViewById(R.id.timeblock2);
+                        box2.setBackgroundColor(0);
+                        break;
+                    case 12:
+                        TextView box3 = (TextView) findViewById(R.id.timeblock3);
+                        box3.setBackgroundColor(0);
+                        break;
+                    case 6:
+                        TextView box4 = (TextView) findViewById(R.id.timeblock4);
+                        box4.setBackgroundColor(0);
+                        break;
+                    case 1:
+                        TextView box5 = (TextView) findViewById(R.id.timeblock5);
+                        box5.setBackgroundColor(0);
+                        break;
+                }
+
+
+//                mTextField.setText("t: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+//                TextView mTextField = (TextView) findViewById(R.id.timeTextField);
+//                mTextField.setText("0");
+            }
+        }.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
         ArrayList givenLetters = new ArrayList();
         givenLetters = getGivenLetters();
         String givenLettersSTR = "";
@@ -51,82 +106,8 @@ public class GameActivity extends AppCompatActivity
         resetTV = (TextView) findViewById(R.id.resetButton);
         submitTV = (TextView) findViewById(R.id.submitButton);
         shuffleTV = (TextView) findViewById(R.id.shuffleButton);
-// consider changing to xml function onClick
-        resetTV.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    TextView rst = (TextView) findViewById(R.id.currentAttempt);
-                    rst.setText("");
-
-                    setGridClickable();
-                }
-                return true;
-            }
-
-        });
 
 
-        submitTV.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                    TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
-                    String currentStr = (String) currentTV.getText();
-                    int currentStrLen = currentStr.length();
-
-                    TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
-                    String longestStr = (String) longestTV.getText();
-                    int longestStrLen = longestStr.length();
-
-                    currentTV.setText("");
-
-                    if (currentStrLen > longestStrLen) {
-                        longestTV.setText(currentStr);
-
-                        String currentStrLenSTR = Integer.toString(currentStrLen);
-                        TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
-                        lengthLongestTV.setText(currentStrLenSTR);
-                    } else {
-                        //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
-                        // buzz vibrate and blink the screen or something
-                    }
-
-                    setGridClickable();
-                }
-                return true;
-            }
-        });
-        shuffleTV.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                    ArrayList<String> givenLetters = new ArrayList<String>();
-                    TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
-                    String givenLettersSTR = (String) givenLettersTV.getText();
-
-                    for (int i = 0; i < givenLettersSTR.length(); i++) {
-//                        givenLettersSTR += givenLetters.get(i);
-                        Log.d(MONITOR_TAG, "subStr: " + givenLettersSTR.substring(i, i+1));
-                        givenLetters.add(givenLettersSTR.substring(i, i+1));
-                    }
-                    Collections.shuffle(givenLetters);
-
-                    givenLettersSTR = "";
-                    for (int i = 0; i < givenLetters.size(); i++) {
-                        givenLettersSTR += givenLetters.get(i);
-                    }
-//                    Log.d(MONITOR_TAG, "Shuf letters: " + givenLettersSTR);
-
-//
-                    givenLettersTV.setText(givenLettersSTR);
-                    writeToGuessGrid(givenLetters);
-                }
-                return true;
-            }
-        });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,6 +144,59 @@ public class GameActivity extends AppCompatActivity
             currentCell.setClickable(true);
         }
 
+    }
+
+    public void clearCurrentAttempt(View v){
+        TextView currentAttemptTV = (TextView) findViewById(R.id.currentAttempt);
+        currentAttemptTV.setText("");
+        setGridClickable();
+    }
+
+    public void submitCurrentAttempt(View v){
+        TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
+        String currentStr = (String) currentTV.getText();
+        int currentStrLen = currentStr.length();
+
+        TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
+        String longestStr = (String) longestTV.getText();
+        int longestStrLen = longestStr.length();
+
+        currentTV.setText("");
+
+        if (currentStrLen > longestStrLen) {
+            longestTV.setText(currentStr);
+
+            String currentStrLenSTR = Integer.toString(currentStrLen);
+            TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
+            lengthLongestTV.setText(currentStrLenSTR);
+        } else {
+            //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
+            // buzz vibrate and blink the screen or something
+        }
+        setGridClickable();
+    }
+
+    public void shuffleGivenLetters(View v){
+        ArrayList<String> givenLetters = new ArrayList<String>();
+        TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
+        String givenLettersSTR = (String) givenLettersTV.getText();
+
+        for (int i = 0; i < givenLettersSTR.length(); i++) {
+//                        givenLettersSTR += givenLetters.get(i);
+            Log.d(MONITOR_TAG, "subStr: " + givenLettersSTR.substring(i, i+1));
+            givenLetters.add(givenLettersSTR.substring(i, i+1));
+        }
+        Collections.shuffle(givenLetters);
+
+        givenLettersSTR = "";
+        for (int i = 0; i < givenLetters.size(); i++) {
+            givenLettersSTR += givenLetters.get(i);
+        }
+//                    Log.d(MONITOR_TAG, "Shuf letters: " + givenLettersSTR);
+
+//
+        givenLettersTV.setText(givenLettersSTR);
+        writeToGuessGrid(givenLetters);
     }
 
     public void gridCellClicked(View v) {

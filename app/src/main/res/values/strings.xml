@@ -7,4 +7,8 @@
     <string name="action_settings">Settings</string>
     <string name="reset">RESET</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="submit">SUBMIT</string>
+    <string name="shuffle">SHUFFLE</string>
+    <string name="Users_best_guess">Your Guess</string>
+    <string name="word_length">Word Length</string>
 </resources>
