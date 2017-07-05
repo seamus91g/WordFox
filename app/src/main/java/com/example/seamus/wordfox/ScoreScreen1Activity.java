@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import static com.example.seamus.wordfox.GameActivity.totalScore;
+
 public class ScoreScreen1Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,12 +42,31 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = preferences.getString("score", "");
-        if(!name.equalsIgnoreCase(""))
+        String score = preferences.getString("score", "");
+        if(!score.equalsIgnoreCase(""))
         {
             TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-            scoreScoreScreenTextView.setText(name);
+            scoreScoreScreenTextView.setText(score);
         }
+
+        int totalScore = preferences.getInt("totalScore", -1);
+
+        if(totalScore == -1) {
+//            problem getting the total from the preference manager. Cause an error.
+        }else{
+            totalScore =+ Integer.parseInt(score);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("totalScore", totalScore);
+            editor.apply();
+        }
+
+        String totalString = Integer.toString(totalScore);
+        TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
+        totalScoreScoreScreenTextView.setText(totalString);
+
+
+
+
 
 
 

@@ -28,7 +28,7 @@ public class GameActivity extends AppCompatActivity
     private TextView resetTV;
     private TextView submitTV;
     private TextView shuffleTV;
-
+    public static int totalScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,11 @@ public class GameActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        totalScore = 0;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("totalScore",0);
+        editor.apply();
 
 
         new CountDownTimer(30000, 1000) {
@@ -172,6 +176,8 @@ public class GameActivity extends AppCompatActivity
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("score",currentStrLenSTR);
             editor.apply();
+
+
 
 
 
