@@ -11,4 +11,5 @@
     <string name="shuffle">SHUFFLE</string>
     <string name="Users_best_guess">Your Guess</string>
     <string name="word_length">Word Length</string>
+    <string name="title_activity_score_screen1">ScoreScreen1Activity</string>
 </resources>

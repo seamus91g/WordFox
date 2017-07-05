@@ -1,26 +1,24 @@
 package com.example.seamus.wordfox;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 import static java.util.Collections.shuffle;
 
@@ -66,6 +64,7 @@ public class GameActivity extends AppCompatActivity
                     case 1:
                         TextView box5 = (TextView) findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
+                        startScoreScreenAct(findViewById(R.id.timeblock5));
                         break;
                 }
 
@@ -78,16 +77,6 @@ public class GameActivity extends AppCompatActivity
 //                mTextField.setText("0");
             }
         }.start();
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -118,6 +107,13 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void startScoreScreenAct(View v){
+
+        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
+        startActivity(ScoreScreen1Intent);
+        return;
     }
 
     public boolean writeToGuessGrid(ArrayList<String> givenLetters) {
@@ -169,6 +165,16 @@ public class GameActivity extends AppCompatActivity
             String currentStrLenSTR = Integer.toString(currentStrLen);
             TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
             lengthLongestTV.setText(currentStrLenSTR);
+
+
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("score",currentStrLenSTR);
+            editor.apply();
+
+
+
         } else {
             //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
             // buzz vibrate and blink the screen or something
