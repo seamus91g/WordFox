@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -16,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,6 +33,8 @@ public class GameActivity extends AppCompatActivity
     private TextView submitTV;
     private TextView shuffleTV;
     public static int totalScore;
+    private foxDictionary myDiction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +48,17 @@ public class GameActivity extends AppCompatActivity
         editor.putInt("totalScore",0);
         editor.apply();
 
+        AssetManager assetManager = this.getAssets();
+        myDiction = new foxDictionary();
+        try {
+            InputStream myIpStr = assetManager.open("validWords.txt");
+            myDiction.readFile(myIpStr);
+            myIpStr.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+//        myDiction.checkWordExists("potato");
+//        myDiction.checkWordExists("ptato");
 
         new CountDownTimer(30000, 1000) {
 
@@ -156,12 +173,18 @@ public class GameActivity extends AppCompatActivity
         TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
         String currentStr = (String) currentTV.getText();
         int currentStrLen = currentStr.length();
+        String lcCurrentStr = currentStr.toLowerCase();
+        currentTV.setText("");
+        setGridClickable();
+        if(!myDiction.checkWordExists(lcCurrentStr)){
+            Toast.makeText(this, "Word doesn't exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
         String longestStr = (String) longestTV.getText();
         int longestStrLen = longestStr.length();
 
-        currentTV.setText("");
 
         if (currentStrLen > longestStrLen) {
             longestTV.setText(currentStr);
@@ -185,7 +208,6 @@ public class GameActivity extends AppCompatActivity
             //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
             // buzz vibrate and blink the screen or something
         }
-        setGridClickable();
     }
 
     public void shuffleGivenLetters(View v){
