@@ -1,11 +1,9 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,8 +30,11 @@ public class GameActivity extends AppCompatActivity
     private TextView resetTV;
     private TextView submitTV;
     private TextView shuffleTV;
-    public static int totalScore;
+//    public static int totalScore;
     private foxDictionary myDiction;
+
+    public static gameInstance myGameInstance = new gameInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,11 @@ public class GameActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        totalScore = 0;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("totalScore",0);
-        editor.apply();
+//        totalScore = 0;
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putInt("totalScore",0);
+//        editor.apply();
 
         AssetManager assetManager = this.getAssets();
         myDiction = new foxDictionary();
@@ -85,7 +86,7 @@ public class GameActivity extends AppCompatActivity
                     case 1:
                         TextView box5 = (TextView) findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
-                        startScoreScreenAct(findViewById(R.id.timeblock5));
+                        startScoreScreen1Act(findViewById(R.id.timeblock5));
                         break;
                 }
 
@@ -130,11 +131,9 @@ public class GameActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void startScoreScreenAct(View v){
-
+    public void startScoreScreen1Act(View v){
         Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
         startActivity(ScoreScreen1Intent);
-        return;
     }
 
     public boolean writeToGuessGrid(ArrayList<String> givenLetters) {
@@ -189,20 +188,17 @@ public class GameActivity extends AppCompatActivity
         if (currentStrLen > longestStrLen) {
             longestTV.setText(currentStr);
 
+            myGameInstance.setScore(currentStrLen);
+
+
             String currentStrLenSTR = Integer.toString(currentStrLen);
             TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
             lengthLongestTV.setText(currentStrLenSTR);
 
-
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("score",currentStrLenSTR);
-            editor.apply();
-
-
-
-
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString("score",currentStrLenSTR);
+//            editor.apply();
 
         } else {
             //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)

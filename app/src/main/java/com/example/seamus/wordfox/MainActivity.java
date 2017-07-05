@@ -1,7 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,20 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +30,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        gameInstance.clearScores();
     }
 
-    public void startGameAct(View v) {
+    public void startGameAct(View v){
 
-         Intent gameIntent = new Intent(this, GameActivity.class);
-         startActivity(gameIntent);
+        gameInstance myInstance = new gameInstance();
+        myInstance.startGame(this);
+
+//         Intent gameIntent = new Intent(this, GameActivity.class);
+//         startActivity(gameIntent);
     }
 
     @Override

@@ -1,20 +1,17 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import static com.example.seamus.wordfox.GameActivity.totalScore;
 
 public class ScoreScreen1Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,41 +32,45 @@ public class ScoreScreen1Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Log.d("Main", "just want to see if this makes it");
+
+
+        int score = GameActivity.myGameInstance.getScore();
+        TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
+        scoreScoreScreenTextView.setText(score);
+
+        Log.d("Main", "just want to see if this makes it");
 
 
 
 
 
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String score = preferences.getString("score", "");
-        if(!score.equalsIgnoreCase(""))
-        {
-            TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-            scoreScoreScreenTextView.setText(score);
-        }
-
-        int totalScore = preferences.getInt("totalScore", -1);
-
-        if(totalScore == -1) {
-//            problem getting the total from the preference manager. Cause an error.
-        }else{
-            totalScore =+ Integer.parseInt(score);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt("totalScore", totalScore);
-            editor.apply();
-        }
-
-        String totalString = Integer.toString(totalScore);
-        TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
-        totalScoreScoreScreenTextView.setText(totalString);
-
-
-
-
-
-
-
+//        int ju = myGameInstance.getScore();
+//
+//
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String score = preferences.getString("score", "");
+//        if(!score.equalsIgnoreCase(""))
+//        {
+//            TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
+//            scoreScoreScreenTextView.setText(score);
+//        }
+//
+//        int totalScore = preferences.getInt("totalScore", -1);
+//
+//        if(totalScore == -1) {
+////            problem getting the total from the preference manager. Cause an error.
+//        }else{
+//            totalScore =+ Integer.parseInt(score);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putInt("totalScore", totalScore);
+//            editor.apply();
+//        }
+//
+//        String totalString = Integer.toString(totalScore);
+//        TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
+//        totalScoreScoreScreenTextView.setText(totalString);
+        
 
 //        TextView longestAttemptTV = (TextView) findViewById(lengthLongestAttempt);
 //        String lengthString = (String) longestAttemptTV.getText();
