@@ -40,57 +40,58 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/scoreScreen1TV"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:text="Your total score is"-->
-            <!--android:textSize="20sp"-->
-            <!--tools:layout_editor_absoluteX="0dp"-->
-            <!--tools:layout_editor_absoluteY="0dp" />-->
+        <TextView
+            android:id="@+id/scoreScreen1TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="Your total score is"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/totalScoreScoreScreenTV"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:text="XXX"-->
-            <!--android:textSize="40sp"-->
-            <!--tools:layout_editor_absoluteX="0dp"-->
-            <!--tools:layout_editor_absoluteY="0dp" />-->
+        <TextView
+            android:id="@+id/totalScoreScoreScreenTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="XXX"
+            android:textSize="40sp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/scoreScreen2TV"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:text="Longest word"-->
-            <!--android:textSize="20sp"-->
-            <!--tools:layout_editor_absoluteX="0dp"-->
-            <!--tools:layout_editor_absoluteY="0dp" />-->
+        <TextView
+            android:id="@+id/scoreScreen2TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="Longest word"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/longestWordScoreScreenTV"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:text="XXXXXXXX"-->
-            <!--android:textSize="40sp"-->
-            <!--tools:layout_editor_absoluteX="0dp"-->
-            <!--tools:layout_editor_absoluteY="0dp" />-->
+        <TextView
+            android:id="@+id/longestWordScoreScreenTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="XXXXXXXX"
+            android:textSize="40sp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="right"-->
-            <!--android:text="PROCEED"-->
-            <!--tools:layout_editor_absoluteX="0dp"-->
-            <!--tools:layout_editor_absoluteY="0dp" />-->
+        <Button
+            android:layout_width="wrap_content"
+            android:onClick="proceed"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="PROCEED"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
 
     </LinearLayout>

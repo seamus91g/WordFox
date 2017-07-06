@@ -49,6 +49,8 @@ public class GameActivity extends AppCompatActivity
 //        editor.putInt("totalScore",0);
 //        editor.apply();
 
+        myGameInstance.clearRoundScores();
+
         AssetManager assetManager = this.getAssets();
         myDiction = new foxDictionary();
         try {
@@ -86,7 +88,10 @@ public class GameActivity extends AppCompatActivity
                     case 1:
                         TextView box5 = (TextView) findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
-                        startScoreScreen1Act(findViewById(R.id.timeblock5));
+
+                        Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
+                        startScoreScreen1Act();
+
                         break;
                 }
 
@@ -131,7 +136,8 @@ public class GameActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void startScoreScreen1Act(View v){
+    public void startScoreScreen1Act(){
+        Log.d(MONITOR_TAG, "starting Score Screen 1");
         Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
         startActivity(ScoreScreen1Intent);
     }
@@ -186,6 +192,7 @@ public class GameActivity extends AppCompatActivity
 
 
         if (currentStrLen > longestStrLen) {
+            myGameInstance.setLongestWord(currentStr);
             longestTV.setText(currentStr);
 
             myGameInstance.setScore(currentStrLen);

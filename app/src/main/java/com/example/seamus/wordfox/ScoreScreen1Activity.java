@@ -11,11 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class ScoreScreen1Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String MONITOR_TAG = "myTag";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,21 +34,22 @@ public class ScoreScreen1Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Log.d("Main", "just want to see if this makes it");
+        Log.d(MONITOR_TAG, "just want to see if this makes it");
 
 
         int score = GameActivity.myGameInstance.getScore();
+        int totalScore = GameActivity.myGameInstance.getTotalScore();
+        String longestAttempt = GameActivity.myGameInstance.getLongestWord();
+
         TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-        scoreScoreScreenTextView.setText(score);
+        scoreScoreScreenTextView.setText(String.valueOf(score));
 
-        Log.d("Main", "just want to see if this makes it");
+        TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
+        totalScoreScoreScreenTextView.setText(String.valueOf(totalScore));
 
+        TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
+        longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
 
-
-
-
-//        int ju = myGameInstance.getScore();
-//
 //
 //        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        String score = preferences.getString("score", "");
@@ -67,19 +70,13 @@ public class ScoreScreen1Activity extends AppCompatActivity
 //            editor.apply();
 //        }
 //
-//        String totalString = Integer.toString(totalScore);
-//        TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
-//        totalScoreScoreScreenTextView.setText(totalString);
-        
 
-//        TextView longestAttemptTV = (TextView) findViewById(lengthLongestAttempt);
-//        String lengthString = (String) longestAttemptTV.getText();
-////        int length = Integer.parseInt(lengthString);
-//
-//        TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-//        scoreScoreScreenTextView.setText(lengthString);
     }
 
+    public void proceed(View v) {
+        Log.d(MONITOR_TAG, "In proceed");
+        GameActivity.myGameInstance.startGame(this);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
