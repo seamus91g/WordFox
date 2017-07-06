@@ -12,7 +12,7 @@ public class GameData {
     private String longestWord;
     private HashMap occurenceByLength = new HashMap();
 
-    public void GameData{
+    public void GameData(){
         occurenceByLength.put(3,0);
         occurenceByLength.put(4,0);
         occurenceByLength.put(5,0);
@@ -25,10 +25,12 @@ public class GameData {
         countGames += 1;
     }
     public void addWord(String newWord){
-        if (newWord.length() >= longestWord.length()){
+        int len = newWord.length();
+        if (len >= longestWord.length()){
             longestWord = newWord;
         }
-        occurenceByLength.put();
+        int numberOccurences = (int) occurenceByLength.get(len);
+        occurenceByLength.put(len, (numberOccurences +1));
     }
     public int findOccurence(int requestLength){
         return (Integer) occurenceByLength.get(requestLength); // returnLength;
