@@ -10,9 +10,9 @@ import java.util.HashMap;
 public class GameData {
     private int countGames;
     private String longestWord;
-    private HashMap occurenceByLength = new HashMap();
+    private HashMap<Integer, Integer> occurenceByLength;
 
-    public void GameData() {
+    GameData() {
         occurenceByLength.put(3, 0);
         occurenceByLength.put(4, 0);
         occurenceByLength.put(5, 0);

@@ -31,6 +31,7 @@ public class GameActivity extends AppCompatActivity
     public static final String MONITOR_TAG = "myTag";
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
+    private NavigationBurger navBurger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,24 +288,13 @@ public class GameActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__");
+        navBurger.navigateTo(item, GameActivity.this);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
+        Log.d(MONITOR_TAG, "After_onNavigationItemSelected__");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 }

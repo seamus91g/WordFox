@@ -16,7 +16,7 @@ public class gameInstance {
     private static int score;
     private static String longestWord;
 
-    public void gameInstance() {
+    gameInstance() {
         totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         longestWord = "";   // Longest of the current round

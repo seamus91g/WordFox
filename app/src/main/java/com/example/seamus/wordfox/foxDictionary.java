@@ -49,6 +49,10 @@ public class foxDictionary {
 
     private ArrayList<String> allValidWords = new ArrayList<String>();
 
+    foxDictionary() {
+
+    }
+
     public void readFile(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
