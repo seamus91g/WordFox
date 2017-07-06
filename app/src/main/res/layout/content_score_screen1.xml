@@ -86,9 +86,9 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:onClick="proceed"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:onClick="proceed"
             android:text="PROCEED"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />

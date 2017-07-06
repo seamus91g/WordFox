@@ -18,6 +18,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String MONITOR_TAG = "myTag";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,6 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
         Log.d(MONITOR_TAG, "just want to see if this makes it");
 
-
         int score = GameActivity.myGameInstance.getScore();
         int totalScore = GameActivity.myGameInstance.getTotalScore();
         String longestAttempt = GameActivity.myGameInstance.getLongestWord();
@@ -50,33 +50,16 @@ public class ScoreScreen1Activity extends AppCompatActivity
         TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
         longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
 
-//
+        // Preference manager example
 //        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        String score = preferences.getString("score", "");
-//        if(!score.equalsIgnoreCase(""))
-//        {
-//            TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-//            scoreScoreScreenTextView.setText(score);
-//        }
-//
-//        int totalScore = preferences.getInt("totalScore", -1);
-//
-//        if(totalScore == -1) {
-////            problem getting the total from the preference manager. Cause an error.
-//        }else{
-//            totalScore =+ Integer.parseInt(score);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.putInt("totalScore", totalScore);
-//            editor.apply();
-//        }
-//
-
     }
 
     public void proceed(View v) {
         Log.d(MONITOR_TAG, "In proceed");
         GameActivity.myGameInstance.startGame(this);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -84,7 +67,6 @@ public class ScoreScreen1Activity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
 //            super.onBackPressed();
-
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         }

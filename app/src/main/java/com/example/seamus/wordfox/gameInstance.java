@@ -12,14 +12,14 @@ import android.util.Log;
 public class gameInstance {
 
     public static final String MONITOR_TAG = "myTag";
-    private static int totalScore;
+    private static int totalScore;      // total Score tracks the accumulated score across rounds.
     private static int score;
     private static String longestWord;
 
     public void gameInstance() {
-        totalScore = 0;
+        totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
-        longestWord = "";
+        longestWord = "";   // Longest of the current round
     }
 
     public int getTotalScore() {

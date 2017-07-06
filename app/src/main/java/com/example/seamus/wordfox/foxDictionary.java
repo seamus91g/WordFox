@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox;
 
 
-
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -30,8 +29,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 
-
-
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -55,17 +52,18 @@ public class foxDictionary {
     public void readFile(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
-        String readString = buffreader.readLine ( ) ;
-        while ( readString != null ) {
+        String readString = buffreader.readLine();
+        while (readString != null) {
             allValidWords.add(readString);
-            readString = buffreader.readLine ( ) ;
+            readString = buffreader.readLine();
         }
     }
-    public boolean checkWordExists(String checkWord){
-        if (allValidWords.contains(checkWord)){
+
+    public boolean checkWordExists(String checkWord) {
+        if (allValidWords.contains(checkWord)) {
             Log.d("foxWords", "Found word: " + checkWord);
             return true;
-        }else {
+        } else {
             Log.d("foxWords", "Did not find word: " + checkWord);
             return false;
         }

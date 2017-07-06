@@ -20,21 +20,17 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Collections.shuffle;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
-    private TextView resetTV;
-    private TextView submitTV;
-    private TextView shuffleTV;
-//    public static int totalScore;
     private foxDictionary myDiction;
-
     public static gameInstance myGameInstance = new gameInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +39,10 @@ public class GameActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        totalScore = 0;
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = preferences.edit();
-//        editor.putInt("totalScore",0);
-//        editor.apply();
-
+        // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
 
+        // Read in text file of all valid words. Store words in class foxDictionary
         AssetManager assetManager = this.getAssets();
         myDiction = new foxDictionary();
         try {
@@ -60,15 +52,12 @@ public class GameActivity extends AppCompatActivity
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-//        myDiction.checkWordExists("potato");
-//        myDiction.checkWordExists("ptato");
 
+        // 30 second counter until game ends.
         new CountDownTimer(30000, 1000) {
-
             public void onTick(long millisUntilFinished) {
-//                TextView mTextField = (TextView) findViewById(R.id.timeTextField);
                 int time = (int) millisUntilFinished / 1000;
-                switch (time){
+                switch (time) {
                     case 24:
                         TextView box1 = (TextView) findViewById(R.id.timeblock1);
                         box1.setBackgroundColor(0);
@@ -88,44 +77,27 @@ public class GameActivity extends AppCompatActivity
                     case 1:
                         TextView box5 = (TextView) findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
-
                         Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
                         startScoreScreen1Act();
-
                         break;
                 }
-
-
-//                mTextField.setText("t: " + millisUntilFinished / 1000);
             }
-
             public void onFinish() {
-//                TextView mTextField = (TextView) findViewById(R.id.timeTextField);
-//                mTextField.setText("0");
             }
         }.start();
 
-
-
-        ArrayList givenLetters = new ArrayList();
-        givenLetters = getGivenLetters();
+        // Generate a random sequence of 9 letters to use for the game
+        ArrayList<String> givenLetters = getGivenLetters();
         String givenLettersSTR = "";
         for (int i = 0; i < givenLetters.size(); i++) {
             givenLettersSTR += givenLetters.get(i);
         }
+        // Write the letters to the heading and to the 3x3 textView grid
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         givenLettersTV.setText(givenLettersSTR);
-
         writeToGuessGrid(givenLetters);
 
-
-        resetTV = (TextView) findViewById(R.id.resetButton);
-        submitTV = (TextView) findViewById(R.id.submitButton);
-        shuffleTV = (TextView) findViewById(R.id.shuffleButton);
-
-
-
-
+        // Left side navigation drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -136,144 +108,126 @@ public class GameActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void startScoreScreen1Act(){
+    // When timer ends, change to the Score Screen to show results.
+    public void startScoreScreen1Act() {
         Log.d(MONITOR_TAG, "starting Score Screen 1");
         Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
         startActivity(ScoreScreen1Intent);
     }
 
+    // Print the 9 generated letters to the 3x3 grid.
     public boolean writeToGuessGrid(ArrayList<String> givenLetters) {
-
+        // Loop to retrieve each letter and write to its appropriate text view in the grid
         for (int i = 0; i < givenLetters.size(); i++) {
             String allCellId = "guessGridCell" + (i + 1);
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
             TextView currentCell = (TextView) findViewById(resID);
-
             currentCell.setText(givenLetters.get(i));
         }
-
         return true;
     }
 
+    // Set the clickable attribute to true on each letter in the 3x3 grid. This is used to reset the grid after a game.
     public void setGridClickable() {
         int cellCount = 9;
         for (int i = 0; i < cellCount; i++) {
-
             String allCellId = "guessGridCell" + (i + 1);
-
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
             TextView currentCell = (TextView) findViewById(resID);
             currentCell.setClickable(true);
         }
-
     }
 
-    public void clearCurrentAttempt(View v){
+    // When user clicks the Reset button, clear the currently typed letters.
+    public void clearCurrentAttempt(View v) {
         TextView currentAttemptTV = (TextView) findViewById(R.id.currentAttempt);
         currentAttemptTV.setText("");
         setGridClickable();
     }
 
-    public void submitCurrentAttempt(View v){
+    // Check if word is valid & longer than current best. If so, set as longest attempt.
+    public void submitCurrentAttempt(View v) {
+        setGridClickable();     // Set all letters to be chooseable again.
+        // Retrieve what the currently chosen letter sequence is
         TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
         String currentStr = (String) currentTV.getText();
-        int currentStrLen = currentStr.length();
-        String lcCurrentStr = currentStr.toLowerCase();
-        currentTV.setText("");
-        setGridClickable();
-        if(!myDiction.checkWordExists(lcCurrentStr)){
+        currentTV.setText("");  // Once retrieved, clear text from the current guess box
+
+        // Check dictionary to see if the word exists
+        String lcCurrentStr = currentStr.toLowerCase(); // All words in dictionary are lower case
+        if (!myDiction.checkWordExists(lcCurrentStr)) {
             Toast.makeText(this, "Word doesn't exist", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Retrieve the existing longest guess to compare with the submitted one
         TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
         String longestStr = (String) longestTV.getText();
+
         int longestStrLen = longestStr.length();
-
-
-        if (currentStrLen > longestStrLen) {
-            myGameInstance.setLongestWord(currentStr);
-            longestTV.setText(currentStr);
-
-            myGameInstance.setScore(currentStrLen);
-
-
+        int currentStrLen = currentStr.length();
+        // If current attempt is longer than previous best attempt, accept word as new longest
+        if (currentStrLen >= longestStrLen) {
+            // Print longest word and its length to the screen
             String currentStrLenSTR = Integer.toString(currentStrLen);
             TextView lengthLongestTV = (TextView) findViewById(R.id.lengthLongestAttempt);
-            lengthLongestTV.setText(currentStrLenSTR);
+            lengthLongestTV.setText(currentStrLenSTR);  // Print Length of word
+            longestTV.setText(currentStr);              // Print word
 
-//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.putString("score",currentStrLenSTR);
-//            editor.apply();
-
-        } else {
-            //provide the same feedback as if the user has enterred an incorrect word (one that isn't in the dictionary)
-            // buzz vibrate and blink the screen or something
+            myGameInstance.setLongestWord(currentStr);  // Save to display on the score screen
+            myGameInstance.setScore(currentStrLen);     // Save to display on the score screen
         }
     }
 
-    public void shuffleGivenLetters(View v){
-        ArrayList<String> givenLetters = new ArrayList<String>();
+    // Randomly shuffle the locations of the letters
+    public void shuffleGivenLetters(View v) {
+        // Retrieve the letters from the screen Text View
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         String givenLettersSTR = (String) givenLettersTV.getText();
 
-        for (int i = 0; i < givenLettersSTR.length(); i++) {
-//                        givenLettersSTR += givenLetters.get(i);
-            Log.d(MONITOR_TAG, "subStr: " + givenLettersSTR.substring(i, i+1));
-            givenLetters.add(givenLettersSTR.substring(i, i+1));
+        // Convert String to List and then shuffle the list. Convert back to String.
+        ArrayList<String> letters = new ArrayList<String>(Arrays.asList(givenLettersSTR.split("")));
+        letters.remove(0);  // Blank element at start. Remove it
+        Collections.shuffle(letters);
+        String shuffled = "";
+        for (String letter : letters) {     // Convert back to a String
+            shuffled += letter;
         }
-        Collections.shuffle(givenLetters);
 
-        givenLettersSTR = "";
-        for (int i = 0; i < givenLetters.size(); i++) {
-            givenLettersSTR += givenLetters.get(i);
-        }
-//                    Log.d(MONITOR_TAG, "Shuf letters: " + givenLettersSTR);
-
-//
-        givenLettersTV.setText(givenLettersSTR);
-        writeToGuessGrid(givenLetters);
+        // Print newly shuffled letters to top of the screen and to the 3x3 grid
+        givenLettersTV.setText(shuffled);
+        writeToGuessGrid(letters);
     }
 
+    // Detect if user clicks a cell in the 3x3 letter grid. Prevent choosing the same cell twice!
     public void gridCellClicked(View v) {
-
-        // ArrayList<Integer> CellIDsUsed = new ArrayList<Integer>();
-
+        // Get ID of which cell was clicked and then retrieve the corresponding letter
         String cellID = getResources().getResourceName(v.getId());
         int resID = getResources().getIdentifier(cellID, "id", getPackageName());
-
         TextView cellGridTV = (TextView) findViewById(resID);
         String cellLetter = (String) cellGridTV.getText();
-
+        // Update the current attempt by appending the chosen letter
         TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt);
         String currentGuess = (String) currentGuessTV.getText();
-
-        currentGuess += cellLetter;
-        currentGuessTV.setText(currentGuess);
-        cellGridTV.setClickable(false);
-        Log.d(MONITOR_TAG, "v ID: " + v.getId());
-        Log.d(MONITOR_TAG, "ID: " + cellID);
-        Log.d(MONITOR_TAG, "res ID: " + resID);
-        Log.d(MONITOR_TAG, "Text: " + cellGridTV.getText());
+        currentGuess += cellLetter;             // Append the new letter
+        currentGuessTV.setText(currentGuess);   // Write the appended string back to the Text View
+        cellGridTV.setClickable(false);         // Can't choose the same letter twice!!
     }
 
+    // Randomly generate a sequence of 9 letters for the user
     public ArrayList<String> getGivenLetters() {
         ArrayList<String> givenLetters = new ArrayList<String>();
         String consonants = randLetter("consonants");
         String vowels = randLetter("vowels");
         String letters = consonants + vowels;
         int lettersLen = letters.length();
-
-        for (int i=0; i<lettersLen; i++)
-        {
-            givenLetters.add((letters.substring(i, i+1)));
+        for (int i = 0; i < lettersLen; i++) {
+            givenLetters.add((letters.substring(i, i + 1)));
         }
-
         shuffle(givenLetters);
         return givenLetters;
     }
-
+    // Generate 6 random consonants or 3 random vowels
     public String randLetter(String choice) {
         String letters = "";
         String set = "";
@@ -282,22 +236,18 @@ public class GameActivity extends AppCompatActivity
         if (choice.equals("consonants")) {
             letters = "BCDFGHJKLMNPQRSTVWXYZ";
             times = 6;
-        }else if(choice.equals("vowels")) {
+        } else if (choice.equals("vowels")) {
             letters = "AEIOU";
             times = 3;
         }
 
         int letterLen = letters.length();
-
-        for (int i=0; i<times; i++)
-        {
-            int random = (int)(Math.random() * letterLen);
+        for (int i = 0; i < times; i++) {
+            int random = (int) (Math.random() * letterLen);
             char randomLetter = letters.charAt(random);
             set += randomLetter;
         }
-
         return set;
-
     }
 
     /////////////////////////////////
@@ -357,6 +307,4 @@ public class GameActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 }

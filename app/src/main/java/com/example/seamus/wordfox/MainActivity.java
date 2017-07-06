@@ -14,7 +14,6 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,16 +30,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Total score is accumulated across game rounds. Returning to the main menu will clear it
         gameInstance.clearAllScores();
     }
 
-    public void startGameAct(View v){
-
+    public void startGameAct(View v) {
         gameInstance myInstance = new gameInstance();
         myInstance.startGame(this);
-
-//         Intent gameIntent = new Intent(this, GameActivity.class);
-//         startActivity(gameIntent);
     }
 
     @Override
