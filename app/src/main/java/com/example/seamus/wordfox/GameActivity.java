@@ -27,16 +27,19 @@ import static java.util.Collections.shuffle;
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
+    private GameData myGameData;
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
     private NavigationBurger navBurger = new NavigationBurger();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("myTag", "OnCreate gameActive");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myGameData = new GameData(this.getApplicationContext());
 
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
@@ -52,10 +55,7 @@ public class GameActivity extends AppCompatActivity
             ioe.printStackTrace();
         }
 
-
-
-
-        gameTimer myGameTimerInstance = new gameTimer(this);
+        gameTimer myGameTimerInstance = new gameTimer(this, myGameInstance, myGameData);
 
 
 
@@ -93,6 +93,11 @@ public class GameActivity extends AppCompatActivity
 //            public void onFinish() {
 //            }
 //        }.start();
+
+                       // Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
+                       //  myGameData.addWord(myGameInstance.getLongestWord());
+                       //  Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
+
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = getGivenLetters();

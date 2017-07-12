@@ -13,11 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class Profile extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String MONITOR_TAG = "myTag";
+    private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,9 @@ public class Profile extends AppCompatActivity
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myGameData = new GameData(this.getApplicationContext());
+        updateLongestWord();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +48,14 @@ public class Profile extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void updateLongestWord() {
+        // profPicLongestWordText
+        String longestWord = myGameData.findLongest();
+        TextView longestWordProfilePage = (TextView) findViewById(R.id.profPicLongestWord);
+        longestWordProfilePage.setText(longestWord);
+        Log.d(MONITOR_TAG, "Printing longest word: " + longestWord + ", END");
     }
 
     @Override

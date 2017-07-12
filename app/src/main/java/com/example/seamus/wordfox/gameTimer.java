@@ -13,15 +13,13 @@ import static com.example.seamus.wordfox.R.id.timeblock1;
  */
 
 public class gameTimer {
-
+    public static final String MONITOR_TAG = "myTag";
     public Activity activity;
 
-
-    public gameTimer(Activity _activity){
+    public gameTimer(Activity _activity, final gameInstance myGame, final GameData myGameData){
         this.activity= _activity;
 
         new CountDownTimer(30000, 1000) {
-
             public void onTick(long millisUntilFinished) {
                 int time = (int) millisUntilFinished / 1000;
                 switch (time) {
@@ -46,6 +44,9 @@ public class gameTimer {
                         box5.setBackgroundColor(0);
 //                        Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
                         Log.d("message", "starting Score Screen 1");
+                        Log.d(MONITOR_TAG, "Adding word to prefs: " + myGame.getLongestWord() + ", END");
+                        myGameData.addWord(myGame.getLongestWord());
+                        Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
                         Intent ScoreScreen1Intent = new Intent(activity, ScoreScreen1Activity.class);
                         activity.startActivity(ScoreScreen1Intent);
                         break;
