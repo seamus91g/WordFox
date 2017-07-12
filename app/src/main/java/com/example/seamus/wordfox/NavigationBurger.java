@@ -24,16 +24,12 @@ public class NavigationBurger {
 //        Intent gameIntent = new Intent(context, GameActivity.class);
 //        context.startActivity(gameIntent);
         Log.d(MONITOR_TAG, "entering_navigateTO 2");
-        if (id == R.id.nav_quitgame) {
+        if (id == R.id.nav_home) {
             // Return to the home screen
-            Log.d(MONITOR_TAG, "nav_quitgame");
+            Log.d(MONITOR_TAG, "nav_home");
             gameInstance.clearAllScores();
             Intent homeScreenIntent = new Intent(fromContext, MainActivity.class);
             fromContext.startActivity(homeScreenIntent);
-        } else if (id == R.id.nav_newgame) {
-            Log.d(MONITOR_TAG, "nav_newgame");
-            gameInstance.clearAllScores();
-            GameActivity.myGameInstance.startGame(fromContext);
         } else if (id == R.id.nav_data) {
             Log.d(MONITOR_TAG, "nav_data");
 //            gameInstance.clearAllScores();
