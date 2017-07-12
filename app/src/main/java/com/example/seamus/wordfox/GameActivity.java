@@ -31,7 +31,7 @@ public class GameActivity extends AppCompatActivity
     public static final String MONITOR_TAG = "myTag";
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
-    private NavigationBurger navBurger;
+    private NavigationBurger navBurger = new NavigationBurger();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,6 +266,7 @@ public class GameActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        menu.getItem(0).setIcon(R.drawable.ic_menu_camera);
         return true;
     }
 

@@ -5,6 +5,5 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        android:icon="@drawable/ic_menu_camera"
         app:showAsAction="never" />
 </menu>

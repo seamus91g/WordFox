@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="overflowIconTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+
+    </style>
+
+    <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_menu_camera</item>
+    </style>
+
+</resources>
