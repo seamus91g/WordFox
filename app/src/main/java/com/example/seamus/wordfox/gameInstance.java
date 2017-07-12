@@ -13,7 +13,8 @@ public class gameInstance {
 
     public static final String MONITOR_TAG = "myTag";
     private static int totalScore;      // total Score tracks the accumulated score across rounds.
-    private static int score;
+    private static int score;   // score is just the score from the current round.
+    private static int round;   // round is a counter for the round of the game.
     private static String longestWord;
 
     gameInstance() {
@@ -51,6 +52,7 @@ public class gameInstance {
     public static void clearAllScores() {
         totalScore = 0;
         score = 0;
+        round = 0;
         longestWord = "";
     }
 
@@ -60,9 +62,19 @@ public class gameInstance {
     }
 
     public void startGame(Context context) {
-        Log.d(MONITOR_TAG, "In startGame");
-        Intent gameIntent = new Intent(context, GameActivity.class);
-        Log.d(MONITOR_TAG, "In startGame 2");
-        context.startActivity(gameIntent);
+
+        Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
+        round ++;
+
+        if (round < 4){
+            Log.d(MONITOR_TAG, "In startGame");
+            Intent gameIntent = new Intent(context, GameActivity.class);
+            Log.d(MONITOR_TAG, "In startGame 2");
+            context.startActivity(gameIntent);
+        }else {
+                Log.d(MONITOR_TAG, "starting Score Screen 2");
+                Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
+                context.startActivity(ScoreScreen2Intent);
+        }
     }
 }

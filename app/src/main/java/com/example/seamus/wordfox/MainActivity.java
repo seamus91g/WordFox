@@ -17,7 +17,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
+
+
     public static GameData myGameData = new GameData();
+
+
+
     private static final String PREF_FILE_NAME = "PREFERENCE_FILE_WORDFOX";
     public static SharedPreferences foxPreferences;
     public static SharedPreferences.Editor editor; // = MainActivity.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
@@ -45,8 +50,7 @@ public class MainActivity extends AppCompatActivity
     }
 //
     public void startGameAct(View v) {
-        gameInstance myInstance = new gameInstance();
-        myInstance.startGame(this);
+        GameActivity.myGameInstance.startGame(this);
     }
 
     @Override

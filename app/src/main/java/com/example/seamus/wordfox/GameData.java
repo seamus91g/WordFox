@@ -1,7 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.content.SharedPreferences;
-
 import java.util.HashMap;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -22,6 +20,26 @@ public class GameData {
 
     GameData() {
 //        editor = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
+
+
+        final int mode = MODE_PRIVATE;
+        final String MYPREFS = "MyPreferences_001";
+
+//// create a reference to the shared preferences object
+//        SharedPreferences mySharedPreferences;
+//
+//// obtain an editor to add data to my SharedPreferences object
+//        SharedPreferences.Editor myEditor;
+//
+//        mySharedPreferences = getSharedPreferences(MYPREFS, mode);
+////        shared preference needs to be in an activity??
+//
+//
+//// using this instance you can get any value saved.
+//        mySharedPreferences.getInt("backColor", Color.BLACK); // default value is BLACK set here
+
+
+
         userName = "Fox";
         occurenceByLength.put(3, 0);
         occurenceByLength.put(4, 0);
