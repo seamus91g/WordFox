@@ -35,8 +35,9 @@ public class gameInstance {
     }
 
     public void setScore(int point) {
+        int tempScore = score;
         score = point;
-        setTotalScore(point);
+        setTotalScore(point - tempScore);
     }
 
     public void setLongestWord(String word) {
