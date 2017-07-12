@@ -3,7 +3,6 @@ package com.example.seamus.wordfox;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static java.util.Collections.shuffle;
 
@@ -54,38 +52,47 @@ public class GameActivity extends AppCompatActivity
             ioe.printStackTrace();
         }
 
-        // 30 second counter until game ends.
-        new CountDownTimer(30000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                int time = (int) millisUntilFinished / 1000;
-                switch (time) {
-                    case 24:
-                        TextView box1 = (TextView) findViewById(R.id.timeblock1);
-                        box1.setBackgroundColor(0);
-                        break;
-                    case 18:
-                        TextView box2 = (TextView) findViewById(R.id.timeblock2);
-                        box2.setBackgroundColor(0);
-                        break;
-                    case 12:
-                        TextView box3 = (TextView) findViewById(R.id.timeblock3);
-                        box3.setBackgroundColor(0);
-                        break;
-                    case 6:
-                        TextView box4 = (TextView) findViewById(R.id.timeblock4);
-                        box4.setBackgroundColor(0);
-                        break;
-                    case 1:
-                        TextView box5 = (TextView) findViewById(R.id.timeblock5);
-                        box5.setBackgroundColor(0);
-                        Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
-                        startScoreScreen1Act();
-                        break;
-                }
-            }
-            public void onFinish() {
-            }
-        }.start();
+
+
+
+        gameTimer myGameTimerInstance = new gameTimer(this);
+
+
+
+
+
+//        // 30 second counter until game ends.
+//        new CountDownTimer(30000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//                int time = (int) millisUntilFinished / 1000;
+//                switch (time) {
+//                    case 24:
+//                        TextView box1 = (TextView) findViewById(R.id.timeblock1);
+//                        box1.setBackgroundColor(0);
+//                        break;
+//                    case 18:
+//                        TextView box2 = (TextView) findViewById(R.id.timeblock2);
+//                        box2.setBackgroundColor(0);
+//                        break;
+//                    case 12:
+//                        TextView box3 = (TextView) findViewById(R.id.timeblock3);
+//                        box3.setBackgroundColor(0);
+//                        break;
+//                    case 6:
+//                        TextView box4 = (TextView) findViewById(R.id.timeblock4);
+//                        box4.setBackgroundColor(0);
+//                        break;
+//                    case 1:
+//                        TextView box5 = (TextView) findViewById(R.id.timeblock5);
+//                        box5.setBackgroundColor(0);
+//                        Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
+//                        startScoreScreen1Act();
+//                        break;
+//                }
+//            }
+//            public void onFinish() {
+//            }
+//        }.start();
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = getGivenLetters();
