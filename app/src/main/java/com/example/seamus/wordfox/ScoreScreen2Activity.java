@@ -17,6 +17,9 @@ import android.widget.TextView;
 public class ScoreScreen2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String MONITOR_TAG = "myTag";
+    private NavigationBurger navBurger = new NavigationBurger();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +38,6 @@ public class ScoreScreen2Activity extends AppCompatActivity
 
         TextView scoreScreen2TextView = (TextView) findViewById(R.id.scoreScreen2TV);
         scoreScreen2TextView.setText(String.valueOf(GameActivity.myGameInstance.getTotalScore()));
-
-
     }
 
     // When button pressed, reboot to main.
@@ -74,7 +75,6 @@ public class ScoreScreen2Activity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -82,21 +82,9 @@ public class ScoreScreen2Activity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__MainActivity");
+        navBurger.navigateTo(item, ScoreScreen2Activity.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

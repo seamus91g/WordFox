@@ -21,7 +21,7 @@ public class GameData extends AppCompatActivity {
     private String GAME_COUNT_KEY = "game_count";
     private String LONGEST_WORD_KEY = "longest_word";
     private String USERNAME_KEY = "username";
-    private String PREF_FILE_NAME = "wordfoxgamedata";
+    private String PREF_FILE_NAME = "word_fox_gamedata";
 
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
@@ -30,22 +30,27 @@ public class GameData extends AppCompatActivity {
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
     }
-    public void setUsername(String nameEntered){
+
+    public void setUsername(String nameEntered) {
         editor.putString(USERNAME_KEY, nameEntered);
         editor.apply();
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return foxPreferences.getString(USERNAME_KEY, "");
     }
+
     public void gameCountUp() {
         int countGames = foxPreferences.getInt(GAME_COUNT_KEY, 0);
         countGames += 1;
         editor.putInt(GAME_COUNT_KEY, countGames);
         editor.apply();
     }
-    public int getGameCount(){
+
+    public int getGameCount() {
         return foxPreferences.getInt(GAME_COUNT_KEY, 0);
     }
+
     public void addWord(String newWord) {
         // Check if longest word
         int len = newWord.length();
@@ -61,12 +66,15 @@ public class GameData extends AppCompatActivity {
         editor.putInt(Integer.toString(len), numberOccurences);
         editor.apply();
     }
-    public String findLongest(){
+
+    public String findLongest() {
         return foxPreferences.getString(LONGEST_WORD_KEY, "");
     }
-    public int findLengthLongest(){
+
+    public int findLengthLongest() {
         return (foxPreferences.getString(LONGEST_WORD_KEY, "")).length();
     }
+
     public int findOccurence(int requestLength) {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
     }

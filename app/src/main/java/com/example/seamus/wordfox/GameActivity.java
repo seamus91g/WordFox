@@ -27,20 +27,19 @@ import static java.util.Collections.shuffle;
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
-    private GameData myGameData;
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
     private NavigationBurger navBurger = new NavigationBurger();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("myTag", "OnCreate gameActive");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        GameData myGameData;
         myGameData = new GameData(this.getApplicationContext());
-
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
 
@@ -56,48 +55,6 @@ public class GameActivity extends AppCompatActivity
         }
 
         gameTimer myGameTimerInstance = new gameTimer(this, myGameInstance, myGameData);
-
-
-
-
-
-//        // 30 second counter until game ends.
-//        new CountDownTimer(30000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//                int time = (int) millisUntilFinished / 1000;
-//                switch (time) {
-//                    case 24:
-//                        TextView box1 = (TextView) findViewById(R.id.timeblock1);
-//                        box1.setBackgroundColor(0);
-//                        break;
-//                    case 18:
-//                        TextView box2 = (TextView) findViewById(R.id.timeblock2);
-//                        box2.setBackgroundColor(0);
-//                        break;
-//                    case 12:
-//                        TextView box3 = (TextView) findViewById(R.id.timeblock3);
-//                        box3.setBackgroundColor(0);
-//                        break;
-//                    case 6:
-//                        TextView box4 = (TextView) findViewById(R.id.timeblock4);
-//                        box4.setBackgroundColor(0);
-//                        break;
-//                    case 1:
-//                        TextView box5 = (TextView) findViewById(R.id.timeblock5);
-//                        box5.setBackgroundColor(0);
-//                        Toast.makeText(GameActivity.this, "Time out!", Toast.LENGTH_SHORT).show();
-//                        startScoreScreen1Act();
-//                        break;
-//                }
-//            }
-//            public void onFinish() {
-//            }
-//        }.start();
-
-                       // Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
-                       //  myGameData.addWord(myGameInstance.getLongestWord());
-                       //  Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
-
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = getGivenLetters();
@@ -240,6 +197,7 @@ public class GameActivity extends AppCompatActivity
         shuffle(givenLetters);
         return givenLetters;
     }
+
     // Generate 6 random consonants or 3 random vowels
     public String randLetter(String choice) {
         String letters = "";

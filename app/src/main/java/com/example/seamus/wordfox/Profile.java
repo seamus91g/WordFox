@@ -21,6 +21,7 @@ public class Profile extends AppCompatActivity
     private static final String MONITOR_TAG = "myTag";
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,15 +31,6 @@ public class Profile extends AppCompatActivity
 
         myGameData = new GameData(this.getApplicationContext());
         updateLongestWord();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

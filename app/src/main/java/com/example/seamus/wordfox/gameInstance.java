@@ -62,19 +62,17 @@ public class gameInstance {
     }
 
     public void startGame(Context context) {
-
         Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
-        round ++;
-
-        if (round < 4){
+        round++;
+        if (round < 4) {
             Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);
             Log.d(MONITOR_TAG, "In startGame 2");
             context.startActivity(gameIntent);
-        }else {
-                Log.d(MONITOR_TAG, "starting Score Screen 2");
-                Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
-                context.startActivity(ScoreScreen2Intent);
+        } else {
+            Log.d(MONITOR_TAG, "starting Score Screen 2");
+            Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
+            context.startActivity(ScoreScreen2Intent);
         }
     }
 }

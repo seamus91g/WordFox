@@ -50,10 +50,6 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
         TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
         longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
-
-        // Preference manager example
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String score = preferences.getString("score", "");
     }
 
     public void proceed(View v) {
