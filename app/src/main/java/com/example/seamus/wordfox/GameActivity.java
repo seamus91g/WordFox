@@ -3,6 +3,7 @@ package com.example.seamus.wordfox;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,7 @@ public class GameActivity extends AppCompatActivity
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
     private NavigationBurger navBurger = new NavigationBurger();
+    private boolean backButtonPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +230,20 @@ public class GameActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            if (this.backButtonPressedOnce){
+                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                startActivity(homeScreenIntent);
+            }
+            this.backButtonPressedOnce = true;
+            Toast.makeText(this, "Press BACK again to exit the game", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run(){
+                    backButtonPressedOnce = false;
+                }
+            }, 2500);
         }
     }
 
