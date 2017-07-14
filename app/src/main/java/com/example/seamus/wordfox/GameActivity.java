@@ -32,18 +32,23 @@ public class GameActivity extends AppCompatActivity
     public static gameInstance myGameInstance = new gameInstance();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
+    private gameTimer myGameTimerInstance;
+    private GameData myGameData;
+    private boolean gameInFocus;
+    private boolean timeUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(MONITOR_TAG, "onCreate ---------- ");
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        GameData myGameData;
         myGameData = new GameData(this.getApplicationContext());
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
+        setGameInFocus(true);
 
         // Read in text file of all valid words. Store words in class foxDictionary
         AssetManager assetManager = this.getAssets();
@@ -56,7 +61,7 @@ public class GameActivity extends AppCompatActivity
             ioe.printStackTrace();
         }
 
-        gameTimer myGameTimerInstance = new gameTimer(this, myGameInstance, myGameData);
+        myGameTimerInstance = new gameTimer(this);
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = getGivenLetters();
@@ -222,8 +227,70 @@ public class GameActivity extends AppCompatActivity
         }
         return set;
     }
+    public boolean isTimeUp(){
+        return timeUp;
+    }
+    public void setTimeUp(boolean timeState){
+        Log.d(MONITOR_TAG, "Setting time state: " + timeState);
+        this.timeUp = timeState;
+    }
+    public boolean isGameInFocus(){
+        return gameInFocus;
+    }
+    public void setGameInFocus(boolean gameState){
+        Log.d(MONITOR_TAG, "Setting focus state: " + gameState);
+        this.gameInFocus = gameState;
+    }
+    public void completeGame(){
+        Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
+        myGameData.addWord(myGameInstance.getLongestWord());
+        Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
+        Log.d(MONITOR_TAG, "Changing activity from gameTimer");
+        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
+        startActivity(ScoreScreen1Intent);
+    }
 
     /////////////////////////////////
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setGameInFocus(false);
+        Log.d(MONITOR_TAG, "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(MONITOR_TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(MONITOR_TAG, "Killing timer from onDestroy");
+        myGameTimerInstance.killTimer();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(MONITOR_TAG, "onResume");
+        if (isTimeUp()){
+            completeGame();
+            Log.d(MONITOR_TAG, "Changing activity from onResume");
+            Intent ScoreScreen1Intent = new Intent(GameActivity.this, ScoreScreen1Activity.class);
+            startActivity(ScoreScreen1Intent);
+        }
+        setGameInFocus(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(MONITOR_TAG, "onStart");
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
