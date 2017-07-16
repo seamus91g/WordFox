@@ -2,11 +2,14 @@ package com.example.seamus.wordfox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.net.URI;
 import java.util.HashMap;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -22,13 +25,14 @@ public class GameData extends AppCompatActivity {
     private String LONGEST_WORD_KEY = "longest_word";
     private String USERNAME_KEY = "username";
     private String PREF_FILE_NAME = "word_fox_gamedata";
-
+    private String PROFILE_PIC_KEY = "wordfox_profile_pic";
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
 
     GameData(Context myContext) {
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
+        editor.apply();
     }
 
     public void setUsername(String nameEntered) {
@@ -36,8 +40,17 @@ public class GameData extends AppCompatActivity {
         editor.apply();
     }
 
+    public void setProfilePicture(Uri picture) {
+        editor.putString(PROFILE_PIC_KEY, picture.toString());
+        editor.apply();
+    }
+
+    public String getProfilePicture() {
+        return foxPreferences.getString(PROFILE_PIC_KEY, "");
+    }
+
     public String getUsername() {
-        return foxPreferences.getString(USERNAME_KEY, "");
+        return foxPreferences.getString(USERNAME_KEY, "fox");
     }
 
     public void gameCountUp() {

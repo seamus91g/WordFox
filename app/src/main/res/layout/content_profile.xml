@@ -12,6 +12,8 @@
         android:id="@+id/profPicAndUsername"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="50dp"
@@ -20,19 +22,26 @@
 
         <ImageView
             android:id="@+id/profPicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             app:srcCompat="@mipmap/prof_pic_default" />
 
-        <TextView
+        <EditText
+            android:id="@+id/username_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fox" />
+            android:gravity="center_horizontal"
+            android:hint="Name here" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Save" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="368dp"
-
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/profPicAndUsername"
@@ -48,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="LongestWord"
+                android:text="Longest Word: "
                 android:textSize="20sp" />
 
             <TextView
@@ -56,7 +65,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="myWord"
                 android:textSize="20sp" />
         </LinearLayout>
 

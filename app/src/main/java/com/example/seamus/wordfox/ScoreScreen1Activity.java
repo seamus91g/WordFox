@@ -22,6 +22,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GameData myGameData = new GameData(this.getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_screen1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -41,6 +42,10 @@ public class ScoreScreen1Activity extends AppCompatActivity
         int score = GameActivity.myGameInstance.getScore();
         int totalScore = GameActivity.myGameInstance.getTotalScore();
         String longestAttempt = GameActivity.myGameInstance.getLongestWord();
+        String userName = myGameData.getUsername();
+
+        TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
+        scoreScreenGreetingTextView.setText("Congratulations " + userName + "! You scored ");
 
         TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
         scoreScoreScreenTextView.setText(String.valueOf(score));
