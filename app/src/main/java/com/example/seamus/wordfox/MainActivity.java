@@ -1,5 +1,6 @@
 package com.example.seamus.wordfox;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,11 +13,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
+    private ImageView toolbarImageButton;
 //    public GameData myGameData = new GameData(this);
 
     @Override
@@ -39,8 +42,20 @@ public class MainActivity extends AppCompatActivity
 
         // Total score is accumulated across game rounds. Returning to the main menu will clear it
         gameInstance.clearAllScores();
+        toolbarImageButton = (ImageView) findViewById(R.id.toolbar_profile_pic);
+        toolbarImageButton.setOnClickListener(toolbarImageButtonListener);
+
     }
-//
+
+    private View.OnClickListener toolbarImageButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(MONITOR_TAG, "Clicking image, END");
+            Intent profileScreenIntent = new Intent(MainActivity.this, Profile.class);
+            startActivity(profileScreenIntent);
+        }
+    };
+    //
     public void startGameAct(View v) {
         gameInstance myInstance = new gameInstance();
         myInstance.startGame(this);
@@ -60,7 +75,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
 //        navBurger.navigateToProfile(MainActivity.this);
         return true;
     }
