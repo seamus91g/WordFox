@@ -51,12 +51,12 @@ public class GameActivity extends AppCompatActivity
         setGameInFocus(true);
 
         // Read in text file of all valid words. Store words in class foxDictionary
-        myDiction = new foxDictionary("validWords.txt", this);
+        myDiction = new foxDictionary("validWords.txt", "letterFrequency.txt", this);
 
         myGameTimerInstance = new gameTimer(this);
 
         // Generate a random sequence of 9 letters to use for the game
-        ArrayList<String> givenLetters = getGivenLetters();
+        ArrayList<String> givenLetters = myDiction.getGivenLetters();
         String givenLettersSTR = "";
         for (int i = 0; i < givenLetters.size(); i++) {
             givenLettersSTR += givenLetters.get(i);
@@ -183,42 +183,7 @@ public class GameActivity extends AppCompatActivity
         cellGridTV.setClickable(false);         // Can't choose the same letter twice!!
     }
 
-    // Randomly generate a sequence of 9 letters for the user
-    public ArrayList<String> getGivenLetters() {
-        ArrayList<String> givenLetters = new ArrayList<String>();
-        String consonants = randLetter("consonants");
-        String vowels = randLetter("vowels");
-        String letters = consonants + vowels;
-        int lettersLen = letters.length();
-        for (int i = 0; i < lettersLen; i++) {
-            givenLetters.add((letters.substring(i, i + 1)));
-        }
-        shuffle(givenLetters);
-        return givenLetters;
-    }
 
-    // Generate 6 random consonants or 3 random vowels
-    public String randLetter(String choice) {
-        String letters = "";
-        String set = "";
-        int times = 0;
-
-        if (choice.equals("consonants")) {
-            letters = "BCDFGHJKLMNPQRSTVWXYZ";
-            times = 6;
-        } else if (choice.equals("vowels")) {
-            letters = "AEIOU";
-            times = 3;
-        }
-
-        int letterLen = letters.length();
-        for (int i = 0; i < times; i++) {
-            int random = (int) (Math.random() * letterLen);
-            char randomLetter = letters.charAt(random);
-            set += randomLetter;
-        }
-        return set;
-    }
     public boolean isTimeUp(){
         return timeUp;
     }
