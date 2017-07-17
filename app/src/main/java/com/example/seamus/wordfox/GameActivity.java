@@ -51,15 +51,7 @@ public class GameActivity extends AppCompatActivity
         setGameInFocus(true);
 
         // Read in text file of all valid words. Store words in class foxDictionary
-        AssetManager assetManager = this.getAssets();
-        myDiction = new foxDictionary();
-        try {
-            InputStream myIpStr = assetManager.open("validWords.txt");
-            myDiction.readFile(myIpStr);
-            myIpStr.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        myDiction = new foxDictionary("validWords.txt", this);
 
         myGameTimerInstance = new gameTimer(this);
 

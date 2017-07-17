@@ -1,6 +1,7 @@
 package com.example.seamus.wordfox;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -49,16 +50,23 @@ public class foxDictionary {
 
     private ArrayList<String> allValidWords = new ArrayList<String>();
 
-    foxDictionary() {
-
+    foxDictionary(String validWordsFileName, Activity myGameActivity) {
+        AssetManager assetManager = myGameActivity.getAssets();
+        try {
+            InputStream myIpStr = assetManager.open(validWordsFileName);
+            this.readFile(myIpStr);
+            myIpStr.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
-    public void readFile(InputStream myIpStr) throws IOException {
+    private void readFile(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
         while (readString != null) {
-            allValidWords.add(readString);
+            allValidWords.add(readString.toLowerCase());
             readString = buffreader.readLine();
         }
     }
