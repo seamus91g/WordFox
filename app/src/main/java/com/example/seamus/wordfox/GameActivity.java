@@ -46,8 +46,10 @@ public class GameActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         myGameData = new GameData(this.getApplicationContext());
+        myGameData.gameCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
+
         setGameInFocus(true);
 
         // Read in text file of all valid words. Store words in class foxDictionary

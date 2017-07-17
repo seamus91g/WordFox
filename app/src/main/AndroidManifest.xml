@@ -43,6 +43,10 @@
         <activity
             android:name=".ScoreScreen2Activity"
             android:label="@string/title_activity_score_screen2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DataScreenActivity"
+            android:label="@string/title_activity_data_screen"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

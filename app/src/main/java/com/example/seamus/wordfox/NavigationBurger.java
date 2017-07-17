@@ -30,17 +30,20 @@ public class NavigationBurger {
             fromContext.startActivity(homeScreenIntent);
         } else if (id == R.id.nav_data) {
             Log.d(MONITOR_TAG, "nav_data");
+            gameInstance.clearAllScores();
+            Intent dataScreenIntent = new Intent(fromContext, DataScreenActivity.class);
+            fromContext.startActivity(dataScreenIntent);
         } else if (id == R.id.nav_profile) {
             Log.d(MONITOR_TAG, "nav_profile");
             gameInstance.clearAllScores();
-            Intent homeScreenIntent = new Intent(fromContext, Profile.class);
-            fromContext.startActivity(homeScreenIntent);
+            Intent profileScreenIntent = new Intent(fromContext, Profile.class);
+            fromContext.startActivity(profileScreenIntent);
 
         } else if (id == R.id.nav_settings) {
             Log.d(MONITOR_TAG, "nav_settings");
             gameInstance.clearAllScores();
-            Intent homeScreenIntent = new Intent(fromContext, SettingsActivity.class);
-            fromContext.startActivity(homeScreenIntent);
+            Intent settingsScreenIntent = new Intent(fromContext, SettingsActivity.class);
+            fromContext.startActivity(settingsScreenIntent);
 
         } else if (id == R.id.nav_review) {
             Log.d(MONITOR_TAG, "nav_review");
