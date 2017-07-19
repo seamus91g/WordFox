@@ -25,9 +25,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -53,14 +55,18 @@ import static java.util.Collections.shuffle;
 public class foxDictionary {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
+    private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
     private final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
-    LetterPool letterPool;
+    private LetterPool letterPool;
+    private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
 
     foxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
+        col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
         Log.d(MONITOR_TAG_FOX, "foxDic: 1");
         if (allValidWords.isEmpty()) {
+            Log.d(MONITOR_TAG_FOX, "foxDic: 2");
             try {
                 InputStream myIpStr = assetManager.open(validWordsFileName);
                 this.populateWords(myIpStr);
@@ -77,18 +83,24 @@ public class foxDictionary {
             ioe.printStackTrace();
         }
         letterPool = new LetterPool(letterDistributionMap);
+
     }
 
     private void populateWords(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
+//        Log.d(MONITOR_TAG_FOX, "Reading dictionary again!!: 1");
         while (readString != null) {
             String thisWord = readString.toLowerCase();
-            allValidWords.add(thisWord);
+            String[] wordArray = thisWord.split(" ");
+            validWordsAlphabeticalKey.put(wordArray[1], wordArray[0]);
+            allValidWords.add(wordArray[0]);
             readString = buffreader.readLine();
         }
+//
     }
+
 
     private void populateLetterDistribution(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
@@ -102,6 +114,15 @@ public class foxDictionary {
         }
     }
 
+    private String makeStringAlphabetical(String notAlphabetical) {
+        String[] s1 = notAlphabetical.split("");
+        Arrays.sort(s1, col);
+        String wordAlphSorted = "";
+        for (int i = 0; i < s1.length; i++) {
+            wordAlphSorted += s1[i];
+        }
+        return wordAlphSorted;
+    }
     public boolean checkWordExists(String checkWord) {
         if (allValidWords.contains(checkWord)) {
             Log.d("foxWords", "Found word: " + checkWord);
@@ -111,6 +132,33 @@ public class foxDictionary {
             return false;
         }
     }
+
+//    public String longestWordFromLetters(String givenLetters) {
+//        givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
+//        String thisLongest = "";
+//
+//        Log.d(MONITOR_TAG_FOX, " Finding longest word for: " + givenLetters);
+//        for (int x = 0; x < 2; x++) {        // Doesn't need to go to 9? Since 3 letter not valid ..
+//            int maxLen = (9 - x);       // Max possible length
+//            for (int k = maxLen; k <= 9; k++) {
+////                String checkWindow = givenLetters.substring(k-maxLen, k);
+////                substring(grid(1, 4)) + substring(grid(6, k))	// skip 5
+////                substring(grid(1, 5)) + substring(grid(7, k))	// skip 6
+//                for (int j = 0; j <= 9*x; j++) {
+//                    String checkWindow = givenLetters.substring(k - maxLen, j) + givenLetters.substring(j + 1, k);    // skip j
+//
+//                    Log.d(MONITOR_TAG_FOX, "This window for " + k + ": " + checkWindow);
+//
+//                    if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
+//                        thisLongest = validWordsAlphabeticalKey.get(checkWindow);
+//                        return thisLongest;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return thisLongest;
+//    }
 
     // Randomly generate a sequence of 9 letters for the user
     public ArrayList<String> getGivenLetters() {

@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity
         setGameInFocus(true);
 
         // Read in text file of all valid words. Store words in class foxDictionary
-        myDiction = new foxDictionary("validWords.txt", "letterFrequency.txt", this);
+        myDiction = new foxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
 
         myGameTimerInstance = new gameTimer(this);
 
@@ -76,6 +76,8 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+//        Log.d(MONITOR_TAG, " Finding longest word ... ");
+//        Log.d(MONITOR_TAG, "Longest word is: " + myDiction.longestWordFromLetters(givenLettersSTR));
     }
 
     // When timer ends, change to the Score Screen to show results.
