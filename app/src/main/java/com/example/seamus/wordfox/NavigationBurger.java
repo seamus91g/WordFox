@@ -2,11 +2,8 @@ package com.example.seamus.wordfox;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -36,7 +33,7 @@ public class NavigationBurger {
         } else if (id == R.id.nav_profile) {
             Log.d(MONITOR_TAG, "nav_profile");
             gameInstance.clearAllScores();
-            Intent profileScreenIntent = new Intent(fromContext, Profile.class);
+            Intent profileScreenIntent = new Intent(fromContext, ProfileActivity.class);
             fromContext.startActivity(profileScreenIntent);
 
         } else if (id == R.id.nav_settings) {
@@ -51,9 +48,9 @@ public class NavigationBurger {
     }
 
     public void navigateToProfile(Context fromContext) {
-        Log.d(MONITOR_TAG, "Navigate to Profile");
+        Log.d(MONITOR_TAG, "Navigate to ProfileActivity");
         gameInstance.clearAllScores();
-        Intent homeScreenIntent = new Intent(fromContext, Profile.class);
+        Intent homeScreenIntent = new Intent(fromContext, ProfileActivity.class);
         fromContext.startActivity(homeScreenIntent);
     }
 }

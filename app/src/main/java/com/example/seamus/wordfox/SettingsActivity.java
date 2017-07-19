@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -34,6 +37,9 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+
+    private static final String MONITOR_TAG = "myTag";
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -85,6 +91,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return true;
         }
     };
+
+
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
+        return true;
+    }@Override
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+                Intent profileScreenIntent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
+
+            // Use this for other action bar items as necessary
+//            case R.id.action_favorite:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     /**
      * Helper method to determine if the device has an extra-large screen. For

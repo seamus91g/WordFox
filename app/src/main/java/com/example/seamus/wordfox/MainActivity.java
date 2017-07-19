@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,15 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
-    private ImageView toolbarImageButton;
 //    public GameData myGameData = new GameData(this);
 
     @Override
@@ -42,20 +40,10 @@ public class MainActivity extends AppCompatActivity
 
         // Total score is accumulated across game rounds. Returning to the main menu will clear it
         gameInstance.clearAllScores();
-        toolbarImageButton = (ImageView) findViewById(R.id.toolbar_profile_pic);
-        toolbarImageButton.setOnClickListener(toolbarImageButtonListener);
 
     }
 
-    private View.OnClickListener toolbarImageButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.d(MONITOR_TAG, "Clicking image, END");
-            Intent profileScreenIntent = new Intent(MainActivity.this, Profile.class);
-            startActivity(profileScreenIntent);
-        }
-    };
-    //
+
     public void startGameAct(View v) {
         gameInstance myInstance = new gameInstance();
         myInstance.startGame(this);
@@ -71,28 +59,33 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        navBurger.navigateToProfile(MainActivity.this);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
-    }
+    }@Override
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+                Intent profileScreenIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            // Use this for other action bar items as necessary
+//            case R.id.action_favorite:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

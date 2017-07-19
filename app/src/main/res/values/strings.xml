@@ -88,4 +88,5 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_score_screen2">ScoreScreen2Activity</string>
     <string name="title_activity_data_screen">DataScreenActivity</string>
+    <string name="profile">Profile</string>
 </resources>

@@ -1,42 +1,36 @@
 package com.example.seamus.wordfox;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Profile extends AppCompatActivity
+public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
-    private ImageView myImageView;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +59,7 @@ public class Profile extends AppCompatActivity
         // Button to save user name to GameData class.
         Button setProfileNameButton = (Button) findViewById(R.id.button);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
-        // Click profile image for option to choose a different one.
-        myImageView = (ImageView) findViewById(R.id.profPicture);
-        myImageView.setOnClickListener(profileImageListener);
+
 
         // Set profile pic if one exists. TODO improve checking to see if exists. Will crash app!!
         String profPicStr = myGameData.getProfilePicture();
@@ -75,23 +67,43 @@ public class Profile extends AppCompatActivity
             try {
                 Uri myFileUri = Uri.parse(profPicStr);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), myFileUri);
-                myImageView.setImageBitmap(bitmap);
+                ImageButton profileIB = (ImageButton) findViewById(R.id.profileImageButton);
+                profileIB.setImageBitmap(bitmap);
             } catch (IOException e) {
                 Log.d(MONITOR_TAG, "Failed to load profile image, END");
                 e.printStackTrace();
             }
         }
     }
-    // Detect a click on the profile image. If true, allow user to choose image from their phone
-    private View.OnClickListener profileImageListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+
+
+    // Allow user to choose image from their phone when the profile image is clicked
+        public void choosePicture (View v) {
             Log.d(MONITOR_TAG, "Choosing image, END");
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
             intent.setType("image/*");
             startActivityForResult(intent, SELECT_PICTURE);
         }
-    };
+
+    @Override
+    // When the user chooses an image, try to load it. Save their choice to GameData
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
+            Log.d(MONITOR_TAG, "Looking for the image, END");
+            Uri selectedImage = data.getData();     // Path to the image
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                Log.d(MONITOR_TAG, "Found the image!, END");
+                ImageButton profileIB = (ImageButton) findViewById(R.id.profileImageButton);
+                profileIB.setImageBitmap(bitmap);
+                myGameData.setProfilePicture(selectedImage);    // Save path to chosen pic for future loading
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // User can type into text field and click 'save' button to save their profile user name
     private View.OnClickListener usernameButtonListener = new View.OnClickListener() {
         @Override
@@ -104,23 +116,6 @@ public class Profile extends AppCompatActivity
         }
     };
 
-    @Override
-    // When the user choose an image, try to load it. Save their choice to GameData
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
-            Log.d(MONITOR_TAG, "Looking for the image, END");
-            Uri selectedImage = data.getData();     // Path to the image
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                Log.d(MONITOR_TAG, "Found the image!, END");
-                myImageView.setImageBitmap(bitmap);             // Display on the screen
-                myGameData.setProfilePicture(selectedImage);    // Save for future loading
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     // Find longest word and display it on the profile screen
     public void updateLongestWord() {
         String longestWord = myGameData.findLongest();
@@ -139,26 +134,35 @@ public class Profile extends AppCompatActivity
         }
     }
 
-    @Override
+
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+                Intent profileScreenIntent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            // Use this for other action bar items as necessary
+//            case R.id.action_favorite:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -167,7 +171,7 @@ public class Profile extends AppCompatActivity
         // Handle navigation view item clicks here.
 
         Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__ProfileActivity");
-        navBurger.navigateTo(item, Profile.this);
+        navBurger.navigateTo(item, ProfileActivity.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
