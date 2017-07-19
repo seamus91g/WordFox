@@ -52,7 +52,7 @@ import static java.util.Collections.shuffle;
 
 public class foxDictionary {
 
-    private ArrayList<String> allValidWords = new ArrayList<String>();
+    private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
     LetterPool letterPool;
     private final String MONITOR_TAG_FOX = "myTag";
@@ -60,12 +60,14 @@ public class foxDictionary {
     foxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
         AssetManager assetManager = myGameActivity.getAssets();
         Log.d(MONITOR_TAG_FOX, "foxDic: 1");
-        try {
-            InputStream myIpStr = assetManager.open(validWordsFileName);
-            this.populateWords(myIpStr);
-            myIpStr.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        if (allValidWords.isEmpty()) {
+            try {
+                InputStream myIpStr = assetManager.open(validWordsFileName);
+                this.populateWords(myIpStr);
+                myIpStr.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
         try {
             InputStream myIpStr = assetManager.open(letterDistributionFile);
@@ -82,10 +84,12 @@ public class foxDictionary {
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
         while (readString != null) {
-            allValidWords.add(readString.toLowerCase());
+            String thisWord = readString.toLowerCase();
+            allValidWords.add(thisWord);
             readString = buffreader.readLine();
         }
     }
+
     private void populateLetterDistribution(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
@@ -93,7 +97,7 @@ public class foxDictionary {
         while (readString != null) {
             String[] letterNumber = readString.split(" ");
             letterDistributionMap.put(letterNumber[0], Integer.parseInt(letterNumber[1]));
-            Log.d("myTag", "Letter: " + letterNumber[0] + ", " + letterNumber[1]);
+//            Log.d("myTag", "Letter: " + letterNumber[0] + ", " + letterNumber[1]);
             readString = buffreader.readLine();
         }
     }
@@ -107,6 +111,7 @@ public class foxDictionary {
             return false;
         }
     }
+
     // Randomly generate a sequence of 9 letters for the user
     public ArrayList<String> getGivenLetters() {
         ArrayList<String> givenLetters = new ArrayList<String>();
@@ -143,7 +148,7 @@ public class foxDictionary {
         return set;
     }
 
-    private class LetterPool{
+    private class LetterPool {
         private final HashMap<String, Integer> poolDistribution; // = new HashMap<String, Integer>();
         private String allVowels = "AEIOU";
         private String allConsonants = "BCDFGHJKLMNPQRSTVWXYZ";
@@ -151,36 +156,40 @@ public class foxDictionary {
         ArrayList<String> allVowelCards;
         ArrayList<String> allConsonantCards;
 
-        LetterPool(HashMap<String, Integer> poolDistribution){
+        LetterPool(HashMap<String, Integer> poolDistribution) {
             this.poolDistribution = poolDistribution;
             allVowelCards = createCards(allVowels);
             allConsonantCards = createCards(allConsonants);
         }
-        private ArrayList<String> createCards(String letterSequence){
+
+        private ArrayList<String> createCards(String letterSequence) {
             ArrayList<String> sequenceOfCards = new ArrayList<String>();
             String[] allLetters = letterSequence.split("(?<=.)");
             for (String letter : allLetters) {
                 int count = poolDistribution.get(letter);
-                for(int x=0; x<count; x++){
+                for (int x = 0; x < count; x++) {
                     sequenceOfCards.add(letter);
                 }
             }
             return sequenceOfCards;
         }
-        public String getVowel(){
+
+        public String getVowel() {
             return returnAndDeleteRandom(allVowelCards);
         }
-        public String getConsonant(){
+
+        public String getConsonant() {
             return returnAndDeleteRandom(allConsonantCards);
         }
-        private String returnAndDeleteRandom(ArrayList<String> letterList){
+
+        private String returnAndDeleteRandom(ArrayList<String> letterList) {
             int random = (int) (Math.random() * letterList.size());
             String randomLetter = letterList.get(random);
             // If letter already chosen, try again. Keep if same found again on second attempt.
-            if (alreadyPicked.contains(randomLetter)){
+            if (alreadyPicked.contains(randomLetter)) {
                 alreadyPicked.remove(alreadyPicked.indexOf(randomLetter));
                 randomLetter = returnAndDeleteRandom(letterList);
-            }else {
+            } else {
                 letterList.remove(random);
                 alreadyPicked.add(randomLetter);
             }
