@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import static java.util.Collections.shuffle;
 
@@ -30,6 +32,7 @@ public class GameActivity extends AppCompatActivity
     public static final String MONITOR_TAG = "myTag";
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
+    static LinkedList alreadyClicked = new LinkedList();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
     private gameTimer myGameTimerInstance;
@@ -44,7 +47,7 @@ public class GameActivity extends AppCompatActivity
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        alreadyClicked.add(0);
         myGameData = new GameData(this.getApplicationContext());
         myGameData.gameCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
@@ -106,6 +109,9 @@ public class GameActivity extends AppCompatActivity
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
             TextView currentCell = (TextView) findViewById(resID);
             currentCell.setClickable(true);
+            currentCell.setBackgroundColor(0x00000000);
+            alreadyClicked.clear();
+            alreadyClicked.add(0);
         }
     }
 
@@ -172,19 +178,42 @@ public class GameActivity extends AppCompatActivity
 
     // Detect if user clicks a cell in the 3x3 letter grid. Prevent choosing the same cell twice!
     public void gridCellClicked(View v) {
-        // Get ID of which cell was clicked and then retrieve the corresponding letter
         String cellID = getResources().getResourceName(v.getId());
         int resID = getResources().getIdentifier(cellID, "id", getPackageName());
+        // Get ID of which cell was clicked and then retrieve the corresponding letter
         TextView cellGridTV = (TextView) findViewById(resID);
         String cellLetter = (String) cellGridTV.getText();
         // Update the current attempt by appending the chosen letter
         TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt);
         String currentGuess = (String) currentGuessTV.getText();
-        currentGuess += cellLetter;             // Append the new letter
-        currentGuessTV.setText(currentGuess);   // Write the appended string back to the Text View
-        cellGridTV.setClickable(false);         // Can't choose the same letter twice!!
-    }
 
+        int previousID = -1;
+        if (alreadyClicked.getLast() != null){
+            previousID = (int) alreadyClicked.getLast();
+        }
+        Log.d(MONITOR_TAG, "Click: 1");
+        if ( previousID != resID){      // If new color
+            currentGuess += cellLetter;             // Append the new letter
+            if (previousID != 0) {
+                TextView previousCellGridTV = (TextView) findViewById(previousID);
+                previousCellGridTV.setClickable(false);         // Can't choose the same letter twice!!
+                previousCellGridTV.setBackgroundColor(Color.parseColor("#BBDEFB"));
+            }
+            alreadyClicked.add(resID);
+            cellGridTV.setBackgroundColor(Color.parseColor("#90CAF9"));
+        }else {
+            alreadyClicked.removeLast();
+            int prePreviousID = (int) alreadyClicked.getLast();
+            cellGridTV.setBackgroundColor(0x00000000);
+            if (prePreviousID != 0) {
+                TextView previousCellGridTV = (TextView) findViewById(prePreviousID);
+                previousCellGridTV.setClickable(true);         // Can't choose the same letter twice!!
+                previousCellGridTV.setBackgroundColor(Color.parseColor("#90CAF9"));
+            }
+            currentGuess = currentGuess.substring(0, currentGuess.length() - 1);
+        }
+        currentGuessTV.setText(currentGuess);   // Write the appended string back to the Text View
+    }
 
     public boolean isTimeUp(){
         return timeUp;
