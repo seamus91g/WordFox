@@ -16,6 +16,13 @@ public class gameInstance {
     private static int score;   // score is just the score from the current round.
     private static int round;   // round is a counter for the round of the game.
     private static String longestWord;
+    private static String round1Word = "";
+    private static String round2Word = "";
+    private static String round3Word = "";
+    private static int round1Length = 0;
+    private static int round2Length = 0;
+    private static int round3Length = 0;
+
 
     gameInstance() {
         totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
@@ -49,6 +56,10 @@ public class gameInstance {
         return longestWord;
     }
 
+    public int getRound() {
+        return round;
+    }
+
     public static void clearAllScores() {
         totalScore = 0;
         score = 0;
@@ -61,9 +72,60 @@ public class gameInstance {
         longestWord = "";
     }
 
+    public static void setRound1Word(String word) {
+        round1Word = word;
+    }
+
+    public static void setRound1Length(int len) {
+        round1Length = len;
+    }
+
+    public static void setRound2Word(String word) {
+        round2Word = word;
+    }
+
+    public static void setRound2Length(int len) {
+        round2Length = len;
+    }
+
+    public static void setRound3Word(String word) {
+        round3Word = word;
+    }
+
+    public static void setRound3Length(int len) {
+        round3Length = len;
+    }
+
+    public static String getRound1Word() {
+        return round1Word;
+    }
+
+    public static int getRound1Length() {
+        return round1Length;
+    }
+
+    public static String getRound2Word() {
+        return round2Word;
+    }
+
+    public static int getRound2Length() {
+        return round2Length;
+    }
+
+    public static String getRound3Word() {
+        return round3Word;
+    }
+
+    public static int getRound3Length() {
+        return round3Length;
+    }
+
+
+
     public void startGame(Context context) {
         Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
         round++;
+        Log.d("Count number of rounds", "gameInstance: no. of rounds started = " + round);
         if (round < 4) {
             Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);

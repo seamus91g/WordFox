@@ -39,6 +39,32 @@ public class ScoreScreen2Activity extends AppCompatActivity
 
         TextView scoreScreen2TextView = (TextView) findViewById(R.id.scoreScreen2TV);
         scoreScreen2TextView.setText(String.valueOf(GameActivity.myGameInstance.getTotalScore()));
+
+
+
+
+        TextView round1WordTextView = (TextView) findViewById(R.id.scoreScreen2Round1WordTV);
+        round1WordTextView.setText(round1WordTextView.getText() + gameInstance.getRound1Word());
+
+        TextView round2WordTextView = (TextView) findViewById(R.id.scoreScreen2Round2WordTV);
+        round2WordTextView.setText(round2WordTextView.getText() + gameInstance.getRound2Word());
+
+        TextView round3WordTextView = (TextView) findViewById(R.id.scoreScreen2Round3WordTV);
+        round3WordTextView.setText(round3WordTextView.getText() + gameInstance.getRound3Word());
+
+
+
+
+        TextView round1LenTextView = (TextView) findViewById(R.id.scoreScreen2Round1ScoreTV);
+        round1LenTextView.setText(round1LenTextView.getText() + Integer.toString(gameInstance.getRound1Length()));
+
+        TextView round2LenTextView = (TextView) findViewById(R.id.scoreScreen2Round2ScoreTV);
+        round2LenTextView.setText(round2LenTextView.getText() + Integer.toString(gameInstance.getRound2Length()));
+
+        TextView round3LenTextView = (TextView) findViewById(R.id.scoreScreen2Round3ScoreTV);
+        round3LenTextView.setText(round3LenTextView.getText() + Integer.toString(gameInstance.getRound3Length()));
+
+
     }
 
     // When button pressed, reboot to main.

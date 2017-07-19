@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -231,8 +230,35 @@ public class GameActivity extends AppCompatActivity
         myGameData.addWord(myGameInstance.getLongestWord());
         Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
         Log.d(MONITOR_TAG, "Changing activity from gameTimer");
-        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
-        startActivity(ScoreScreen1Intent);
+        startScoreScreen1Act();
+
+
+        int currentRound = myGameInstance.getRound();
+        switch (currentRound){
+            case 1:
+                myGameInstance.setRound1Word(myGameInstance.getLongestWord());
+                myGameInstance.setRound1Length(myGameInstance.getLongestWord().length());
+                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+                break;
+            case 2:
+                myGameInstance.setRound2Word(myGameInstance.getLongestWord());
+                myGameInstance.setRound2Length(myGameInstance.getLongestWord().length());
+                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+                break;
+            case 3:
+                myGameInstance.setRound3Word(myGameInstance.getLongestWord());
+                myGameInstance.setRound3Length(myGameInstance.getLongestWord().length());
+                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+                break;
+            default:
+                break;
+        }
+
+
+
+
+
+
     }
 
 
