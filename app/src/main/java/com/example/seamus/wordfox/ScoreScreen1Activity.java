@@ -43,6 +43,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
         int score = GameActivity.myGameInstance.getScore();
         int totalScore = GameActivity.myGameInstance.getTotalScore();
         String longestAttempt = GameActivity.myGameInstance.getLongestWord();
+        String longestPossible = GameActivity.myGameInstance.getLongestPossible().toUpperCase();
         String userName = myGameData.getUsername();
 
         TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
@@ -56,6 +57,9 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
         TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
         longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
+
+        TextView longestWordPossibleTextView = (TextView) findViewById(R.id.longestWordPossibleTV);
+        longestWordPossibleTextView.setText(longestPossible);
     }
 
     public void proceed(View v) {

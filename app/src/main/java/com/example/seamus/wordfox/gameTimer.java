@@ -44,7 +44,7 @@ public class gameTimer {
                         TextView box5 = (TextView) activity.findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
                         _activity.setTimeUp(true);
-                        Log.d(MONITOR_TAG, "Time is now up!!");
+//                        Log.d(MONITOR_TAG, "Time is now up!!");
                         if (_activity.isGameInFocus()) {
                             activity.completeGame();
                         }

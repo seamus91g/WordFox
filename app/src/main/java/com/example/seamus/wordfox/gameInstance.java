@@ -15,6 +15,7 @@ public class gameInstance {
     private static int totalScore;      // total Score tracks the accumulated score across rounds.
     private static int score;   // score is just the score from the current round.
     private static int round;   // round is a counter for the round of the game.
+    private static String longestPossible;   // round is a counter for the round of the game.
     private static String longestWord;
     private static String round1Word = "";
     private static String round2Word = "";
@@ -28,6 +29,7 @@ public class gameInstance {
         totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         longestWord = "";   // Longest of the current round
+        longestPossible = "";   // Longest possible word of the current round
     }
 
     public int getTotalScore() {
@@ -54,6 +56,13 @@ public class gameInstance {
 
     public String getLongestWord() {
         return longestWord;
+    }
+    public void setLongestPossible(String word) {
+        longestPossible = word;
+    }
+
+    public String getLongestPossible() {
+        return longestPossible;
     }
 
     public int getRound() {
@@ -123,13 +132,13 @@ public class gameInstance {
 
 
     public void startGame(Context context) {
-        Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
+//        Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
         round++;
         Log.d("Count number of rounds", "gameInstance: no. of rounds started = " + round);
         if (round < 4) {
-            Log.d(MONITOR_TAG, "In startGame");
+//            Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);
-            Log.d(MONITOR_TAG, "In startGame 2");
+//            Log.d(MONITOR_TAG, "In startGame 2");
             context.startActivity(gameIntent);
         } else {
             Log.d(MONITOR_TAG, "starting Score Screen 2");

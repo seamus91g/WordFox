@@ -56,7 +56,7 @@ public class foxDictionary {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
-    private final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
+    private static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
     private LetterPool letterPool;
     private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
@@ -64,9 +64,9 @@ public class foxDictionary {
     foxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
         col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
-        Log.d(MONITOR_TAG_FOX, "foxDic: 1");
+//        Log.d(MONITOR_TAG_FOX, "foxDic: 1");
         if (allValidWords.isEmpty()) {
-            Log.d(MONITOR_TAG_FOX, "foxDic: 2");
+//            Log.d(MONITOR_TAG_FOX, "foxDic: 2");
             try {
                 InputStream myIpStr = assetManager.open(validWordsFileName);
                 this.populateWords(myIpStr);
@@ -75,17 +75,20 @@ public class foxDictionary {
                 ioe.printStackTrace();
             }
         }
-        try {
-            InputStream myIpStr = assetManager.open(letterDistributionFile);
-            this.populateLetterDistribution(myIpStr);
-            myIpStr.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        if (letterDistributionMap.isEmpty()){
+            try {
+                InputStream myIpStr = assetManager.open(letterDistributionFile);
+                this.populateLetterDistribution(myIpStr);
+                myIpStr.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
         letterPool = new LetterPool(letterDistributionMap);
-
     }
-
+    // Read in text file of list of words.
+    // Also store in a Hashmap where each key is a word with its letters sorted alphabetically.
+    // The Hashmap value for each key is the word itself. This is used to search for longest word
     private void populateWords(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
@@ -98,10 +101,8 @@ public class foxDictionary {
             allValidWords.add(wordArray[0]);
             readString = buffreader.readLine();
         }
-//
     }
-
-
+    // Store how many of each letter to use. Example, 8 letter Ts, 3 letter Bs, 1 letter Z
     private void populateLetterDistribution(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
@@ -132,33 +133,49 @@ public class foxDictionary {
             return false;
         }
     }
+    // Find longest word from the random 9 game letters.
+    public String longestWordFromLetters(String givenLetters) {
+        givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
+        String thisLongest = "";
+        Log.d(MONITOR_TAG_FOX, " Finding longest word for: " + givenLetters);
 
-//    public String longestWordFromLetters(String givenLetters) {
-//        givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
-//        String thisLongest = "";
-//
-//        Log.d(MONITOR_TAG_FOX, " Finding longest word for: " + givenLetters);
-//        for (int x = 0; x < 2; x++) {        // Doesn't need to go to 9? Since 3 letter not valid ..
-//            int maxLen = (9 - x);       // Max possible length
-//            for (int k = maxLen; k <= 9; k++) {
-////                String checkWindow = givenLetters.substring(k-maxLen, k);
-////                substring(grid(1, 4)) + substring(grid(6, k))	// skip 5
-////                substring(grid(1, 5)) + substring(grid(7, k))	// skip 6
-//                for (int j = 0; j <= 9*x; j++) {
-//                    String checkWindow = givenLetters.substring(k - maxLen, j) + givenLetters.substring(j + 1, k);    // skip j
-//
-//                    Log.d(MONITOR_TAG_FOX, "This window for " + k + ": " + checkWindow);
-//
-//                    if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
-//                        thisLongest = validWordsAlphabeticalKey.get(checkWindow);
-//                        return thisLongest;
-//                    }
-//                }
-//            }
-//        }
-//
-//        return thisLongest;
-//    }
+        if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
+            thisLongest = validWordsAlphabeticalKey.get(givenLetters);
+            Log.d(MONITOR_TAG_FOX, "-----------== Found a niner!! ==--------------: " + thisLongest);
+        }else {
+            for (int x = 0; x < 7; x++) {        // Only go to 7 since 2 letter words are not valid
+                if (thisLongest.equals("")) {
+                    thisLongest = substringSearch(givenLetters, x);
+                }else{
+                    break;
+                }
+            }
+        }
+        return thisLongest;
+    }
+    // Recursively search for valid substrings
+    public String substringSearch(String givenLetters, int Depth) {
+        String thisLongest = "";
+        int len = givenLetters.length();
+        for (int j = 0; j < len; j++){
+            String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
+            if (Depth == 0) {
+//                Log.d(MONITOR_TAG_FOX, "This window here!: " + checkWindow);
+                if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
+                    thisLongest = validWordsAlphabeticalKey.get(checkWindow);
+                    Log.d(MONITOR_TAG_FOX, "Found!!: " + thisLongest);
+                    return thisLongest;
+                }
+            }else {
+//                Log.d(MONITOR_TAG_FOX, "New depth!: " + checkWindow);
+                thisLongest = substringSearch(checkWindow, Depth - 1);
+            }
+            if (!thisLongest.equals("")){
+                break;
+            }
+        }
+        return thisLongest;
+    }
 
     // Randomly generate a sequence of 9 letters for the user
     public ArrayList<String> getGivenLetters() {
@@ -173,7 +190,6 @@ public class foxDictionary {
         shuffle(givenLetters);
         return givenLetters;
     }
-
     // Generate 6 random consonants or 3 random vowels
     private String randLetter(String choice) {
         String letters = "";

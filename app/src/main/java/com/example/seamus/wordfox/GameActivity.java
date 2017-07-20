@@ -76,8 +76,9 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        Log.d(MONITOR_TAG, " Finding longest word ... ");
-//        Log.d(MONITOR_TAG, "Longest word is: " + myDiction.longestWordFromLetters(givenLettersSTR));
+        Log.d(MONITOR_TAG, " Finding longest word ... ");
+        myGameInstance.setLongestPossible(myDiction.longestWordFromLetters(givenLettersSTR));
+        Log.d(MONITOR_TAG, "Longest word is: " + myGameInstance.getLongestPossible());
     }
 
     // When timer ends, change to the Score Screen to show results.
@@ -189,7 +190,7 @@ public class GameActivity extends AppCompatActivity
         if (alreadyClicked.getLast() != null){
             previousID = (int) alreadyClicked.getLast();
         }
-        Log.d(MONITOR_TAG, "Click: 1");
+//        Log.d(MONITOR_TAG, "Click: 1");
         if ( previousID != resID){      // If new color
             currentGuess += cellLetter;             // Append the new letter
             if (previousID != 0) {
@@ -217,14 +218,14 @@ public class GameActivity extends AppCompatActivity
         return timeUp;
     }
     public void setTimeUp(boolean timeState){
-        Log.d(MONITOR_TAG, "Setting time state: " + timeState);
+//        Log.d(MONITOR_TAG, "Setting time state: " + timeState);
         this.timeUp = timeState;
     }
     public boolean isGameInFocus(){
         return gameInFocus;
     }
     public void setGameInFocus(boolean gameState){
-        Log.d(MONITOR_TAG, "Setting focus state: " + gameState);
+//        Log.d(MONITOR_TAG, "Setting focus state: " + gameState);
         this.gameInFocus = gameState;
     }
     public void completeGame(){
@@ -302,13 +303,13 @@ public class GameActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         setGameInFocus(false);
-        Log.d(MONITOR_TAG, "onPause");
+//        Log.d(MONITOR_TAG, "onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(MONITOR_TAG, "onStop");
+//        Log.d(MONITOR_TAG, "onStop");
     }
 
     @Override
@@ -321,7 +322,7 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(MONITOR_TAG, "onResume");
+//        Log.d(MONITOR_TAG, "onResume");
         if (isTimeUp()){
             completeGame();
             Log.d(MONITOR_TAG, "Changing activity from onResume");
@@ -334,7 +335,7 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(MONITOR_TAG, "onStart");
+//        Log.d(MONITOR_TAG, "onStart");
     }
 
     @Override
