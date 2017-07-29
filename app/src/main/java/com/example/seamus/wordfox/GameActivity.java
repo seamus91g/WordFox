@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class GameActivity extends AppCompatActivity
@@ -28,11 +29,13 @@ public class GameActivity extends AppCompatActivity
     public static final String MONITOR_TAG = "myTag";
     private foxDictionary myDiction;
     public static gameInstance myGameInstance = new gameInstance();
-    static LinkedList alreadyClicked = new LinkedList();
+    private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
     private gameTimer myGameTimerInstance;
     private GameData myGameData;
+    //    private HashMap<Integer, Integer> resIdToCellNumber = new HashMap<Integer, Integer>();
+    private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
     private boolean gameInFocus;
     private boolean timeUp;
 
@@ -43,7 +46,7 @@ public class GameActivity extends AppCompatActivity
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        alreadyClicked.add(0);
+        alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         myGameData = new GameData(this.getApplicationContext());
         myGameData.gameCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
@@ -91,13 +94,24 @@ public class GameActivity extends AppCompatActivity
     // Print the 9 generated letters to the 3x3 grid.
     public boolean writeToGuessGrid(ArrayList<String> givenLetters) {
         // Loop to retrieve each letter and write to its appropriate text view in the grid
+        listOfGridCells = new ArrayList<SingleCell>();
+
+        Log.d(MONITOR_TAG, "Resetting grid cell list. Size is: " + listOfGridCells.size());
         for (int i = 0; i < givenLetters.size(); i++) {
             String allCellId = "guessGridCell" + (i + 1);
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
-            TextView currentCell = (TextView) findViewById(resID);
-            currentCell.setText(givenLetters.get(i));
+//            SingleCell mySC = new SingleCell(resID, givenLetters.get(i));
+            listOfGridCells.add(new SingleCell(resID, givenLetters.get(i)));
+
         }
+        printGridCells(listOfGridCells);
         return true;
+    }
+    public void printGridCells(ArrayList<SingleCell> gridCells){
+        for (int i=0; i<gridCells.size(); i++){
+            TextView currentCell = (TextView) findViewById(gridCells.get(i).resID);
+            currentCell.setText(gridCells.get(i).letter);
+        }
     }
 
     // Set the clickable attribute to true on each letter in the 3x3 grid. This is used to reset the grid after a game.
@@ -110,7 +124,7 @@ public class GameActivity extends AppCompatActivity
             currentCell.setClickable(true);
             currentCell.setBackgroundColor(0x00000000);
             alreadyClicked.clear();
-            alreadyClicked.add(0);
+            alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         }
     }
 
@@ -157,23 +171,56 @@ public class GameActivity extends AppCompatActivity
 
     // Randomly shuffle the locations of the letters
     public void shuffleGivenLetters(View v) {
-        // Retrieve the letters from the screen Text View
-        TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
-        String givenLettersSTR = (String) givenLettersTV.getText();
 
-        // Convert String to List and then shuffle the list. Convert back to String.
-        ArrayList<String> letters = new ArrayList<String>(Arrays.asList(givenLettersSTR.split("")));
-        letters.remove(0);  // Blank element at start. Remove it
-        Collections.shuffle(letters);
+        // Shuffle the list containing the grid cells
+        Collections.shuffle(listOfGridCells);
         String shuffled = "";
-        for (String letter : letters) {     // Convert back to a String
-            shuffled += letter;
+        for (SingleCell singleCell : listOfGridCells) {     // Create String to print at top of screen
+            shuffled += singleCell.letter;
+        }
+
+        // Map the old resource IDs to the new ones
+        HashMap<Integer, Integer> oldToNew = new HashMap<Integer, Integer>();
+        for (int i=0; i<listOfGridCells.size(); i++){
+            SingleCell singleCell = listOfGridCells.get(i);
+            int resIdOld = singleCell.resID;        // Old resource ID of this grid cell
+            TextView currentCell = (TextView) findViewById(resIdOld);
+            currentCell.setClickable(true);
+            currentCell.setBackgroundColor(0x00000000);
+            // Android xml ID string is based on it's order in the List of grid cells
+            String newCellId = "guessGridCell" + (i + 1);
+            // Get new resource ID from the android xml ID string
+            singleCell.resID = getResources().getIdentifier(newCellId, "id", getPackageName());
+            listOfGridCells.set(i, singleCell);
+            oldToNew.put(resIdOld, singleCell.resID);   // Map changes to the resource IDs
+        }
+
+        TextView currentCell = null;
+        // Assign new resource IDs to the already clicked grid cells
+        // Highlight all the letters which have already been clicked
+        for (SingleCell singleCellClicked : alreadyClicked) {
+            if (singleCellClicked.resID == 0){
+                Log.d(MONITOR_TAG, "Skipping first");
+                continue;
+            }
+            singleCellClicked.resID = oldToNew.get(singleCellClicked.resID);
+            currentCell = (TextView) findViewById(singleCellClicked.resID);
+            currentCell.setBackgroundColor(Color.parseColor("#BBDEFB"));
+            currentCell.setClickable(false);         // Can't choose the same letter twice!!
+        }
+        // Most recently clicked cell is a different color
+        if (currentCell != null){
+            currentCell.setBackgroundColor(Color.parseColor("#90CAF9"));
+            currentCell.setClickable(true);         // Can't choose the same letter twice!!
         }
 
         // Print newly shuffled letters to top of the screen and to the 3x3 grid
+        TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         givenLettersTV.setText(shuffled);
-        writeToGuessGrid(letters);
+
+        printGridCells(listOfGridCells);
     }
+//    private void updateResIDs
 
     // Detect if user clicks a cell in the 3x3 letter grid. Prevent choosing the same cell twice!
     public void gridCellClicked(View v) {
@@ -186,23 +233,23 @@ public class GameActivity extends AppCompatActivity
         TextView currentGuessTV = (TextView) findViewById(R.id.currentAttempt);
         String currentGuess = (String) currentGuessTV.getText();
 
-        int previousID = -1;
-        if (alreadyClicked.getLast() != null){
-            previousID = (int) alreadyClicked.getLast();
+        int previousID = -1;        // TODO do this better.
+        if (alreadyClicked.getLast().letter != null) {
+            previousID = (int) alreadyClicked.getLast().resID;
         }
-//        Log.d(MONITOR_TAG, "Click: 1");
-        if ( previousID != resID){      // If new color
+        if (previousID != resID) {      // If new color
             currentGuess += cellLetter;             // Append the new letter
             if (previousID != 0) {
                 TextView previousCellGridTV = (TextView) findViewById(previousID);
                 previousCellGridTV.setClickable(false);         // Can't choose the same letter twice!!
                 previousCellGridTV.setBackgroundColor(Color.parseColor("#BBDEFB"));
             }
-            alreadyClicked.add(resID);
+//            SingleCell singleCell = new SingleCell(resID, cellLetter);
+            alreadyClicked.add(new SingleCell(resID, cellLetter));
             cellGridTV.setBackgroundColor(Color.parseColor("#90CAF9"));
-        }else {
+        } else {
             alreadyClicked.removeLast();
-            int prePreviousID = (int) alreadyClicked.getLast();
+            int prePreviousID = (int) alreadyClicked.getLast().resID;
             cellGridTV.setBackgroundColor(0x00000000);
             if (prePreviousID != 0) {
                 TextView previousCellGridTV = (TextView) findViewById(prePreviousID);
@@ -214,21 +261,25 @@ public class GameActivity extends AppCompatActivity
         currentGuessTV.setText(currentGuess);   // Write the appended string back to the Text View
     }
 
-    public boolean isTimeUp(){
+    public boolean isTimeUp() {
         return timeUp;
     }
-    public void setTimeUp(boolean timeState){
+
+    public void setTimeUp(boolean timeState) {
 //        Log.d(MONITOR_TAG, "Setting time state: " + timeState);
         this.timeUp = timeState;
     }
-    public boolean isGameInFocus(){
+
+    public boolean isGameInFocus() {
         return gameInFocus;
     }
-    public void setGameInFocus(boolean gameState){
+
+    public void setGameInFocus(boolean gameState) {
 //        Log.d(MONITOR_TAG, "Setting focus state: " + gameState);
         this.gameInFocus = gameState;
     }
-    public void completeGame(){
+
+    public void completeGame() {
         Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
         myGameData.addWord(myGameInstance.getLongestWord());
         Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
@@ -237,7 +288,7 @@ public class GameActivity extends AppCompatActivity
 
 
         int currentRound = myGameInstance.getRound();
-        switch (currentRound){
+        switch (currentRound) {
             case 1:
                 myGameInstance.setRound1Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound1Length(myGameInstance.getLongestWord().length());
@@ -258,21 +309,16 @@ public class GameActivity extends AppCompatActivity
         }
 
 
-
-
-
-
     }
-
-
-
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile, menu);
         return true;
-    }@Override
+    }
+
+    @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -323,7 +369,7 @@ public class GameActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 //        Log.d(MONITOR_TAG, "onResume");
-        if (isTimeUp()){
+        if (isTimeUp()) {
             completeGame();
             Log.d(MONITOR_TAG, "Changing activity from onResume");
             Intent ScoreScreen1Intent = new Intent(GameActivity.this, ScoreScreen1Activity.class);
@@ -345,16 +391,16 @@ public class GameActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
 //            super.onBackPressed();
-            if (this.backButtonPressedOnce){
+            if (this.backButtonPressedOnce) {
                 Intent homeScreenIntent = new Intent(this, MainActivity.class);
                 startActivity(homeScreenIntent);
             }
             this.backButtonPressedOnce = true;
             Toast.makeText(this, "Press BACK again to exit the game", Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(new Runnable(){
+            new Handler().postDelayed(new Runnable() {
                 @Override
-                public void run(){
+                public void run() {
                     backButtonPressedOnce = false;
                 }
             }, 2500);
@@ -374,4 +420,15 @@ public class GameActivity extends AppCompatActivity
 
         return true;
     }
+}
+
+class SingleCell {
+    int resID;
+    String letter;
+
+    public SingleCell(int resID, String letter) {
+        this.resID = resID;
+        this.letter = letter;
+    }
+
 }
