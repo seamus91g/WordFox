@@ -89,4 +89,7 @@
     <string name="title_activity_score_screen2">ScoreScreen2Activity</string>
     <string name="title_activity_data_screen">DataScreenActivity</string>
     <string name="profile">Profile</string>
+    <string name="ScoreScreen2ActivityLabel">Result Summary</string>
+    <string name="DataScreenActivityLabel">Profile Data</string>
+    <string name="SettingsActivityLabel">Settings</string>
 </resources>

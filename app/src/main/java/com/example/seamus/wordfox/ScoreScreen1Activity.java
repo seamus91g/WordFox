@@ -25,6 +25,9 @@ public class ScoreScreen1Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         GameData myGameData = new GameData(this.getApplicationContext());
         super.onCreate(savedInstanceState);
+
+        this.setTitle("Round " + GameActivity.myGameInstance.getRound() + " Score");
+
         setContentView(R.layout.activity_score_screen1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
