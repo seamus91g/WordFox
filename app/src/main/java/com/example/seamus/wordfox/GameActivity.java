@@ -288,20 +288,19 @@ public class GameActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "Changing activity from gameTimer");
         startScoreScreen1Act();
 
-
         int currentRound = myGameInstance.getRound();
         switch (currentRound) {
-            case 1:
+            case 0:
                 myGameInstance.setRound1Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound1Length(myGameInstance.getLongestWord().length());
                 Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
                 break;
-            case 2:
+            case 1:
                 myGameInstance.setRound2Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound2Length(myGameInstance.getLongestWord().length());
                 Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
                 break;
-            case 3:
+            case 2:
                 myGameInstance.setRound3Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound3Length(myGameInstance.getLongestWord().length());
                 Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
@@ -309,8 +308,6 @@ public class GameActivity extends AppCompatActivity
             default:
                 break;
         }
-
-
     }
 
 

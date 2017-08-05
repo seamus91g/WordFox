@@ -42,27 +42,33 @@ public class ScoreScreen2Activity extends AppCompatActivity
 
 
 
-
+        String placeholder = "";
         TextView round1WordTextView = (TextView) findViewById(R.id.scoreScreen2Round1WordTV);
-        round1WordTextView.setText(round1WordTextView.getText() + gameInstance.getRound1Word());
+        placeholder = round1WordTextView.getText() + GameActivity.myGameInstance.getRound1Word();
+        round1WordTextView.setText(placeholder);
 
         TextView round2WordTextView = (TextView) findViewById(R.id.scoreScreen2Round2WordTV);
-        round2WordTextView.setText(round2WordTextView.getText() + gameInstance.getRound2Word());
+        placeholder = round2WordTextView.getText() + GameActivity.myGameInstance.getRound2Word();
+        round2WordTextView.setText(placeholder);
 
         TextView round3WordTextView = (TextView) findViewById(R.id.scoreScreen2Round3WordTV);
-        round3WordTextView.setText(round3WordTextView.getText() + gameInstance.getRound3Word());
+        placeholder = round3WordTextView.getText() + GameActivity.myGameInstance.getRound3Word();
+        round3WordTextView.setText(placeholder);
 
 
 
 
         TextView round1LenTextView = (TextView) findViewById(R.id.scoreScreen2Round1ScoreTV);
-        round1LenTextView.setText(round1LenTextView.getText() + Integer.toString(gameInstance.getRound1Length()));
+        placeholder = round1LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound1Length());
+        round1LenTextView.setText(placeholder);
 
         TextView round2LenTextView = (TextView) findViewById(R.id.scoreScreen2Round2ScoreTV);
-        round2LenTextView.setText(round2LenTextView.getText() + Integer.toString(gameInstance.getRound2Length()));
+        placeholder = round2LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound2Length());
+        round2LenTextView.setText(placeholder);
 
         TextView round3LenTextView = (TextView) findViewById(R.id.scoreScreen2Round3ScoreTV);
-        round3LenTextView.setText(round3LenTextView.getText() + Integer.toString(gameInstance.getRound3Length()));
+        placeholder = round3LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound3Length());
+        round3LenTextView.setText(placeholder);
 
 
     }

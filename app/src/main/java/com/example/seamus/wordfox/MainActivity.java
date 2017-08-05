@@ -16,7 +16,7 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String MONITOR_TAG = "myTag";
+    public final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
 //    public GameData myGameData = new GameData(this);
 
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Log.d(MONITOR_TAG, "Main activity, END");
 
 //        editor = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
 
@@ -39,14 +40,17 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Total score is accumulated across game rounds. Returning to the main menu will clear it
-        gameInstance.clearAllScores();
+        GameActivity.myGameInstance.clearAllScores();
 
     }
 
 
     public void startGameAct(View v) {
-        gameInstance myInstance = new gameInstance();
-        myInstance.startGame(this);
+//        gameInstance myInstance = new gameInstance();
+//        myInstance.startGame(this);
+        Intent gameIntent = new Intent(this, GameActivity.class);
+//            Log.d(MONITOR_TAG, "In startGame 2");
+        this.startActivity(gameIntent);
     }
 
     @Override

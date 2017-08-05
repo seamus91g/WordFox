@@ -22,23 +22,23 @@ public class NavigationBurger {
         if (id == R.id.nav_home) {
             // Return to the home screen
             Log.d(MONITOR_TAG, "nav_home");
-            gameInstance.clearAllScores();
+            GameActivity.myGameInstance.clearAllScores();
             Intent homeScreenIntent = new Intent(fromContext, MainActivity.class);
             fromContext.startActivity(homeScreenIntent);
         } else if (id == R.id.nav_data) {
             Log.d(MONITOR_TAG, "nav_data");
-            gameInstance.clearAllScores();
+            GameActivity.myGameInstance.clearAllScores();
             Intent dataScreenIntent = new Intent(fromContext, DataScreenActivity.class);
             fromContext.startActivity(dataScreenIntent);
         } else if (id == R.id.nav_profile) {
             Log.d(MONITOR_TAG, "nav_profile");
-            gameInstance.clearAllScores();
+            GameActivity.myGameInstance.clearAllScores();
             Intent profileScreenIntent = new Intent(fromContext, ProfileActivity.class);
             fromContext.startActivity(profileScreenIntent);
 
         } else if (id == R.id.nav_settings) {
             Log.d(MONITOR_TAG, "nav_settings");
-            gameInstance.clearAllScores();
+            GameActivity.myGameInstance.clearAllScores();
             Intent settingsScreenIntent = new Intent(fromContext, SettingsActivity.class);
             fromContext.startActivity(settingsScreenIntent);
 
@@ -49,7 +49,7 @@ public class NavigationBurger {
 
     public void navigateToProfile(Context fromContext) {
         Log.d(MONITOR_TAG, "Navigate to ProfileActivity");
-        gameInstance.clearAllScores();
+        GameActivity.myGameInstance.clearAllScores();
         Intent homeScreenIntent = new Intent(fromContext, ProfileActivity.class);
         fromContext.startActivity(homeScreenIntent);
     }
