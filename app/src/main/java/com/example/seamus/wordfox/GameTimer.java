@@ -51,12 +51,13 @@ public class GameTimer {
                         break;
                 }
             }
+
             public void onFinish() {
             }
         }.start();
     }
 
-    public void killTimer(){
+    public void killTimer() {
         Log.d(MONITOR_TAG, "Killing timer from killTimer");
         countDownTimer.cancel();
     }

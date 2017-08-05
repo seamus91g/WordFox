@@ -27,7 +27,8 @@ public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
     private FoxDictionary myDiction;
-    public static GameInstance myGameInstance = new GameInstance();
+    //    public static GameInstance myGameInstance = new GameInstance();
+    private GameInstance myGameInstance; // = new GameInstance();
     private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
@@ -37,10 +38,16 @@ public class GameActivity extends AppCompatActivity
     private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
     private boolean gameInFocus;
     private boolean timeUp;
+    int gameIndexNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        gameIndexNumber = getIntent().getExtras().getInt("game_index");
+        Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
+        myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
+
         Log.d(MONITOR_TAG, "onCreate ---------- ");
 
         this.setTitle("Round " + myGameInstance.getRound());
@@ -48,6 +55,8 @@ public class GameActivity extends AppCompatActivity
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         myGameData = new GameData(this.getApplicationContext());
         myGameData.gameCountUp();
@@ -90,6 +99,8 @@ public class GameActivity extends AppCompatActivity
     public void startScoreScreen1Act() {
         Log.d(MONITOR_TAG, "starting Score Screen 1");
         Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
+
+        ScoreScreen1Intent.putExtra("game_index", gameIndexNumber);
         startActivity(ScoreScreen1Intent);
     }
 
@@ -109,8 +120,9 @@ public class GameActivity extends AppCompatActivity
         printGridCells(listOfGridCells);
         return true;
     }
-    public void printGridCells(ArrayList<SingleCell> gridCells){
-        for (int i=0; i<gridCells.size(); i++){
+
+    public void printGridCells(ArrayList<SingleCell> gridCells) {
+        for (int i = 0; i < gridCells.size(); i++) {
             TextView currentCell = (TextView) findViewById(gridCells.get(i).resID);
             currentCell.setText(gridCells.get(i).letter);
         }
@@ -183,7 +195,7 @@ public class GameActivity extends AppCompatActivity
 
         // Map the old resource IDs to the new ones
         HashMap<Integer, Integer> oldToNew = new HashMap<Integer, Integer>();
-        for (int i=0; i<listOfGridCells.size(); i++){
+        for (int i = 0; i < listOfGridCells.size(); i++) {
             SingleCell singleCell = listOfGridCells.get(i);
             int resIdOld = singleCell.resID;        // Old resource ID of this grid cell
             TextView currentCell = (TextView) findViewById(resIdOld);
@@ -201,7 +213,7 @@ public class GameActivity extends AppCompatActivity
         // Assign new resource IDs to the already clicked grid cells
         // Highlight all the letters which have already been clicked
         for (SingleCell singleCellClicked : alreadyClicked) {
-            if (singleCellClicked.resID == 0){
+            if (singleCellClicked.resID == 0) {
                 Log.d(MONITOR_TAG, "Skipping first");
                 continue;
             }
@@ -211,7 +223,7 @@ public class GameActivity extends AppCompatActivity
             currentCell.setClickable(false);         // Can't choose the same letter twice!!
         }
         // Most recently clicked cell is a different color
-        if (currentCell != null){
+        if (currentCell != null) {
             currentCell.setBackgroundColor(Color.parseColor("#90CAF9"));
             currentCell.setClickable(true);         // Can't choose the same letter twice!!
         }
@@ -369,10 +381,10 @@ public class GameActivity extends AppCompatActivity
         super.onResume();
 //        Log.d(MONITOR_TAG, "onResume");
         if (isTimeUp()) {
-            completeGame();
             Log.d(MONITOR_TAG, "Changing activity from onResume");
-            Intent ScoreScreen1Intent = new Intent(GameActivity.this, ScoreScreen1Activity.class);
-            startActivity(ScoreScreen1Intent);
+            completeGame();
+//            Intent ScoreScreen1Intent = new Intent(GameActivity.this, ScoreScreen1Activity.class);
+//            startActivity(ScoreScreen1Intent);
         }
         setGameInFocus(true);
     }

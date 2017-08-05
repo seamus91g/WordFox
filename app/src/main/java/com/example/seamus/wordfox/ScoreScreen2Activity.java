@@ -38,36 +38,33 @@ public class ScoreScreen2Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         TextView scoreScreen2TextView = (TextView) findViewById(R.id.scoreScreen2TV);
-        scoreScreen2TextView.setText(String.valueOf(GameActivity.myGameInstance.getTotalScore()));
-
+        scoreScreen2TextView.setText(String.valueOf(MainActivity.allGameInstances.get(0).getTotalScore()));
 
 
         String placeholder = "";
         TextView round1WordTextView = (TextView) findViewById(R.id.scoreScreen2Round1WordTV);
-        placeholder = round1WordTextView.getText() + GameActivity.myGameInstance.getRound1Word();
+        placeholder = round1WordTextView.getText() + MainActivity.allGameInstances.get(0).getRound1Word();
         round1WordTextView.setText(placeholder);
 
         TextView round2WordTextView = (TextView) findViewById(R.id.scoreScreen2Round2WordTV);
-        placeholder = round2WordTextView.getText() + GameActivity.myGameInstance.getRound2Word();
+        placeholder = round2WordTextView.getText() + MainActivity.allGameInstances.get(0).getRound2Word();
         round2WordTextView.setText(placeholder);
 
         TextView round3WordTextView = (TextView) findViewById(R.id.scoreScreen2Round3WordTV);
-        placeholder = round3WordTextView.getText() + GameActivity.myGameInstance.getRound3Word();
+        placeholder = round3WordTextView.getText() + MainActivity.allGameInstances.get(0).getRound3Word();
         round3WordTextView.setText(placeholder);
 
 
-
-
         TextView round1LenTextView = (TextView) findViewById(R.id.scoreScreen2Round1ScoreTV);
-        placeholder = round1LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound1Length());
+        placeholder = round1LenTextView.getText() + Integer.toString(MainActivity.allGameInstances.get(0).getRound1Length());
         round1LenTextView.setText(placeholder);
 
         TextView round2LenTextView = (TextView) findViewById(R.id.scoreScreen2Round2ScoreTV);
-        placeholder = round2LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound2Length());
+        placeholder = round2LenTextView.getText() + Integer.toString(MainActivity.allGameInstances.get(0).getRound2Length());
         round2LenTextView.setText(placeholder);
 
         TextView round3LenTextView = (TextView) findViewById(R.id.scoreScreen2Round3ScoreTV);
-        placeholder = round3LenTextView.getText() + Integer.toString(GameActivity.myGameInstance.getRound3Length());
+        placeholder = round3LenTextView.getText() + Integer.toString(MainActivity.allGameInstances.get(0).getRound3Length());
         round3LenTextView.setText(placeholder);
 
 
@@ -94,7 +91,9 @@ public class ScoreScreen2Activity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile, menu);
         return true;
-    }@Override
+    }
+
+    @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

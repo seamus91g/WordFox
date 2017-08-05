@@ -46,6 +46,11 @@
         <activity
             android:name=".DataScreenActivity"
             android:label="@string/DataScreenActivityLabel"
+            android:label="@string/title_activity_data_screen"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PlayerSwitchActivity"
+            android:label="@string/title_activity_player_switch"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

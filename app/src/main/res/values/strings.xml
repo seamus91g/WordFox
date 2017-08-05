@@ -92,4 +92,5 @@
     <string name="ScoreScreen2ActivityLabel">Result Summary</string>
     <string name="DataScreenActivityLabel">Profile Data</string>
     <string name="SettingsActivityLabel">Settings</string>
+    <string name="title_activity_player_switch">PlayerSwitchActivity</string>
 </resources>

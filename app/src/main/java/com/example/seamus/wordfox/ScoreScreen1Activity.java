@@ -20,6 +20,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
+    private int gameIndexNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        gameIndexNumber = getIntent().getExtras().getInt("game_index");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -43,10 +45,10 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
         Log.d(MONITOR_TAG, "just want to see if this makes it");
 
-        int score = GameActivity.myGameInstance.getScore();
-        int totalScore = GameActivity.myGameInstance.getTotalScore();
-        String longestAttempt = GameActivity.myGameInstance.getLongestWord();
-        String longestPossible = GameActivity.myGameInstance.getLongestPossible().toUpperCase();
+        int score = MainActivity.allGameInstances.get(gameIndexNumber).getScore();
+        int totalScore = MainActivity.allGameInstances.get(gameIndexNumber).getTotalScore();
+        String longestAttempt = MainActivity.allGameInstances.get(gameIndexNumber).getLongestWord();
+        String longestPossible = MainActivity.allGameInstances.get(gameIndexNumber).getLongestPossible().toUpperCase();
         String userName = myGameData.getUsername();
 
         TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
@@ -67,7 +69,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     public void proceed(View v) {
         Log.d(MONITOR_TAG, "In proceed");
-        GameActivity.myGameInstance.startGame(this);
+        MainActivity.allGameInstances.get(gameIndexNumber).startGame(this);
     }
 
     @Override
@@ -86,7 +88,9 @@ public class ScoreScreen1Activity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile, menu);
         return true;
-    }@Override
+    }
+
+    @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

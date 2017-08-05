@@ -13,11 +13,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.NumberPicker;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public final String MONITOR_TAG = "myTag";
+    private final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
+    public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
+    private int numberOfPlayers;
 //    public GameData myGameData = new GameData(this);
 
     @Override
@@ -27,6 +32,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
+
+
+        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+        np.setMinValue(1);
+        np.setMaxValue(6);
 
 //        editor = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
 
@@ -40,15 +50,30 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Total score is accumulated across game rounds. Returning to the main menu will clear it
-        GameActivity.myGameInstance.clearAllScores();
-
+//        GameActivity.myGameInstance.clearAllScores();
+        numberOfPlayers = 1;
+        Log.d(MONITOR_TAG, "Number of game instances: " + allGameInstances.size() + ", END");
     }
 
 
     public void startGameAct(View v) {
 //        GameInstance myInstance = new GameInstance();
 //        myInstance.startGame(this);
+        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+        numberOfPlayers = np.getValue();
+        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+        allGameInstances.clear();
+        for (int i = 0; i < numberOfPlayers; i++) {
+            GameInstance thisGame = new GameInstance();
+            thisGame.setThisGameIndex(i);
+            allGameInstances.add(thisGame);
+
+        }
+
+        int indexOfGameInstance = 0;
+        allGameInstances.get(indexOfGameInstance).clearAllScores(); // Is this necessary??  :S
         Intent gameIntent = new Intent(this, GameActivity.class);
+        gameIntent.putExtra("game_index", indexOfGameInstance);
 //            Log.d(MONITOR_TAG, "In startGame 2");
         this.startActivity(gameIntent);
     }
@@ -67,7 +92,9 @@ public class MainActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile, menu);
         return true;
-    }@Override
+    }
+
+    @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

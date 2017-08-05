@@ -23,6 +23,30 @@ public class GameInstance {
     private int round1Length = 0;
     private int round2Length = 0;
     private int round3Length = 0;
+    private int maxNumberOfRounds = 3;
+
+    public int getThisGameIndex() {
+        return thisGameIndex;
+    }
+
+    public void setThisGameIndex(int thisGameIndex) {
+        this.thisGameIndex = thisGameIndex;
+    }
+
+    public GameState getMyGameState() {
+        return myGameState;
+    }
+
+    public void setMyGameState(GameState myGameState) {
+        this.myGameState = myGameState;
+    }
+
+    private int thisGameIndex;
+
+    private enum GameState {ONGOING, FINISHED}
+
+    ;
+    private GameState myGameState;
 
 
     GameInstance() {
@@ -31,8 +55,10 @@ public class GameInstance {
         round = 0;
         longestWord = "";   // Longest of the current round
         longestPossible = "";   // Longest possible word of the current round
+        myGameState = GameState.ONGOING;
         Log.d(MONITOR_TAG, "New game instance");
     }
+
 
     public int getTotalScore() {
         return totalScore;
@@ -58,6 +84,7 @@ public class GameInstance {
     public String getLongestWord() {
         return longestWord;
     }
+
     public void setLongestPossible(String word) {
         longestPossible = word;
     }
@@ -133,18 +160,32 @@ public class GameInstance {
     }
 
 
-
     public void startGame(Context context) {
 //        Log.d("Count number of rounds", "GameInstance: no. of completed rounds = " + round);
         round++;
+        Log.d(MONITOR_TAG, "!!!! This is game index: " + thisGameIndex);
         Log.d(MONITOR_TAG, "GameInstance: no. of rounds = " + round);
-        if (round < 3) {
+        if (round < maxNumberOfRounds) {
 //            Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);
+            gameIntent.putExtra("game_index", thisGameIndex);
 //            Log.d(MONITOR_TAG, "In startGame 2");
             context.startActivity(gameIntent);
         } else {
             Log.d(MONITOR_TAG, "starting Score Screen 2");
+            myGameState = GameState.FINISHED;
+            for (int x = 0; x < MainActivity.allGameInstances.size(); x++) {
+                if ((MainActivity.allGameInstances.get(x).myGameState).equals(GameState.ONGOING)) {
+
+                    Log.d(MONITOR_TAG, "starting player switch: " + x);
+
+                    Intent gameIntent = new Intent(context, PlayerSwitchActivity.class);
+                    gameIntent.putExtra("game_index", x);
+                    context.startActivity(gameIntent);
+                    return;
+                }
+            }
+            Log.d(MONITOR_TAG, "Moving to score screen two! ");
             Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
             context.startActivity(ScoreScreen2Intent);
         }
