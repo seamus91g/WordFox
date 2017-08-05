@@ -63,8 +63,9 @@ public class ScoreScreen1Activity extends AppCompatActivity
         TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
         longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
 
+        String longestWordPossibleWithLength = longestPossible + " (" + longestPossible.length() + ")";
         TextView longestWordPossibleTextView = (TextView) findViewById(R.id.longestWordPossibleTV);
-        longestWordPossibleTextView.setText(longestPossible);
+        longestWordPossibleTextView.setText(longestWordPossibleWithLength);
     }
 
     public void proceed(View v) {

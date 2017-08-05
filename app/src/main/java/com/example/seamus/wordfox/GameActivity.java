@@ -50,7 +50,7 @@ public class GameActivity extends AppCompatActivity
 
         Log.d(MONITOR_TAG, "onCreate ---------- ");
 
-        this.setTitle("Round " + myGameInstance.getRound());
+        this.setTitle("Round " + MainActivity.allGameInstances.get(gameIndexNumber).getRound());
 
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
