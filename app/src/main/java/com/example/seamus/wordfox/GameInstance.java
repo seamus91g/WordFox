@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by Desmond on 05/07/2017.
  */
@@ -15,15 +17,50 @@ public class GameInstance {
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
     private int round;   // round is a counter for the round of the game.
-    private String longestPossible;   // round is a counter for the round of the game.
+    //    private String longestPossible;   // round is a counter for the round of the game.
+    private ArrayList<String> allLongestPossible = new ArrayList<>();
     private String longestWord;
+    private ArrayList<String> letters = new ArrayList<>();
     private String round1Word = "";
     private String round2Word = "";
     private String round3Word = "";
+    private int highestPossibleScore = 0;
     private int round1Length = 0;
     private int round2Length = 0;
     private int round3Length = 0;
     private int maxNumberOfRounds = 3;
+    private int thisGameIndex;
+
+    private enum GameState {ONGOING, FINISHED}
+
+    ;
+    private GameState myGameState;
+
+    GameInstance() {
+        totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
+        score = 0;
+        round = 0;
+        longestWord = "";   // Longest of the current round
+//        longestPossible = "";   // Longest possible word of the current round
+        myGameState = GameState.ONGOING;
+        Log.d(MONITOR_TAG, "New game instance");
+    }
+
+    public int getHighestPossibleScore() {
+        return highestPossibleScore;
+    }
+
+    public String getLetters(int roundIndex) {
+        return letters.get(roundIndex);
+    }
+
+    public String getRoundLetters() {
+        return letters.get(round);
+    }
+
+    public void setLetters(String letters) {
+        this.letters.add(letters);
+    }
 
     public int getThisGameIndex() {
         return thisGameIndex;
@@ -39,24 +76,6 @@ public class GameInstance {
 
     public void setMyGameState(GameState myGameState) {
         this.myGameState = myGameState;
-    }
-
-    private int thisGameIndex;
-
-    private enum GameState {ONGOING, FINISHED}
-
-    ;
-    private GameState myGameState;
-
-
-    GameInstance() {
-        totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
-        score = 0;
-        round = 0;
-        longestWord = "";   // Longest of the current round
-        longestPossible = "";   // Longest possible word of the current round
-        myGameState = GameState.ONGOING;
-        Log.d(MONITOR_TAG, "New game instance");
     }
 
 
@@ -86,11 +105,17 @@ public class GameInstance {
     }
 
     public void setLongestPossible(String word) {
-        longestPossible = word;
+//        longestPossible = word;
+        allLongestPossible.add(word);
+        highestPossibleScore += word.length();
     }
 
     public String getLongestPossible() {
-        return longestPossible;
+        return allLongestPossible.get(round);
+    }
+
+    public String getRoundLongestPossible(int roundIndex) {
+        return allLongestPossible.get(roundIndex);
     }
 
     public int getRound() {

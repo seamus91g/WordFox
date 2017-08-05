@@ -71,11 +71,24 @@ public class GameActivity extends AppCompatActivity
         myGameTimerInstance = new GameTimer(this);
 
         // Generate a random sequence of 9 letters to use for the game
-        ArrayList<String> givenLetters = myDiction.getGivenLetters();
+        ArrayList<String> givenLetters = new ArrayList<>();
         String givenLettersSTR = "";
-        for (int i = 0; i < givenLetters.size(); i++) {
-            givenLettersSTR += givenLetters.get(i);
+        if (gameIndexNumber == 0) {
+            givenLetters = myDiction.getGivenLetters();
+            for (int i = 0; i < givenLetters.size(); i++) {
+                givenLettersSTR += givenLetters.get(i);
+            }
+        } else {      // If multi player game, re-use the same letters
+            Log.d(MONITOR_TAG, "Re-using game letters ... ");
+            givenLettersSTR = MainActivity.allGameInstances.get(0).getLetters(myGameInstance.getRound());
+            String[] letters = givenLettersSTR.split("");
+            for (int i = 1; i < letters.length; i++) {       // First is a blank, skip
+                givenLetters.add(letters[i]);
+            }
         }
+
+        Log.d(MONITOR_TAG, "Saving game letters ... ");
+        myGameInstance.setLetters(givenLettersSTR);
         // Write the letters to the heading and to the 3x3 textView grid
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         givenLettersTV.setText(givenLettersSTR);
@@ -90,7 +103,6 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Log.d(MONITOR_TAG, " Finding longest word ... ");
         myGameInstance.setLongestPossible(myDiction.longestWordFromLetters(givenLettersSTR));
         Log.d(MONITOR_TAG, "Longest word is: " + myGameInstance.getLongestPossible());
     }

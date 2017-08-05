@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ScoreScreen2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,8 +42,6 @@ public class ScoreScreen2Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TextView scoreScreen2TextView = (TextView) findViewById(R.id.scoreScreen2TV);
-        scoreScreen2TextView.setText(String.valueOf(MainActivity.allGameInstances.get(0).getTotalScore()));
 
         int numberOfGames = MainActivity.allGameInstances.size();
         int numberOfRounds = 3;
@@ -51,26 +50,33 @@ public class ScoreScreen2Activity extends AppCompatActivity
         ListView listViewWord = (ListView) findViewById(R.id.gameOverScreenResultWord);
         ArrayList<String> gameResults = new ArrayList<>();
 
-        String gameOverScreenRound = "";
-        String gameOverScreenRoundDetails = "";
+        GameInstance firstGame = MainActivity.allGameInstances.get(0);
+        String highestPossible = "Highest Possible score:  " + firstGame.getHighestPossibleScore();
+        gameResults.add(highestPossible);       // List of items to print to the ListView
 
         for (int i = 0; i < numberOfRounds; i++) {
-            gameOverScreenRound = "ROUND " + (i + 1) + " - AMTBESILW"; // + letters
-            gameOverScreenRoundDetails = "Longest possible: " + MainActivity.allGameInstances.get(0).getLongestPossible().toUpperCase() + "  (" + MainActivity.allGameInstances.get(0).getLongestPossible().length() + ")";
+            String longestWordPossible = firstGame.getRoundLongestPossible(i).toUpperCase();
+
+            String gameOverScreenRound = "ROUND " + (i + 1) + " - " + firstGame.getLetters(i) + "          " + longestWordPossible + "  (" + longestWordPossible.length() + ")"; // + letters
+//            String gameOverScreenRoundDetails = "Longest possible: " + longestWordPossible + "  (" + longestWordPossible.length() + ")";
             gameResults.add(gameOverScreenRound);
-            gameResults.add(gameOverScreenRoundDetails);
+//            gameResults.add(gameOverScreenRoundDetails);
         }
 
+        ArrayList<Integer> playerTotalScores = new ArrayList<>();
         for (int i = 0; i < numberOfGames; i++) {
-            String playerString = "PLAYER " + (i + 1) + " TOTAL: " + MainActivity.allGameInstances.get(i).getTotalScore();
+            GameInstance thisGameInstance = MainActivity.allGameInstances.get(i);
+            int totalScore = thisGameInstance.getTotalScore();
+            playerTotalScores.add(totalScore);
+            String playerString = "PLAYER " + (i + 1) + " TOTAL: " + totalScore;
             gameResults.add(playerString);
             for (int j = 0; j < 1; j++) {
 
-                gameOverScreenRoundResult = "Round 1 word: " + MainActivity.allGameInstances.get(i).getRound1Word() + "    Score: " + MainActivity.allGameInstances.get(i).getRound1Length();
+                gameOverScreenRoundResult = "Round 1 word: " + thisGameInstance.getRound1Word() + "    Score: " + thisGameInstance.getRound1Length();
                 gameResults.add(gameOverScreenRoundResult);
-                gameOverScreenRoundResult = "Round 2 word: " + MainActivity.allGameInstances.get(i).getRound2Word() + "    Score: " + MainActivity.allGameInstances.get(i).getRound2Length();
+                gameOverScreenRoundResult = "Round 2 word: " + thisGameInstance.getRound2Word() + "    Score: " + thisGameInstance.getRound2Length();
                 gameResults.add(gameOverScreenRoundResult);
-                gameOverScreenRoundResult = "Round 3 word: " + MainActivity.allGameInstances.get(i).getRound3Word() + "    Score: " + MainActivity.allGameInstances.get(i).getRound3Length();
+                gameOverScreenRoundResult = "Round 3 word: " + thisGameInstance.getRound3Word() + "    Score: " + thisGameInstance.getRound3Length();
                 gameResults.add(gameOverScreenRoundResult);
 
             }
@@ -78,6 +84,10 @@ public class ScoreScreen2Activity extends AppCompatActivity
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, gameResults);
         listViewWord.setAdapter(adapter);
+
+        int maxScore = Collections.max(playerTotalScores);
+        TextView scoreScreen2TextView = (TextView) findViewById(R.id.scoreScreen2TV);
+        scoreScreen2TextView.setText(String.valueOf(maxScore));
 
     }
 

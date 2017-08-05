@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="Your final score is:"
+                android:text="High score is: "
                 android:textSize="30sp" />
 
             <TextView
