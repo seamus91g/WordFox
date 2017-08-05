@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void startGameAct(View v) {
-//        gameInstance myInstance = new gameInstance();
+//        GameInstance myInstance = new GameInstance();
 //        myInstance.startGame(this);
         Intent gameIntent = new Intent(this, GameActivity.class);
 //            Log.d(MONITOR_TAG, "In startGame 2");

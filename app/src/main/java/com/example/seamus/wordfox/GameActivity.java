@@ -26,12 +26,12 @@ import java.util.LinkedList;
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
-    private foxDictionary myDiction;
-    public static gameInstance myGameInstance = new gameInstance();
+    private FoxDictionary myDiction;
+    public static GameInstance myGameInstance = new GameInstance();
     private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
-    private gameTimer myGameTimerInstance;
+    private GameTimer myGameTimerInstance;
     private GameData myGameData;
     //    private HashMap<Integer, Integer> resIdToCellNumber = new HashMap<Integer, Integer>();
     private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
@@ -56,10 +56,10 @@ public class GameActivity extends AppCompatActivity
 
         setGameInFocus(true);
 
-        // Read in text file of all valid words. Store words in class foxDictionary
-        myDiction = new foxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
+        // Read in text file of all valid words. Store words in class FoxDictionary
+        myDiction = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
 
-        myGameTimerInstance = new gameTimer(this);
+        myGameTimerInstance = new GameTimer(this);
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = myDiction.getGivenLetters();
@@ -285,7 +285,7 @@ public class GameActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
         myGameData.addWord(myGameInstance.getLongestWord());
         Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
-        Log.d(MONITOR_TAG, "Changing activity from gameTimer");
+        Log.d(MONITOR_TAG, "Changing activity from GameTimer");
         startScoreScreen1Act();
 
         int currentRound = myGameInstance.getRound();

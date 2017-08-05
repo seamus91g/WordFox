@@ -9,7 +9,7 @@ import android.util.Log;
  * Created by Desmond on 05/07/2017.
  */
 
-public class gameInstance {
+public class GameInstance {
 
     public final String MONITOR_TAG = "myTag";
     private int totalScore;      // total Score tracks the accumulated score across rounds.
@@ -25,7 +25,7 @@ public class gameInstance {
     private int round3Length = 0;
 
 
-    gameInstance() {
+    GameInstance() {
         totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         round = 0;
@@ -135,9 +135,9 @@ public class gameInstance {
 
 
     public void startGame(Context context) {
-//        Log.d("Count number of rounds", "gameInstance: no. of completed rounds = " + round);
+//        Log.d("Count number of rounds", "GameInstance: no. of completed rounds = " + round);
         round++;
-        Log.d(MONITOR_TAG, "gameInstance: no. of rounds = " + round);
+        Log.d(MONITOR_TAG, "GameInstance: no. of rounds = " + round);
         if (round < 3) {
 //            Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);

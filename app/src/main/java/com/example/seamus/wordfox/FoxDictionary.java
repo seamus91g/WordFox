@@ -52,7 +52,7 @@ import static java.util.Collections.shuffle;
  * Created by Seamus on 05/07/2017.
  */
 
-public class foxDictionary {
+public class FoxDictionary {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
@@ -61,7 +61,7 @@ public class foxDictionary {
     private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
 
-    foxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
+    FoxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
         col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
 //        Log.d(MONITOR_TAG_FOX, "foxDic: 1");

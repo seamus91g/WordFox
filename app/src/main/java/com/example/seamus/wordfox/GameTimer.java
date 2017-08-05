@@ -12,12 +12,12 @@ import static com.example.seamus.wordfox.R.id.timeblock1;
  * Created by Desmond on 12/07/2017.
  */
 
-public class gameTimer {
+public class GameTimer {
     public static final String MONITOR_TAG = "myTag";
     public final GameActivity activity;
     CountDownTimer countDownTimer;
 
-    public gameTimer(final GameActivity _activity) {
+    public GameTimer(final GameActivity _activity) {
         this.activity = _activity;
         _activity.setTimeUp(false);
         countDownTimer = new CountDownTimer(30000, 1000) {
