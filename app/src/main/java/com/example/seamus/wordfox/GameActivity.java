@@ -1,10 +1,10 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -148,7 +148,7 @@ public class GameActivity extends AppCompatActivity
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
             TextView currentCell = (TextView) findViewById(resID);
             currentCell.setClickable(true);
-            currentCell.setBackgroundColor(0x00000000);
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
             alreadyClicked.clear();
             alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         }
@@ -212,7 +212,9 @@ public class GameActivity extends AppCompatActivity
             int resIdOld = singleCell.resID;        // Old resource ID of this grid cell
             TextView currentCell = (TextView) findViewById(resIdOld);
             currentCell.setClickable(true);
-            currentCell.setBackgroundColor(0x00000000);
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
+
+
             // Android xml ID string is based on it's order in the List of grid cells
             String newCellId = "guessGridCell" + (i + 1);
             // Get new resource ID from the android xml ID string
@@ -231,12 +233,12 @@ public class GameActivity extends AppCompatActivity
             }
             singleCellClicked.resID = oldToNew.get(singleCellClicked.resID);
             currentCell = (TextView) findViewById(singleCellClicked.resID);
-            currentCell.setBackgroundColor(Color.parseColor("#BBDEFB"));
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.lightpurple_rounded_border_textview));
             currentCell.setClickable(false);         // Can't choose the same letter twice!!
         }
         // Most recently clicked cell is a different color
         if (currentCell != null) {
-            currentCell.setBackgroundColor(Color.parseColor("#90CAF9"));
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.purple_rounded_border_textview));
             currentCell.setClickable(true);         // Can't choose the same letter twice!!
         }
 
@@ -268,19 +270,19 @@ public class GameActivity extends AppCompatActivity
             if (previousID != 0) {
                 TextView previousCellGridTV = (TextView) findViewById(previousID);
                 previousCellGridTV.setClickable(false);         // Can't choose the same letter twice!!
-                previousCellGridTV.setBackgroundColor(Color.parseColor("#BBDEFB"));
+                previousCellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.lightpurple_rounded_border_textview));
             }
 //            SingleCell singleCell = new SingleCell(resID, cellLetter);
             alreadyClicked.add(new SingleCell(resID, cellLetter));
-            cellGridTV.setBackgroundColor(Color.parseColor("#90CAF9"));
+            cellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.purple_rounded_border_textview));
         } else {
             alreadyClicked.removeLast();
             int prePreviousID = (int) alreadyClicked.getLast().resID;
-            cellGridTV.setBackgroundColor(0x00000000);
+            cellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
             if (prePreviousID != 0) {
                 TextView previousCellGridTV = (TextView) findViewById(prePreviousID);
                 previousCellGridTV.setClickable(true);         // Can't choose the same letter twice!!
-                previousCellGridTV.setBackgroundColor(Color.parseColor("#90CAF9"));
+                previousCellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.purple_rounded_border_textview));
             }
             currentGuess = currentGuess.substring(0, currentGuess.length() - 1);
         }

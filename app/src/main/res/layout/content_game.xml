@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.seamus.wordfox.GameActivity"
     tools:showIn="@layout/app_bar_game">
@@ -12,37 +14,34 @@
     <TextView
         android:id="@+id/givenLettersGameScreen"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.10"
+        android:gravity="center_vertical"
         android:text="JDUENFISL"
-        android:textSize="40sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="@color/colorAccent"
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/currentAttempt"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="30dp"
-        android:paddingLeft="50dp"
-        android:paddingStart="50dp"
-        android:text=""
-        android:textSize="25sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/givenLettersGameScreen"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_weight="0.10"
+        android:text="xxxxxxxxxxx"
+        android:textColor="@color/colorAccent"
+        android:textSize="25sp" />
 
     <LinearLayout
         android:id="@+id/guessGrid"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentAttempt"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="0.6"
+        android:orientation="horizontal">
 
 
         <TextView
@@ -55,104 +54,83 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight=".11"
-            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/guessGridCell1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:clickable="true"
-
+                android:hapticFeedbackEnabled="true"
                 android:onClick="gridCellClicked"
-                android:text="B"
-                android:textSize="80sp" />
+                android:text="B" />
 
             <TextView
                 android:id="@+id/guessGridCell4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="B"
-                android:textSize="80sp" />
+                android:text="B" />
 
             <TextView
                 android:id="@+id/guessGridCell7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="B"
-                android:textSize="80sp" />
+                android:text="B" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight=".11"
-            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/guessGridCell2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:clickable="true"
                 android:onClick="gridCellClicked"
-                android:text="A"
-                android:textSize="80sp" />
+                android:text="A" />
 
             <TextView
                 android:id="@+id/guessGridCell5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="A"
-                android:textSize="80sp" />
+                android:text="A" />
 
             <TextView
                 android:id="@+id/guessGridCell8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="A"
-                android:textSize="80sp" />
+                android:text="A" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight=".11"
-            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/guessGridCell3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:clickable="true"
                 android:onClick="gridCellClicked"
-                android:text="C"
-                android:textSize="80sp" />
+                android:text="C" />
 
             <TextView
                 android:id="@+id/guessGridCell6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="C"
-                android:textSize="80sp" />
+                android:text="C" />
 
             <TextView
                 android:id="@+id/guessGridCell9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="C"
-                android:textSize="80sp" />
+                android:text="C" />
 
         </LinearLayout>
 
@@ -220,70 +198,80 @@
 
     <LinearLayout
         android:id="@+id/gameButtons"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guessGrid"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="0.10">
 
         <Button
             android:id="@+id/resetButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:onClick="clearCurrentAttempt"
             android:text="@string/reset" />
 
         <Button
             android:id="@+id/submitButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
+
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:onClick="submitCurrentAttempt"
             android:text="SUBMIT" />
 
         <Button
             android:id="@+id/shuffleButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
+
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:onClick="shuffleGivenLetters"
             android:text="SHUFFLE" />
     </LinearLayout>
 
+
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
-        android:paddingStart="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameButtons"
-        tools:layout_editor_absoluteX="8dp">
+        android:id="@+id/bestWordLL"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="0.10"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/longestAttempt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Your Guess"
+            android:layout_weight="0.75"
+            android:gravity="center"
+            android:hint="Your Longest Word"
             android:text=""
-            android:textSize="15sp"
-            tools:layout_editor_absoluteX="8dp" />
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/lengthLongestAttempt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="200dp"
-            android:hint="Word Length"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:hint="Letters"
             android:text=""
-            android:textSize="10sp" />
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
