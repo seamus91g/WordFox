@@ -64,9 +64,7 @@ public class FoxDictionary {
     FoxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
         col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
-//        Log.d(MONITOR_TAG_FOX, "foxDic: 1");
         if (allValidWords.isEmpty()) {
-//            Log.d(MONITOR_TAG_FOX, "foxDic: 2");
             try {
                 InputStream myIpStr = assetManager.open(validWordsFileName);
                 this.populateWords(myIpStr);
@@ -97,7 +95,11 @@ public class FoxDictionary {
         while (readString != null) {
             String thisWord = readString.toLowerCase();
             String[] wordArray = thisWord.split(" ");
-            validWordsAlphabeticalKey.put(wordArray[1], wordArray[0]);
+            if (validWordsAlphabeticalKey.get(wordArray[1]) == null){
+                validWordsAlphabeticalKey.put(wordArray[1], wordArray[0]);
+            } // else{
+//                Log.d(MONITOR_TAG_FOX, "Found anagram: " + wordArray[0] + "," + validWordsAlphabeticalKey.get(wordArray[1]));
+//            }
             allValidWords.add(wordArray[0]);
             readString = buffreader.readLine();
         }
@@ -110,7 +112,6 @@ public class FoxDictionary {
         while (readString != null) {
             String[] letterNumber = readString.split(" ");
             letterDistributionMap.put(letterNumber[0], Integer.parseInt(letterNumber[1]));
-//            Log.d("myTag", "Letter: " + letterNumber[0] + ", " + letterNumber[1]);
             readString = buffreader.readLine();
         }
     }
@@ -137,16 +138,15 @@ public class FoxDictionary {
     public String longestWordFromLetters(String givenLetters) {
         givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
         String thisLongest = "";
-        Log.d(MONITOR_TAG_FOX, " Finding longest word for: " + givenLetters);
-
         if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
             thisLongest = validWordsAlphabeticalKey.get(givenLetters);
             Log.d(MONITOR_TAG_FOX, "-----------== Found a niner!! ==--------------: " + thisLongest);
         }else {
             for (int x = 0; x < 7; x++) {        // Only go to 7 since 2 letter words are not valid
                 if (thisLongest.equals("")) {
-                    thisLongest = substringSearch(givenLetters, x);
+                    thisLongest = substringSearch(givenLetters, thisLongest, x);
                 }else{
+                    Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + x + " letters ---");
                     break;
                 }
             }
@@ -154,27 +154,46 @@ public class FoxDictionary {
         return thisLongest;
     }
     // Recursively search for valid substrings
-    public String substringSearch(String givenLetters, int Depth) {
-        String thisLongest = "";
+    public String substringSearch(String givenLetters, String knownLongest, int Depth) {
+        String thisLongest = knownLongest;
         int len = givenLetters.length();
         for (int j = 0; j < len; j++){
             String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
             if (Depth == 0) {
-//                Log.d(MONITOR_TAG_FOX, "This window here!: " + checkWindow);
                 if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
-                    thisLongest = validWordsAlphabeticalKey.get(checkWindow);
-                    Log.d(MONITOR_TAG_FOX, "Found!!: " + thisLongest);
-                    return thisLongest;
+                    String candidateLongest = validWordsAlphabeticalKey.get(checkWindow);
+                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest);
+                    thisLongest = returnBetterIndex(thisLongest, candidateLongest);
+                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest + ", not " + candidateLongest);
                 }
             }else {
-//                Log.d(MONITOR_TAG_FOX, "New depth!: " + checkWindow);
-                thisLongest = substringSearch(checkWindow, Depth - 1);
+                String returnLongest = substringSearch(checkWindow, thisLongest, Depth - 1);
+                thisLongest = returnBetterIndex(thisLongest, returnLongest);
             }
-            if (!thisLongest.equals("")){
-                break;
-            }
+//            if (!thisLongest.equals("")){
+//                break;
+//            }
         }
         return thisLongest;
+    }
+//  Find which of two words has the highest frequency index
+    private String returnBetterIndex(String defaultLongest, String suggestedLongest) {
+        String bestIndex = "";
+        int defaultIndex = allValidWords.indexOf(defaultLongest);
+        int suggestedIndex = allValidWords.indexOf(suggestedLongest);
+        if (defaultIndex == -1 && suggestedIndex == -1){
+            return bestIndex;
+        }
+        if (defaultIndex == -1 ){
+            return suggestedLongest;
+        }
+        if (suggestedIndex == -1 ){
+            return defaultLongest;
+        }
+        if (suggestedIndex < defaultIndex){
+            return suggestedLongest;
+        }
+        return defaultLongest;
     }
 
     // Randomly generate a sequence of 9 letters for the user
