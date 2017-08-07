@@ -27,7 +27,8 @@ public class ScoreScreen1Activity extends AppCompatActivity
         GameData myGameData = new GameData(this.getApplicationContext());
         super.onCreate(savedInstanceState);
 
-        this.setTitle("Round " + MainActivity.allGameInstances.get(gameIndexNumber).getRound() + " Score");
+        int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
+        this.setTitle("Round " + round + " Score");
 
         setContentView(R.layout.activity_score_screen1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -66,6 +67,12 @@ public class ScoreScreen1Activity extends AppCompatActivity
         String longestWordPossibleWithLength = longestPossible + " (" + longestPossible.length() + ")";
         TextView longestWordPossibleTextView = (TextView) findViewById(R.id.longestWordPossibleTV);
         longestWordPossibleTextView.setText(longestWordPossibleWithLength);
+
+
+        if (gameIndexNumber == 0 && round == 2){
+            myGameData.setHighestScore(totalScore);
+            Log.d(MONITOR_TAG, "Setting high score: " + totalScore);
+        }
     }
 
     public void proceed(View v) {

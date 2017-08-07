@@ -59,7 +59,10 @@ public class GameActivity extends AppCompatActivity
 
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         myGameData = new GameData(this.getApplicationContext());
-        myGameData.gameCountUp();
+        if(gameIndexNumber == 0){
+            myGameData.gameCountUp();
+        }
+        myGameData.roundCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
 
@@ -173,9 +176,10 @@ public class GameActivity extends AppCompatActivity
         String lcCurrentStr = currentStr.toLowerCase(); // All words in dictionary are lower case
         if (!myDiction.checkWordExists(lcCurrentStr)) {
             Toast.makeText(this, "Word doesn't exist", Toast.LENGTH_SHORT).show();
+            myGameData.incorrectCountUp();
             return;
         }
-
+        myGameData.correctCountUp();
         // Retrieve the existing longest guess to compare with the submitted one
         TextView longestTV = (TextView) findViewById(R.id.longestAttempt);
         String longestStr = (String) longestTV.getText();
@@ -197,7 +201,7 @@ public class GameActivity extends AppCompatActivity
 
     // Randomly shuffle the locations of the letters
     public void shuffleGivenLetters(View v) {
-
+        myGameData.shuffleCountUp();
         // Shuffle the list containing the grid cells
         Collections.shuffle(listOfGridCells);
         String shuffled = "";
@@ -294,7 +298,6 @@ public class GameActivity extends AppCompatActivity
     }
 
     public void setTimeUp(boolean timeState) {
-//        Log.d(MONITOR_TAG, "Setting time state: " + timeState);
         this.timeUp = timeState;
     }
 
@@ -303,15 +306,12 @@ public class GameActivity extends AppCompatActivity
     }
 
     public void setGameInFocus(boolean gameState) {
-//        Log.d(MONITOR_TAG, "Setting focus state: " + gameState);
         this.gameInFocus = gameState;
     }
 
     public void completeGame() {
         Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
         myGameData.addWord(myGameInstance.getLongestWord());
-        Log.d(MONITOR_TAG, "Now longest: " + myGameData.findLongest() + ", END");
-        Log.d(MONITOR_TAG, "Changing activity from GameTimer");
         startScoreScreen1Act();
 
         int currentRound = myGameInstance.getRound();
