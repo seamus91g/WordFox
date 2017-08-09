@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -41,14 +42,18 @@ public class GameData extends AppCompatActivity {
         editor = foxPreferences.edit();
         editor.apply();
     }
-    public double getAverageWordLength(){
+
+    public String getAverageWordLength() {
         int totalWordCount = 0;
+        double result = 0.0;
         int rounds = getRoundCount();
-        for (int i=3; i<10; i++){
-            totalWordCount += i*findOccurence(i);
+        for (int i = 3; i < 10; i++) {
+            totalWordCount += i * findOccurence(i);
         }
-        Log.d(MONITOR_TAG, "Total accumulated letters " + totalWordCount + ", END");
-        return (double) totalWordCount/rounds;
+        if (rounds > 0) {
+            result = (double) totalWordCount / rounds;
+        }
+        return String.format("%.2f", result);
     }
 
     public int getRoundCount() {
@@ -66,41 +71,47 @@ public class GameData extends AppCompatActivity {
     public int getNoneFoundCount() {
         return foxPreferences.getInt(COUNT_NONE_FOUND_KEY, 0);
     }
+
     public int getShuffleCount() {
         return foxPreferences.getInt(SHUFFLE_COUNT_KEY, 0);
     }
-    public double getShuffleAverage() {
+
+    public String getShuffleAverage() {
         int shufCount = foxPreferences.getInt(SHUFFLE_COUNT_KEY, 0);
         int roundCount = foxPreferences.getInt(ROUND_COUNT_KEY, 0);
         double shufAverage = 0;
-        if (roundCount > 0){
-            shufAverage = shufCount/roundCount;
+        if (roundCount > 0) {
+            shufAverage = (double) shufCount / roundCount;
         }
-        return shufAverage;
+        return String.format("%.2f", shufAverage);
     }
+
     public int getHighestTotalScore() {
         return foxPreferences.getInt(HIGHEST_SCORE_KEY, 0);
     }
 
     public void setHighestScore(int submittedScore) {
         int highScore = foxPreferences.getInt(HIGHEST_SCORE_KEY, 0);
-        if (submittedScore > highScore){
+        if (submittedScore > highScore) {
             editor.putInt(HIGHEST_SCORE_KEY, submittedScore);
             editor.apply();
         }
     }
+
     public void correctCountUp() {
         int countCorrect = foxPreferences.getInt(SUBMITTED_CORRECT_COUNT_KEY, 0);
         countCorrect += 1;
         editor.putInt(SUBMITTED_CORRECT_COUNT_KEY, countCorrect);
         editor.apply();
     }
+
     public void incorrectCountUp() {
         int countIncorrect = foxPreferences.getInt(SUBMITTED_INCORRECT_COUNT_KEY, 0);
         countIncorrect += 1;
         editor.putInt(SUBMITTED_INCORRECT_COUNT_KEY, countIncorrect);
         editor.apply();
     }
+
     public void noneFoundCountUp() {
         int countNoneFound = foxPreferences.getInt(COUNT_NONE_FOUND_KEY, 0);
         countNoneFound += 1;
@@ -132,12 +143,14 @@ public class GameData extends AppCompatActivity {
         editor.putInt(GAME_COUNT_KEY, countGames);
         editor.apply();
     }
+
     public void roundCountUp() {
         int countRounds = foxPreferences.getInt(ROUND_COUNT_KEY, 0);
         countRounds += 1;
         editor.putInt(ROUND_COUNT_KEY, countRounds);
         editor.apply();
     }
+
     public void shuffleCountUp() {
         int countShuffles = foxPreferences.getInt(SHUFFLE_COUNT_KEY, 0);
         countShuffles += 1;
@@ -156,7 +169,7 @@ public class GameData extends AppCompatActivity {
         String currentLongest = foxPreferences.getString(LONGEST_WORD_KEY, "");
         if (len >= currentLongest.length()) {
             editor.putString(LONGEST_WORD_KEY, newWord);
-        }else if (len == 0){
+        } else if (len == 0) {
             noneFoundCountUp();
         }
         // Increase occurence of word length

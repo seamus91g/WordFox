@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.Double2;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,9 +30,17 @@ public class DataScreenActivity extends AppCompatActivity
 
         myGameData = new GameData(this.getApplicationContext());
 
-        updateLongestWord();
-        updateUsername();
-        updateGameCount();
+        updateTextView("Average word length: " + myGameData.getAverageWordLength(), "averge_word_length");    //
+        updateTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), "count_submitted_correct");    //
+        updateTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), "count_submitted_incorrect");    //
+        updateTextView("Games where no word found: " + myGameData.getNoneFoundCount(), "count_none_found");    //
+        updateTextView("Total shuffles: " + myGameData.getShuffleCount(), "count_shuffles");    //
+        updateTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), "average_shuffles");    //
+        updateTextView("Highest score: " + myGameData.getHighestTotalScore(), "highest_total_score");    //
+        updateTextView("Played " + myGameData.getGameCount() + " games", "gameCount_data_screen");    //
+        updateTextView("" + myGameData.getUsername(), "username_data_screen");    //
+        updateTextView("Longest word: " + myGameData.findLongest(), "longestWord_data_screen");    //
+
         updateWordOccurences();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -43,50 +52,21 @@ public class DataScreenActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    public void updateTextView(String text, String id) {
+        int resID = getResources().getIdentifier(id, "id", getPackageName());
+        TextView currentCell = (TextView) findViewById(resID);
+        currentCell.setText(text);
+    }
+
     public void updateWordOccurences() {
-        Log.d(MONITOR_TAG, "Starting, END");
-        for (int i=3; i<=9; i++){
+        for (int i = 3; i <= 9; i++) {
             int frequencyOccured = myGameData.findOccurence(i);
-            Log.d(MONITOR_TAG, "Starting 2, END");
             String frequencyOccuredStr = Integer.toString(frequencyOccured);
-            Log.d(MONITOR_TAG, "Starting 3, END");
             String textToDisplay = "Found " + frequencyOccuredStr + " words of length " + i;
-            Log.d(MONITOR_TAG, "Starting 4, END");
 
-            String textViewId = "word" + i + "_data_screen";
-            Log.d(MONITOR_TAG, "Starting 5, END");
-            int resID = getResources().getIdentifier(textViewId, "id", getPackageName());
-
-            TextView currentWord = (TextView) findViewById(resID);
-            currentWord.setText(textToDisplay);
-
+            updateTextView(textToDisplay, "word" + i + "_data_screen");
         }
-
-    }
-
-
-    public void updateLongestWord() {
-        String longestWord = myGameData.findLongest();
-        TextView longestWordProfilePage = (TextView) findViewById(R.id.longestWord_data_screen);
-        String longWordSentence = "Longest Word: " + longestWord;
-        longestWordProfilePage.setText(longWordSentence);
-        Log.d(MONITOR_TAG, "Printing longest word: " + longestWord + ", END");
-    }
-
-    public void updateUsername() {
-        String user = myGameData.getUsername();
-        TextView longestWordProfilePage = (TextView) findViewById(R.id.username_data_screen);
-        longestWordProfilePage.setText(user);
-
-    }
-
-    public void updateGameCount() {
-        int gameCount = myGameData.getGameCount();
-        String gameCountStr = Integer.toString(gameCount);
-        String textViewString = "Played " + gameCountStr + " games";
-        TextView longestWordProfilePage = (TextView) findViewById(R.id.gameCount_data_screen);
-        longestWordProfilePage.setText(textViewString);
-
     }
 
     @Override
@@ -103,7 +83,9 @@ public class DataScreenActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile, menu);
         return true;
-    }@Override
+    }
+
+    @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

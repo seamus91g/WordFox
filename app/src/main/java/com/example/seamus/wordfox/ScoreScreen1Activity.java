@@ -28,7 +28,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
-        this.setTitle("Round " + round + " Score");
+        this.setTitle("Round " + (round+1) + " Score");
 
         setContentView(R.layout.activity_score_screen1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

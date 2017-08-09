@@ -48,18 +48,15 @@ public class GameActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
         myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
 
-        Log.d(MONITOR_TAG, "onCreate ---------- ");
-
-        this.setTitle("Round " + MainActivity.allGameInstances.get(gameIndexNumber).getRound());
+        this.setTitle("Round " + (MainActivity.allGameInstances.get(gameIndexNumber).getRound() + 1));
 
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         myGameData = new GameData(this.getApplicationContext());
-        if(gameIndexNumber == 0){
+        if (gameIndexNumber == 0) {
             myGameData.gameCountUp();
         }
         myGameData.roundCountUp();
@@ -90,7 +87,6 @@ public class GameActivity extends AppCompatActivity
             }
         }
 
-        Log.d(MONITOR_TAG, "Saving game letters ... ");
         myGameInstance.setLetters(givenLettersSTR);
         // Write the letters to the heading and to the 3x3 textView grid
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
