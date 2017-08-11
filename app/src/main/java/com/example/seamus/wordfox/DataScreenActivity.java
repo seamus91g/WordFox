@@ -28,16 +28,17 @@ public class DataScreenActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myGameData = new GameData(this.getApplicationContext());
+        myGameData = new GameData(this.getApplicationContext(), 0);     // Only data for player 0
 
         updateTextView("Average word length: " + myGameData.getAverageWordLength(), "averge_word_length");    //
         updateTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), "count_submitted_correct");    //
         updateTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), "count_submitted_incorrect");    //
-        updateTextView("Games where no word found: " + myGameData.getNoneFoundCount(), "count_none_found");    //
+        updateTextView("Rounds where no word found: " + myGameData.getNoneFoundCount(), "count_none_found");    //
         updateTextView("Total shuffles: " + myGameData.getShuffleCount(), "count_shuffles");    //
         updateTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), "average_shuffles");    //
         updateTextView("Highest score: " + myGameData.getHighestTotalScore(), "highest_total_score");    //
         updateTextView("Played " + myGameData.getGameCount() + " games", "gameCount_data_screen");    //
+        updateTextView("Played " + myGameData.getRoundCount() + " rounds", "roundCount_data_screen");    //
         updateTextView("" + myGameData.getUsername(), "username_data_screen");    //
         updateTextView("Longest word: " + myGameData.findLongest(), "longestWord_data_screen");    //
 

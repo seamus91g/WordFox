@@ -16,7 +16,7 @@
 
         <ScrollView
             android:layout_width="368dp"
-            android:layout_height="510dp"
+            android:layout_height="530dp"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
@@ -48,6 +48,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Games played: " />
+                <TextView
+                    android:id="@+id/roundCount_data_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rounds played: " />
 
                 <TextView
                     android:layout_width="match_parent"

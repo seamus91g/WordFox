@@ -38,7 +38,7 @@ public class GameActivity extends AppCompatActivity
     private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
     private boolean gameInFocus;
     private boolean timeUp;
-    int gameIndexNumber;
+    private int gameIndexNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +47,16 @@ public class GameActivity extends AppCompatActivity
         gameIndexNumber = getIntent().getExtras().getInt("game_index");
         Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
         myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
-
-        this.setTitle("Round " + (MainActivity.allGameInstances.get(gameIndexNumber).getRound() + 1));
+        int currentRound = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
+        this.setTitle("Round " + (currentRound + 1));
 
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
-        myGameData = new GameData(this.getApplicationContext());
-        if (gameIndexNumber == 0) {
+        myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
+        if (currentRound == 0) {
             myGameData.gameCountUp();
         }
         myGameData.roundCountUp();

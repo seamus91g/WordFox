@@ -24,7 +24,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        GameData myGameData = new GameData(this.getApplicationContext());
+        GameData myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
         super.onCreate(savedInstanceState);
 
         int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();

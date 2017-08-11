@@ -22,22 +22,33 @@ import static android.content.Context.MODE_PRIVATE;
 // Class to store game data and statistics
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
-    private String GAME_COUNT_KEY = "game_count";
-    private String ROUND_COUNT_KEY = "game_count";
-    private String LONGEST_WORD_KEY = "longest_word";
-    private String USERNAME_KEY = "username";
-    private String PREF_FILE_NAME = "word_fox_gamedata";
-    private String PROFILE_PIC_KEY = "wordfox_profile_pic";
-
-    private String SUBMITTED_CORRECT_COUNT_KEY = "submitted_correct_count";
-    private String SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count";
-    private String COUNT_NONE_FOUND_KEY = "count_none_found";
-    private String SHUFFLE_COUNT_KEY = "shuffle_count";
-    private String HIGHEST_SCORE_KEY = "highest_score";
+    private String GAME_COUNT_KEY;
+    private String ROUND_COUNT_KEY;
+    private String LONGEST_WORD_KEY;
+    private String USERNAME_KEY;
+    private String PREF_FILE_NAME;
+    private String PROFILE_PIC_KEY;
+    private String SUBMITTED_CORRECT_COUNT_KEY;
+    private String SUBMITTED_INCORRECT_COUNT_KEY;
+    private String COUNT_NONE_FOUND_KEY;
+    private String SHUFFLE_COUNT_KEY;
+    private String HIGHEST_SCORE_KEY;
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
 
-    GameData(Context myContext) {
+    GameData(Context myContext, int playerNumber) {
+        GAME_COUNT_KEY = "game_count_" + playerNumber;
+        ROUND_COUNT_KEY = "round_count_" + playerNumber;
+        LONGEST_WORD_KEY = "longest_word_" + playerNumber;
+        USERNAME_KEY = "username_" + playerNumber;
+        PREF_FILE_NAME = "word_fox_gamedata_" + playerNumber;
+        PROFILE_PIC_KEY = "wordfox_profile_pic_" + playerNumber;
+        SUBMITTED_CORRECT_COUNT_KEY = "submitted_correct_count_" + playerNumber;
+        SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count_" + playerNumber;
+        COUNT_NONE_FOUND_KEY = "count_none_found_" + playerNumber;
+        SHUFFLE_COUNT_KEY = "shuffle_count_" + playerNumber;
+        HIGHEST_SCORE_KEY = "highest_score_" + playerNumber;
+
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
         editor.apply();

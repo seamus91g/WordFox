@@ -39,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myGameData = new GameData(this.getApplicationContext());
+        myGameData = new GameData(this.getApplicationContext(), 0);
         updateLongestWord();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
