@@ -135,6 +135,11 @@ public class GameActivity extends AppCompatActivity
     public void printGridCells(ArrayList<SingleCell> gridCells) {
         for (int i = 0; i < gridCells.size(); i++) {
             TextView currentCell = (TextView) findViewById(gridCells.get(i).resID);
+
+
+            float sourceTextSize = currentCell.getTextSize();
+            currentCell.setTextSize(sourceTextSize/getResources().getDisplayMetrics().density);
+
             currentCell.setText(gridCells.get(i).letter);
         }
     }
@@ -147,7 +152,7 @@ public class GameActivity extends AppCompatActivity
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
             TextView currentCell = (TextView) findViewById(resID);
             currentCell.setClickable(true);
-            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.turquoise_background_rounded_border_textview));
             alreadyClicked.clear();
             alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
         }
@@ -212,7 +217,7 @@ public class GameActivity extends AppCompatActivity
             int resIdOld = singleCell.resID;        // Old resource ID of this grid cell
             TextView currentCell = (TextView) findViewById(resIdOld);
             currentCell.setClickable(true);
-            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
+            currentCell.setBackground(ContextCompat.getDrawable(this, R.drawable.turquoise_background_rounded_border_textview));
 
 
             // Android xml ID string is based on it's order in the List of grid cells
@@ -278,7 +283,7 @@ public class GameActivity extends AppCompatActivity
         } else {
             alreadyClicked.removeLast();
             int prePreviousID = (int) alreadyClicked.getLast().resID;
-            cellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.orange_rounded_border_textview));
+            cellGridTV.setBackground(ContextCompat.getDrawable(this, R.drawable.turquoise_background_rounded_border_textview));
             if (prePreviousID != 0) {
                 TextView previousCellGridTV = (TextView) findViewById(prePreviousID);
                 previousCellGridTV.setClickable(true);         // Can't choose the same letter twice!!
