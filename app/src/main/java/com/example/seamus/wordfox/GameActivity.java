@@ -135,11 +135,6 @@ public class GameActivity extends AppCompatActivity
     public void printGridCells(ArrayList<SingleCell> gridCells) {
         for (int i = 0; i < gridCells.size(); i++) {
             TextView currentCell = (TextView) findViewById(gridCells.get(i).resID);
-
-
-            float sourceTextSize = currentCell.getTextSize();
-            currentCell.setTextSize(sourceTextSize/getResources().getDisplayMetrics().density);
-
             currentCell.setText(gridCells.get(i).letter);
         }
     }

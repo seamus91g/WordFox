@@ -22,7 +22,7 @@
             name="android:layout_margin">4dp
         </item>
         <item
-            name="android:textSize">60dp
+            name="android:textSize">@dimen/grid_button_text_size
         </item>
         <item
             name="android:textStyle">bold
@@ -34,13 +34,7 @@
             name="android:layout_width">match_parent
         </item>
         <item
-            name="android:layout_height">0dp
-        </item>
-        <item
-            name="android:layout_weight">0.33
-        </item>
-        <item
-            name="android:gravity">center
+            name="android:layout_height">@dimen/grid_button_height
         </item>
         <item
             name="android:fontFamily">monospace
