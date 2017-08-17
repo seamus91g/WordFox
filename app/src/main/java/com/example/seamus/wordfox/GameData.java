@@ -33,10 +33,12 @@ public class GameData extends AppCompatActivity {
     private String COUNT_NONE_FOUND_KEY;
     private String SHUFFLE_COUNT_KEY;
     private String HIGHEST_SCORE_KEY;
+    private int playerNumber;
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
 
     GameData(Context myContext, int playerNumber) {
+        this.playerNumber = playerNumber;
         GAME_COUNT_KEY = "game_count_" + playerNumber;
         ROUND_COUNT_KEY = "round_count_" + playerNumber;
         LONGEST_WORD_KEY = "longest_word_" + playerNumber;
@@ -145,7 +147,11 @@ public class GameData extends AppCompatActivity {
     }
 
     public String getUsername() {
-        return foxPreferences.getString(USERNAME_KEY, "fox");
+        String defaultName = "Player " + (playerNumber+1);
+        if (playerNumber == 0){
+            defaultName = "Fox";
+        }
+        return foxPreferences.getString(USERNAME_KEY, defaultName);
     }
 
     public void gameCountUp() {

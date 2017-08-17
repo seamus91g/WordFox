@@ -1,24 +1,28 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.Double2;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DataScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationBurger navBurger = new NavigationBurger();
     private GameData myGameData;
+    private int colorIndex = 0;
     public static final String MONITOR_TAG = "myTag";
 
     @Override
@@ -30,19 +34,27 @@ public class DataScreenActivity extends AppCompatActivity
 
         myGameData = new GameData(this.getApplicationContext(), 0);     // Only data for player 0
 
-        updateTextView("Average word length: " + myGameData.getAverageWordLength(), "averge_word_length");    //
-        updateTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), "count_submitted_correct");    //
-        updateTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), "count_submitted_incorrect");    //
-        updateTextView("Rounds where no word found: " + myGameData.getNoneFoundCount(), "count_none_found");    //
-        updateTextView("Total shuffles: " + myGameData.getShuffleCount(), "count_shuffles");    //
-        updateTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), "average_shuffles");    //
-        updateTextView("Highest score: " + myGameData.getHighestTotalScore(), "highest_total_score");    //
-        updateTextView("Played " + myGameData.getGameCount() + " games", "gameCount_data_screen");    //
-        updateTextView("Played " + myGameData.getRoundCount() + " rounds", "roundCount_data_screen");    //
-        updateTextView("" + myGameData.getUsername(), "username_data_screen");    //
-        updateTextView("Longest word: " + myGameData.findLongest(), "longestWord_data_screen");    //
-
-        updateWordOccurences();
+        // Load the view group for each data section
+        ViewGroup usernameSection = (ViewGroup) findViewById(R.id.username_section);
+        ViewGroup gamesSection = (ViewGroup) findViewById(R.id.games_section);
+        ViewGroup wordsSection = (ViewGroup) findViewById(R.id.words_section);
+        ViewGroup dataSection = (ViewGroup) findViewById(R.id.data_section);
+        // Username section
+        createDataTextView("" + myGameData.getUsername(), usernameSection);
+        // Games Section
+        createDataTextView("Played " + myGameData.getGameCount() + " games", gamesSection);    //
+        createDataTextView("Played " + myGameData.getRoundCount() + " rounds", gamesSection);    //
+        // Words section
+        createDataTextView("Longest word: " + myGameData.findLongest(), wordsSection);    //
+        createDataTextView("Average word length: " + myGameData.getAverageWordLength(), wordsSection);    //
+        createDataTextView("Rounds where no word found: " + myGameData.getNoneFoundCount(), wordsSection);    //
+        updateWordOccurences(wordsSection);
+        // Data section
+        createDataTextView("Highest score: " + myGameData.getHighestTotalScore(), dataSection);    //
+        createDataTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), dataSection);    //
+        createDataTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), dataSection);    //
+        createDataTextView("Total shuffles: " + myGameData.getShuffleCount(), dataSection);    //
+        createDataTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), dataSection);    //
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -54,19 +66,44 @@ public class DataScreenActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void updateTextView(String text, String id) {
-        int resID = getResources().getIdentifier(id, "id", getPackageName());
-        TextView currentCell = (TextView) findViewById(resID);
-        currentCell.setText(text);
+    private void createDataTextView(String dataText, ViewGroup viewSection) {
+        TextView textView = new TextView(this);
+        int dataStyle = R.style.dataTextStyle;
+        int color;
+        // Alternate the background color for every second data item
+        if (++colorIndex % 2 == 0) {
+            color = R.color.colorTextDataBG;
+        } else {
+            color = R.color.colorTextDataBGAlt;
+        }
+        // Load a style and a color for the text view
+        if (Build.VERSION.SDK_INT < 23) {
+            textView.setTextAppearance(this, dataStyle);
+            color = getResources().getColor(color);
+        } else {
+            textView.setTextAppearance(dataStyle);
+            color = ContextCompat.getColor(this, color);
+        }
+        // Find the width of the screen. Text view width should be equal to this
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int parentWidth = dm.widthPixels;
+        // Set all desired text view attributes
+        textView.setText(dataText);
+        textView.setBackgroundColor(color);
+        textView.setWidth(parentWidth);
+        textView.setPadding(16, 2, 16, 2);
+
+        viewSection.addView(textView);
     }
 
-    public void updateWordOccurences() {
+    public void updateWordOccurences(ViewGroup viewSection) {
         for (int i = 3; i <= 9; i++) {
             int frequencyOccured = myGameData.findOccurence(i);
             String frequencyOccuredStr = Integer.toString(frequencyOccured);
             String textToDisplay = "Found " + frequencyOccuredStr + " words of length " + i;
 
-            updateTextView(textToDisplay, "word" + i + "_data_screen");
+            createDataTextView(textToDisplay, viewSection);
         }
     }
 

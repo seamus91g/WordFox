@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+
+<!--android:layout_width="match_parent"--><!--android:fillViewport="true"--><!--android:layout_height="wrap_content">-->
+
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,156 +14,104 @@
     tools:context="com.example.seamus.wordfox.DataScreenActivity"
     tools:showIn="@layout/app_bar_data_screen">
 
-
     <!-- username, Longest word, game count, occurences -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <ScrollView
-            android:layout_width="368dp"
-            android:layout_height="530dp"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/data_heading_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:orientation="vertical">
+                android:padding="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/data_graph_logo" />
+
+            <View
+                style="@style/Divider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/data_heading_image" />
+
+            <LinearLayout
+                android:id="@+id/username_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/data_heading_image">
 
                 <TextView
+                    style="@style/dataTextHeadingStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--- Username ---"
-                    android:textSize="30dp" />
-
-                <TextView
-                    android:id="@+id/username_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="--- Games ---"
-                    android:textSize="30dp" />
-
-                <TextView
-                    android:id="@+id/gameCount_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Games played: " />
-                <TextView
-                    android:id="@+id/roundCount_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rounds played: " />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="--- Words ---"
-                    android:textSize="30dp" />
-
-                <TextView
-                    android:id="@+id/longestWord_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Longest Word: " />
-
-                <TextView
-                    android:id="@+id/count_none_found"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word3_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word4_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word5_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word6_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word7_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word8_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/word9_data_screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/averge_word_length"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="--- Data ---"
-                    android:textSize="30dp" />
-
-                <TextView
-                    android:id="@+id/count_submitted_correct"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/count_submitted_incorrect"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/count_shuffles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/average_shuffles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-                <TextView
-                    android:id="@+id/highest_total_score"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
+                    android:text="Username" />
             </LinearLayout>
 
-        </ScrollView>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/games_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/username_section">
+
+                <TextView
+                    style="@style/dataTextHeadingStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Games" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/words_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/games_section">
+
+                <TextView
+                    style="@style/dataTextHeadingStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Words" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/data_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/words_section">
+
+                <TextView
+                    style="@style/dataTextHeadingStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Data" />
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
+
+    <!--</ScrollView>-->

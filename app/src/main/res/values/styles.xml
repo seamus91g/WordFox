@@ -13,10 +13,32 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="dataTextHeadingStyle">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/colorTextHeading</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@color/colorTextHeadingBG</item>
+        <item name="android:windowBackground">@color/colorTextHeadingBG</item>
+        <item name="android:colorBackground">@color/colorTextHeadingBG</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="dataTextStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/colorTextData</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+
     <!-- Style for the TextView displaying the letters to be chosen-->
     <style name="TextViewButtons">
-        <item
-            name="android:textColor">@android:color/primary_text_dark
+        <item name="android:textColor">@android:color/primary_text_dark
         </item>
         <item
             name="android:layout_margin">4dp
@@ -29,9 +51,9 @@
         </item>
         <item
             name="android:padding">2dp
+
         </item>
-        <item
-            name="android:layout_width">match_parent
+        <item name="android:layout_width">match_parent
         </item>
         <item
             name="android:layout_height">@dimen/grid_button_height
@@ -54,6 +76,7 @@
         <item
             name="android:background">@drawable/turquoise_border_white_background
         </item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

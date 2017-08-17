@@ -24,6 +24,8 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        gameIndexNumber = getIntent().getExtras().getInt("game_index");
         GameData myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
         super.onCreate(savedInstanceState);
 
@@ -34,7 +36,6 @@ public class ScoreScreen1Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        gameIndexNumber = getIntent().getExtras().getInt("game_index");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
