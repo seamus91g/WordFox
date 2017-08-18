@@ -8,84 +8,85 @@
     tools:context="com.example.seamus.wordfox.ProfileActivity"
     tools:showIn="@layout/app_bar_profile">
 
+
+    <ImageView
+        android:id="@+id/profileImageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="270dp"
+        android:layout_marginTop="0dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_action_name"
+        android:onClick="choosePicture"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/username_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:hint="Name here"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImageButton" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_profile" />
+
     <LinearLayout
+        android:id="@+id/longest_word_profile"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/profPicAndUsername"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button"
         tools:layout_editor_absoluteX="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/profPicLongestWordText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Longest Word: "
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/profPicLongestWord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:textSize="20sp" />
-        </LinearLayout>
-
         <TextView
-            android:id="@+id/profPicData"
-            android:layout_width="match_parent"
+            android:id="@+id/profPicLongestWordText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Data"
+            android:text="Longest Word: "
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/profPicSettings"
-            android:layout_width="match_parent"
+            android:id="@+id/profPicLongestWord"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Settings"
+            android:layout_marginLeft="20dp"
             android:textSize="20sp" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/profPicAndUsername"
-        android:layout_width="368dp"
+    <TextView
+        android:id="@+id/profPicData"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="50dp"
+        android:padding="10dp"
+        android:text="Data"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/longest_word_profile" />
+
+    <TextView
+        android:id="@+id/profPicSettings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Settings"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profPicData"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <ImageButton
-            android:id="@+id/profileImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_action_name"
-            android:onClick="choosePicture" />
-
-        <EditText
-            android:id="@+id/username_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:hint="Name here" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Save" />
-    </LinearLayout>
+        tools:layout_editor_absoluteY="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>

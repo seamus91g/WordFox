@@ -1,12 +1,17 @@
 package com.example.seamus.wordfox;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,14 +25,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
+    private static final int PLAYER_NUMBER = 0;
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
     private Menu menu;
@@ -39,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myGameData = new GameData(this.getApplicationContext(), 0);
+        myGameData = new GameData(this.getApplicationContext(), PLAYER_NUMBER);
         updateLongestWord();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -60,30 +68,28 @@ public class ProfileActivity extends AppCompatActivity
         Button setProfileNameButton = (Button) findViewById(R.id.button);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
-
-        // Set profile pic if one exists. TODO improve checking to see if exists. Will crash app!!
+        // Display the profile pic if one exists.
         String profPicStr = myGameData.getProfilePicture();
-        if (!profPicStr.equals("")) {   // Not enough. Will still crash if user deletes the image
-            try {
-                Uri myFileUri = Uri.parse(profPicStr);
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), myFileUri);
-                ImageButton profileIB = (ImageButton) findViewById(R.id.profileImageButton);
+        if (!profPicStr.equals("")) {
+            Uri myFileUri = Uri.parse(profPicStr);
+            Bitmap bitmap = getBitmapFromUri(myFileUri);
+            ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
+            // Check it exists. Could be null if user has deleted the image from gallery
+            if (bitmap != null) {
                 profileIB.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                Log.d(MONITOR_TAG, "Failed to load profile image, END");
-                e.printStackTrace();
+            } else {
+                Log.d(MONITOR_TAG, "Setting default profile image, END");
+                profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
             }
         }
     }
 
-
     // Allow user to choose image from their phone when the profile image is clicked
-        public void choosePicture (View v) {
-            Log.d(MONITOR_TAG, "Choosing image, END");
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-            intent.setType("image/*");
-            startActivityForResult(intent, SELECT_PICTURE);
-        }
+    public void choosePicture(View v) {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, SELECT_PICTURE);
+    }
 
     @Override
     // When the user chooses an image, try to load it. Save their choice to GameData
@@ -92,16 +98,52 @@ public class ProfileActivity extends AppCompatActivity
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
             Log.d(MONITOR_TAG, "Looking for the image, END");
             Uri selectedImage = data.getData();     // Path to the image
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                Log.d(MONITOR_TAG, "Found the image!, END");
-                ImageButton profileIB = (ImageButton) findViewById(R.id.profileImageButton);
+            Bitmap bitmap = getBitmapFromUri(selectedImage);
+            ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
+            if (bitmap != null) {
                 profileIB.setImageBitmap(bitmap);
-                myGameData.setProfilePicture(selectedImage);    // Save path to chosen pic for future loading
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                Log.d(MONITOR_TAG, "Setting default profile image, END");
+                profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
+            }
+            myGameData.setProfilePicture(selectedImage);    // Save path to chosen pic for future loading
+        }
+    }
+
+    private Bitmap getBitmapFromUri(Uri imgUri) {
+        Bitmap bitmap = null;
+        ContentResolver cr = getContentResolver();
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor myCur = cr.query(imgUri, projection, null, null, null);
+
+        Log.d(MONITOR_TAG, "Checking if file exists: " + imgUri.toString() + ", END");
+        if (myCur != null) {
+            if (myCur.moveToFirst()) {
+                String filePath = myCur.getString(0);
+                if (new File(filePath).exists()) {
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Rotate image if necessary
+                    Matrix rotateMatrix = new Matrix();
+                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+//                    Cursor cur = managedQuery(imgUri, orientationColumn, null, null, null);
+                    Cursor cur = getContentResolver().query(imgUri, orientationColumn, null, null, null);
+                    int orientation = -1;
+                    if (cur != null && cur.moveToFirst()) {
+                        orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+                    }
+                    rotateMatrix.postRotate(orientation);
+                    if (!rotateMatrix.isIdentity()) {
+                        Log.d(MONITOR_TAG, "Image needs rotation: " + orientation);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
+                    }
+                }
             }
         }
+        return bitmap;
     }
 
     // User can type into text field and click 'save' button to save their profile user name
