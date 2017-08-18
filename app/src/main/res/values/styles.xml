@@ -14,9 +14,10 @@
     </style>
 
     <style name="dataTextHeadingStyle">
-        <item name="android:fontFamily">serif</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/colorTextHeading</item>
         <item name="android:padding">8dp</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:background">@color/colorTextHeadingBG</item>
         <item name="android:windowBackground">@color/colorTextHeadingBG</item>
         <item name="android:colorBackground">@color/colorTextHeadingBG</item>

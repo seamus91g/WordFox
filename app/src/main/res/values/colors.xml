@@ -4,9 +4,9 @@
     <color name="colorPrimaryDark">#e64a19</color>
     <color name="colorPrimaryLight">#FFAB91</color>
     <color name="colorAccent">#7c4dff</color>
-    <color name="colorTextHeading">#1111AA</color>
-    <color name="colorTextHeadingBG">#DDDDDD</color>
-    <color name="colorTextData">#1111AA</color>
+    <color name="colorTextHeading">#FFFFFF </color>
+    <color name="colorTextHeadingBG">#36454f</color>
+    <color name="colorTextData">#36454f</color>
     <color name="colorTextDataBG">#e3f2fd</color>
     <color name="colorTextDataBGAlt">#D9EDFD</color>
 </resources>

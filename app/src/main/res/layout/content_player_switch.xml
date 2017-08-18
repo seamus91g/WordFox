@@ -8,31 +8,29 @@
     tools:context="com.example.seamus.wordfox.PlayerSwitchActivity"
     tools:showIn="@layout/app_bar_player_switch">
 
-    <LinearLayout
-        android:layout_width="368dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp">
     <TextView
         android:id="@+id/playerSwitchTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="20dp"
-        android:textSize="20sp"
         android:text="Pass to the next player"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="60dp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/nextPlayerButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.382"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/nextPlayerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="298dp" />
+        android:text="Continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playerSwitchTV" />
 
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
