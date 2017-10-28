@@ -49,15 +49,19 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
         int score = MainActivity.allGameInstances.get(gameIndexNumber).getScore();
         int totalScore = MainActivity.allGameInstances.get(gameIndexNumber).getTotalScore();
+        String gameLetters = MainActivity.allGameInstances.get(gameIndexNumber).getLetters(round);
         String longestAttempt = MainActivity.allGameInstances.get(gameIndexNumber).getLongestWord();
         String longestPossible = MainActivity.allGameInstances.get(gameIndexNumber).getLongestPossible().toUpperCase();
         String userName = myGameData.getUsername();
 
-        TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
-        scoreScreenGreetingTextView.setText("Congratulations " + userName + "! You scored ");
+//        TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
+//        scoreScreenGreetingTextView.setText("Congratulations " + userName + "!");
+
+//        TextView scoreScreenRoundTextView = (TextView) findViewById(R.id.scoreScreenRound);
+//        scoreScreenRoundTextView.setText("Round 1 results:");
 
         TextView scoreScoreScreenTextView = (TextView) findViewById(R.id.scoreScoreScreenTV);
-        scoreScoreScreenTextView.setText(String.valueOf(score));
+        scoreScoreScreenTextView.setText(gameLetters);
 
         TextView totalScoreScoreScreenTextView = (TextView) findViewById(R.id.totalScoreScoreScreenTV);
         totalScoreScoreScreenTextView.setText(String.valueOf(totalScore));
