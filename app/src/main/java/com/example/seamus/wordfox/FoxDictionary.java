@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.FileInputStream;
@@ -57,6 +58,7 @@ public class FoxDictionary {
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
     private static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
+
     private LetterPool letterPool;
     private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
@@ -144,9 +146,10 @@ public class FoxDictionary {
         }else {
             for (int x = 0; x < 7; x++) {        // Only go to 7 since 2 letter words are not valid
                 if (thisLongest.equals("")) {
-                    thisLongest = substringSearch(givenLetters, thisLongest, x);
+                    HashMap<String, Boolean> substringsChecked = new HashMap<String, Boolean>();
+                    thisLongest = substringSearch(givenLetters, thisLongest, x, substringsChecked);
                 }else{
-                    Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + x + " letters ---");
+                    Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + (9 - x) + " letters ---");
                     break;
                 }
             }
@@ -154,20 +157,28 @@ public class FoxDictionary {
         return thisLongest;
     }
     // Recursively search for valid substrings
-    public String substringSearch(String givenLetters, String knownLongest, int Depth) {
+    public String substringSearch(String givenLetters, String knownLongest, int Depth, HashMap substringsChecked) {
         String thisLongest = knownLongest;
         int len = givenLetters.length();
         for (int j = 0; j < len; j++){
             String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
+            if (substringsChecked.containsKey(checkWindow)){
+
+              //  Log.d(MONITOR_TAG_FOX, "Already checked " + checkWindow + ", continuing ...");
+                continue;
+            }else{
+                substringsChecked.put(checkWindow, 1);
+                //Log.d(MONITOR_TAG_FOX, "Checking " + checkWindow + "!!");
+            }
             if (Depth == 0) {
                 if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
                     String candidateLongest = validWordsAlphabeticalKey.get(checkWindow);
-                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest);
+                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest + ", checking if higher index than " + thisLongest + ", end");
                     thisLongest = returnBetterIndex(thisLongest, candidateLongest);
-                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest + ", not " + candidateLongest);
+                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest);
                 }
             }else {
-                String returnLongest = substringSearch(checkWindow, thisLongest, Depth - 1);
+                String returnLongest = substringSearch(checkWindow, thisLongest, Depth - 1, substringsChecked);
                 thisLongest = returnBetterIndex(thisLongest, returnLongest);
             }
 //            if (!thisLongest.equals("")){
@@ -230,6 +241,15 @@ public class FoxDictionary {
         }
         return set;
     }
+
+//    private class LettersInstance {
+//        private final String givenLetters;
+//        LettersInstance(String givenLetters){
+//            this.givenLetters = givenLetters;
+//        }
+
+
+//    }
 
     private class LetterPool {
         private final HashMap<String, Integer> poolDistribution; // = new HashMap<String, Integer>();
