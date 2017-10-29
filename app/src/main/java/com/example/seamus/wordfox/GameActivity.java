@@ -32,6 +32,7 @@ public class GameActivity extends AppCompatActivity
     private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
+    private boolean resetButtonPressedOnce = false;
     private GameTimer myGameTimerInstance;
     private GameData myGameData;
     //    private HashMap<Integer, Integer> resIdToCellNumber = new HashMap<Integer, Integer>();
@@ -158,7 +159,20 @@ public class GameActivity extends AppCompatActivity
         TextView currentAttemptTV = (TextView) findViewById(R.id.currentAttempt);
         currentAttemptTV.setText("");
         setGridClickable();
+
+        if (this.resetButtonPressedOnce) {
+            completeGame();
+        }
+        this.resetButtonPressedOnce = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                resetButtonPressedOnce = false;
+            }
+        }, 500);
     }
+
+
 
     // Check if word is valid & longer than current best. If so, set as longest attempt.
     public void submitCurrentAttempt(View v) {
