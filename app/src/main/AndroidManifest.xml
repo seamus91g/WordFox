@@ -50,6 +50,10 @@
         <activity
             android:name=".PlayerSwitchActivity"
             android:label="@string/title_activity_player_switch"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EndScreenSinglePlayer1"
+            android:label="@string/title_activity_end_screen_single_player1"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

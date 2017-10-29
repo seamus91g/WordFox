@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -110,8 +109,29 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > 1) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
+    }
+
     private Bitmap getBitmapFromUri(Uri imgUri) {
-        Bitmap bitmap = null;
+        Bitmap myBitmap = null;
         ContentResolver cr = getContentResolver();
         String[] projection = {MediaStore.MediaColumns.DATA};
         Cursor myCur = cr.query(imgUri, projection, null, null, null);
@@ -120,12 +140,23 @@ public class ProfileActivity extends AppCompatActivity
         if (myCur != null) {
             if (myCur.moveToFirst()) {
                 String filePath = myCur.getString(0);
+
                 if (new File(filePath).exists()) {
                     try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
+                        myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
+
+                        if(myBitmap.getHeight()>=2048||myBitmap.getWidth()>=2048){
+                            Log.d(MONITOR_TAG, "Image is too large");
+                            DisplayMetrics metrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                            int width = metrics.widthPixels;
+                            int height = metrics.heightPixels;
+                            myBitmap = resize(myBitmap,width, height);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     // Rotate image if necessary
                     Matrix rotateMatrix = new Matrix();
                     String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
@@ -138,12 +169,12 @@ public class ProfileActivity extends AppCompatActivity
                     rotateMatrix.postRotate(orientation);
                     if (!rotateMatrix.isIdentity()) {
                         Log.d(MONITOR_TAG, "Image needs rotation: " + orientation);
-                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
+                        myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), rotateMatrix, true);
                     }
                 }
             }
         }
-        return bitmap;
+        return myBitmap;
     }
 
     // User can type into text field and click 'save' button to save their profile user name

@@ -108,6 +108,7 @@ public class GameInstance {
 //        longestPossible = word;
         allLongestPossible.add(word);
         highestPossibleScore += word.length();
+        Log.d("Check this out", "highest possible score is " + highestPossibleScore);
     }
 
     public String getLongestPossible() {
@@ -184,6 +185,19 @@ public class GameInstance {
         return round3Length;
     }
 
+    public String getRoundXWord(int x) {
+        String guess = "";
+        switch (x){
+            case 1:  guess = getRound1Word();
+                    break;
+            case 2: guess = getRound2Word();
+                    break;
+            case 3: guess = getRound3Word();
+                    break;
+        }
+        return guess;
+    }
+
 
     public void startGame(Context context) {
 //        Log.d("Count number of rounds", "GameInstance: no. of completed rounds = " + round);
@@ -211,8 +225,13 @@ public class GameInstance {
                 }
             }
             Log.d(MONITOR_TAG, "Moving to score screen two! ");
-            Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
-            context.startActivity(ScoreScreen2Intent);
+            //commented this out while testing the new wnd screen
+//            Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
+//            context.startActivity(ScoreScreen2Intent);
+
+            //testing new end screen
+            Intent EndScreenIntent = new Intent(context, EndScreenSinglePlayer1.class);
+            context.startActivity(EndScreenIntent);
         }
     }
 }
