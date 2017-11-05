@@ -27,7 +27,6 @@ public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
     private FoxDictionary myDiction;
-    //    public static GameInstance myGameInstance = new GameInstance();
     private GameInstance myGameInstance; // = new GameInstance();
     private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
@@ -35,7 +34,6 @@ public class GameActivity extends AppCompatActivity
     private boolean resetButtonPressedOnce = false;
     private GameTimer myGameTimerInstance;
     private GameData myGameData;
-    //    private HashMap<Integer, Integer> resIdToCellNumber = new HashMap<Integer, Integer>();
     private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
     private boolean gameInFocus;
     private boolean timeUp;
@@ -56,7 +54,13 @@ public class GameActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
-        myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
+
+        if (myGameInstance.getPlayerID().equals("")){
+            myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
+        }else{
+            myGameData = new GameData(this.getApplicationContext(), myGameInstance.getPlayerID());
+        }
+
         if (currentRound == 0) {
             myGameData.gameCountUp();
         }

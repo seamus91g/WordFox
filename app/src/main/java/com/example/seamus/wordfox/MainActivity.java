@@ -23,6 +23,11 @@ public class MainActivity extends AppCompatActivity
     private NavigationBurger navBurger = new NavigationBurger();
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
     private int numberOfPlayers;
+    private final static int maxPlayerCount = 6;
+
+    public static int getMaxPlayerCount() {
+        return maxPlayerCount;
+    }
 //    public GameData myGameData = new GameData(this);
 
     @Override
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 
         NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
         np.setMinValue(1);
-        np.setMaxValue(6);
+        np.setMaxValue(maxPlayerCount);
 
 //        editor = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
 

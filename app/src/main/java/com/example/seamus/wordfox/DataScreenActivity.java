@@ -3,6 +3,8 @@ package com.example.seamus.wordfox;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -12,18 +14,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.support.constraint.ConstraintSet.BOTTOM;
+import static android.support.constraint.ConstraintSet.TOP;
 
 public class DataScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationBurger navBurger = new NavigationBurger();
     private GameData myGameData;
-    private int colorIndex = 0;
+    private int colorIndex = 0;         // Every second color is different
     public static final String MONITOR_TAG = "myTag";
+    static int id = 1; //   Support for API 16
+    private ArrayList<Integer> allUniqueIds = new ArrayList<Integer>(); // Unique ID for each generated xml view
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,29 +48,47 @@ public class DataScreenActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myGameData = new GameData(this.getApplicationContext(), 0);     // Only data for player 0
-
-        // Load the view group for each data section
-        ViewGroup usernameSection = (ViewGroup) findViewById(R.id.username_section);
-        ViewGroup gamesSection = (ViewGroup) findViewById(R.id.games_section);
-        ViewGroup wordsSection = (ViewGroup) findViewById(R.id.words_section);
-        ViewGroup dataSection = (ViewGroup) findViewById(R.id.data_section);
-        // Username section
-        createDataTextView("" + myGameData.getUsername(), usernameSection);
-        // Games Section
-        createDataTextView("Played " + myGameData.getGameCount() + " games", gamesSection);    //
-        createDataTextView("Played " + myGameData.getRoundCount() + " rounds", gamesSection);    //
-        // Words section
-        createDataTextView("Longest word: " + myGameData.findLongest(), wordsSection);    //
-        createDataTextView("Average word length: " + myGameData.getAverageWordLength(), wordsSection);    //
-        createDataTextView("Rounds where no word found: " + myGameData.getNoneFoundCount(), wordsSection);    //
-        updateWordOccurences(wordsSection);
-        // Data section
-        createDataTextView("Highest score: " + myGameData.getHighestTotalScore(), dataSection);    //
-        createDataTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), dataSection);    //
-        createDataTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), dataSection);    //
-        createDataTextView("Total shuffles: " + myGameData.getShuffleCount(), dataSection);    //
-        createDataTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), dataSection);    //
+        // First ID is the image at the top. All other views are constrained to this
+        allUniqueIds.add(R.id.data_heading_image);
+        // Get list of created player names
+        ArrayList<String> players = GameData.getNamedPlayerList(this);
+        // Iterate through each player which has data
+        int count = 0;
+        while (count < MainActivity.getMaxPlayerCount()){
+            // Get all named players
+            if (players.size() > 0 && count > 0){
+                String playerName = players.remove(0);
+                myGameData = new GameData(this.getApplicationContext(), playerName);
+            // Get all numbered players
+            }else{
+                myGameData = new GameData(this.getApplicationContext(), count);
+                ++count;
+            }
+            // If there's no data, skip to the next one
+            if(myGameData.getGameCount() == 0){
+                continue;
+            }
+            // Username section
+            setTextView("Username", "HEADER");
+            setTextView("" + myGameData.getUsername(), "DATA");
+            // Games section
+            setTextView("Games", "HEADER");
+            setTextView("Played " + myGameData.getGameCount() + " games", "DATA");
+            setTextView("Played " + myGameData.getRoundCount() + " rounds", "DATA");    //
+            // Words section
+            setTextView("Words", "HEADER");
+            setTextView("Longest word: " + myGameData.findLongest(), "DATA");    //
+            setTextView("Average word length: " + myGameData.getAverageWordLength(), "DATA");    //
+            setTextView("Rounds where no word found: " + myGameData.getNoneFoundCount(), "DATA");    //
+            updateWordOccurences();
+            // Data section
+            setTextView("DATA", "HEADER");
+            setTextView("Highest score: " + myGameData.getHighestTotalScore(), "DATA");    //
+            setTextView("Valid words submitted: " + myGameData.getSubmittedCorrectCount(), "DATA");    //
+            setTextView("Invalid words submitted: " + myGameData.getSubmittedIncorrectCount(), "DATA");    //
+            setTextView("Total shuffles: " + myGameData.getShuffleCount(), "DATA");    //
+            setTextView("Average shuffles per round: " + myGameData.getShuffleAverage(), "DATA");    //
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,46 +99,92 @@ public class DataScreenActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-    private void createDataTextView(String dataText, ViewGroup viewSection) {
-        TextView textView = new TextView(this);
-        int dataStyle = R.style.dataTextStyle;
-        int color;
-        // Alternate the background color for every second data item
-        if (++colorIndex % 2 == 0) {
-            color = R.color.colorTextDataBG;
-        } else {
-            color = R.color.colorTextDataBGAlt;
-        }
-        // Load a style and a color for the text view
-        if (Build.VERSION.SDK_INT < 23) {
-            textView.setTextAppearance(this, dataStyle);
-            color = getResources().getColor(color);
-        } else {
-            textView.setTextAppearance(dataStyle);
-            color = ContextCompat.getColor(this, color);
-        }
-        // Find the width of the screen. Text view width should be equal to this
-        DisplayMetrics dm = new DisplayMetrics();
-        this.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int parentWidth = dm.widthPixels;
-        // Set all desired text view attributes
-        textView.setText(dataText);
-        textView.setBackgroundColor(color);
-        textView.setWidth(parentWidth);
-        textView.setPadding(16, 2, 16, 2);
-
-        viewSection.addView(textView);
+    // Create a text view, constrained and styled appropriately
+    private void setTextView(String text, String type){
+        ConstraintLayout consLayout = (ConstraintLayout) findViewById(R.id.wholePageData);
+        ConstraintSet set = new ConstraintSet();
+        TextView dataTextView;
+        int newId = getUniqueId();
+        allUniqueIds.add(newId);
+        dataTextView = createDataPageTextView(text, type);
+        dataTextView.setId(newId);
+        consLayout.addView(dataTextView);
+        set.clone(consLayout);
+        set = attachUnderneath(newId, allUniqueIds.get(allUniqueIds.size() -2), set);
+        set.applyTo(consLayout);
     }
 
-    public void updateWordOccurences(ViewGroup viewSection) {
+    private ConstraintSet attachUnderneath(int idBottom, int idTop, ConstraintSet set){
+        set.connect(idBottom, ConstraintSet.TOP, idTop, ConstraintSet.BOTTOM, 0);
+        set.connect(idBottom, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+        set.connect(idBottom, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
+        return set;
+    }
+    // Apply appropriate styles depending on if it's a header or data point
+    private TextView createDataPageTextView(String dataText, String type) {
+        TextView textView = new TextView(this);
+        int dataStyle = 0;
+        int colorId = 0;
+        if (type.equals("HEADER")){
+            dataStyle = R.style.dataTextHeadingStyle; // Load a style and a color for the text view
+            colorId = R.color.colorTextHeadingBG;
+            int dimenPx = dp2px(8);
+            textView.setPadding(dimenPx, dimenPx, dimenPx, dimenPx);
+        }else if(type.equals("DATA")){
+            dataStyle = R.style.dataTextStyle;
+            if (++colorIndex % 2 == 0) {
+                colorId = R.color.colorTextDataBG;
+            } else {
+                colorId = R.color.colorTextDataBGAlt;
+            }
+            textView.setPadding(16, 2, 16, 2);
+        }
+        if (colorId != 0 && dataStyle != 0 ) {
+            int color;
+            if (Build.VERSION.SDK_INT < 23) {
+                textView.setTextAppearance(this, dataStyle);
+                color = getResources().getColor(colorId);
+            } else {
+                textView.setTextAppearance(dataStyle);
+                color = ContextCompat.getColor(this, colorId);
+            }
+            // Find the width of the screen. Text view width should be equal to this
+            DisplayMetrics dm = new DisplayMetrics();
+            this.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            int parentWidth = dm.widthPixels;
+            // Set all desired text view attributes
+            textView.setText(dataText);
+            textView.setBackgroundColor(color);
+            textView.setWidth(parentWidth);
+        }
+        return textView;
+    }
+    // Convert from dp to pixels
+    public int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.getResources().getDisplayMetrics());
+    }
+    // Print number of times each length was found
+    public void updateWordOccurences() {
         for (int i = 3; i <= 9; i++) {
             int frequencyOccured = myGameData.findOccurence(i);
             String frequencyOccuredStr = Integer.toString(frequencyOccured);
             String textToDisplay = "Found " + frequencyOccuredStr + " words of length " + i;
-
-            createDataTextView(textToDisplay, viewSection);
+            setTextView(textToDisplay, "DATA");
         }
+    }
+    // Returns a valid id that isn't in use
+    public int getUniqueId() {
+        int newId;
+        if (Build.VERSION.SDK_INT < 17) {
+            View v = findViewById(id);
+            while (v != null){
+                v = findViewById(++id);
+            }
+            newId = id++;
+        } else {
+            newId = View.generateViewId();
+        }
+        return newId;
     }
 
     @Override
@@ -133,12 +213,6 @@ public class DataScreenActivity extends AppCompatActivity
                 Intent profileScreenIntent = new Intent(DataScreenActivity.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;
-
-            // Use this for other action bar items as necessary
-//            case R.id.action_favorite:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
 
             default:
                 // If we got here, the user's action was not recognized.

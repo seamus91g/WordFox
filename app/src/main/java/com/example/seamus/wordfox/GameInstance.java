@@ -17,7 +17,6 @@ public class GameInstance {
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
     private int round;   // round is a counter for the round of the game.
-    //    private String longestPossible;   // round is a counter for the round of the game.
     private ArrayList<String> allLongestPossible = new ArrayList<>();
     private String longestWord;
     private ArrayList<String> letters = new ArrayList<>();
@@ -30,6 +29,15 @@ public class GameInstance {
     private int round3Length = 0;
     private int maxNumberOfRounds = 3;
     private int thisGameIndex;
+    private String playerID = "";   // Only exists if created on the player switch screen
+
+    public String getPlayerID() {
+        return playerID;
+    }
+
+    public void setPlayerID(String playerID) {
+        this.playerID = playerID;
+    }
 
     private enum GameState {ONGOING, FINISHED}
 
@@ -41,7 +49,6 @@ public class GameInstance {
         score = 0;
         round = 0;
         longestWord = "";   // Longest of the current round
-//        longestPossible = "";   // Longest possible word of the current round
         myGameState = GameState.ONGOING;
         Log.d(MONITOR_TAG, "New game instance");
     }
@@ -200,12 +207,10 @@ public class GameInstance {
 
 
     public void startGame(Context context) {
-//        Log.d("Count number of rounds", "GameInstance: no. of completed rounds = " + round);
         round++;
         Log.d(MONITOR_TAG, "!!!! This is game index: " + thisGameIndex);
         Log.d(MONITOR_TAG, "GameInstance: no. of rounds = " + round);
         if (round < maxNumberOfRounds) {
-//            Log.d(MONITOR_TAG, "In startGame");
             Intent gameIntent = new Intent(context, GameActivity.class);
             gameIntent.putExtra("game_index", thisGameIndex);
 //            Log.d(MONITOR_TAG, "In startGame 2");
