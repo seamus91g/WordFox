@@ -3,6 +3,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 public class GameInstance {
 
-    public final String MONITOR_TAG = "myTag";
+    public final String MONITOR_TAG = "GameInstance";
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
     private int round;   // round is a counter for the round of the game.
@@ -27,7 +28,7 @@ public class GameInstance {
     private int round1Length = 0;
     private int round2Length = 0;
     private int round3Length = 0;
-    private int maxNumberOfRounds = 3;
+    private static int maxNumberOfRounds = 3;
     private int thisGameIndex;
     private String playerID = "";   // Only exists if created on the player switch screen
 
@@ -37,6 +38,14 @@ public class GameInstance {
 
     public void setPlayerID(String playerID) {
         this.playerID = playerID;
+    }
+
+    public static int getMaxNumberOfRounds() {
+        return maxNumberOfRounds;
+    }
+
+    public void setMaxNumberOfRounds(int maxNumberOfRounds) {
+        this.maxNumberOfRounds = maxNumberOfRounds;
     }
 
     private enum GameState {ONGOING, FINISHED}
@@ -208,20 +217,35 @@ public class GameInstance {
 
     public void startGame(Context context) {
         round++;
-        Log.d(MONITOR_TAG, "!!!! This is game index: " + thisGameIndex);
-        Log.d(MONITOR_TAG, "GameInstance: no. of rounds = " + round);
+        Log.d(MONITOR_TAG, "startGame: game_index = " + thisGameIndex);
+        Log.d(MONITOR_TAG, "startGame: no. of rounds = " + round);
+
+        int currentRound = MainActivity.allGameInstances.get(thisGameIndex).getRound();
+        // if the current round is anything but the last round, start a new round following on
+        // from the previous round
         if (round < maxNumberOfRounds) {
+
             Intent gameIntent = new Intent(context, GameActivity.class);
             gameIntent.putExtra("game_index", thisGameIndex);
-//            Log.d(MONITOR_TAG, "In startGame 2");
             context.startActivity(gameIntent);
         } else {
-            Log.d(MONITOR_TAG, "starting Score Screen 2");
+            Log.d(MONITOR_TAG, "startGame: round is more than max no. of rounds so switch player or end game = " + round);
+            // if the current round is the last round but there are still players to play, launch
+            // the PlayerSwitchActivity
             myGameState = GameState.FINISHED;
+
+
+            // check each player to see if there's anyone yet to play, if there is then start the
+            // player switch activity
             for (int x = 0; x < MainActivity.allGameInstances.size(); x++) {
                 if ((MainActivity.allGameInstances.get(x).myGameState).equals(GameState.ONGOING)) {
 
-                    Log.d(MONITOR_TAG, "starting player switch: " + x);
+
+                    // the round counter is not being correctly reset to zero when the new player
+                    // takes over, getting a game index of 0 with round = 4 even when p2 has started
+                    // meaning you'll need to move the game index along to the next player so that
+                    // the round counter resets back to zero
+                    Log.d(MONITOR_TAG, "startGame: starting player switch: " + x);
 
                     Intent gameIntent = new Intent(context, PlayerSwitchActivity.class);
                     gameIntent.putExtra("game_index", x);
@@ -229,14 +253,27 @@ public class GameInstance {
                     return;
                 }
             }
-            Log.d(MONITOR_TAG, "Moving to score screen two! ");
-            //commented this out while testing the new wnd screen
+
+            //only start the end of game screen if the current player has played all their rounds
+            // and there's no player still yet to play
+            Log.d(MONITOR_TAG, "GameInstance: Moving to score screen 2! ");
+            //commented this out while testing the new End screen
 //            Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
 //            context.startActivity(ScoreScreen2Intent);
 
             //testing new end screen
-            Intent EndScreenIntent = new Intent(context, EndScreenSinglePlayer1.class);
+//            Intent EndScreenIntent = new Intent(context, RoundnGameResults.class);
+//            context.startActivity(EndScreenIntent);
+
+
+            //testing new end screen
+            Intent EndScreenIntent = new Intent(context, RoundnGameResults.class);
+            Bundle endScreenBundle = new Bundle();
+            endScreenBundle.putString("key", "game");
+            endScreenBundle.putInt("gameIndexNumber", thisGameIndex);
+            EndScreenIntent.putExtras(endScreenBundle);
             context.startActivity(EndScreenIntent);
         }
     }
+
 }

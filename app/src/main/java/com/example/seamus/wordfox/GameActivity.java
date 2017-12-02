@@ -114,10 +114,22 @@ public class GameActivity extends AppCompatActivity
     // When timer ends, change to the Score Screen to show results.
     public void startScoreScreen1Act() {
         Log.d(MONITOR_TAG, "starting Score Screen 1");
-        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
 
-        ScoreScreen1Intent.putExtra("game_index", gameIndexNumber);
-        startActivity(ScoreScreen1Intent);
+//        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
+//        ScoreScreen1Intent.putExtra("game_index", gameIndexNumber);
+//        startActivity(ScoreScreen1Intent);
+
+
+//        gameIndexNumber = getIntent().getExtras().getInt("game_index");
+//        gameIndexNumber++;
+
+        //testing new end screen
+        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
+        Bundle endScreenBundle = new Bundle();
+        endScreenBundle.putString("key", "round");
+        endScreenBundle.putInt("gameIndexNumber", gameIndexNumber);
+        EndScreenIntent.putExtras(endScreenBundle);
+        startActivity(EndScreenIntent);
     }
 
     // Print the 9 generated letters to the 3x3 grid.
@@ -166,7 +178,9 @@ public class GameActivity extends AppCompatActivity
 
         if (this.resetButtonPressedOnce) {
             completeGame();
-        }
+    }
+//        Error:Execution failed for task ':app:clean'.
+//                > Unable to delete directory:
         this.resetButtonPressedOnce = true;
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -326,7 +340,6 @@ public class GameActivity extends AppCompatActivity
     public void completeGame() {
         Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
         myGameData.addWord(myGameInstance.getLongestWord());
-        startScoreScreen1Act();
 
         int currentRound = myGameInstance.getRound();
         switch (currentRound) {
@@ -348,6 +361,8 @@ public class GameActivity extends AppCompatActivity
             default:
                 break;
         }
+        startScoreScreen1Act();
+
     }
 
 

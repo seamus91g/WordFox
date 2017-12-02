@@ -17,10 +17,7 @@ import java.util.ArrayList;
 public class EndOfRoundOrGameResults{
 
     public static final String MONITOR_TAG = "EndOfRoundOrGameResults: ";
-
     public Activity activity;
-
-
     //declare a String for the heading at the top of the results page (Game Over OR Time Up!)
     private String resultsHeading = "";
     //declare a String to display who won
@@ -47,89 +44,59 @@ public class EndOfRoundOrGameResults{
     //declare a Double (object) to be used to calculate the player's percentage
     private Double successPercent;
 
+    private LinearLayout.LayoutParams lp;
+
+    public LinearLayout.LayoutParams getLp() {
+        return lp;
+    }
+
+    public void setLp(LinearLayout.LayoutParams lp) {
+        this.lp = lp;
+    }
+
     public EndOfRoundOrGameResults(Activity _activity, String roundOrGameEnd){
         this.activity = _activity;
         this.numPlayers = MainActivity.allGameInstances.size();
 
+        // create a set of parameters for a linear layout setting the width and height to be
+        // wrap content to be used on each textview created later on
+       this.lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
 
         if (roundOrGameEnd == "round"){
             //do what you need for the end of a round
+            populateHeaderMsg(roundOrGameEnd);
+            populateResultLL(roundOrGameEnd);
+            createRoundSummary(roundOrGameEnd);
+
         }else if (roundOrGameEnd == "game"){
             //do what you need for the end of the game
-
-
-
-            // create a set of parameters for a linear layout setting the width and height to be
-            // wrap content to be used on each textview created later on
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
-
-
-            // get the textview that will display the GAME OVER message on the end screen
-            TextView gameOverTV = (TextView) this.activity.findViewById(R.id.gameOverEndScreenTV);
-
-            // if there's more than one player set the text of the gameOverTV on the end screen to say 'GAME OVER BITCHEZ'
-            if (numPlayers>1) {
-                gameOverTV.setText("GAME OVER BITCHEZ");
-            }else {
-                //if there's only one player set the text of the gameOverTV on the end screen to say 'GAME OVER'
-                //followed by their name
-                // retrieve the player's name from the GameData class, store in a string to display in the heading
-                GameData myGameData = new GameData(this.activity, 0);
-                String playername = myGameData.getUsername();
-                gameOverTV.setText("GAME OVER " + playername.toUpperCase());
-            }
-            Log.d("Hello", "xxxx 1");
+            populateHeaderMsg(roundOrGameEnd);
+            populateResultLL(roundOrGameEnd);
 
             // create an array of playersFinalScoresNNames objects for the players' scores and names
             // at the end of the game
             playersFinalScoresNNames[] playersFinalScoresNNamesArr = new playersFinalScoresNNames[numPlayers];
 
-            //for the number of players add a line stating the score each achieved
-            LinearLayout resultsLL = (LinearLayout) this.activity.findViewById(R.id.resultEndScreenLL);
-            for (int k=0; k<numPlayers; k++){
+            for (int k=0; k<numPlayers; k++) {
+                // for each player declare and initialize a new playersFinalScoresNNames object with
+                // the associated totalScore and playername and add it into playersFinalScoresNNamesArr
 
-                //create an empty string to be filled with the components of the result
-                String result = "";
-                String playername = "";
-                String greeting = "";
 
-                if (numPlayers == 1){
-                    // if there's only one player, the greeting should say, 'You scored '
-                    greeting = "You scored ";
-                }else {
-                    // if there's more than one player, the greeting should say, '#name scored'
-
-                    //get the player name
-                    GameData myGameData = new GameData(this.activity, k);
-                    playername = myGameData.getUsername();
-                    greeting = playername + " scored ";
-                }
-                Log.d("Hello", "xxxx 2 iteration no." + k);
-
-                // create a reference to the object instance of the GameInstance class created in the main activity
+                // create a reference to the object instance of the GameInstance class created in
+                // the main activity
                 GameInstance myGameInstance = MainActivity.allGameInstances.get(k);
                 //declare and initialise an integer for the player's total score at the end of the game
                 int totalScore = myGameInstance.getTotalScore();
-                //declare and initialise an integer for the max possible score at the end of the game
-                int maxScore = myGameInstance.getHighestPossibleScore();
-                //set the text of the resultsRatioTV on the end screen to show the users points
-                String resultsRatio = String.valueOf(totalScore) + " out of " + String.valueOf(maxScore) + " = ";
 
-                //declare and initialise a double for the percent success at the end of the game
-                Double successPercent = (Double.valueOf(totalScore)/Double.valueOf(maxScore)*100);
-                String resultsPercent = String.valueOf(successPercent.intValue()) + "%";
+                GameData myGameData = new GameData(this.activity, k);
+                String playername = myGameData.getUsername();
 
-                // for each player declare and initialize a new playersFinalScoresNNames object with
-                // the associated totalScore and playername
-                playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore,playername);
+
+                playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore, playername);
                 playersFinalScoresNNamesArr[k] = myPlayersFinalScoresNNames;
 
-                //assemble the result to contain all the components and show in the TextView
-                result = greeting + resultsRatio + resultsPercent;
-                TextView resultTV = createTVwithText(result);
-                resultTV.setLayoutParams(lp);
-                resultsLL.addView(resultTV);
             }
+
             Log.d("Hello", "xxxx 3");
 
             //get the name of the player with the highest score and set it to be the winner or if
@@ -171,83 +138,201 @@ public class EndOfRoundOrGameResults{
 
                 //add the textview with the winner's name into the LinearLayout containing the Game Over message
                 LinearLayout gameOverWinnerLL = (LinearLayout) this.activity.findViewById(R.id.gameOverWinnerLLEndScreen);
+                winnerTV.setLayoutParams(lp);
                 gameOverWinnerLL.addView(winnerTV);
             }
 
-            LinearLayout playersLL = (LinearLayout) this.activity.findViewById(R.id.playersEndScreenLL);
-            LinearLayout wordsLL = (LinearLayout) this.activity.findViewById(R.id.wordsEndScreenLL);
+            createRoundSummary(roundOrGameEnd);
 
-            //loop through the numbers of rounds, doing the following:
-            //add margin at the top of the round summary
-            // add the word 'Round' followed by the correct round number
-            // add the words 'Best Word'
-            //Opposite do the following
-            //add the round letters
-            //add the best possible word
-            for (int j=0; j<3; j++){
-                // create and add a TextView displaying the current round
-                TextView roundTV = createTVwithText("Round " + String.valueOf(j+1) + ": ");
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, dpTOpx(50), 0, 0);
-                roundTV.setLayoutParams(params);
-                playersLL.addView(roundTV);
-                Log.d("Hello", "xxxx 4 " + j);
+        }
+    }
 
-                // create and add a TextView displaying the title 'Best Word: '
-                TextView bestWordTitleTV = createTVwithText("Best Word: ");
-                bestWordTitleTV.setLayoutParams(lp);
-                playersLL.addView(bestWordTitleTV);
-                Log.d("Hello", "xxxx 4.1 " + j);
+    private void createRoundSummary(String roundOrGameEnd) {
+        LinearLayout playersLL = (LinearLayout) this.activity.findViewById(R.id.playersEndScreenLL);
+        LinearLayout wordsLL = (LinearLayout) this.activity.findViewById(R.id.wordsEndScreenLL);
 
-                // create a reference to the object instance of the GameInstance class created in the main
-                // activity so that you can get the letters for each round
-                GameInstance thisGameInstance = MainActivity.allGameInstances.get(0);
+        int count = 0;
 
-                // create and add a TextView displaying the letters for the round
-                TextView lettersTV = createTVwithText(thisGameInstance.getLetters(j));
-                lettersTV.setLayoutParams(params);
-                wordsLL.addView(lettersTV);
-                Log.d("Hello", "xxxx 4.2 " + j);
+        // if this method is being called for the end of a game, you'll need to do the
+        // below for loop for each player. If it's just the end of a round, you'll only need to do
+        // the for loop once, for the player that just completed the round
+        if(roundOrGameEnd == "game"){
+            count = GameInstance.getMaxNumberOfRounds();
+        }else if (roundOrGameEnd == "round"){
+            count = 1;
+        }
 
-                //get the best possible word
-                // create and add a TextView displaying the best possible word for the round
-                TextView bestPossibleWordTV = createTVwithText(thisGameInstance.getRoundLongestPossible(j) + " (" + String.valueOf(thisGameInstance.getRoundLongestPossible(j).length()) + ")");
-                bestPossibleWordTV.setLayoutParams(lp);
-                wordsLL.addView(bestPossibleWordTV);
-                Log.d("Hello", "xxxx 4.3 " + j);
+        int steps = 0;
+
+        // if this method is being called for the end of a game, you'll need to do the
+        // below for loop for each player. If it's just the end of a round, you'll only need to do
+        // the for loop once, for the player that just completed the round
+        if(roundOrGameEnd == "game"){
+            steps = numPlayers;
+        }else if (roundOrGameEnd == "round"){
+            steps = 1;
+        }
+
+        //loop through the numbers of rounds, doing the following:
+        //add margin at the top of the round summary
+        // add the word 'Round' followed by the correct round number
+        // add the words 'Best Word:'
+        //Opposite do the following
+        //add the round letters
+        //add the best possible word
+        for (int j=0; j<count; j++){
+            // create and add a TextView displaying the current round
 
 
-                //loop through the numbers of players, doing the following:
-                // adding a new TextView for the players' names
-                //Opposite add a new TextView for the players' best words
-                for (int i = 0 ; i<numPlayers; i++){
-                    Log.d("Hello", "xxxx 5 " + i);
-
-                    // create an object instance of the GameData class to get the stored username(s)
-                    GameData myGameData = new GameData(this.activity, i);
-                    // declare and initialise a String to hold the player's name retrieved from the GameData class
-                    String name = myGameData.getUsername();
-
-                    TextView nameTV = createTVwithText(name + ": ");
-                    nameTV.setLayoutParams(lp);
-                    playersLL.addView(nameTV);
-
-                    // create a reference to the object instance of the GameInstance class created in the main activity
-                    GameInstance myGameInstance = MainActivity.allGameInstances.get(i);
-                    TextView bestGuessTV = createTVwithText(myGameInstance.getRoundXWord(j+1) + " (" + String.valueOf(myGameInstance.getRoundXWord(j+1).length()) +")");
-                    bestGuessTV.setLayoutParams(lp);
-                    wordsLL.addView(bestGuessTV);
-                }
-
+            String roundNo ="";
+            if(roundOrGameEnd == "game"){
+                roundNo = "Round " + String.valueOf(j+1) + ": ";
+            }else if (roundOrGameEnd == "round"){
+                roundNo = "Round " + String.valueOf(MainActivity.allGameInstances.get(j).getRound()) + ": ";
             }
 
+            TextView roundTV = createTVwithText(roundNo);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, dpTOpx(50), 0, 0);
+            roundTV.setLayoutParams(params);
+            playersLL.addView(roundTV);
+            Log.d("Hello", "xxxx 4 " + j);
+
+            // create and add a TextView displaying the title 'Best Word: '
+            TextView bestWordTitleTV = createTVwithText("Best Word: ");
+            bestWordTitleTV.setLayoutParams(lp);
+            playersLL.addView(bestWordTitleTV);
+            Log.d("Hello", "xxxx 4.1 " + j);
+
+            // create a reference to the object instance of the GameInstance class created in the main
+            // activity so that you can get the letters for each round
+            GameInstance thisGameInstance = MainActivity.allGameInstances.get(0);
+
+            // create and add a TextView displaying the letters for the round
+            TextView lettersTV = createTVwithText(thisGameInstance.getLetters(j));
+            lettersTV.setLayoutParams(params);
+            wordsLL.addView(lettersTV);
+            Log.d("Hello", "xxxx 4.2 " + j);
+
+            //get the best possible word
+            // create and add a TextView displaying the best possible word for the round
+            TextView bestPossibleWordTV = createTVwithText(thisGameInstance.getRoundLongestPossible(j) + " (" + String.valueOf(thisGameInstance.getRoundLongestPossible(j).length()) + ")");
+            bestPossibleWordTV.setLayoutParams(lp);
+            wordsLL.addView(bestPossibleWordTV);
+            Log.d("Hello", "xxxx 4.3 " + j);
 
 
+            // for the end of a round only do this step for the one player currently playing,
+            // for the end of the game do this step for each player, doing the following:
+            // adding a new TextView for the players' names
+            // Opposite add a new TextView for the players' best words
+            for (int i = 0 ; i<steps; i++){
+                Log.d("Hello", "xxxx 5 " + i);
+
+                // create an object instance of the GameData class to get the stored username(s)
+                GameData myGameData = new GameData(this.activity, i);
+                // declare and initialise a String to hold the player's name retrieved from the GameData class
+                String name = myGameData.getUsername();
+
+                TextView nameTV = createTVwithText(name + ": ");
+                nameTV.setLayoutParams(lp);
+                playersLL.addView(nameTV);
+
+                // create a reference to the object instance of the GameInstance class created in the main activity
+                GameInstance myGameInstance = MainActivity.allGameInstances.get(i);
+                TextView bestGuessTV = createTVwithText(myGameInstance.getRoundXWord(j+1) + " (" + String.valueOf(myGameInstance.getRoundXWord(j+1).length()) +")");
+                bestGuessTV.setLayoutParams(lp);
+                wordsLL.addView(bestGuessTV);
+            }
+
+        }
+
+    }
+
+    private void populateHeaderMsg(String roundOrGameEnd) {
+        // get the textview that will display the header message on the end screen, either
+        // GAME OVER for the end of a game or TIME UP for the end of a round
+        TextView gameOverTV = (TextView) this.activity.findViewById(R.id.gameOverEndScreenTV);
+
+        if (roundOrGameEnd == "round"){
+            //do what you need for the end of a round
+            gameOverTV.setText("TIME UP YOU CUNT");
+        }else if (roundOrGameEnd == "game") {
+            //do what you need for the end of the game
+
+            // if there's more than one player set the text of the gameOverTV on the end screen to say 'GAME OVER BITCHEZ'
+            if (numPlayers > 1) {
+                gameOverTV.setText("GAME OVER BITCHEZ");
+            } else {
+                //if there's only one player set the text of the gameOverTV on the end screen to say 'GAME OVER'
+                //followed by their name
+                // retrieve the player's name from the GameData class, store in a string to display in the heading
+                GameData myGameData = new GameData(this.activity, 0);
+                String playername = myGameData.getUsername();
+                gameOverTV.setText("GAME OVER " + playername.toUpperCase());
+            }
+            Log.d("Hello", "xxxx 1");
+        }
+    }
+
+    private void populateResultLL(String roundOrGameEnd) {
+
+        LinearLayout resultsLL = (LinearLayout) this.activity.findViewById(R.id.resultEndScreenLL);
+
+        int steps = 0;
+
+        // if this method is being called for the end of a game, you'll need to do the
+        // below for loop for each player. If it's just the end of a round, you'll only need to do
+        // the for loop once, for the player that just completed the round
+        if(roundOrGameEnd == "game"){
+            steps = numPlayers;
+        }else if (roundOrGameEnd == "round"){
+            steps = 1;
+        }
 
 
+        //for the number of players add a line stating the score each player achieved to the
+        // horizontal linear layout called resultsLL
+        for (int k=0; k<steps; k++){
 
+            //create empty strings to be filled with the individual components of the result
+            String result = "";
+            String playername = "";
+            String greeting = "";
 
+            if (numPlayers == 1 || roundOrGameEnd == "round"){
+                // if there's only one player, or its just the end of a round, the greeting should
+                // say, 'You scored '
+                greeting = "You scored ";
+            }else {
+                // if there's more than one player, or it's the end of the game the greeting should
+                // say, '#name scored'
 
+                //get the player name
+                GameData myGameData = new GameData(this.activity, k);
+                playername = myGameData.getUsername();
+                greeting = playername + " scored ";
+            }
+            Log.d("Hello", "xxxx 2 iteration no." + k);
+
+            // create a reference to the object instance of the GameInstance class created in the main activity
+            GameInstance myGameInstance = MainActivity.allGameInstances.get(k);
+            //declare and initialise an integer for the player's total score at the end of the game
+            int totalScore = myGameInstance.getTotalScore();
+            //declare and initialise an integer for the max possible score at the end of the game
+            int maxScore = myGameInstance.getHighestPossibleScore();
+            //set the text of the resultsRatioTV on the end screen to show the users points
+            String resultsRatio = String.valueOf(totalScore) + " out of " + String.valueOf(maxScore) + " = ";
+
+            //declare and initialise a double for the percent success at the end of the game
+            Double successPercent = (Double.valueOf(totalScore)/Double.valueOf(maxScore)*100);
+            String resultsPercent = String.valueOf(successPercent.intValue()) + "%";
+
+            //assemble the result to contain all the components and show in the TextView
+            result = greeting + resultsRatio + resultsPercent;
+            TextView resultTV = createTVwithText(result);
+            resultTV.setLayoutParams(lp);
+            resultsLL.addView(resultTV);
         }
     }
 
@@ -283,101 +368,5 @@ public class EndOfRoundOrGameResults{
         TextView newTV = new TextView(this.activity);
         newTV.setText(text4TV);
         return newTV;
-    }
-
-    public String getResultsHeading() {
-        return resultsHeading;
-    }
-
-    public void setResultsHeading(String resultsHeading) {
-        this.resultsHeading = resultsHeading;
-    }
-
-    public String getVictoryMessage() {
-        return victoryMessage;
-    }
-
-    public void setVictoryMessage(String victoryMessage) {
-        this.victoryMessage = victoryMessage;
-    }
-
-    public String getGreetingMsg() {
-        return GreetingMsg;
-    }
-
-    public void setGreetingMsg(String greetingMsg) {
-        GreetingMsg = greetingMsg;
-    }
-
-    public String getResultsRatio() {
-        return resultsRatio;
-    }
-
-    public void setResultsRatio(String resultsRatio) {
-        this.resultsRatio = resultsRatio;
-    }
-
-    public String getResultsPercent() {
-        return resultsPercent;
-    }
-
-    public void setResultsPercent(String resultsPercent) {
-        this.resultsPercent = resultsPercent;
-    }
-
-    public String getResultMsg() {
-        return ResultMsg;
-    }
-
-    public void setResultMsg(String resultMsg) {
-        ResultMsg = resultMsg;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
-    public void setNumPlayers(int numPlayers) {
-        this.numPlayers = numPlayers;
-    }
-
-    public int getMaxPossibleRoundScore() {
-        return maxPossibleRoundScore;
-    }
-
-    public void setMaxPossibleRoundScore(int maxPossibleRoundScore) {
-        this.maxPossibleRoundScore = maxPossibleRoundScore;
-    }
-
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
-    }
-
-    public int getMaxPossibleGameScore() {
-        return maxPossibleGameScore;
-    }
-
-    public void setMaxPossibleGameScore(int maxPossibleGameScore) {
-        this.maxPossibleGameScore = maxPossibleGameScore;
-    }
-
-    public Double getSuccessPercent() {
-        return successPercent;
-    }
-
-    public void setSuccessPercent(Double successPercent) {
-        this.successPercent = successPercent;
     }
 }

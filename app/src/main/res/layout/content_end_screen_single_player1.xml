@@ -3,17 +3,18 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/endScreenCL"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-tools:context="com.example.seamus.wordfox.EndScreenSinglePlayer1"
+tools:context="com.example.seamus.wordfox.RoundnGameResults"
 tools:showIn="@layout/app_bar_end_screen_single_player1"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
     <LinearLayout
         android:id="@+id/gameOverWinnerLLEndScreen"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
@@ -31,11 +32,11 @@ tools:showIn="@layout/app_bar_end_screen_single_player1"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="GAME OVER"
+            android:text="header"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textStyle="bold"
-            tools:text="GAME OVER" />
+            tools:text="header" />
 
 
     </LinearLayout>
@@ -83,5 +84,17 @@ tools:showIn="@layout/app_bar_end_screen_single_player1"
         app:layout_constraintVertical_chainStyle="packed">
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/endOfRoundOrGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp" />
 
 </android.support.constraint.ConstraintLayout>

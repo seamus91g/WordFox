@@ -20,19 +20,21 @@ public class ScoreScreen1Activity extends AppCompatActivity
 
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
-    private int gameIndexNumber;
+    private static int gameIndexNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         gameIndexNumber = getIntent().getExtras().getInt("game_index");
         GameData myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
+
         super.onCreate(savedInstanceState);
 
         int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
         this.setTitle("Round " + (round+1) + " Score");
 
         setContentView(R.layout.activity_score_screen1);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,9 +82,9 @@ public class ScoreScreen1Activity extends AppCompatActivity
         }
     }
 
-    public void proceed(View v) {
+    public static void proceed(View v) {
         Log.d(MONITOR_TAG, "In proceed");
-        MainActivity.allGameInstances.get(gameIndexNumber).startGame(this);
+//        MainActivity.allGameInstances.get(gameIndexNumber).startGame(v.getContext());
     }
 
     @Override

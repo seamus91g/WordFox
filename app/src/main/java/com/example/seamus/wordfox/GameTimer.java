@@ -1,7 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.TextView;
@@ -44,7 +42,7 @@ public class GameTimer {
                         TextView box5 = (TextView) activity.findViewById(R.id.timeblock5);
                         box5.setBackgroundColor(0);
                         _activity.setTimeUp(true);
-//                        Log.d(MONITOR_TAG, "Time is now up!!");
+                        Log.d(MONITOR_TAG, "Time is now up!!");
                         if (_activity.isGameInFocus()) {
                             activity.completeGame();
                         }
