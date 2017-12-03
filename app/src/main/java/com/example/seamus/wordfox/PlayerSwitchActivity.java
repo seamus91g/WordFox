@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.R.attr.duration;
 
@@ -55,17 +57,24 @@ public class PlayerSwitchActivity extends AppCompatActivity
         Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
         //create a list of items for the spinner.
         ArrayList<String> items = new ArrayList<String>();
-        items.add("Player " + (gameIndexNumber + 1)); // +2 because number has not been incremented yet from last round.
+        items.add("Player " + (gameIndexNumber + 1));
         // track already chosen players so they can't be chosen again
         ArrayList<String> previousPlayers = new ArrayList<>();
         for (int i=0; i<gameIndexNumber; i++){
             previousPlayers.add(MainActivity.allGameInstances.get(i).getPlayerID());
         }
         // Show the user a list of available player names excluding already chosen ones
+        Pattern p = Pattern.compile("Player\\s\\d");    // TODO     .. really??
+
         for(String playerID : GameData.getNamedPlayerList(this)){
             if(previousPlayers.contains(playerID)){
                 continue;
             }
+            Matcher m = p.matcher(playerID);
+            if(m.matches()){
+                Log.d(MONITOR_TAG, "Matched: " + playerID);
+            }
+            Log.d(MONITOR_TAG, "Didn't match: " + playerID);
             items.add(playerID);
         }
         // Create an adapter to describe how the items are displayed
@@ -80,14 +89,12 @@ public class PlayerSwitchActivity extends AppCompatActivity
                                        int position, long id) {
                 // The first option is not a name, just a player number
                 String nextPlayerMessage;
-                if (! (position == 0)){
-                    String choice = (String) parent.getItemAtPosition(position);
-                    MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(choice);
-                    nextPlayerMessage = "Pass the game to " + choice;
-                }else   {
-                    MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID("");
-                    nextPlayerMessage = "Pass the game to player " + (gameIndexNumber + 1);
-                }
+
+                String choice = (String) parent.getItemAtPosition(position);
+//              MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(choice);
+                MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(choice, gameIndexNumber));
+                nextPlayerMessage = "Pass the game to " + choice;
+
                 TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
                 nextPlayerTextView.setText(nextPlayerMessage);
             }
@@ -117,9 +124,10 @@ public class PlayerSwitchActivity extends AppCompatActivity
         public void onClick(View v) {
             EditText et = (EditText) findViewById(R.id.username_profile);
             String username_prof = et.getText().toString();
-            new GameData(v.getContext(), username_prof);    // TODO Invoke static method to add player instead
+//            new GameData(v.getContext(), username_prof);    // TODO Invoke static method to add player instead
             // Assign a username instead of just a player number
-            MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(username_prof);
+//            MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(username_prof);
+            MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(username_prof, gameIndexNumber));
             String nextPlayerMessage = "Pass the game to " + username_prof;
             TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
             nextPlayerTextView.setText(nextPlayerMessage);

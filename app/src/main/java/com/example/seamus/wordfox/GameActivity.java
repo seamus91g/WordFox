@@ -18,10 +18,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.database.FoxSQLData;
+import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.datamodels.RoundItem;
+import com.example.seamus.wordfox.datamodels.WordItem;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.UUID;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,15 +44,16 @@ public class GameActivity extends AppCompatActivity
     private boolean gameInFocus;
     private boolean timeUp;
     private int gameIndexNumber;
+    private FoxSQLData foxData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         gameIndexNumber = getIntent().getExtras().getInt("game_index");
-        Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
+//        Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
         myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
-        int currentRound = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
+        int currentRound = myGameInstance.getRound();
         this.setTitle("Round " + (currentRound + 1));
 
         setContentView(R.layout.activity_game);
@@ -55,15 +62,20 @@ public class GameActivity extends AppCompatActivity
 
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
 
-        if (myGameInstance.getPlayerID().equals("")){
-            myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
-        }else{
-            myGameData = new GameData(this.getApplicationContext(), myGameInstance.getPlayerID());
-        }
+        foxData = new FoxSQLData(this);
+        foxData.open();
+//        if (myGameInstance.getPlayerID().equals("")){
+//            myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
+//        }else{
+//        }
+        String playerID = myGameInstance.getPlayerID();
+        myGameData = new GameData(this.getApplicationContext(), playerID);
 
+        int gameCou = myGameData.getGameCount();
         if (currentRound == 0) {
             myGameData.gameCountUp();
         }
+        gameCou = myGameData.getGameCount();
         myGameData.roundCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
@@ -83,9 +95,16 @@ public class GameActivity extends AppCompatActivity
             for (int i = 0; i < givenLetters.size(); i++) {
                 givenLettersSTR += givenLetters.get(i);
             }
+
+            myGameInstance.setLongestPossible(myDiction.longestWordFromLetters(givenLettersSTR));
+            Log.d(MONITOR_TAG, "Longest word is: " + myGameInstance.getLongestPossible());
+
+            RoundItem thisRound = new RoundItem(myGameInstance.getRoundID(currentRound), givenLettersSTR, myGameInstance.getLongestPossible());
+            foxData.createRoundItem(thisRound);
         } else {      // If multi player game, re-use the same letters
             Log.d(MONITOR_TAG, "Re-using game letters ... ");
             givenLettersSTR = MainActivity.allGameInstances.get(0).getLetters(myGameInstance.getRound());
+            myGameInstance.setLongestPossible(MainActivity.allGameInstances.get(0).getRoundLongestPossible(currentRound));
             String[] letters = givenLettersSTR.split("");
             for (int i = 1; i < letters.length; i++) {       // First is a blank, skip
                 givenLetters.add(letters[i]);
@@ -107,13 +126,13 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        myGameInstance.setLongestPossible(myDiction.longestWordFromLetters(givenLettersSTR));
-        Log.d(MONITOR_TAG, "Longest word is: " + myGameInstance.getLongestPossible());
     }
 
     // When timer ends, change to the Score Screen to show results.
     public void startScoreScreen1Act() {
-        Log.d(MONITOR_TAG, "starting Score Screen 1");
+//        Log.d(MONITOR_TAG, "starting Score Screen 1");
+
+        Log.d(MONITOR_TAG, "Starting score sscreen intent: " + gameIndexNumber);
 
 //        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
 //        ScoreScreen1Intent.putExtra("game_index", gameIndexNumber);
@@ -137,7 +156,7 @@ public class GameActivity extends AppCompatActivity
         // Loop to retrieve each letter and write to its appropriate text view in the grid
         listOfGridCells = new ArrayList<SingleCell>();
 
-        Log.d(MONITOR_TAG, "Resetting grid cell list. Size is: " + listOfGridCells.size());
+//        Log.d(MONITOR_TAG, "Resetting grid cell list. Size is: " + listOfGridCells.size());
         for (int i = 0; i < givenLetters.size(); i++) {
             String allCellId = "guessGridCell" + (i + 1);
             int resID = getResources().getIdentifier(allCellId, "id", getPackageName());
@@ -199,10 +218,25 @@ public class GameActivity extends AppCompatActivity
         TextView currentTV = (TextView) findViewById(R.id.currentAttempt);
         String currentStr = (String) currentTV.getText();
         currentTV.setText("");  // Once retrieved, clear text from the current guess box
+        String lcCurrentStr = currentStr.toLowerCase(); // All words in dictionary are lower case
 
         // Check dictionary to see if the word exists
-        String lcCurrentStr = currentStr.toLowerCase(); // All words in dictionary are lower case
-        if (!myDiction.checkWordExists(lcCurrentStr)) {
+        boolean isValid = myDiction.checkWordExists(lcCurrentStr);
+        String wordAttempt = myGameInstance.getLongestWord();
+        boolean isPrevious = (wordAttempt.equals(""));
+        // if not valid, stick current word into data & sql, exit
+        // if valid, stick previous word into sql, continue
+        if (!isValid || !isPrevious){
+            if(!isValid){
+                wordAttempt = lcCurrentStr.toUpperCase();
+            }
+            String wordId = UUID.randomUUID().toString();
+            WordItem wrongWord = new WordItem(
+                    wordId, wordAttempt, myGameInstance.getPlayerID(), isValid, false, myGameInstance.getRoundID(myGameInstance.getRound())
+            );
+            foxData.createWordItem(wrongWord);
+        }
+        if (!isValid) {
             Toast.makeText(this, "Word doesn't exist", Toast.LENGTH_SHORT).show();
             myGameData.incorrectCountUp();
             return;
@@ -260,7 +294,7 @@ public class GameActivity extends AppCompatActivity
         // Highlight all the letters which have already been clicked
         for (SingleCell singleCellClicked : alreadyClicked) {
             if (singleCellClicked.resID == 0) {
-                Log.d(MONITOR_TAG, "Skipping first");
+//                Log.d(MONITOR_TAG, "Skipping first");
                 continue;
             }
             singleCellClicked.resID = oldToNew.get(singleCellClicked.resID);
@@ -337,26 +371,34 @@ public class GameActivity extends AppCompatActivity
         this.gameInFocus = gameState;
     }
 
+//    String wordId, String wordSubmitted, String playerName, String letters, boolean isValid, boolean isFinal, String gameId) {
     public void completeGame() {
-        Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
-        myGameData.addWord(myGameInstance.getLongestWord());
-
+//        Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
+        String endWord = myGameInstance.getLongestWord();
         int currentRound = myGameInstance.getRound();
+
+        myGameData.addWord(endWord);
+        String wordId = UUID.randomUUID().toString();
+        WordItem word = new WordItem(wordId, endWord, myGameInstance.getPlayerID(), true, true, myGameInstance.getRoundID(currentRound));
+        foxData.createWordItem(word);
+
+        Log.d(MONITOR_TAG, "Completing game: " + endWord);
+
         switch (currentRound) {
             case 0:
                 myGameInstance.setRound1Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound1Length(myGameInstance.getLongestWord().length());
-                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
                 break;
             case 1:
                 myGameInstance.setRound2Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound2Length(myGameInstance.getLongestWord().length());
-                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
                 break;
             case 2:
                 myGameInstance.setRound3Word(myGameInstance.getLongestWord());
                 myGameInstance.setRound3Length(myGameInstance.getLongestWord().length());
-                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
+//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
                 break;
             default:
                 break;
@@ -364,7 +406,6 @@ public class GameActivity extends AppCompatActivity
         startScoreScreen1Act();
 
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -378,7 +419,7 @@ public class GameActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+//                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
                 Intent profileScreenIntent = new Intent(GameActivity.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;
@@ -414,7 +455,7 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        Log.d(MONITOR_TAG, "Killing timer from onDestroy");
+//        Log.d(MONITOR_TAG, "Killing timer from onDestroy");
         myGameTimerInstance.killTimer();
         super.onDestroy();
     }
@@ -424,7 +465,7 @@ public class GameActivity extends AppCompatActivity
         super.onResume();
 //        Log.d(MONITOR_TAG, "onResume");
         if (isTimeUp()) {
-            Log.d(MONITOR_TAG, "Changing activity from onResume");
+//            Log.d(MONITOR_TAG, "Changing activity from onResume");
             completeGame();
 //            Intent ScoreScreen1Intent = new Intent(GameActivity.this, ScoreScreen1Activity.class);
 //            startActivity(ScoreScreen1Intent);
@@ -450,7 +491,7 @@ public class GameActivity extends AppCompatActivity
                 startActivity(homeScreenIntent);
             }
             this.backButtonPressedOnce = true;
-            Toast.makeText(this, "Press BACK again to exit the game", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Press BACK again to exit the game", Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -465,10 +506,10 @@ public class GameActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__");
+//        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__");
         navBurger.navigateTo(item, GameActivity.this);
 
-        Log.d(MONITOR_TAG, "After_onNavigationItemSelected__");
+//        Log.d(MONITOR_TAG, "After_onNavigationItemSelected__");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 

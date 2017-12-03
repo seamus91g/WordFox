@@ -29,12 +29,12 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.GenericArrayType;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
-    private static final int PLAYER_NUMBER = 0;
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
     private Menu menu;
@@ -46,7 +46,8 @@ public class ProfileActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myGameData = new GameData(this.getApplicationContext(), PLAYER_NUMBER);
+//        final String PLAYER = "Player 1";
+        myGameData = new GameData(this.getApplicationContext(), GameData.DEFAULT_P1_NAME);
         updateLongestWord();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -60,7 +61,8 @@ public class ProfileActivity extends AppCompatActivity
         // Display the user name. Do not display if still default "fox"
         EditText et = (EditText) findViewById(R.id.username_profile);
         String username_prof = myGameData.getUsername();
-        if (!username_prof.equals("fox")) {
+//        String username_prof = GameData.getPlayer1Name(this);
+        if (!username_prof.equals(GameData.DEFAULT_P1_NAME)) {  // TODO .. This can never be true?? Default return is Fox
             et.setText(username_prof);
         }
         // Button to save user name to GameData class.
@@ -183,6 +185,7 @@ public class ProfileActivity extends AppCompatActivity
         public void onClick(View v) {
             EditText et = (EditText) findViewById(R.id.username_profile);
             String username_prof = et.getText().toString();
+//            GameData.setPlayer1Name(v.getContext(), username_prof);
             myGameData.setUsername(username_prof);
             et.clearFocus();
             Log.d(MONITOR_TAG, "User entered: " + username_prof + ", END");

@@ -335,14 +335,14 @@ public class RoundnGameResults extends AppCompatActivity
 
         // if the playerID is blank then the new player hasn't set a user ID and their name can
         // just be retrieved using the GameData constructor that takes an int as an input
-        if (playerID.equals("")){
-            myGameData = new GameData(this, playerNum);
+//        if (playerID.equals("")){
+//            myGameData = new GameData(this, playerNum);
 
-        } else {
+//        } else {
             // if the playerID is not blank then the new player has set a user ID which
             // must be retrieved using the GameData constructor that takes the playerID
             myGameData = new GameData(this, playerID);
-        }
+//        }
 
         // return the player's name or ID retrieved from the GameData class
         return myGameData.getUsername();
@@ -432,7 +432,7 @@ public class RoundnGameResults extends AppCompatActivity
                 //followed by their name
                 // retrieve the player's name from the GameData class, store in a string to display in the heading
                 Log.d(TAG, "numPlayers not > 1 " + numPlayers);
-                GameData myGameData = new GameData(this, 0);
+                GameData myGameData = new GameData(this, MainActivity.allGameInstances.get(0).getPlayerID());
                 String playername = myGameData.getUsername();
                 gameOverTV.setText("GAME OVER " + playername.toUpperCase());
             }

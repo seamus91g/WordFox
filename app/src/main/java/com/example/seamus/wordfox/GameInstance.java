@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Desmond on 05/07/2017.
@@ -29,16 +31,9 @@ public class GameInstance {
     private int round2Length = 0;
     private int round3Length = 0;
     private static int maxNumberOfRounds = 3;
-    private int thisGameIndex;
-    private String playerID = "";   // Only exists if created on the player switch screen
-
-    public String getPlayerID() {
-        return playerID;
-    }
-
-    public void setPlayerID(String playerID) {
-        this.playerID = playerID;
-    }
+    private final int thisGameIndex;
+    private String playerID;   // Only exists if created on the player switch screen
+    private final ArrayList<String> roundIDs = new ArrayList<>();
 
     public static int getMaxNumberOfRounds() {
         return maxNumberOfRounds;
@@ -53,14 +48,40 @@ public class GameInstance {
     ;
     private GameState myGameState;
 
-    GameInstance() {
+    {
         totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         round = 0;
         longestWord = "";   // Longest of the current round
         myGameState = GameState.ONGOING;
-        Log.d(MONITOR_TAG, "New game instance");
+//        Log.d(MONITOR_TAG, "New game instance");]
+        for (int i=0; i<3; i++){
+            roundIDs.add(UUID.randomUUID().toString());
+        }
     }
+    GameInstance(int thisGameIndex) {
+        this.thisGameIndex = thisGameIndex;
+        this.playerID = "Player " + (thisGameIndex + 1);
+    }
+    GameInstance(String pId ,int thisGameIndex) {
+        if (pId.equals("")){
+            pId = "Unknown";
+        }
+        this.thisGameIndex = thisGameIndex;
+        this.playerID = pId;
+    }
+
+    public String getRoundID(int roundNum) {
+        return roundIDs.get(roundNum);
+    }
+
+    public String getPlayerID() {
+        return playerID;
+    }
+
+//    public void setPlayerID(String playerID) {
+//        this.playerID = playerID;
+//    }
 
     public int getHighestPossibleScore() {
         return highestPossibleScore;
@@ -82,16 +103,8 @@ public class GameInstance {
         return thisGameIndex;
     }
 
-    public void setThisGameIndex(int thisGameIndex) {
-        this.thisGameIndex = thisGameIndex;
-    }
-
     public GameState getMyGameState() {
         return myGameState;
-    }
-
-    public void setMyGameState(GameState myGameState) {
-        this.myGameState = myGameState;
     }
 
 
@@ -128,6 +141,7 @@ public class GameInstance {
     }
 
     public String getLongestPossible() {
+
         return allLongestPossible.get(round);
     }
 
@@ -144,13 +158,13 @@ public class GameInstance {
         score = 0;
         round = 0;
         longestWord = "";
-        Log.d(MONITOR_TAG, "Clearing all scores");
+//        Log.d(MONITOR_TAG, "Clearing all scores");
     }
 
     public void clearRoundScores() {
         score = 0;
         longestWord = "";
-        Log.d(MONITOR_TAG, "Clearing round scores");
+//        Log.d(MONITOR_TAG, "Clearing round scores");
     }
 
     public void setRound1Word(String word) {

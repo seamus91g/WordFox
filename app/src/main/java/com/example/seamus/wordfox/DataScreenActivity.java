@@ -25,9 +25,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.seamus.wordfox.database.FoxSQLData;
+import com.example.seamus.wordfox.database.WordTable;
+import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.datamodels.RoundItem;
+import com.example.seamus.wordfox.datamodels.WordItem;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import static android.support.constraint.ConstraintSet.BOTTOM;
 import static android.support.constraint.ConstraintSet.TOP;
@@ -48,29 +56,50 @@ public class DataScreenActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FoxSQLData foxData = new FoxSQLData(this);
+        foxData.open();
+
         // First ID is the image at the top. All other views are constrained to this
         allUniqueIds.add(R.id.data_heading_image);
         // Get list of created player names
         ArrayList<String> players = GameData.getNamedPlayerList(this);
         // Iterate through each player which has data
-        int count = 0;
-        while (count < MainActivity.getMaxPlayerCount()){
+//        int count = 0;
+        while (players.size() > 0){
             // Get all named players
-            if (players.size() > 0 && count > 0){
-                String playerName = players.remove(0);
-                myGameData = new GameData(this.getApplicationContext(), playerName);
-            // Get all numbered players
-            }else{
-                myGameData = new GameData(this.getApplicationContext(), count);
-                ++count;
-            }
-            // If there's no data, skip to the next one
+            String playerName;
+            playerName = players.remove(0);
+            myGameData = new GameData(this.getApplicationContext(), playerName);
             if(myGameData.getGameCount() == 0){
                 continue;
             }
             // Username section
             setTextView("Username", "HEADER");
             setTextView("" + myGameData.getUsername(), "DATA");
+            // DB words section
+            setTextView("Words", "HEADER");
+            List<WordItem> allWords = foxData.getValidWords(playerName);
+            Iterator<WordItem> wordIterator = allWords.iterator();
+//            setTextView("Number of words: " + foxData.getCountWords(), "DATA");    //
+            while(wordIterator.hasNext()){
+                WordItem thisword = wordIterator.next();
+                setTextView("" + thisword.getWordSubmitted(), "DATA"); // + "\t\t" + thisword.getPlayerName() + "\t\t" + thisword.isFinal() + "\t\t" + thisword.isValid(), "DATA");    //
+            }
+////            // DB Rounds section
+//            setTextView("Letters", "HEADER");
+//            List<RoundItem> allRounds = foxData.getAllRounds();
+//            Iterator<RoundItem> roundItemIterator = allRounds.iterator();
+//            setTextView("Number of rounds: " + foxData.getCountRounds(), "DATA");    //
+//            while(roundItemIterator.hasNext()){
+//                setTextView("" + roundItemIterator.next().getLetters(), "DATA");    //
+//            }
+////            // DB Games section
+//            setTextView("Winners", "HEADER");
+//            List<GameItem> allGames = foxData.getAllGames();
+//            Iterator<GameItem> gameItemIterator = allGames.iterator();
+//            while(gameItemIterator.hasNext()){
+//                setTextView("" + gameItemIterator.next().getWinner(), "DATA");    //
+//            }
             // Games section
             setTextView("Games", "HEADER");
             setTextView("Played " + myGameData.getGameCount() + " games", "DATA");

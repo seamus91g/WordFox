@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import static android.content.Context.MODE_PRIVATE;
 // Class to store game data and statistics
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
+    public static final String DEFAULT_P1_NAME = "Player 1";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -37,33 +39,38 @@ public class GameData extends AppCompatActivity {
     private String COUNT_NONE_FOUND_KEY;
     private String SHUFFLE_COUNT_KEY;
     private String HIGHEST_SCORE_KEY;
+//    private static String PLAYER_1_NAME_KEY = "player_1";
     private static String NAMED_PLAYER_COUNT_KEY = "named_player_count";
-    private int playerNumber;
+//    private int playerNumber;
     private static Set<String> playerIDs = new HashSet<String>();
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
 
-    GameData(Context myContext, int playerNumber) {
-        this.playerNumber = playerNumber;
-        GAME_COUNT_KEY = "game_count_" + playerNumber;
-        ROUND_COUNT_KEY = "round_count_" + playerNumber;
-        LONGEST_WORD_KEY = "longest_word_" + playerNumber;
-        USERNAME_KEY = "username_" + playerNumber;
-        PREF_FILE_NAME = "word_fox_gamedata_" + playerNumber;
-        PROFILE_PIC_KEY = "wordfox_profile_pic_" + playerNumber;
-        SUBMITTED_CORRECT_COUNT_KEY = "submitted_correct_count_" + playerNumber;
-        SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count_" + playerNumber;
-        COUNT_NONE_FOUND_KEY = "count_none_found_" + playerNumber;
-        SHUFFLE_COUNT_KEY = "shuffle_count_" + playerNumber;
-        HIGHEST_SCORE_KEY = "highest_score_" + playerNumber;
-
-        foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
-        editor = foxPreferences.edit();
-        editor.apply();
-    }
+//    GameData(Context myContext, int playerNumber) {
+//        this.playerNumber = playerNumber;
+//        GAME_COUNT_KEY = "game_count_" + playerNumber;
+//        ROUND_COUNT_KEY = "round_count_" + playerNumber;
+//        LONGEST_WORD_KEY = "longest_word_" + playerNumber;
+//        USERNAME_KEY = "username_" + playerNumber;
+//        PREF_FILE_NAME = "word_fox_gamedata_" + playerNumber;
+//        PROFILE_PIC_KEY = "wordfox_profile_pic_" + playerNumber;
+//        SUBMITTED_CORRECT_COUNT_KEY = "submitted_correct_count_" + playerNumber;
+//        SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count_" + playerNumber;
+//        COUNT_NONE_FOUND_KEY = "count_none_found_" + playerNumber;
+//        SHUFFLE_COUNT_KEY = "shuffle_count_" + playerNumber;
+//        HIGHEST_SCORE_KEY = "highest_score_" + playerNumber;
+//
+//        foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+//        editor = foxPreferences.edit();
+//        editor.apply();
+//    }
     // Instantiate using a name instead of a player number
     GameData(Context myContext, String playerID) {
-        this.playerNumber = 99;     // Why bother setting this?
+//        this.playerNumber = 99;     // Why bother setting this?
+        if (playerID.equals("")){
+            Toast.makeText(myContext, "Player name is empty!", Toast.LENGTH_SHORT).show();
+//            throw new RuntimeException("Empty player name!");
+        }
         GAME_COUNT_KEY = "game_count_" + playerID;
         ROUND_COUNT_KEY = "round_count_" + playerID;
         LONGEST_WORD_KEY = "longest_word_" + playerID;
@@ -80,9 +87,15 @@ public class GameData extends AppCompatActivity {
         editor = foxPreferences.edit();
         editor.apply();
 
-        playerIDs.add(playerID);
         addPlayer(playerID, myContext);
-        setUsername(playerID);
+        playerIDs.add(playerID);
+        if (!playerID.equals(DEFAULT_P1_NAME)) {    // If p1, don't set username. Only done in profile
+            setUsername(playerID);
+        }
+//        if (playerID.equals(DEFAULT_P1_NAME)){
+//            playerID = getPlayer1Name(myContext);
+//            Toast.makeText(myContext, "Default p1 name! Now: " + playerID, Toast.LENGTH_SHORT).show();
+//        }
     }
     // Create a new player if the name is unique
     void addPlayer(String playerID, Context myContext){
@@ -102,20 +115,20 @@ public class GameData extends AppCompatActivity {
         namedPlayerCountUp(myContext);
     }
     // Increase count of number of named players
-    static void namedPlayerCountUp(Context myContext){
+    private void namedPlayerCountUp(Context myContext){
         int countIncorrect = getNamedPlayerCount(myContext);
         countIncorrect += 1;
         setNamedPlayerCount(myContext, countIncorrect);
     }
-    static int getNamedPlayerCount(Context myContext){
-        SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
-        return foxPreferences.getInt(NAMED_PLAYER_COUNT_KEY, 0);
-    }
-    static void setNamedPlayerCount(Context myContext, int count){
+    private void setNamedPlayerCount(Context myContext, int count){
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         SharedPreferences.Editor editor = foxPreferences.edit();
         editor.putInt(NAMED_PLAYER_COUNT_KEY, count);
         editor.apply();
+    }
+    static int getNamedPlayerCount(Context myContext){
+        SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+        return foxPreferences.getInt(NAMED_PLAYER_COUNT_KEY, 0);
     }
     static ArrayList<String> getNamedPlayerList(Context myContext){
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
@@ -129,15 +142,35 @@ public class GameData extends AppCompatActivity {
         return namedPlayers;
     }
 
+//    public static String getPlayer1Name(Context myContext) {
+//        SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = foxPreferences.edit();
+//        return foxPreferences.getString(PLAYER_1_NAME_KEY, "Fox");
+//    }
+//    public String getPlayerName(int index) {
+////        SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+////        SharedPreferences.Editor editor = foxPreferences.edit();
+//
+//        String KEY = "name_" + index;
+//        String name = foxPreferences.getString(KEY, "Unknown");
+//        return foxPreferences.getString(PLAYER_1_NAME_KEY, "Fox");
+//    }
+//    static void setPlayer1Name(Context myContext, String name) {
+//        SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = foxPreferences.edit();
+//        editor.putString(PLAYER_1_NAME_KEY, name);
+//        editor.apply();
+//    }
     public void setUsername(String nameEntered) {
         editor.putString(USERNAME_KEY, nameEntered);
         editor.apply();
     }
     public String getUsername() {
-        String defaultName = "Player " + (playerNumber+1);
-        if (playerNumber == 0){
-            defaultName = "Fox";
-        }
+        String defaultName = "Fox";
+//        String defaultName = "Player " + (playerNumber+1);
+//        if (playerNumber == 0){
+//            defaultName = "Fox";
+//        }
         return foxPreferences.getString(USERNAME_KEY, defaultName);
     }
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private final String MONITOR_TAG = "myTag";
+    public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
     private int numberOfPlayers;
@@ -38,12 +38,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
 
-
         NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
         np.setMinValue(1);
         np.setMaxValue(maxPlayerCount);
-
-//        editor = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE).edit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -69,10 +66,8 @@ public class MainActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
         for (int i = 0; i < numberOfPlayers; i++) {
-            GameInstance thisGame = new GameInstance();
-            thisGame.setThisGameIndex(i);
+            GameInstance thisGame = new GameInstance(i);
             allGameInstances.add(thisGame);
-
         }
 
         int indexOfGameInstance = 0;

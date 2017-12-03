@@ -26,13 +26,14 @@ public class ScoreScreen1Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         gameIndexNumber = getIntent().getExtras().getInt("game_index");
-        GameData myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
-
+        Log.d(MONITOR_TAG, "OnCreate score screen 1: " + gameIndexNumber);
+        GameData myGameData = new GameData(this.getApplicationContext(), MainActivity.allGameInstances.get(gameIndexNumber).getPlayerID());
         super.onCreate(savedInstanceState);
 
         int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
         this.setTitle("Round " + (round+1) + " Score");
 
+        Log.d(MONITOR_TAG, "OnCreate score screen 2: " + gameIndexNumber);
         setContentView(R.layout.activity_score_screen1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -44,18 +45,20 @@ public class ScoreScreen1Activity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        Log.d(MONITOR_TAG, "OnCreate score screen 3: " + gameIndexNumber);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Log.d(MONITOR_TAG, "just want to see if this makes it");
 
-        int score = MainActivity.allGameInstances.get(gameIndexNumber).getScore();
+//        int score = MainActivity.allGameInstances.get(gameIndexNumber).getScore();
         int totalScore = MainActivity.allGameInstances.get(gameIndexNumber).getTotalScore();
         String gameLetters = MainActivity.allGameInstances.get(gameIndexNumber).getLetters(round);
         String longestAttempt = MainActivity.allGameInstances.get(gameIndexNumber).getLongestWord();
         String longestPossible = MainActivity.allGameInstances.get(gameIndexNumber).getLongestPossible().toUpperCase();
-        String userName = myGameData.getUsername();
+//        String userName = myGameData.getUsername();
 
+        Log.d(MONITOR_TAG, "OnCreate score screen 4 : " + gameIndexNumber);
 //        TextView scoreScreenGreetingTextView = (TextView) findViewById(R.id.scoreScreenGreetingTV);
 //        scoreScreenGreetingTextView.setText("Congratulations " + userName + "!");
 
@@ -71,6 +74,7 @@ public class ScoreScreen1Activity extends AppCompatActivity
         TextView longestWordScoreScreenTextView = (TextView) findViewById(R.id.longestWordScoreScreenTV);
         longestWordScoreScreenTextView.setText(String.valueOf(longestAttempt));
 
+        Log.d(MONITOR_TAG, "OnCreate score screen 5: " + gameIndexNumber);
         String longestWordPossibleWithLength = longestPossible + " (" + longestPossible.length() + ")";
         TextView longestWordPossibleTextView = (TextView) findViewById(R.id.longestWordPossibleTV);
         longestWordPossibleTextView.setText(longestWordPossibleWithLength);
