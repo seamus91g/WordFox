@@ -119,8 +119,12 @@ public class RoundnGameResults extends AppCompatActivity
                 //declare and initialise an integer for the player's total score at the end of the game
                 int totalScore = myGameInstance.getTotalScore();
 
-                GameData myGameData = new GameData(this, k);
-                String playername = myGameData.getUsername();
+                String playername = getPlayerNameorID(k);
+
+
+
+//                GameData myGameData = new GameData(this, k);
+//                String playername = myGameData.getUsername();
 
 
                 playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore, playername);
@@ -299,14 +303,9 @@ public class RoundnGameResults extends AppCompatActivity
                 String name = "";
 
                 if(roundOrGameEnd.equals("game")) {
-                    // create an object instance of the GameData class to get the stored username(s)
-                    GameData myGameData = new GameData(this, i);
-                    // declare and initialise a String to hold the player's name retrieved from the GameData class
-                    name = myGameData.getUsername();
-                } else {
-                    GameData myGameData = new GameData(this, gameIndexNumber);
-                    // declare and initialise a String to hold the player's name retrieved from the GameData class
-                    name = myGameData.getUsername();
+                    name = getPlayerNameorID(i);
+                } else if(roundOrGameEnd.equals("round")) {
+                    name = getPlayerNameorID(gameIndexNumber);
                 }
 
                 TextView nameTV = createTVwithText(name + ": ");
@@ -324,6 +323,29 @@ public class RoundnGameResults extends AppCompatActivity
 
         }
 
+    }
+
+    private String getPlayerNameorID(int playerNum) {
+
+        GameData myGameData;
+
+        // declare and initialise a String to hold the player's ID retrieved from the
+        // allGameInstance class
+        String playerID = MainActivity.allGameInstances.get(playerNum).getPlayerID();
+
+        // if the playerID is blank then the new player hasn't set a user ID and their name can
+        // just be retrieved using the GameData constructor that takes an int as an input
+        if (playerID.equals("")){
+            myGameData = new GameData(this, playerNum);
+
+        } else {
+            // if the playerID is not blank then the new player has set a user ID which
+            // must be retrieved using the GameData constructor that takes the playerID
+            myGameData = new GameData(this, playerID);
+        }
+
+        // return the player's name or ID retrieved from the GameData class
+        return myGameData.getUsername();
     }
 
     private String getRoundOrGameBestGuess(String roundOrGameEnd, int i, int j) {
@@ -428,8 +450,8 @@ public class RoundnGameResults extends AppCompatActivity
         // below for loop for each player. If it's just the end of a round, you'll only need to do
         // the for loop once, for the player that just completed the round
         if(roundOrGameEnd.equals("game")){
-            steps = numPlayers;
             Log.d(TAG, "roundOrGameEnd should be game, is: " + roundOrGameEnd);
+            steps = numPlayers;
 
         }else if (roundOrGameEnd.equals("round")){
             Log.d(TAG, "roundOrGameEnd should be round, is: " + roundOrGameEnd);
@@ -451,34 +473,40 @@ public class RoundnGameResults extends AppCompatActivity
             // create a reference to the object instance of the GameInstance class created in the main activity
             GameInstance myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
 
-            if (roundOrGameEnd.equals("round")){
-                // if there's only one player, or its just the end of a round in a multiplayer game, the greeting should
-                // say, 'You scored '
-                greeting = "You scored ";
 
+            // set the greeting to be "You scored" for the end of a round in any game type,
+            // set the greeting to say "You scored" for end of round and game in one player,
+            // set the greeting to be "#name scored" for the end of a game in multiplayer
+            if (roundOrGameEnd.equals("round") || (numPlayers == 1)){
+                greeting = "You scored ";
+            }else if (roundOrGameEnd.equals("game") && (numPlayers > 1)){
+                //get the player name
+                playername = getPlayerNameorID(k);
+                greeting = playername + " scored ";
+            }
+
+
+
+            if (roundOrGameEnd.equals("round")){
+                // if it's the end of a round get the players score and the max possible score from that round
                     // the player's total score at the end of the round
                     totalScore = myGameInstance.getRoundXWord(myGameInstance.getRound()+1).length();
                     // the max possible score at the end of the round
                     maxScore = myGameInstance.getRoundLongestPossible(myGameInstance.getRound()).length();
 
             }else if (roundOrGameEnd.equals("game")){
-                // if there's more than one player, or it's the end of the game the greeting should
-                // say, '#name scored'
+                // if it's the end of a game get the players score and the max possible score from that game
+                    GameInstance eachGameInstance = MainActivity.allGameInstances.get(k);
 
-                GameInstance eachGameInstance = MainActivity.allGameInstances.get(k);
-
-                //get the player name
-                GameData myGameData = new GameData(this, k);
-                playername = myGameData.getUsername();
-                greeting = playername + " scored ";
-
-
-                // the player's total score at the end of the game
-                totalScore = eachGameInstance.getTotalScore();
-                // the max possible score at the end of the game
-                maxScore = eachGameInstance.getHighestPossibleScore();
+                    // the player's total score at the end of the game
+                    totalScore = eachGameInstance.getTotalScore();
+                    // the max possible score at the end of the game
+                    maxScore = eachGameInstance.getHighestPossibleScore();
             }
             Log.d(TAG, "xxxx 2 iteration no. " + k);
+
+
+
 
             //set the text of the resultsRatioTV on the end screen to show the users points
             String resultsRatio = String.valueOf(totalScore) + " out of " + String.valueOf(maxScore) + " = ";
