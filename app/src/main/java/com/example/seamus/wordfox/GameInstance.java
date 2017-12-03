@@ -33,6 +33,9 @@ public class GameInstance {
     private static int maxNumberOfRounds = 3;
     private final int thisGameIndex;
     private String playerID;   // Only exists if created on the player switch screen
+
+
+
     private final ArrayList<String> roundIDs = new ArrayList<>();
 
     public static int getMaxNumberOfRounds() {
@@ -49,23 +52,33 @@ public class GameInstance {
     private GameState myGameState;
 
     {
-        totalScore = 0;     // These initialisations seem unnecessary since MainActivity clears scores
+        totalScore = 0;         // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         round = 0;
-        longestWord = "";   // Longest of the current round
+        longestWord = "";       // Longest of the current round
         myGameState = GameState.ONGOING;
-//        Log.d(MONITOR_TAG, "New game instance");]
-        for (int i=0; i<3; i++){
-            roundIDs.add(UUID.randomUUID().toString());
-        }
     }
     GameInstance(int thisGameIndex) {
-        this.thisGameIndex = thisGameIndex;
-        this.playerID = "Player " + (thisGameIndex + 1);
+        this("Player " + (thisGameIndex + 1), thisGameIndex, null);
     }
-    GameInstance(String pId ,int thisGameIndex) {
+    GameInstance(int thisGameIndex, ArrayList<String> roundIDs) {
+        this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
+    }
+    GameInstance(String pId, int thisGameIndex) {
+        this(pId, thisGameIndex, null);
+    }
+    GameInstance(String pId ,int thisGameIndex, ArrayList<String> roundIDs) {
         if (pId.equals("")){
             pId = "Unknown";
+        }
+        if(roundIDs == null){
+            for (int i=0; i<maxNumberOfRounds; i++){
+                this.roundIDs.add(UUID.randomUUID().toString());
+            }
+        }else{                              // Defensive copying
+            for (String ID: roundIDs) {
+                this.roundIDs.add(ID);
+            }
         }
         this.thisGameIndex = thisGameIndex;
         this.playerID = pId;
@@ -74,14 +87,13 @@ public class GameInstance {
     public String getRoundID(int roundNum) {
         return roundIDs.get(roundNum);
     }
+    public ArrayList<String> getRoundIDs() {
+        return roundIDs;
+    }
 
     public String getPlayerID() {
         return playerID;
     }
-
-//    public void setPlayerID(String playerID) {
-//        this.playerID = playerID;
-//    }
 
     public int getHighestPossibleScore() {
         return highestPossibleScore;

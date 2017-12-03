@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,8 +66,14 @@ public class MainActivity extends AppCompatActivity
         numberOfPlayers = np.getValue();
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
-        for (int i = 0; i < numberOfPlayers; i++) {
-            GameInstance thisGame = new GameInstance(i);
+//        for (int i=0; i<maxNumberOfRounds; i++){
+//            this.roundIDs.add(UUID.randomUUID().toString());
+//        }
+
+        GameInstance thisGame = new GameInstance(0);
+        allGameInstances.add(thisGame);
+        for (int i = 1; i < numberOfPlayers; i++) {
+            thisGame = new GameInstance(i, thisGame.getRoundIDs());
             allGameInstances.add(thisGame);
         }
 
