@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="results_scrolling_screen_height">500dp</dimen>
 </resources>

@@ -19,4 +19,7 @@
     <dimen name="grid_button_height">84dp</dimen>
     <dimen name="action_button_dimension">60dp</dimen>
     <dimen name="action_button_text_size">7dp</dimen>
+
+    <dimen name="results_scrolling_screen_height">440dp</dimen>
+
 </resources>

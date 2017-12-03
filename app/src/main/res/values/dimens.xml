@@ -13,4 +13,7 @@
     <dimen name="grid_button_text_size">38dp</dimen>
     <dimen name="action_button_dimension">64dp</dimen>
     <dimen name="action_button_text_size">8dp</dimen>
+
+    <dimen name="results_scrolling_screen_height">275dp</dimen>
+
 </resources>

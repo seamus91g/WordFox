@@ -24,10 +24,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.constraint.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:id="@+id/wholePageData"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/wholePageData">
 
             <ImageView
                 android:id="@+id/data_heading_image"
