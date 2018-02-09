@@ -124,7 +124,37 @@ public class FoxSQLData {
         cursor.close();
         return rounds;
     }
+    public RoundItem getRound(String rID) {
+        RoundItem round;
+        Cursor cursor = wfDatabase.query(RoundTable.TABLE_ROUNDS, RoundTable.ALL_COLUMNS,  RoundTable.COLUMN_ID + " = '" + rID + "'", null, null, null, null);
 
+        cursor.moveToNext();
+        round = new RoundItem(
+                cursor.getString(cursor.getColumnIndex(RoundTable.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(RoundTable.COLUMN_LETTERS)),
+                cursor.getString(cursor.getColumnIndex(RoundTable.COLUMN_LONGEST_POSSIBLE))
+        );
+        cursor.close();
+        return round;
+    }
+    public WordItem getWord(String wID) {
+        WordItem word;
+        Cursor cursor = wfDatabase.query(RoundTable.TABLE_ROUNDS, RoundTable.ALL_COLUMNS,  RoundTable.COLUMN_ID + " = '" + wID + "'", null, null, null, null);
+
+        cursor.moveToNext();
+        word = new WordItem(
+                cursor.getString(cursor.getColumnIndex(WordTable.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(WordTable.COLUMN_WORD)),
+                cursor.getString(cursor.getColumnIndex(WordTable.COLUMN_PLAYER)),
+                (cursor.getInt(cursor.getColumnIndex(WordTable.COLUMN_VALID)) == 1),   // Convert to bool.  If 1, true. If not 1, false
+                (cursor.getInt(cursor.getColumnIndex(WordTable.COLUMN_FINAL)) == 1),
+                cursor.getString(cursor.getColumnIndex(WordTable.COLUMN_GAME_ID))
+        );
+        cursor.close();
+        return word;
+    }
+
+//    public List<GameItem> getAllGames(Context myCont) {
     public List<GameItem> getAllGames() {
         List<GameItem> games = new ArrayList<>();
         Cursor cursor = wfDatabase.query(GameTable.TABLE_GAMES, GameTable.ALL_COLUMNS, null, null, null, null, null);
@@ -139,6 +169,7 @@ public class FoxSQLData {
                     cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W3_ID)),
                     cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_WINNER)),
                     cursor.getInt(cursor.getColumnIndex(GameTable.COLUMN_PLAYER_COUNT))
+//                    myCont
             );
             games.add(round);
         }

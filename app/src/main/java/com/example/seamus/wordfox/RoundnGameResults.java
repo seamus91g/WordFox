@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.seamus.wordfox.database.FoxSQLData;
+import com.example.seamus.wordfox.datamodels.GameItem;
+
 import java.util.ArrayList;
 
 public class RoundnGameResults extends AppCompatActivity
@@ -100,53 +103,61 @@ public class RoundnGameResults extends AppCompatActivity
         }else if (roundOrGameEnd.equals("game")){
             //do what you need for the end of the game
             Log.d(MONITOR_TAG, "IT'S THE END OF A GAME: " + roundOrGameEnd);
+
             populateHeaderMsg(roundOrGameEnd);
             populateResultLL(roundOrGameEnd);
 
             //getWinnerOrDraw
             // create an array of playersFinalScoresNNames objects for the players' scores and names
             // at the end of the game
-            playersFinalScoresNNames[] playersFinalScoresNNamesArr = new playersFinalScoresNNames[numPlayers];
+//            playersFinalScoresNNames[] playersFinalScoresNNamesArr = new playersFinalScoresNNames[numPlayers];
 
-            for (int k=0; k<numPlayers; k++) {
-                // for each player declare and initialize a new playersFinalScoresNNames object with
-                // the associated totalScore and playername and add it into playersFinalScoresNNamesArr
-
-
-                // create a reference to the object instance of the GameInstance class created in
-                // the main activity
-                GameInstance myGameInstance = MainActivity.allGameInstances.get(k);
-                //declare and initialise an integer for the player's total score at the end of the game
-                int totalScore = myGameInstance.getTotalScore();
-
-                String playername = getPlayerNameorID(k);
-
-
-
-//                GameData myGameData = new GameData(this, k);
-//                String playername = myGameData.getUsername();
-
-
-                playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore, playername);
-                playersFinalScoresNNamesArr[k] = myPlayersFinalScoresNNames;
-
-            }
+//            for (int k=0; k<numPlayers; k++) {
+//                // for each player declare and initialize a new playersFinalScoresNNames object with
+//                // the associated totalScore and playername and add it into playersFinalScoresNNamesArr
+//
+//
+//                // create a reference to the object instance of the GameInstance class created in
+//                // the main activity
+//                GameInstance myGameInstance = MainActivity.allGameInstances.get(k);
+//                //declare and initialise an integer for the player's total score at the end of the game
+//                int totalScore = myGameInstance.getTotalScore();
+//
+//                String playername = getPlayerNameorID(k);
+//
+//
+//
+////                GameData myGameData = new GameData(this, k);
+////                String playername = myGameData.getUsername();
+//
+//
+//                playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore, playername);
+//                playersFinalScoresNNamesArr[k] = myPlayersFinalScoresNNames;
+//
+//            }
 
             Log.d("Hello", "xxxx 3");
 
             //get the name of the player with the highest score and set it to be the winner or if
             // there's a draw, say who drew
+
+            //create an array of strings to hold the name(s) of the player(s) with the highest score
+            ArrayList<GameInstance> winners = playersWithHighestScore();
+
+            GameItem thisGameDetails = gameitemFromInstances(winners);
+            FoxSQLData foxData = new FoxSQLData(this);
+            foxData.open();
+            foxData.createGameItem(thisGameDetails);
+
             if (numPlayers>1){
 
-                //create an array of strings to hold the name(s) of the player(s) with the highest score
-                ArrayList<String> winners = playersWithHighestScore(playersFinalScoresNNamesArr);
 
                 victoryMessage = "";
                 Log.d("Hello", "xxxx 3.1 victoryMessage is: " + victoryMessage);
 
                 if (winners.size() == 1){
                     //if there's only one name in the list of winners then it wasn't a draw and that player won
-                    victoryMessage = "Winner is " + winners.get(0) + "!";
+                    victoryMessage = "Winner is " + winners.get(0).getPlayerID() + "!";
                     Log.d("Hello", "xxxx 3.2 victoryMessage is: " + victoryMessage);
                 }else {
                     //if there's more than one name in the list of winners then it was a draw
@@ -158,9 +169,9 @@ public class RoundnGameResults extends AppCompatActivity
                         if (f == (winners.size() - 1)){
                             //if you're entering the name of the last player to tie the score,
                             // end with an !
-                            victoryMessage = (victoryMessage + winners.get(f) + "!");
+                            victoryMessage = (victoryMessage + winners.get(f).getPlayerID() + "!");
                         }else{
-                            victoryMessage = (victoryMessage + winners.get(f) + " and ");
+                            victoryMessage = (victoryMessage + winners.get(f).getPlayerID() + " and ");
                         }
 
                     }
@@ -180,6 +191,45 @@ public class RoundnGameResults extends AppCompatActivity
             createRoundSummary(roundOrGameEnd);
 
         }
+    }
+
+    private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances){
+        StringBuilder winWords1 = new StringBuilder();
+        StringBuilder winWords2 = new StringBuilder();
+        StringBuilder winWords3 = new StringBuilder();
+        StringBuilder winNames = new StringBuilder();
+        for(GameInstance g : gInstances){
+            winWords1.append(g.getRound1Word());
+            winWords1.append(", ");
+            winWords2.append(g.getRound2Word());
+            winWords2.append(", ");
+            winWords3.append(g.getRound3Word());
+            winWords3.append(", ");
+            winNames.append(g.getPlayerID());
+            winNames.append(", ");
+        }
+        String ww1 = winWords1.length() > 0 ? winWords1.substring(0, winWords1.length() - 2): "";
+        String ww2 = winWords2.length() > 0 ? winWords2.substring(0, winWords2.length() - 2): "";
+        String ww3 = winWords3.length() > 0 ? winWords3.substring(0, winWords3.length() - 2): "";
+        String wn = winNames.length() > 0 ? winNames.substring(0, winNames.length() - 2): "";
+
+        GameInstance myGameInstance = MainActivity.allGameInstances.get(0);
+        String round1Id = myGameInstance.getRoundID(0);
+        String round2Id = myGameInstance.getRoundID(1);
+        String round3Id = myGameInstance.getRoundID(2);
+                GameItem thisGame = new GameItem(
+                round1Id, round2Id, round3Id, ww1, ww2, ww3, wn, numPlayers
+        );
+        return thisGame;
+    }
+
+    private String getCslFromList(ArrayList<String> strings){
+        StringBuilder strBl = new StringBuilder();
+        for(String string : strings) {
+            strBl.append(string);
+            strBl.append(",");
+        }
+        return strBl.length() > 0 ? strBl.substring(0, strBl.length() - 1): "";
     }
 
     private void createRoundSummary(String roundOrGameEnd) {
@@ -523,21 +573,22 @@ public class RoundnGameResults extends AppCompatActivity
         }
     }
 
-    private ArrayList<String> playersWithHighestScore(playersFinalScoresNNames[] playersFinalScoresNNamesArr) {
+//    private ArrayList<String> playersWithHighestScore(playersFinalScoresNNames[] playersFinalScoresNNamesArr) {
+    private ArrayList<GameInstance> playersWithHighestScore() {
         int maxScore = 0;
         // declare an empty ArrayList of Strings to hold the names of the player(s) with the high score
-        ArrayList<String> winners = new ArrayList<>();
+        ArrayList<GameInstance> winners = new ArrayList<>();
 
         // go through each element of the playersFinalScoresNNamesArr checking each score to find
         // the max score, then add the associated PlayerName to the ArrayList of winners names
-        for (playersFinalScoresNNames v1 : playersFinalScoresNNamesArr) {
-            int score = v1.getEndOfGameScore();
+        for (GameInstance v1 : MainActivity.allGameInstances) {
+            int score = v1.getTotalScore();
             if (score > maxScore) {
                 maxScore = score;
                 winners.clear();
-                winners.add(v1.getPlayerName());
+                winners.add(v1);
             } else if (score == maxScore) {
-                winners.add(v1.getPlayerName());
+                winners.add(v1);
             }
         }
 

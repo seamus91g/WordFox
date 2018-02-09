@@ -63,6 +63,7 @@ public class DataScreenActivity extends AppCompatActivity
         allUniqueIds.add(R.id.data_heading_image);
         // Get list of created player names
         ArrayList<String> players = GameData.getNamedPlayerList(this);
+//        List<GameItem> allGames = foxData.getAllGames(this);
         // Iterate through each player which has data
 //        int count = 0;
         while (players.size() > 0){
@@ -94,11 +95,19 @@ public class DataScreenActivity extends AppCompatActivity
 //                setTextView("" + roundItemIterator.next().getLetters(), "DATA");    //
 //            }
 ////            // DB Games section
-//            setTextView("Winners", "HEADER");
-//            List<GameItem> allGames = foxData.getAllGames();
+//            setTextView("Games Won", "HEADER");
 //            Iterator<GameItem> gameItemIterator = allGames.iterator();
 //            while(gameItemIterator.hasNext()){
-//                setTextView("" + gameItemIterator.next().getWinner(), "DATA");    //
+//                GameItem thisGame = gameItemIterator.next();
+//                if(thisGame.getWinners().contains(playerName)){
+//
+////                    setTextView(
+////                            "" + thisGame.getLetters(0)  + thisGame.getWinnerWords().get(0) + "\n"
+////                            + thisGame.getLetters(1)  + thisGame.getWinnerWords().get(1) + "\n"
+////                            + thisGame.getLetters(2)  + thisGame.getWinnerWords().get(2)
+////                            , "DATA"
+////                    );    //
+//                }
 //            }
             // Games section
             setTextView("Games", "HEADER");
