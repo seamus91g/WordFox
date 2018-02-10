@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import java.util.Random;
 
 import android.content.res.AssetManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -129,36 +131,45 @@ public class FoxDictionary {
     }
     public boolean checkWordExists(String checkWord) {
         if (allValidWords.contains(checkWord)) {
-            Log.d("foxWords", "Found word: " + checkWord);
             return true;
         } else {
-            Log.d("foxWords", "Did not find word: " + checkWord);
             return false;
         }
     }
     // Find longest word from the random 9 game letters.
-    public String longestWordFromLetters(String givenLetters) {
+    public ArrayList<String> longestWordFromLetters(String givenLetters) {
         givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
-        String thisLongest = "";
+
+        // Save 3 of the longest words that can be found. Also store 1 of each length down to length 5
+        int numberToSave = 3;
+        ArrayList<String> multipleLengths = new ArrayList<String>();
         if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
-            thisLongest = validWordsAlphabeticalKey.get(givenLetters);
-            Log.d(MONITOR_TAG_FOX, "-----------== Found a niner!! ==--------------: " + thisLongest);
-        }else {
-            for (int x = 0; x < 7; x++) {        // Only go to 7 since 2 letter words are not valid
-                if (thisLongest.equals("")) {
-                    HashMap<String, Boolean> substringsChecked = new HashMap<String, Boolean>();
-                    thisLongest = substringSearch(givenLetters, thisLongest, x, substringsChecked);
-                }else{
-                    Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + (9 - x) + " letters ---");
-                    break;
+            String niner = validWordsAlphabeticalKey.get(givenLetters);
+            multipleLengths.add(niner);
+            --numberToSave;
+            Log.d(MONITOR_TAG_FOX, "-----------== Found a nine letter word! ==--------------: " + niner);
+        }
+        for (int x = 0; x < 7; ++x) {        // Only go to 7 since 2 letter words are not valid
+            if (multipleLengths.size() == 0 || x < 4) {
+                Log.d(MONITOR_TAG_FOX, "=== entering === " + x);
+                HashMap<String, Boolean> substringsChecked = new HashMap<String, Boolean>();
+                ArrayList<String> listOfLongest = new ArrayList<String>();
+                listOfLongest = substringSearch(givenLetters, listOfLongest, x, substringsChecked, numberToSave);
+                multipleLengths.addAll(listOfLongest);
+                if (numberToSave != 1 && listOfLongest.size() > 0) {
+                    numberToSave -= listOfLongest.size() -1;
+                    numberToSave = numberToSave < 1 ? 1 : numberToSave;
                 }
+            }else{
+                Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + (9 - x) + " letters ---");
+                break;
             }
         }
-        return thisLongest;
+        return multipleLengths;
     }
     // Recursively search for valid substrings
-    public String substringSearch(String givenLetters, String knownLongest, int Depth, HashMap substringsChecked) {
-        String thisLongest = knownLongest;
+    public ArrayList<String> substringSearch(String givenLetters, ArrayList<String> knownLongest, int Depth, HashMap substringsChecked, int howMany) {
+        ArrayList<String> thisLongest = knownLongest;
         int len = givenLetters.length();
         for (int j = 0; j < len; j++){
             String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
@@ -173,17 +184,31 @@ public class FoxDictionary {
             if (Depth == 0) {
                 if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
                     String candidateLongest = validWordsAlphabeticalKey.get(checkWindow);
-                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest + ", checking if higher index than " + thisLongest + ", end");
-                    thisLongest = returnBetterIndex(thisLongest, candidateLongest);
-                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest);
+//                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest + ", checking if higher index than " + thisLongest + ", end");
+                    int numberCollected = thisLongest.size();
+                    // TODO: This fails to return list of highest index words. First two will be sorted and the winner of this comparison will never be removed from the list, even if several subsequent higher indexes are found
+                    if (numberCollected > 0) {
+                        String leastIndexWord = thisLongest.get(numberCollected-1);
+                        String result = returnBetterIndex(leastIndexWord, candidateLongest);
+                        if(!result.equals(leastIndexWord)) {
+//                            Log.d(MONITOR_TAG_FOX, "LW1> Removing " + thisLongest.get(0) + ", Adding "+ res);
+                            thisLongest.remove(numberCollected-1);
+                            thisLongest.add(result);
+                            if(thisLongest.size() < howMany){
+                                thisLongest.add(leastIndexWord);
+                            }
+                        }else if(thisLongest.size() < howMany){
+                            thisLongest.add(candidateLongest);
+                        }
+                    }else{
+                        thisLongest.add(candidateLongest);
+//                        Log.d(MONITOR_TAG_FOX, "LW2> Adding " + candidateLongest);
+                    }
+//                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest);
                 }
             }else {
-                String returnLongest = substringSearch(checkWindow, thisLongest, Depth - 1, substringsChecked);
-                thisLongest = returnBetterIndex(thisLongest, returnLongest);
+                thisLongest = substringSearch(checkWindow, thisLongest, Depth - 1, substringsChecked, howMany);
             }
-//            if (!thisLongest.equals("")){
-//                break;
-//            }
         }
         return thisLongest;
     }

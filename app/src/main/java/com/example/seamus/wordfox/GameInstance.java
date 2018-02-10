@@ -23,6 +23,7 @@ public class GameInstance {
     private ArrayList<String> allLongestPossible = new ArrayList<>();
     private String longestWord;
     private ArrayList<String> letters = new ArrayList<>();
+    private ArrayList<ArrayList<String>> wordForEachLengthPerRound = new ArrayList<>();
     private String round1Word = "";
     private String round2Word = "";
     private String round3Word = "";
@@ -119,6 +120,12 @@ public class GameInstance {
         return myGameState;
     }
 
+    public void addListOfSuggestedWords(ArrayList<String> suggestedWords){
+        wordForEachLengthPerRound.add(suggestedWords);
+    }
+    public ArrayList<String> getSuggestedWordsOfRound(int requestedRound){
+        return wordForEachLengthPerRound.get(requestedRound);
+    }
 
     public int getTotalScore() {
         return totalScore;

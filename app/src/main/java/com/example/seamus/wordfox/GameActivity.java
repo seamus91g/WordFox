@@ -95,12 +95,13 @@ public class GameActivity extends AppCompatActivity
             for (int i = 0; i < givenLetters.size(); i++) {
                 givenLettersSTR += givenLetters.get(i);
             }
-
-            myGameInstance.setLongestPossible(myDiction.longestWordFromLetters(givenLettersSTR));
-            Log.d(MONITOR_TAG, "Longest word is: " + myGameInstance.getLongestPossible());
-
+            ArrayList<String> longestWordsPossible = new ArrayList<>();
+            longestWordsPossible = myDiction.longestWordFromLetters(givenLettersSTR);
+            myGameInstance.setLongestPossible(longestWordsPossible.get(0));
+            myGameInstance.addListOfSuggestedWords(longestWordsPossible);
             RoundItem thisRound = new RoundItem(myGameInstance.getRoundID(currentRound), givenLettersSTR, myGameInstance.getLongestPossible());
             foxData.createRoundItem(thisRound);
+
         } else {      // If multi player game, re-use the same letters
             Log.d(MONITOR_TAG, "Re-using game letters ... ");
             givenLettersSTR = MainActivity.allGameInstances.get(0).getLetters(myGameInstance.getRound());

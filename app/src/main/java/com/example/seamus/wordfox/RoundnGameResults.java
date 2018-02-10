@@ -272,6 +272,7 @@ public class RoundnGameResults extends AppCompatActivity
             // create and add a TextView displaying the current round
             String roundNo ="";
 
+            int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             // if it's the end of the game, each round number will need to be displayed, also on the
             // final iteration of the loop set the title of the screen to be 'Final Results' and
             // the button at the bottom to say 'Next' and  to go home when pressed
@@ -297,7 +298,7 @@ public class RoundnGameResults extends AppCompatActivity
                 // the round number for player0 will have reached 3 making this int become 3
 
 
-                int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
+//                int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
                 this.setTitle("Round " + String.valueOf(round+1) + " Score");
                 roundNo = "Round " + String.valueOf(round+1) + ": ";
 
@@ -317,7 +318,13 @@ public class RoundnGameResults extends AppCompatActivity
             Log.d("Hello", "xxxx 4.0 " + j);
 
             // create and add a TextView displaying the title 'Best Word: '
-            TextView bestWordTitleTV = createTVwithText("Best Word: ");
+            String suggestionTitle;
+            if(rounds == 1){
+                suggestionTitle = "Possible words: ";
+            }else{
+                suggestionTitle = "Best word: ";
+            }
+            TextView bestWordTitleTV = createTVwithText(suggestionTitle);
             bestWordTitleTV.setLayoutParams(lp);
             playersLL.addView(bestWordTitleTV);
             Log.d("Hello", "xxxx 4.1 " + j);
@@ -335,12 +342,36 @@ public class RoundnGameResults extends AppCompatActivity
             wordsLL.addView(lettersTV);
             Log.d("Hello", "xxxx 4.2 " + j);
 
-            //get the best possible word
-            // create and add a TextView displaying the best possible word for the round
-            String bestPossibleWord = getRoundOrGameBestPossibleWord(roundOrGameEnd,j);
-            TextView bestPossibleWordTV = createTVwithText(bestPossibleWord);
-            bestPossibleWordTV.setLayoutParams(lp);
-            wordsLL.addView(bestPossibleWordTV);
+
+            String wordSuggestion;
+            // If 'Round End' screen, Print list of suggested words for various lengths
+            // If 'Game End' screen, Print just one longest word
+            if (rounds == 1) {
+                ArrayList<String> suggestedWords = new ArrayList<>();
+                GameInstance gi = MainActivity.allGameInstances.get(0);
+                int curRound = gi.getRound();
+                suggestedWords = gi.getSuggestedWordsOfRound(curRound);
+                for (int i=0; i<suggestedWords.size(); ++i){ // String w : suggestedWords){
+                    String w = suggestedWords.get(i);
+                    StringBuilder suggestedToPlayer = new StringBuilder();
+                    suggestedToPlayer.append(w.toUpperCase());
+                    suggestedToPlayer.append(" (" + w.length() + ")");
+                    TextView bestPossibleWordTV = createTVwithText(suggestedToPlayer.toString());
+                    bestPossibleWordTV.setLayoutParams(lp);
+                    wordsLL.addView(bestPossibleWordTV);
+                    if (i>0) {
+                        TextView spaceTV = createTVwithText("");
+                        spaceTV.setLayoutParams(lp);
+                        playersLL.addView(spaceTV);
+                    }
+                }
+            }else{
+                wordSuggestion = getRoundOrGameBestPossibleWord(roundOrGameEnd,j);
+                TextView bestPossibleWordTV = createTVwithText(wordSuggestion);
+                bestPossibleWordTV.setLayoutParams(lp);
+                wordsLL.addView(bestPossibleWordTV);
+            }
+
             Log.d("Hello", "xxxx 4.3 " + j);
 
 
