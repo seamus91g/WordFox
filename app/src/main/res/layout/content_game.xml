@@ -207,6 +207,10 @@
             android:layout_weight="1"
             android:layout_height="match_parent" />
 
+        <Space
+            android:layout_width="4dp"
+            android:layout_height="match_parent" />
+
         <Button
             android:id="@+id/resetButton"
             style="@style/gameActionButtons"
@@ -218,8 +222,7 @@
             android:textSize="@dimen/action_button_text_size" />
 
         <Space
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="26dp"
             android:layout_height="match_parent" />
 
         <Button
@@ -233,8 +236,7 @@
             android:textSize="@dimen/action_button_text_size" />
 
         <Space
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="26dp"
             android:layout_height="match_parent" />
 
         <Button
@@ -246,6 +248,10 @@
             android:onClick="shuffleGivenLetters"
             android:text="SHUFFLE"
             android:textSize="@dimen/action_button_text_size" />
+
+        <Space
+            android:layout_width="4dp"
+            android:layout_height="match_parent" />
 
         <Space
             android:layout_width="0dp"

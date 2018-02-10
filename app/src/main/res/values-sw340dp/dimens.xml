@@ -14,10 +14,12 @@
     <dimen name="small_text_size">21dp</dimen>
     <dimen name="grid_height">275dp</dimen>
     <dimen name="timer_width">16dp</dimen>
+
     <dimen name="column_width">84dp</dimen>
-    <dimen name="grid_button_text_size">33dp</dimen>
     <dimen name="grid_button_height">84dp</dimen>
-    <dimen name="action_button_dimension">60dp</dimen>
+    <dimen name="action_button_dimension">64dp</dimen>
+
+    <dimen name="grid_button_text_size">33dp</dimen>
     <dimen name="action_button_text_size">7dp</dimen>
 
     <dimen name="results_scrolling_screen_height">440dp</dimen>

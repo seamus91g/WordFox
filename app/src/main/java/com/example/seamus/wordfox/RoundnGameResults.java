@@ -157,7 +157,7 @@ public class RoundnGameResults extends AppCompatActivity
 
                 if (winners.size() == 1){
                     //if there's only one name in the list of winners then it wasn't a draw and that player won
-                    victoryMessage = "Winner is " + winners.get(0).getPlayerID() + "!";
+                    victoryMessage = "Winner is " + getPlayerNameorID(0) + "!";
                     Log.d("Hello", "xxxx 3.2 victoryMessage is: " + victoryMessage);
                 }else {
                     //if there's more than one name in the list of winners then it was a draw
@@ -169,9 +169,9 @@ public class RoundnGameResults extends AppCompatActivity
                         if (f == (winners.size() - 1)){
                             //if you're entering the name of the last player to tie the score,
                             // end with an !
-                            victoryMessage = (victoryMessage + winners.get(f).getPlayerID() + "!");
+                            victoryMessage = (victoryMessage + getPlayerNameorID(f) + "!");
                         }else{
-                            victoryMessage = (victoryMessage + winners.get(f).getPlayerID() + " and ");
+                            victoryMessage = (victoryMessage + getPlayerNameorID(f) + " and ");
                         }
 
                     }
@@ -276,6 +276,7 @@ public class RoundnGameResults extends AppCompatActivity
             // final iteration of the loop set the title of the screen to be 'Final Results' and
             // the button at the bottom to say 'Next' and  to go home when pressed
             if(roundOrGameEnd.equals("game")){
+
                 roundNo = "Round " + String.valueOf(j+1) + ": ";
 
                 //final iteration of loop
