@@ -104,8 +104,13 @@ public class GameActivity extends AppCompatActivity
 
         } else {      // If multi player game, re-use the same letters
             Log.d(MONITOR_TAG, "Re-using game letters ... ");
-            givenLettersSTR = MainActivity.allGameInstances.get(0).getLetters(myGameInstance.getRound());
-            myGameInstance.setLongestPossible(MainActivity.allGameInstances.get(0).getRoundLongestPossible(currentRound));
+            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+            givenLettersSTR = playerOneInstance.getLetters(myGameInstance.getRound());
+            myGameInstance.setLongestPossible(playerOneInstance.getRoundLongestPossible(currentRound));
+
+            ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(currentRound);
+            myGameInstance.addListOfSuggestedWords(longestWordsPossibleForRound);
+
             String[] letters = givenLettersSTR.split("");
             for (int i = 1; i < letters.length; i++) {       // First is a blank, skip
                 givenLetters.add(letters[i]);

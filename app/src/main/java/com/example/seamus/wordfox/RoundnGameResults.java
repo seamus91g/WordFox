@@ -331,7 +331,7 @@ public class RoundnGameResults extends AppCompatActivity
 
             // create a reference to the object instance of the GameInstance class created in the main
             // activity so that you can get the letters and corresponding best words for each round
-            GameInstance thisGameInstance = MainActivity.allGameInstances.get(0);
+            GameInstance thisGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
 
 
             // get the letters
@@ -348,7 +348,7 @@ public class RoundnGameResults extends AppCompatActivity
             // If 'Game End' screen, Print just one longest word
             if (rounds == 1) {
                 ArrayList<String> suggestedWords = new ArrayList<>();
-                GameInstance gi = MainActivity.allGameInstances.get(0);
+                GameInstance gi = thisGameInstance;
                 int curRound = gi.getRound();
                 suggestedWords = gi.getSuggestedWordsOfRound(curRound);
                 for (int i=0; i<suggestedWords.size(); ++i){ // String w : suggestedWords){
