@@ -1,15 +1,19 @@
 package com.example.seamus.wordfox;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,18 +30,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.GenericArrayType;
 
 public class ProfileActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+    implements ActivityCompat.OnRequestPermissionsResultCallback, NavigationView.OnNavigationItemSelectedListener {
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
     private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,27 +74,85 @@ public class ProfileActivity extends AppCompatActivity
         Button setProfileNameButton = (Button) findViewById(R.id.button);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
-        // Display the profile pic if one exists.
-        String profPicStr = myGameData.getProfilePicture();
-        if (!profPicStr.equals("")) {
-            Uri myFileUri = Uri.parse(profPicStr);
-            Bitmap bitmap = getBitmapFromUri(myFileUri);
-            ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
-            // Check it exists. Could be null if user has deleted the image from gallery
-            if (bitmap != null) {
-                profileIB.setImageBitmap(bitmap);
-            } else {
-                Log.d(MONITOR_TAG, "Setting default profile image, END");
-                profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
+            // Display the profile pic if one exists.
+            String profPicStr = myGameData.getProfilePicture();
+
+            if (!profPicStr.equals("")) {
+                Uri myFileUri = Uri.parse(profPicStr);
+
+                if (isStoragePermissionGranted()){
+                    Bitmap bitmap = getBitmapFromUri(myFileUri);
+                    ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
+
+                    // Check it exists. Could be null if user has deleted the image from gallery
+                    if (bitmap != null) {
+                        profileIB.setImageBitmap(bitmap);
+                    } else {
+                        Log.d(MONITOR_TAG, "Setting default profile image, END");
+                        profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
+                    }
+                }
+
             }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // if permission has been granted resume tasks needing this permission
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(MONITOR_TAG, "Permission granted: " + permissions[0] + " was: " + grantResults[0]);
+
+            // permission granted so get the image
+            String profPicStr = myGameData.getProfilePicture();
+            ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
+
+            if (!profPicStr.equals("")) {
+                Uri myFileUri = Uri.parse(profPicStr);
+                Bitmap bitmap = getBitmapFromUri(myFileUri);
+
+                // Check it exists. Could be null if user has deleted the image from gallery
+                if (bitmap != null) {
+                    profileIB.setImageBitmap(bitmap);
+                } else {
+                    Log.d(MONITOR_TAG, "Setting default profile image, END");
+                    profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
+                }
+
+            } else { // if there's no image already set choose the image
+                choosePicture(profileIB);
+            }
+
+        } else { // permission not granted so can't do anything with the image
+            Toast.makeText(this, "Default profile icon will remain", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(MONITOR_TAG,"Permission is granted");
+                return true;
+            } else {
+                Log.v(MONITOR_TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(MONITOR_TAG,"Permission is granted");
+            return true;
         }
     }
 
     // Allow user to choose image from their phone when the profile image is clicked
     public void choosePicture(View v) {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(intent, SELECT_PICTURE);
+        if (isStoragePermissionGranted()) {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            startActivityForResult(intent, SELECT_PICTURE);
+        }
     }
 
     @Override
@@ -112,21 +175,32 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        Log.d(MONITOR_TAG, "starting resize now END");
+
         if (maxHeight > 0 && maxWidth > 0) {
+
+            // get the width and the height of the image to be resized
             int width = image.getWidth();
             int height = image.getHeight();
-            float ratioBitmap = (float) width / (float) height;
-            float ratioMax = (float) maxWidth / (float) maxHeight;
 
-            int finalWidth = maxWidth;
-            int finalHeight = maxHeight;
-            if (ratioMax > 1) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
-            } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
-            }
+            // get the ratio of the image width to the screen (max) width
+            float widthRatio = (float) width / (float) maxWidth;
+
+            // get the ratio of the image height to the screen (max) height
+            float heightRatio = (float) height / (float) maxHeight;
+
+            // check which ratio is larger to determine which dimension is more out of bounds
+            float maxRatio = (widthRatio > heightRatio) ? widthRatio : heightRatio;
+
+            //scale down both dimensions by the ratio that's most out of bounds to bring whichever
+            // was most out of bound down to the max while maintain aspect ratio
+            int finalWidth = (int) Math.floor(width/maxRatio);
+            int finalHeight = (int) Math.floor(height/maxRatio);
+            Log.d(MONITOR_TAG, "finalWidth is " + finalWidth + " finalHeight is " + finalHeight + " END");
+
             image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
             return image;
+
         } else {
             return image;
         }
@@ -148,11 +222,12 @@ public class ProfileActivity extends AppCompatActivity
                         myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
 
                         if(myBitmap.getHeight()>=2048||myBitmap.getWidth()>=2048){
-                            Log.d(MONITOR_TAG, "Image is too large");
+                            Log.d(MONITOR_TAG, "Image is too large: width is " + myBitmap.getWidth() + " height is " + myBitmap.getHeight() + " END");
                             DisplayMetrics metrics = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(metrics);
                             int width = metrics.widthPixels;
                             int height = metrics.heightPixels;
+                            Log.d(MONITOR_TAG, "screen width is: " + width + " screen height is: " + height + "resizing image now END");
                             myBitmap = resize(myBitmap,width, height);
                         }
                     } catch (IOException e) {
