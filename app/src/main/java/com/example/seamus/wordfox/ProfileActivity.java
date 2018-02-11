@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
@@ -26,17 +28,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.database.FoxSQLData;
+import com.example.seamus.wordfox.datamodels.GameItem;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.GenericArrayType;
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity
     implements ActivityCompat.OnRequestPermissionsResultCallback, NavigationView.OnNavigationItemSelectedListener {
+    public static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
     private GameData myGameData;
@@ -61,6 +72,8 @@ public class ProfileActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        // Display details of most recently played game
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // Display the user name. Do not display if still default "fox"
@@ -74,27 +87,29 @@ public class ProfileActivity extends AppCompatActivity
         Button setProfileNameButton = (Button) findViewById(R.id.button);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
-            // Display the profile pic if one exists.
-            String profPicStr = myGameData.getProfilePicture();
-
-            if (!profPicStr.equals("")) {
-                Uri myFileUri = Uri.parse(profPicStr);
-
-                if (isStoragePermissionGranted()){
-                    Bitmap bitmap = getBitmapFromUri(myFileUri);
-                    ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
-
-                    // Check it exists. Could be null if user has deleted the image from gallery
-                    if (bitmap != null) {
-                        profileIB.setImageBitmap(bitmap);
-                    } else {
-                        Log.d(MONITOR_TAG, "Setting default profile image, END");
-                        profileIB.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_name));
-                    }
-                }
-
+        showRecentGame();
+        showBestWords();
+        // Display the profile pic if one exists.
+        String profPicStr = myGameData.getProfilePicture();
+        ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
+        Bitmap profBitmap;
+        if (!profPicStr.equals("") && isStoragePermissionGranted()) {
+            Uri myFileUri = Uri.parse(profPicStr);
+            profBitmap = getBitmapFromUri(myFileUri);
+            // If failed to load, get default
+            if (profBitmap == null){
+                profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+            }else{
+                profileIB.setAdjustViewBounds(true);
             }
+        }else{
+            profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+        }
+
+        profileIB.setImageBitmap(profBitmap);
+
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -143,6 +158,113 @@ public class ProfileActivity extends AppCompatActivity
         else { //permission is automatically granted on sdk<23 upon installation
             Log.v(MONITOR_TAG,"Permission is granted");
             return true;
+        }
+    }
+
+    private Bitmap loadAssetImage(String assetName){
+        AssetManager assetmanager = getAssets();
+        InputStream inStr = null;
+        try{
+            inStr = assetmanager.open(assetName);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(inStr);
+        return bitmap;
+    }
+
+    public void showBestWords(){
+
+        GameData plyrGd = new GameData(this, GameData.DEFAULT_P1_NAME);
+        ArrayList<String> bestWords = plyrGd.getBestWords();
+        // Exit if no best words exist
+        if (bestWords.get(0).equals(GameData.NONE_FOUND)){
+            return;
+        }
+
+        ArrayList<String> bestWordsStrings = new ArrayList<>();
+        bestWordsStrings.add("== Best Words == ");
+        bestWordsStrings.add(bestWords.get(0) + " (" + bestWords.get(0).length() + ")");
+        bestWordsStrings.add(bestWords.get(1) + " (" + bestWords.get(1).length() + ")");
+        bestWordsStrings.add(bestWords.get(2) + " (" + bestWords.get(2).length() + ")");
+
+
+        for (String message : bestWordsStrings) {
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            textView.setText(message);
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.recent_game);
+            linearLayout.addView(textView);
+        }
+
+    }
+    public void showRecentGame(){
+        GameData plyrGd = new GameData(this, GameData.DEFAULT_P1_NAME);
+        String rgID = plyrGd.getRecentGame();
+        // Exit if no recent game exists
+        if (rgID.equals("")){
+            return;
+        }
+        ArrayList<String> recentWords = plyrGd.getRecentWords();
+
+        FoxSQLData foxData = new FoxSQLData(this);
+        foxData.open();
+        GameItem recentGame = foxData.getGame(rgID);
+        // Load data for player. Use this to find recent words and Game ID. Use Game ID to load Game from SQL DB
+        ArrayList<String> lastGameStrings = new ArrayList<>();
+
+
+        // Declare winner
+        ArrayList<String> winners = recentGame.getWinners();
+        String winMessage;
+        if (winners.size() > 1) {
+            winMessage = "Draw: " + recentGame.getWinnerString();
+        }else{
+            winMessage = "Winner: " + winners.get(0);
+        }
+        lastGameStrings.add(winMessage);
+
+        recentGame.getWinnerWords();
+        // Winner words
+        StringBuilder myRec = new StringBuilder();
+        for (int i=0; i<recentGame.getWinnerWords().get(0).size(); ++i){
+            myRec.append(recentGame.getWinnerWords().get(0).get(i));
+            myRec.append(", ");
+        }
+        String myRecent = myRec.toString();
+        lastGameStrings.add(myRecent);
+
+        // Recent words
+        winMessage = "Your words: ";
+        lastGameStrings.add(winMessage);
+        myRec = new StringBuilder();
+        for (int i=0; i<recentWords.size(); ++i){
+            myRec.append(recentWords.get(i));
+            myRec.append(", ");
+        }
+        myRecent = myRec.toString();
+        lastGameStrings.add(myRecent);
+
+        FoxSQLData myDB = new FoxSQLData(this);
+        ArrayList<String> recentLetter = recentGame.getLetters(myDB);
+        ArrayList<String> recentBest = recentGame.getLongestWords(myDB);
+        StringBuilder lettersAndWords = new StringBuilder();
+        for (int i=0; i<recentLetter.size(); ++i){
+            lettersAndWords.append(recentLetter.get(i));
+            lettersAndWords.append("\t\t\t");
+            lettersAndWords.append(recentBest.get(i));
+            lettersAndWords.append("\n");
+        }
+        lastGameStrings.add(lettersAndWords.toString());
+
+        for (String message : lastGameStrings) {
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            textView.setText(message);
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.recent_game);
+            linearLayout.addView(textView);
         }
     }
 

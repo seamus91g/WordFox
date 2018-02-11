@@ -96,61 +96,48 @@ public class RoundnGameResults extends AppCompatActivity
         // wrap content to be used on each textview created later on
         lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
 
+        populateHeaderMsg(roundOrGameEnd);
+        populateResultLL(roundOrGameEnd);
         if (roundOrGameEnd.equals("round")){
             //do what you need for the end of a round
             Log.d(MONITOR_TAG, "IT'S THE END OF A ROUND: " + roundOrGameEnd);
-            populateHeaderMsg(roundOrGameEnd);
-            populateResultLL(roundOrGameEnd);
             createRoundSummary(roundOrGameEnd);
 
         }else if (roundOrGameEnd.equals("game")){
             //do what you need for the end of the game
             Log.d(MONITOR_TAG, "IT'S THE END OF A GAME: " + roundOrGameEnd);
 
-            populateHeaderMsg(roundOrGameEnd);
-            populateResultLL(roundOrGameEnd);
 
-            //getWinnerOrDraw
-            // create an array of playersFinalScoresNNames objects for the players' scores and names
-            // at the end of the game
-//            playersFinalScoresNNames[] playersFinalScoresNNamesArr = new playersFinalScoresNNames[numPlayers];
-
-//            for (int k=0; k<numPlayers; k++) {
-//                // for each player declare and initialize a new playersFinalScoresNNames object with
-//                // the associated totalScore and playername and add it into playersFinalScoresNNamesArr
-//
-//
-//                // create a reference to the object instance of the GameInstance class created in
-//                // the main activity
-//                GameInstance myGameInstance = MainActivity.allGameInstances.get(k);
-//                //declare and initialise an integer for the player's total score at the end of the game
-//                int totalScore = myGameInstance.getTotalScore();
-//
-//                String playername = getPlayerNameorID(k);
-//
-//
-//
-////                GameData myGameData = new GameData(this, k);
-////                String playername = myGameData.getUsername();
-//
-//
-//                playersFinalScoresNNames myPlayersFinalScoresNNames = new playersFinalScoresNNames(totalScore, playername);
-//                playersFinalScoresNNamesArr[k] = myPlayersFinalScoresNNames;
-//
-//            }
-
-            Log.d("Hello", "xxxx 3");
-
-            //get the name of the player with the highest score and set it to be the winner or if
-            // there's a draw, say who drew
-
-            //create an array of strings to hold the name(s) of the player(s) with the highest score
+            /////// Store data
             ArrayList<GameInstance> winners = playersWithHighestScore();
 
             GameItem thisGameDetails = gameitemFromInstances(winners);
             FoxSQLData foxData = new FoxSQLData(this);
             foxData.open();
             foxData.createGameItem(thisGameDetails);
+
+            // Store most recent words for each player
+            // Store most recent Game ID
+            for (GameInstance pgi : MainActivity.allGameInstances) {
+                GameData plyrGd = new GameData(this, pgi.getPlayerID());
+                plyrGd.setRecentGame(pgi.getRoundID(0));
+                plyrGd.setRecentWords(pgi.getAllFinalWords());
+                if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()){
+                    // best words
+                    Log.d(MONITOR_TAG, "Best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
+                    plyrGd.setBestWords(pgi.getAllFinalWords());
+                }else{
+                    Log.d(MONITOR_TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
+                }
+            }
+
+
+            ///////
+
+
+            //get the name of the player with the highest score and set it to be the winner or if
+            // there's a draw, say who drew
+            //create an array of strings to hold the name(s) of the player(s) with the highest score
 
             if (numPlayers>1){
 
@@ -229,7 +216,7 @@ public class RoundnGameResults extends AppCompatActivity
         );
         return thisGame;
     }
-
+// Get a list of comma separated values from an Array List
     private String getCslFromList(ArrayList<String> strings){
         StringBuilder strBl = new StringBuilder();
         for(String string : strings) {

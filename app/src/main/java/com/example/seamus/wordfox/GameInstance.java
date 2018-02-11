@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -185,7 +186,13 @@ public class GameInstance {
         longestWord = "";
 //        Log.d(MONITOR_TAG, "Clearing round scores");
     }
-
+    public ArrayList<String> getAllFinalWords(){
+        ArrayList<String> finalWordList = new ArrayList<>(
+                Arrays.asList(  round1Word,
+                                round2Word,
+                                round3Word));
+        return finalWordList;
+    }
     public void setRound1Word(String word) {
         round1Word = word;
     }

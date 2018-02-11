@@ -27,6 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
     public static final String DEFAULT_P1_NAME = "Player 1";
+    public static final String NONE_FOUND = "None Found!";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -39,7 +40,10 @@ public class GameData extends AppCompatActivity {
     private String COUNT_NONE_FOUND_KEY;
     private String SHUFFLE_COUNT_KEY;
     private String HIGHEST_SCORE_KEY;
-//    private static String PLAYER_1_NAME_KEY = "player_1";
+    private String RECENT_WORDS_KEY;
+    private String RECENT_GAME_ID_KEY;
+    private String BEST_WORDS_KEY;
+    //    private static String PLAYER_1_NAME_KEY = "player_1";
     private static String NAMED_PLAYER_COUNT_KEY = "named_player_count";
 //    private int playerNumber;
     private static Set<String> playerIDs = new HashSet<String>();
@@ -82,6 +86,9 @@ public class GameData extends AppCompatActivity {
         COUNT_NONE_FOUND_KEY = "count_none_found_" + playerID;
         SHUFFLE_COUNT_KEY = "shuffle_count_" + playerID;
         HIGHEST_SCORE_KEY = "highest_score_" + playerID;
+        RECENT_WORDS_KEY = "recent_words_" + playerID;
+        RECENT_GAME_ID_KEY = "recent_game_id_" + playerID;
+        BEST_WORDS_KEY = "best_words_" + playerID;
 
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
@@ -172,6 +179,47 @@ public class GameData extends AppCompatActivity {
 //            defaultName = "Fox";
 //        }
         return foxPreferences.getString(USERNAME_KEY, defaultName);
+    }
+    // BEST_WORDS_KEY
+    // Set of most picked words during the most recent game played
+    public void setBestWords(ArrayList<String> bestWords){
+        for (int i=0; i<bestWords.size(); ++i) {
+            String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
+            editor.putString(BEST_WORDS_KEY_i, bestWords.get(i));
+            editor.apply();
+        }
+    }
+    public ArrayList<String> getBestWords(){
+        ArrayList<String> bestWords = new ArrayList<>();
+        for (int i=0; i<GameInstance.getMaxNumberOfRounds(); ++i) {
+            String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
+            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, "None Found!"));
+        }
+        return bestWords;
+    }
+    // Set of most picked words during the most recent game played
+    public void setRecentWords(ArrayList<String> words){
+        for (int i=0; i<words.size(); ++i) {
+            String RECENT_WORDS_KEY_i = RECENT_WORDS_KEY + "_" + i;
+            editor.putString(RECENT_WORDS_KEY_i, words.get(i));
+            editor.apply();
+        }
+    }
+    public ArrayList<String> getRecentWords(){
+        ArrayList<String> recentWords = new ArrayList<>();
+        for (int i=0; i<GameInstance.getMaxNumberOfRounds(); ++i) {
+            String RECENT_WORDS_KEY_i = RECENT_WORDS_KEY + "_" + i;
+            recentWords.add(foxPreferences.getString(RECENT_WORDS_KEY_i, "None Found!"));
+        }
+        return recentWords;
+    }
+    // Get the ID of the most recently played game
+    public void setRecentGame(String recentGameID) {
+        editor.putString(RECENT_GAME_ID_KEY, recentGameID);
+        editor.apply();
+    }
+    public String getRecentGame() {
+        return foxPreferences.getString(RECENT_GAME_ID_KEY, "");
     }
 
     public String getAverageWordLength() {
