@@ -3,6 +3,7 @@ package com.example.seamus.wordfox;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
@@ -32,6 +34,7 @@ public class RoundnGameResults extends AppCompatActivity
 
     public static final String MONITOR_TAG = "EndScreen: ";
     private static final String TAG = "RoundnGameResults" ;
+    private boolean backButtonPressedOnce = false;
     public Activity activity;
     //declare a String for the heading at the top of the results page (Game Over OR Time Up!)
     private String resultsHeading = "";
@@ -151,13 +154,19 @@ public class RoundnGameResults extends AppCompatActivity
 
             if (numPlayers>1){
 
-
                 victoryMessage = "";
                 Log.d("Hello", "xxxx 3.1 victoryMessage is: " + victoryMessage);
 
                 if (winners.size() == 1){
                     //if there's only one name in the list of winners then it wasn't a draw and that player won
-                    victoryMessage = "Winner is " + getPlayerNameorID(0) + "!";
+
+                    String winnerName = winners.get(0).getPlayerID();
+                    if (winnerName.equals(GameData.DEFAULT_P1_NAME)){
+                        GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
+                        winnerName = fox.getUsername();
+                    }
+
+                    victoryMessage = "Winner is " + winnerName + "!";
                     Log.d("Hello", "xxxx 3.2 victoryMessage is: " + victoryMessage);
                 }else {
                     //if there's more than one name in the list of winners then it was a draw
@@ -173,9 +182,7 @@ public class RoundnGameResults extends AppCompatActivity
                         }else{
                             victoryMessage = (victoryMessage + getPlayerNameorID(f) + " and ");
                         }
-
                     }
-
                 }
 
                 TextView winnerTV = createTVwithText(victoryMessage);
@@ -504,7 +511,6 @@ public class RoundnGameResults extends AppCompatActivity
             //do what you need for the end of the game
             Log.d(TAG, "populateHeaderMsg: roundOrGameEnd should be GAME: " + roundOrGameEnd);
 
-
             // if there's more than one player set the text of the gameOverTV on the end screen to say 'GAME OVER BITCHEZ'
             if (numPlayers > 1) {
                 Log.d(TAG, "numPlayers > 1" + numPlayers);
@@ -645,7 +651,21 @@ public class RoundnGameResults extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (this.backButtonPressedOnce) {
+                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                startActivity(homeScreenIntent);
+                return;
+            }
+            Toast.makeText(this, "Double tap BACK to exit!", Toast.LENGTH_SHORT).show();
+            this.backButtonPressedOnce = true;
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backButtonPressedOnce = false;
+                }
+            }, 1500);
+
         }
     }
 

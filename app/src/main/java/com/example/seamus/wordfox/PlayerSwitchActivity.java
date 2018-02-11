@@ -2,19 +2,18 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.MenuInflater;
-import android.view.View;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,16 +22,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.R.attr.duration;
-
 public class PlayerSwitchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private int gameIndexNumber;
+    private boolean backButtonPressedOnce = false;
     private NavigationBurger navBurger = new NavigationBurger();
     private final String MONITOR_TAG = "myTag";
 
@@ -158,7 +155,20 @@ public class PlayerSwitchActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (this.backButtonPressedOnce) {
+                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                startActivity(homeScreenIntent);
+                return;
+            }
+            Toast.makeText(this, "Double tap BACK to exit!", Toast.LENGTH_SHORT).show();
+            this.backButtonPressedOnce = true;
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backButtonPressedOnce = false;
+                }
+            }, 1500);
         }
     }
 

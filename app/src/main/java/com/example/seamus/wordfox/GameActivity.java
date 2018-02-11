@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.seamus.wordfox.database.FoxSQLData;
-import com.example.seamus.wordfox.datamodels.GameItem;
 import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
 
@@ -491,20 +491,24 @@ public class GameActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
+
             if (this.backButtonPressedOnce) {
                 Intent homeScreenIntent = new Intent(this, MainActivity.class);
                 startActivity(homeScreenIntent);
+                return;
             }
             this.backButtonPressedOnce = true;
-//            Toast.makeText(this, "Press BACK again to exit the game", Toast.LENGTH_SHORT).show();
+
+            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+            toastMessage.setGravity(Gravity.TOP,0, 40);
+            toastMessage.show();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     backButtonPressedOnce = false;
                 }
-            }, 2500);
+            }, 1500);
         }
     }
 

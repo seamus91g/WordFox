@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,13 +15,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MONITOR_TAG = "myTag";
+    private boolean backButtonPressedOnce = false;
     private NavigationBurger navBurger = new NavigationBurger();
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
     private int numberOfPlayers;
@@ -91,7 +93,20 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (this.backButtonPressedOnce) {
+                this.finishAffinity();
+                return;
+            }
+            Toast.makeText(this, "Double tap BACK to exit!", Toast.LENGTH_SHORT).show();
+            this.backButtonPressedOnce = true;
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backButtonPressedOnce = false;
+                }
+            }, 1500);
+
         }
     }
 
