@@ -13,10 +13,14 @@ import android.widget.Toast;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.database.WordTable;
 import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.datamodels.OpponentItem;
+import com.example.seamus.wordfox.datamodels.PlayerStatsItem;
 import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,6 +55,19 @@ public class FoxSQLData {
     public long getCountGames() {
         return DatabaseUtils.queryNumEntries(wfDatabase, GameTable.TABLE_GAMES);
     }
+    // Count of total games by a specific player
+    public long getCountGames(String player) {
+        Cursor cursor = wfDatabase.query(
+                PlayerStatsTable.TABLE_PLAYER_STATS,
+                PlayerStatsTable.SUM_GAMES,
+                PlayerStatsTable.COLUMN_NAME + " = '" + player + "'",
+                null, null, null, null);
+
+        cursor.moveToNext();
+        long gameCount = cursor.getInt(0);
+        cursor.close();
+        return gameCount;
+    }
 
     public void createWordItem(WordItem item){
         if(item.getWordSubmitted().equals("")){
@@ -67,6 +84,80 @@ public class FoxSQLData {
         ContentValues values = item.toValues();
         wfDatabase.insert(GameTable.TABLE_GAMES, null, values);
 //        Log.d(MainActivity.MONITOR_TAG, "create Game item!!, END");
+    }
+    public void updatePlayerStats(String player, String result){
+        // Ensure exists
+        PlayerStatsItem item1 = new PlayerStatsItem(player, 0, 0, 0);
+        wfDatabase.insertWithOnConflict(PlayerStatsTable.TABLE_PLAYER_STATS, null, item1.toValues(), SQLiteDatabase.CONFLICT_IGNORE);  /// Given names and then 0, 0, 0
+        // Increment the relevant column by 1
+        // UPDATE player_stats SET wins = wins + 1 WHERE name = fox
+        wfDatabase.execSQL("UPDATE " + PlayerStatsTable.TABLE_PLAYER_STATS +
+                        " SET '" + result + "' = '" + result + "' + 1" +
+                        " WHERE " + PlayerStatsTable.COLUMN_NAME  + " = '" + player + "';"
+                );
+    }
+    // Winner, Loser, Draw?
+    public void updateOpponentItem(String p1, String p2, boolean draw){
+        // Ensure exists
+        wfDatabase.insertWithOnConflict(OpponentTable.TABLE_OPPONENTS, null, new OpponentItem(p1, p2, 0, 0, 0).toValues(), SQLiteDatabase.CONFLICT_IGNORE);  /// Given names and then 0, 0, 0
+        wfDatabase.insertWithOnConflict(OpponentTable.TABLE_OPPONENTS, null, new OpponentItem(p2, p1, 0, 0, 0).toValues(), SQLiteDatabase.CONFLICT_IGNORE);  /// Given names and then 0, 0, 0
+        // If draw, don't change win or lose column
+        String[] bindingArgs = new String[]{ p1, p2 };
+        String incrementRowWin = OpponentTable.COLUMN_WINS;
+        String incrementRowLose = OpponentTable.COLUMN_LOSES;
+        if (draw){
+            incrementRowWin = OpponentTable.COLUMN_DRAWS;
+            incrementRowLose = OpponentTable.COLUMN_DRAWS;
+        }
+        // Increment the relevant columns by 1
+        wfDatabase.execSQL("UPDATE " + OpponentTable.TABLE_OPPONENTS +
+                        " SET " + incrementRowWin + " = " + incrementRowWin + " + 1" +
+                        " WHERE " + OpponentTable.COLUMN_NAME  + " = ? AND " + OpponentTable.COLUMN_OPPONENT_NAME + " = ?;",
+                        bindingArgs);
+        wfDatabase.execSQL("UPDATE " + OpponentTable.TABLE_OPPONENTS +
+                        " SET " + incrementRowLose + " = " + incrementRowLose + " + 1" +
+                        " WHERE " + OpponentTable.COLUMN_OPPONENT_NAME  + " = ? AND " + OpponentTable.COLUMN_NAME + " = ?;",
+                        bindingArgs);
+    }
+
+    public PlayerStatsItem getStats(String p1) {
+        PlayerStatsItem psi;
+        Cursor cursor = wfDatabase.query(
+                PlayerStatsTable.TABLE_PLAYER_STATS,
+                PlayerStatsTable.ALL_COLUMNS,
+                RoundTable.COLUMN_ID + " = '" + p1 + "'",
+                null, null, null, null);
+
+        cursor.moveToNext();
+        psi = new PlayerStatsItem(
+                cursor.getString(cursor.getColumnIndex(PlayerStatsTable.COLUMN_NAME)),
+                cursor.getInt(cursor.getColumnIndex(PlayerStatsTable.COLUMN_WINS)),
+                cursor.getInt(cursor.getColumnIndex(PlayerStatsTable.COLUMN_LOSES)),
+                cursor.getInt(cursor.getColumnIndex(PlayerStatsTable.COLUMN_DRAWS))
+        );
+
+        cursor.close();
+        return psi;
+    }
+
+    public OpponentItem getOpponentStats(String p1, String p2) {
+        OpponentItem opStats;
+        Cursor cursor = wfDatabase.query(
+                OpponentTable.TABLE_OPPONENTS,
+                OpponentTable.ALL_COLUMNS,
+                OpponentTable.COLUMN_NAME + " = '" + p1 + "' && " + OpponentTable.COLUMN_OPPONENT_NAME + " = '" + p2 + "'",
+                null, null, null, null);
+
+        cursor.moveToNext();
+        opStats = new OpponentItem(
+                cursor.getString(cursor.getColumnIndex(OpponentTable.COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndex(OpponentTable.COLUMN_OPPONENT_NAME)),
+                cursor.getInt(cursor.getColumnIndex(OpponentTable.COLUMN_WINS)),
+                cursor.getInt(cursor.getColumnIndex(OpponentTable.COLUMN_LOSES)),
+                cursor.getInt(cursor.getColumnIndex(OpponentTable.COLUMN_DRAWS))
+        );
+        cursor.close();
+        return opStats;
     }
 
     public List<WordItem> getAllWords() {
@@ -195,5 +286,22 @@ public class FoxSQLData {
         cursor.close();
         return game;
     }
+
+
+//--win/lose/draw count
+//    query Opponents table
+//    SELECT SUM(Wins), SUM(Loses), SUM(Draws) FROM Opponents WHERE Name = "Fox";
+//
+//    COLUMN_NAME = "name";
+//    COLUMN_OPPONENT_NAME = "opponent_name";
+//    COLUMN_WINS = "wins";
+//    COLUMN_LOSES = "loses";
+//    COLUMN_DRAWS = "draws";
+
+
+//--NO. of games completed
+//    Counter in GameData
+//    SELECT SUM((Wins + Loses + Draws)) as 'Total' FROM Opponents	WHERE Name = "Fox";
+
 
 }

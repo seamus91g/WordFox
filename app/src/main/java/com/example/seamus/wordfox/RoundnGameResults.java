@@ -23,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.seamus.wordfox.database.FoxSQLData;
+import com.example.seamus.wordfox.database.PlayerStatsTable;
 import com.example.seamus.wordfox.datamodels.GameItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -107,40 +109,71 @@ public class RoundnGameResults extends AppCompatActivity
             //do what you need for the end of the game
             Log.d(MONITOR_TAG, "IT'S THE END OF A GAME: " + roundOrGameEnd);
 
-
-            /////// Store data
-            ArrayList<GameInstance> winners = playersWithHighestScore();
-
-            GameItem thisGameDetails = gameitemFromInstances(winners);
+            ///////////// Store game  data /////////////
             FoxSQLData foxData = new FoxSQLData(this);
             foxData.open();
-            foxData.createGameItem(thisGameDetails);
+            // Separate winners and losers into two lists
+            ArrayList<GameInstance> winners = new ArrayList<GameInstance>();
+            if(numPlayers > 1) {
+                HashMap<Boolean, ArrayList<GameInstance>> playerGroups = sortWinnersLosers(MainActivity.allGameInstances);
+                winners = playerGroups.get(Boolean.TRUE);
+                // Increment individual win/draw counters
+                if (winners.size() > 1) {
+                    // Game was a draw if the winner group contains more than one player
+                    for (GameInstance player : winners) {
+                        foxData.updatePlayerStats(player.getPlayerID(), PlayerStatsTable.COLUMN_DRAWS);
+                    }
+                } else {
+                    foxData.updatePlayerStats(winners.get(0).getPlayerID(), PlayerStatsTable.COLUMN_WINS);
+                }
+                // Increment lose counters
+                for (GameInstance player : playerGroups.get(Boolean.FALSE)) {
+                    foxData.updatePlayerStats(player.getPlayerID(), PlayerStatsTable.COLUMN_LOSES);
+                }
 
+                // Loop through player and register win/lose/draw respective to every other player
+                for (GameInstance player : MainActivity.allGameInstances) {
+                    for (GameInstance opponent : MainActivity.allGameInstances) {
+                        String winner = player.getPlayerID(), loser = opponent.getPlayerID();
+                        if (winner.equals(loser)) {
+                            continue;
+                        }
+                        boolean draw = false;
+                        if (player.getTotalScore() == opponent.getTotalScore()) {
+                            draw = true;
+                        } else if (player.getTotalScore() < opponent.getTotalScore()) {
+                            winner = opponent.getPlayerID();
+                            loser = player.getPlayerID();
+                        }
+                        foxData.updateOpponentItem(winner, loser, draw);
+                    }
+                }
+            }else{
+                winners.add(MainActivity.allGameInstances.get(0)); // addAll();
+            }
             // Store most recent words for each player
             // Store most recent Game ID
             for (GameInstance pgi : MainActivity.allGameInstances) {
                 GameData plyrGd = new GameData(this, pgi.getPlayerID());
                 plyrGd.setRecentGame(pgi.getRoundID(0));
                 plyrGd.setRecentWords(pgi.getAllFinalWords());
-                if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()){
+                if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
                     // best words
                     Log.d(MONITOR_TAG, "Best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
                     plyrGd.setBestWords(pgi.getAllFinalWords());
-                }else{
+                    plyrGd.setHighestScore(pgi.getTotalScore());
+                } else {
                     Log.d(MONITOR_TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
                 }
             }
-
-
-            ///////
-
-
+            GameItem thisGameDetails = gameitemFromInstances(winners);
+            foxData.createGameItem(thisGameDetails);
+            //////////////////
             //get the name of the player with the highest score and set it to be the winner or if
             // there's a draw, say who drew
             //create an array of strings to hold the name(s) of the player(s) with the highest score
-
             if (numPlayers>1){
-
+//                ArrayList<GameInstance> winners = playerGroups.get(Boolean.TRUE);
                 victoryMessage = "";
                 Log.d("Hello", "xxxx 3.1 victoryMessage is: " + victoryMessage);
 
@@ -598,27 +631,29 @@ public class RoundnGameResults extends AppCompatActivity
         }
     }
 
-//    private ArrayList<String> playersWithHighestScore(playersFinalScoresNNames[] playersFinalScoresNNamesArr) {
-    private ArrayList<GameInstance> playersWithHighestScore() {
-        int maxScore = 0;
-        // declare an empty ArrayList of Strings to hold the names of the player(s) with the high score
+    private HashMap<Boolean, ArrayList<GameInstance>>  sortWinnersLosers(ArrayList<GameInstance> allPlayers) {
+        int maxScore = 0;   // Note: In single player, getting a score of zero will register as a lose
+        // Sort players into two groups. Those with the highest score (winners) and those with a lower score (losers)
+        // In the hashmap, 'true' is the key for the winners and 'false' is the key for the losers
+        HashMap<Boolean, ArrayList<GameInstance>> playersByCategory = new HashMap<Boolean, ArrayList<GameInstance>>();
         ArrayList<GameInstance> winners = new ArrayList<>();
+        ArrayList<GameInstance> losers = new ArrayList<>();
 
-        // go through each element of the playersFinalScoresNNamesArr checking each score to find
-        // the max score, then add the associated PlayerName to the ArrayList of winners names
-        for (GameInstance v1 : MainActivity.allGameInstances) {
-            int score = v1.getTotalScore();
+        // Loop, add players to 'loser' group if higher scores are found
+        for (GameInstance player : allPlayers) {
+            int score = player.getTotalScore();
             if (score > maxScore) {
                 maxScore = score;
+                losers.addAll(winners);
                 winners.clear();
-                winners.add(v1);
+                winners.add(player);
             } else if (score == maxScore) {
-                winners.add(v1);
+                winners.add(player);
             }
         }
-
-        return winners;
-
+        playersByCategory.put(true, winners);
+        playersByCategory.put(false, losers);
+        return playersByCategory;
     }
 
     public int dpTOpx (int dp){

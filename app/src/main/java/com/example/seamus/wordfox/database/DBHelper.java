@@ -26,6 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(GameTable.SQL_CREATE);
         sqLiteDatabase.execSQL(WordTable.SQL_CREATE);
         sqLiteDatabase.execSQL(RoundTable.SQL_CREATE);
+        sqLiteDatabase.execSQL(OpponentTable.SQL_CREATE);
+        sqLiteDatabase.execSQL(PlayerStatsTable.SQL_CREATE);
         Log.d(MainActivity.MONITOR_TAG, "Finished onCreate wf DBHelper!!, END");
     }
 
@@ -35,6 +37,8 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(GameTable.SQL_DELETE);
         sqLiteDatabase.execSQL(WordTable.SQL_DELETE);
         sqLiteDatabase.execSQL(RoundTable.SQL_DELETE);
+        sqLiteDatabase.execSQL(OpponentTable.SQL_DELETE);
+        sqLiteDatabase.execSQL(PlayerStatsTable.SQL_DELETE);
         onCreate(sqLiteDatabase);
     }
 }
