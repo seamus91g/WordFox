@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
 
-import static android.app.PendingIntent.getActivity;
-
 /**
  * Created by Seamus on 06/07/2017.
  */
@@ -32,11 +30,11 @@ public class NavigationBurger {
             Log.d(MONITOR_TAG, "nav_profile");
             Intent profileScreenIntent = new Intent(fromContext, ProfileActivity.class);
             fromContext.startActivity(profileScreenIntent);
-
-        } else if (id == R.id.nav_settings) {
-            Log.d(MONITOR_TAG, "nav_settings");
-            Intent settingsScreenIntent = new Intent(fromContext, SettingsActivity.class);
-            fromContext.startActivity(settingsScreenIntent);
+//
+//        } else if (id == R.id.nav_settings) {
+//            Log.d(MONITOR_TAG, "nav_settings");
+//            Intent settingsScreenIntent = new Intent(fromContext, SettingsActivity.class);
+//            fromContext.startActivity(settingsScreenIntent);
 
         } else if (id == R.id.nav_review) {
             Log.d(MONITOR_TAG, "nav_review");
