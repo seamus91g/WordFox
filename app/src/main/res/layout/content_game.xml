@@ -31,18 +31,28 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.3"/>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/small_TextView_height">
     <TextView
         android:id="@+id/currentAttempt"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/small_TextView_height"
+        android:layout_height="match_parent"
         android:textSize="@dimen/small_text_size"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical"
         android:text=""
         android:textColor="#01848f"
         android:fontFamily="monospace" />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/secondsRemaining"
+        android:text="30"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -144,49 +154,11 @@
         <LinearLayout
             android:layout_width="@dimen/timer_width"
             android:layout_height="match_parent"
+            android:id="@+id/timeBlock"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/timeblock1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".2"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/timeblock2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".2"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/timeblock3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".2"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/timeblock4"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".2"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/timeblock5"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".2"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
         </LinearLayout>
     </LinearLayout>
 

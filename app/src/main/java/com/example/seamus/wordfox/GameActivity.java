@@ -16,23 +16,30 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.data.Diction;
+import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
+import com.example.seamus.wordfox.injection.DictionaryApplication;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.UUID;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static int GAME_TIME_SECONDS = 30;
     public static final String MONITOR_TAG = "myTag";
-    private FoxDictionary myDiction;
+    private Diction myDiction;
     private GameInstance myGameInstance; // = new GameInstance();
     private LinkedList<SingleCell> alreadyClicked = new LinkedList<SingleCell>();
     private NavigationBurger navBurger = new NavigationBurger();
@@ -45,47 +52,60 @@ public class GameActivity extends AppCompatActivity
     private boolean timeUp;
     private int gameIndexNumber;
     private FoxSQLData foxData;
+    private Set<String> allWordsSubmitted = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        gameIndexNumber = getIntent().getExtras().getInt("game_index");
-//        Log.d(MONITOR_TAG, "Game index is: " + gameIndexNumber);
-        myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
-        int currentRound = myGameInstance.getRound();
-        this.setTitle("Round " + (currentRound + 1));
-
         setContentView(R.layout.activity_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Left side navigation drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ////////  Steps carried out ////////
+        // Load the game instance
+        // Load database
+        // Adjust stats
+        // Load dictionary
+        // Create game timer
+        // Generate letters. Find longest words.
+        // Write letters to grid
+
+        populateTimeBlock();
+
+        gameIndexNumber = getIntent().getExtras().getInt("game_index");
+        myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
+        int currentRound = myGameInstance.getRound();
+        this.setTitle("Round " + (currentRound + 1));
 
         alreadyClicked.add(new SingleCell(0, ""));      // TODO Fix this!
 
         foxData = new FoxSQLData(this);
         foxData.open();
-//        if (myGameInstance.getPlayerID().equals("")){
-//            myGameData = new GameData(this.getApplicationContext(), gameIndexNumber);
-//        }else{
-//        }
         String playerID = myGameInstance.getPlayerID();
         myGameData = new GameData(this.getApplicationContext(), playerID);
 
-        int gameCou = myGameData.getGameCount();
         if (currentRound == 0) {
             myGameData.gameCountUp();
         }
-        gameCou = myGameData.getGameCount();
         myGameData.roundCountUp();
         // Clear longest word. Clear score for round but keep Total Score.
         myGameInstance.clearRoundScores();
 
         setGameInFocus(true);
+        // Read in text file of all valid words. This is our dictionary.
+        DictionaryApplication dictionary = (DictionaryApplication) getApplication();
+        myDiction = dictionary.getDictionary();
 
-        // Read in text file of all valid words. Store words in class FoxDictionary
-        myDiction = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
-
-        myGameTimerInstance = new GameTimer(this);
 
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters = new ArrayList<>();
@@ -103,7 +123,6 @@ public class GameActivity extends AppCompatActivity
             foxData.createRoundItem(thisRound);
 
         } else {      // If multi player game, re-use the same letters
-            Log.d(MONITOR_TAG, "Re-using game letters ... ");
             GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(myGameInstance.getRound());
             myGameInstance.setLongestPossible(playerOneInstance.getRoundLongestPossible(currentRound));
@@ -123,32 +142,41 @@ public class GameActivity extends AppCompatActivity
         givenLettersTV.setText(givenLettersSTR);
         writeToGuessGrid(givenLetters);
 
-        // Left side navigation drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void populateTimeBlock(){
+        final LinearLayout timeBlock = findViewById(R.id.timeBlock);
+        // We must wait for the layout to be finished before we can measure the height.
+        timeBlock.post(new Runnable() {
+            @Override
+            public void run() {
+                addTimeBlocks(timeBlock, timeBlock.getHeight());    //height is ready
+            }
+        });
+    }
+    private void addTimeBlocks(LinearLayout linearLayout, int height){
+        ArrayList<Integer> textViewIds = new ArrayList<>();
+        int blockHeight = linearLayout.getHeight();
+        int unitHeight = blockHeight/GAME_TIME_SECONDS;
+        for (int i=0; i<GAME_TIME_SECONDS; ++i){
+            int id = FoxUtils.getUniqueId(this);
+            textViewIds.add(id);
+            TextView tv = new TextView(this);
+            tv.setId(id);
+            tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, unitHeight));
+            tv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            linearLayout.addView(tv);
+        }
+        myGameTimerInstance = new GameTimer(this, textViewIds);
     }
 
     // When timer ends, change to the Score Screen to show results.
     public void startScoreScreen1Act() {
-//        Log.d(MONITOR_TAG, "starting Score Screen 1");
 
         Log.d(MONITOR_TAG, "Starting score sscreen intent: " + gameIndexNumber);
 
-//        Intent ScoreScreen1Intent = new Intent(this, ScoreScreen1Activity.class);
-//        ScoreScreen1Intent.putExtra("game_index", gameIndexNumber);
-//        startActivity(ScoreScreen1Intent);
-
-
-//        gameIndexNumber = getIntent().getExtras().getInt("game_index");
-//        gameIndexNumber++;
-
-        //testing new end screen
         Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
         Bundle endScreenBundle = new Bundle();
         endScreenBundle.putString("key", "round");
@@ -203,7 +231,7 @@ public class GameActivity extends AppCompatActivity
 
         if (this.resetButtonPressedOnce) {
             completeGame();
-    }
+        }
 //        Error:Execution failed for task ':app:clean'.
 //                > Unable to delete directory:
         this.resetButtonPressedOnce = true;
@@ -216,7 +244,6 @@ public class GameActivity extends AppCompatActivity
     }
 
 
-
     // Check if word is valid & longer than current best. If so, set as longest attempt.
     public void submitCurrentAttempt(View v) {
         setGridClickable();     // Set all letters to be chooseable again.
@@ -225,15 +252,17 @@ public class GameActivity extends AppCompatActivity
         String currentStr = (String) currentTV.getText();
         currentTV.setText("");  // Once retrieved, clear text from the current guess box
         String lcCurrentStr = currentStr.toLowerCase(); // All words in dictionary are lower case
-
+        if (allWordsSubmitted.contains(lcCurrentStr)) {
+            return;     // User has already submitted this word
+        }
         // Check dictionary to see if the word exists
         boolean isValid = myDiction.checkWordExists(lcCurrentStr);
         String wordAttempt = myGameInstance.getLongestWord();
         boolean isPrevious = (wordAttempt.equals(""));
         // if not valid, stick current word into data & sql, exit
         // if valid, stick previous word into sql, continue
-        if (!isValid || !isPrevious){
-            if(!isValid){
+        if (!isValid || !isPrevious) {
+            if (!isValid) {
                 wordAttempt = lcCurrentStr.toUpperCase();
             }
             String wordId = UUID.randomUUID().toString();
@@ -377,7 +406,7 @@ public class GameActivity extends AppCompatActivity
         this.gameInFocus = gameState;
     }
 
-//    String wordId, String wordSubmitted, String playerName, String letters, boolean isValid, boolean isFinal, String gameId) {
+    //    String wordId, String wordSubmitted, String playerName, String letters, boolean isValid, boolean isFinal, String gameId) {
     public void completeGame() {
 //        Log.d(MONITOR_TAG, "Adding word to prefs: " + myGameInstance.getLongestWord() + ", END");
         String endWord = myGameInstance.getLongestWord();
@@ -500,7 +529,7 @@ public class GameActivity extends AppCompatActivity
             this.backButtonPressedOnce = true;
 
             Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
-            toastMessage.setGravity(Gravity.TOP,0, 40);
+            toastMessage.setGravity(Gravity.TOP, 0, 40);
             toastMessage.show();
 
             new Handler().postDelayed(new Runnable() {
@@ -525,15 +554,16 @@ public class GameActivity extends AppCompatActivity
 
         return true;
     }
-}
 
-class SingleCell {
-    int resID;
-    String letter;
+    class SingleCell {
+        int resID;
+        String letter;
 
-    public SingleCell(int resID, String letter) {
-        this.resID = resID;
-        this.letter = letter;
+        public SingleCell(int resID, String letter) {
+            this.resID = resID;
+            this.letter = letter;
+        }
+
     }
-
 }
+

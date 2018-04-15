@@ -10,10 +10,12 @@ import com.example.seamus.wordfox.data.Diction;
  */
 
 public class DictionaryApplication extends Application {
-    private Diction dictionary = null;
+    private FoxDictionary dictionary = null;
     public Diction getDictionary(){
         if(dictionary == null){
             dictionary = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
+        }else{
+            dictionary.resetLetterPool();
         }
         return dictionary;
     }

@@ -88,6 +88,9 @@ public class FoxDictionary implements Diction {
                 ioe.printStackTrace();
             }
         }
+        resetLetterPool();
+    }
+    public void resetLetterPool(){
         letterPool = new LetterPool(letterDistributionMap);
     }
     // Read in text file of list of words.
