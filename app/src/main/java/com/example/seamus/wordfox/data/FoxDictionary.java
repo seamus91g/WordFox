@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.data;
 
 
 import android.app.Activity;
@@ -67,7 +67,7 @@ public class FoxDictionary implements Diction {
     private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
 
-    FoxDictionary(String validWordsFileName, String letterDistributionFile, Context myGameActivity) {
+    public FoxDictionary(String validWordsFileName, String letterDistributionFile, Context myGameActivity) {
         col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
         if (allValidWords.isEmpty()) {
