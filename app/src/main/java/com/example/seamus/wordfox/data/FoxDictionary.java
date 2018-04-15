@@ -40,6 +40,8 @@ import android.content.res.AssetManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.data.Diction;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,7 +57,7 @@ import static java.util.Collections.shuffle;
  * Created by Seamus on 05/07/2017.
  */
 
-public class FoxDictionary {
+public class FoxDictionary implements Diction {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
@@ -65,7 +67,7 @@ public class FoxDictionary {
     private Collator col;
     private final String MONITOR_TAG_FOX = "myTag";
 
-    FoxDictionary(String validWordsFileName, String letterDistributionFile, Activity myGameActivity) {
+    FoxDictionary(String validWordsFileName, String letterDistributionFile, Context myGameActivity) {
         col = Collator.getInstance(new Locale("en", "EN"));
         AssetManager assetManager = myGameActivity.getAssets();
         if (allValidWords.isEmpty()) {
@@ -168,7 +170,7 @@ public class FoxDictionary {
         return multipleLengths;
     }
     // Recursively search for valid substrings
-    public ArrayList<String> substringSearch(String givenLetters, ArrayList<String> knownLongest, int Depth, HashMap substringsChecked, int howMany) {
+    private ArrayList<String> substringSearch(String givenLetters, ArrayList<String> knownLongest, int Depth, HashMap substringsChecked, int howMany) {
         ArrayList<String> thisLongest = knownLongest;
         int len = givenLetters.length();
         for (int j = 0; j < len; j++){
@@ -266,15 +268,6 @@ public class FoxDictionary {
         }
         return set;
     }
-
-//    private class LettersInstance {
-//        private final String givenLetters;
-//        LettersInstance(String givenLetters){
-//            this.givenLetters = givenLetters;
-//        }
-
-
-//    }
 
     private class LetterPool {
         private final HashMap<String, Integer> poolDistribution; // = new HashMap<String, Integer>();
