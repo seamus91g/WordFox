@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.profile.ProfilePresenter;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,13 +48,12 @@ import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity
     implements ActivityCompat.OnRequestPermissionsResultCallback, NavigationView.OnNavigationItemSelectedListener {
-    public static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int SELECT_PICTURE = 0;
     private static final String MONITOR_TAG = "myTag";
     private GameData myGameData;
     private NavigationBurger navBurger = new NavigationBurger();
     private Menu menu;
-
+    private ProfilePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,20 +62,17 @@ public class ProfileActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        final String PLAYER = "Player 1";
-        myGameData = new GameData(this.getApplicationContext(), GameData.DEFAULT_P1_NAME);
-        updateLongestWord();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        // Display details of most recently played game
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        presenter = new ProfilePresenter(this);
+        updateLongestWord();
         // Display the user name. Do not display if still default "fox"
         EditText et = (EditText) findViewById(R.id.username_profile);
         String username_prof = myGameData.getUsername();
@@ -87,24 +84,25 @@ public class ProfileActivity extends AppCompatActivity
         Button setProfileNameButton = (Button) findViewById(R.id.button);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
+        // Display details of most recently played game
         showRecentGame();
         showBestWords();
         // Display the profile pic if one exists.
-        String profPicStr = myGameData.getProfilePicture();
+//        String profPicStr = myGameData.getProfilePicture();
         ImageView profileIB = (ImageView) findViewById(R.id.profileImageButton);
-        Bitmap profBitmap;
-        if (!profPicStr.equals("") && isStoragePermissionGranted()) {
-            Uri myFileUri = Uri.parse(profPicStr);
-            profBitmap = getBitmapFromUri(myFileUri);
+        Bitmap profBitmap = presenter.loadProfileImage();
+//        if (!profPicStr.equals("") && isStoragePermissionGranted()) {
+//            Uri myFileUri = Uri.parse(profPicStr);
+//            profBitmap = getBitmapFromUri(myFileUri);
             // If failed to load, get default
-            if (profBitmap == null){
-                profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
-            }else{
-                profileIB.setAdjustViewBounds(true);
-            }
-        }else{
-            profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
-        }
+//            if (profBitmap == null){
+//                profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+//            }else{
+//                profileIB.setAdjustViewBounds(true);
+//            }
+//        }else{
+//            profBitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+//        }
 
         profileIB.setImageBitmap(profBitmap);
 
@@ -144,34 +142,7 @@ public class ProfileActivity extends AppCompatActivity
 
     }
 
-    public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(MONITOR_TAG,"Permission is granted");
-                return true;
-            } else {
-                Log.v(MONITOR_TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(MONITOR_TAG,"Permission is granted");
-            return true;
-        }
-    }
 
-    private Bitmap loadAssetImage(String assetName){
-        AssetManager assetmanager = getAssets();
-        InputStream inStr = null;
-        try{
-            inStr = assetmanager.open(assetName);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        Bitmap bitmap = BitmapFactory.decodeStream(inStr);
-        return bitmap;
-    }
 
     public void showBestWords(){
 
@@ -326,54 +297,6 @@ public class ProfileActivity extends AppCompatActivity
         } else {
             return image;
         }
-    }
-
-    private Bitmap getBitmapFromUri(Uri imgUri) {
-        Bitmap myBitmap = null;
-        ContentResolver cr = getContentResolver();
-        String[] projection = {MediaStore.MediaColumns.DATA};
-        Cursor myCur = cr.query(imgUri, projection, null, null, null);
-
-        Log.d(MONITOR_TAG, "Checking if file exists: " + imgUri.toString() + ", END");
-        if (myCur != null) {
-            if (myCur.moveToFirst()) {
-                String filePath = myCur.getString(0);
-
-                if (new File(filePath).exists()) {
-                    try {
-                        myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
-
-                        if(myBitmap.getHeight()>=2048||myBitmap.getWidth()>=2048){
-                            Log.d(MONITOR_TAG, "Image is too large: width is " + myBitmap.getWidth() + " height is " + myBitmap.getHeight() + " END");
-                            DisplayMetrics metrics = new DisplayMetrics();
-                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                            int width = metrics.widthPixels;
-                            int height = metrics.heightPixels;
-                            Log.d(MONITOR_TAG, "screen width is: " + width + " screen height is: " + height + "resizing image now END");
-                            myBitmap = resize(myBitmap,width, height);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Rotate image if necessary
-                    Matrix rotateMatrix = new Matrix();
-                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-//                    Cursor cur = managedQuery(imgUri, orientationColumn, null, null, null);
-                    Cursor cur = getContentResolver().query(imgUri, orientationColumn, null, null, null);
-                    int orientation = -1;
-                    if (cur != null && cur.moveToFirst()) {
-                        orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-                    }
-                    rotateMatrix.postRotate(orientation);
-                    if (!rotateMatrix.isIdentity()) {
-                        Log.d(MONITOR_TAG, "Image needs rotation: " + orientation);
-                        myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), rotateMatrix, true);
-                    }
-                }
-            }
-        }
-        return myBitmap;
     }
 
     // User can type into text field and click 'save' button to save their profile user name
