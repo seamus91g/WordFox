@@ -22,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.profile.ProfileActivity;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +34,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
     private boolean backButtonPressedOnce = false;
     private NavigationBurger navBurger = new NavigationBurger();
     private final String MONITOR_TAG = "myTag";
+    EditText et;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +92,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
 
                 String choice = (String) parent.getItemAtPosition(position);
 //              MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(choice);
-                MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(choice, gameIndexNumber));
+                MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(choice, gameIndexNumber, MainActivity.allGameInstances.get(0).getRoundIDs()));
                 nextPlayerMessage = "Pass the game to " + choice;
 
                 TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
@@ -102,8 +105,8 @@ public class PlayerSwitchActivity extends AppCompatActivity
             }
         });
         // User can type in a new name for their player if it doesn't exist
-        EditText et = (EditText) findViewById(R.id.username_profile);
-        Button setProfileName = (Button) findViewById(R.id.button);
+        et = (EditText) findViewById(R.id.create_player);
+        Button setProfileName = (Button) findViewById(R.id.pswitch_create_player_button);
         setProfileName.setOnClickListener(usernameButtonListener);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,19 +122,21 @@ public class PlayerSwitchActivity extends AppCompatActivity
     private View.OnClickListener usernameButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            EditText et = (EditText) findViewById(R.id.username_profile);
             String username_prof = et.getText().toString();
 //            new GameData(v.getContext(), username_prof);    // TODO Invoke static method to add player instead
             // Assign a username instead of just a player number
 //            MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(username_prof);
-            MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(username_prof, gameIndexNumber));
+            MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(username_prof, gameIndexNumber, MainActivity.allGameInstances.get(0).getRoundIDs()));
             String nextPlayerMessage = "Pass the game to " + username_prof;
             TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
             nextPlayerTextView.setText(nextPlayerMessage);
-            et.clearFocus();
+            clearEdittextFocus();
             Log.d(MONITOR_TAG, "User entered: " + username_prof + ", END");
         }
     };
+    private void clearEdittextFocus(){
+        FoxUtils.clearViewFocus(et, this);
+    }
 
     // User can type into text field and click 'save' button to save their profile user name
     private View.OnClickListener nextPlayerButtonListener = new View.OnClickListener() {
