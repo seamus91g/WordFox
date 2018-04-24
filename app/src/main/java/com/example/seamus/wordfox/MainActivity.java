@@ -2,6 +2,7 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,14 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.database.DBHelper;
+import com.example.seamus.wordfox.profile.ProfileActivity;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -27,6 +36,8 @@ public class MainActivity extends AppCompatActivity
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
     private int numberOfPlayers;
     private final static int maxPlayerCount = 6;
+
+
 
     public static int getMaxPlayerCount() {
         return maxPlayerCount;
@@ -58,8 +69,37 @@ public class MainActivity extends AppCompatActivity
 //        GameActivity.myGameInstance.clearAllScores();
         numberOfPlayers = 1;
         Log.d(MONITOR_TAG, "Number of game instances: " + allGameInstances.size() + ", END");
+
+
+        findViewById(R.id.exportsql).setOnClickListener(sqlListener);
     }
 
+    private View.OnClickListener sqlListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            exportDB();
+        }
+    };
+    private void exportDB(){
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+        FileChannel source=null;
+        FileChannel destination=null;
+        String currentDBPath = "/data/"+ "com.example.seamus.wordfox" +"/databases/"+ DBHelper.DB_FILE_NAME;
+        String backupDBPath = DBHelper.DB_FILE_NAME;
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        try {
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Toast.makeText(this, "DB Exported!", Toast.LENGTH_LONG).show();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void startGameAct(View v) {
 //        GameInstance myInstance = new GameInstance();

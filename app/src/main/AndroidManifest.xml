@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
+        android:name=".injection.DictionaryApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -39,14 +39,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".profile.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/SettingsActivityLabel" />
+            android:label="@string/SettingsActivityLabel"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ScoreScreen2Activity"
             android:label="@string/ScoreScreen2ActivityLabel"
@@ -66,8 +66,15 @@
             android:name=".RoundnGameResults"
             android:label="@string/title_activity_end_screen_single_player1"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DataActivity"
+            android:label="@string/title_activity_data"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DataPageActivity"
+            android:label="@string/title_activity_data_page"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

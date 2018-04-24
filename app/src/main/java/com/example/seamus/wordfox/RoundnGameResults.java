@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.database.PlayerStatsTable;
 import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -272,7 +273,7 @@ public class RoundnGameResults extends AppCompatActivity
         // below for loop for each player. If it's just the end of a round, you'll only need to do
         // the for loop once, for the player that just completed the round
         if(roundOrGameEnd.equals("game")){
-            rounds = GameInstance.getMaxNumberOfRounds();
+            rounds = GameInstance.getNumberRounds();
         }else if (roundOrGameEnd.equals("round")){
             rounds = 1;
         }
@@ -427,6 +428,7 @@ public class RoundnGameResults extends AppCompatActivity
                 String bestGuess = getRoundOrGameBestGuess(roundOrGameEnd,i,j);
                 TextView bestGuessTV = createTVwithText(bestGuess);
                 bestGuessTV.setLayoutParams(lp);
+                bestGuessTV.setContentDescription("Player longest word");
                 wordsLL.addView(bestGuessTV);
             }
 

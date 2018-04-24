@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +16,7 @@ import java.util.UUID;
 
 public class GameInstance {
 
+    public static int NUMBER_ROUNDS = 3;
     public final String MONITOR_TAG = "GameInstance";
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
@@ -32,7 +32,6 @@ public class GameInstance {
     private int round1Length = 0;
     private int round2Length = 0;
     private int round3Length = 0;
-    private static int maxNumberOfRounds = 3;
     private final int thisGameIndex;
     private String playerID;   // Only exists if created on the player switch screen
 
@@ -40,12 +39,12 @@ public class GameInstance {
 
     private final ArrayList<String> roundIDs = new ArrayList<>();
 
-    public static int getMaxNumberOfRounds() {
-        return maxNumberOfRounds;
+    public static int getNumberRounds() {
+        return NUMBER_ROUNDS;
     }
 
     public void setMaxNumberOfRounds(int maxNumberOfRounds) {
-        this.maxNumberOfRounds = maxNumberOfRounds;
+        this.NUMBER_ROUNDS = maxNumberOfRounds;
     }
 
     private enum GameState {ONGOING, FINISHED}
@@ -74,7 +73,7 @@ public class GameInstance {
             pId = "Unknown";
         }
         if(roundIDs == null){
-            for (int i=0; i<maxNumberOfRounds; i++){
+            for (int i = 0; i< NUMBER_ROUNDS; i++){
                 this.roundIDs.add(UUID.randomUUID().toString());
             }
         }else{                              // Defensive copying
@@ -263,7 +262,7 @@ public class GameInstance {
         int currentRound = MainActivity.allGameInstances.get(thisGameIndex).getRound();
         // if the current round is anything but the last round, start a new round following on
         // from the previous round
-        if (round < maxNumberOfRounds) {
+        if (round < NUMBER_ROUNDS) {
 
             Intent gameIntent = new Intent(context, GameActivity.class);
             gameIntent.putExtra("game_index", thisGameIndex);

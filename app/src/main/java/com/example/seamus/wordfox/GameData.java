@@ -2,22 +2,14 @@ package com.example.seamus.wordfox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Seamus on 05/07/2017.
@@ -69,7 +61,7 @@ public class GameData extends AppCompatActivity {
 //        editor.apply();
 //    }
     // Instantiate using a name instead of a player number
-    GameData(Context myContext, String playerID) {
+    public GameData(Context myContext, String playerID) {
 //        this.playerNumber = 99;     // Why bother setting this?
         if (playerID.equals("")){
             Toast.makeText(myContext, "Player name is empty!", Toast.LENGTH_SHORT).show();
@@ -191,7 +183,7 @@ public class GameData extends AppCompatActivity {
     }
     public ArrayList<String> getBestWords(){
         ArrayList<String> bestWords = new ArrayList<>();
-        for (int i=0; i<GameInstance.getMaxNumberOfRounds(); ++i) {
+        for (int i = 0; i<GameInstance.getNumberRounds(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
             bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, "None Found!"));
         }
@@ -207,7 +199,7 @@ public class GameData extends AppCompatActivity {
     }
     public ArrayList<String> getRecentWords(){
         ArrayList<String> recentWords = new ArrayList<>();
-        for (int i=0; i<GameInstance.getMaxNumberOfRounds(); ++i) {
+        for (int i = 0; i<GameInstance.getNumberRounds(); ++i) {
             String RECENT_WORDS_KEY_i = RECENT_WORDS_KEY + "_" + i;
             recentWords.add(foxPreferences.getString(RECENT_WORDS_KEY_i, "None Found!"));
         }
@@ -298,8 +290,8 @@ public class GameData extends AppCompatActivity {
         editor.apply();
     }
 
-    public void setProfilePicture(Uri picture) {
-        editor.putString(PROFILE_PIC_KEY, picture.toString());
+    public void setProfilePicture(String picture) {
+        editor.putString(PROFILE_PIC_KEY, picture);
         editor.apply();
     }
 

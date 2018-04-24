@@ -20,12 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.GameScreen.GamescreenContract;
+import com.example.seamus.wordfox.GameScreen.GamescreenPresenter;
 import com.example.seamus.wordfox.data.Diction;
-import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +38,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class GameActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GamescreenContract.View{
     public static int GAME_TIME_SECONDS = 30;
     public static final String MONITOR_TAG = "myTag";
     private Diction myDiction;
@@ -47,7 +49,7 @@ public class GameActivity extends AppCompatActivity
     private boolean resetButtonPressedOnce = false;
     private GameTimer myGameTimerInstance;
     private GameData myGameData;
-    private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();
+    private ArrayList<SingleCell> listOfGridCells; // = new ArrayList<SingleCell>();c
     private boolean gameInFocus;
     private boolean timeUp;
     private int gameIndexNumber;
@@ -140,9 +142,9 @@ public class GameActivity extends AppCompatActivity
         // Write the letters to the heading and to the 3x3 textView grid
         TextView givenLettersTV = (TextView) findViewById(R.id.givenLettersGameScreen);
         givenLettersTV.setText(givenLettersSTR);
-        writeToGuessGrid(givenLetters);
 
-
+        final GamescreenPresenter presenter = new GamescreenPresenter(givenLetters, this);
+        presenter.setUpGrid();
 
     }
 
@@ -152,11 +154,12 @@ public class GameActivity extends AppCompatActivity
         timeBlock.post(new Runnable() {
             @Override
             public void run() {
-                addTimeBlocks(timeBlock, timeBlock.getHeight());    //height is ready
+                addTimeBlocks(timeBlock);    //height is ready
             }
         });
+        timeBlock.post(() -> addTimeBlocks(timeBlock));
     }
-    private void addTimeBlocks(LinearLayout linearLayout, int height){
+    private void addTimeBlocks(LinearLayout linearLayout){
         ArrayList<Integer> textViewIds = new ArrayList<>();
         int blockHeight = linearLayout.getHeight();
         int unitHeight = blockHeight/GAME_TIME_SECONDS;
@@ -186,7 +189,8 @@ public class GameActivity extends AppCompatActivity
     }
 
     // Print the 9 generated letters to the 3x3 grid.
-    public boolean writeToGuessGrid(ArrayList<String> givenLetters) {
+    @Override
+    public void writeToGuessGrid(ArrayList<String> givenLetters) {
         // Loop to retrieve each letter and write to its appropriate text view in the grid
         listOfGridCells = new ArrayList<SingleCell>();
 
@@ -199,7 +203,7 @@ public class GameActivity extends AppCompatActivity
 
         }
         printGridCells(listOfGridCells);
-        return true;
+        return;
     }
 
     public void printGridCells(ArrayList<SingleCell> gridCells) {
@@ -223,7 +227,7 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    // When user clicks the Reset button, clear the currently typed letters.
+    // When user clicks the Reset button, clear the currently typed letters.q
     public void clearCurrentAttempt(View v) {
         TextView currentAttemptTV = (TextView) findViewById(R.id.currentAttempt);
         currentAttemptTV.setText("");
@@ -232,15 +236,14 @@ public class GameActivity extends AppCompatActivity
         if (this.resetButtonPressedOnce) {
             completeGame();
         }
-//        Error:Execution failed for task ':app:clean'.
-//                > Unable to delete directory:
         this.resetButtonPressedOnce = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                resetButtonPressedOnce = false;
-            }
-        }, 500);
+        new Handler().postDelayed(() -> resetButtonPressedOnce = false, 500);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                resetButtonPressedOnce = false;
+//            }
+//        }, 500);
     }
 
 
@@ -532,12 +535,13 @@ public class GameActivity extends AppCompatActivity
             toastMessage.setGravity(Gravity.TOP, 0, 40);
             toastMessage.show();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    backButtonPressedOnce = false;
-                }
-            }, 1500);
+            new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    backButtonPressedOnce = false;
+//                }
+//            }, 1500);
         }
     }
 
