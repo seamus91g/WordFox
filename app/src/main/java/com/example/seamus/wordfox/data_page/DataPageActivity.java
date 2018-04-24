@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.data_page;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -17,6 +17,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.WordLoader;
 import com.example.seamus.wordfox.dataWordsRecycler.WordData;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 import com.example.seamus.wordfox.database.DataPerGame;

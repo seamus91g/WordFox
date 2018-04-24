@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.database.DBHelper;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 

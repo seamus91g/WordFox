@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.results_screen;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.GameInstance;
+import com.example.seamus.wordfox.MainActivity;
+import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.database.PlayerStatsTable;
 import com.example.seamus.wordfox.datamodels.GameItem;

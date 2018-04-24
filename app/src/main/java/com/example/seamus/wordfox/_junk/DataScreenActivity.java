@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox._junk;
 
 import android.content.Intent;
 import android.os.Build;
@@ -15,38 +15,30 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
-import com.example.seamus.wordfox.database.WordTable;
-import com.example.seamus.wordfox.datamodels.GameItem;
-import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-
-import static android.support.constraint.ConstraintSet.BOTTOM;
-import static android.support.constraint.ConstraintSet.TOP;
 
 public class DataScreenActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String MONITOR_TAG = "myTag";
+    private static int id = 1;                                  //   Support for API 16
     private NavigationBurger navBurger = new NavigationBurger();
     private GameData myGameData;
-    private int colorIndex = 0;         // Every second color is different
-    public static final String MONITOR_TAG = "myTag";
-    static int id = 1; //   Support for API 16
+    private int colorIndex = 0;                         // Every second color is different
     private ArrayList<Integer> allUniqueIds = new ArrayList<Integer>(); // Unique ID for each generated xml view
 
     @Override
@@ -63,9 +55,7 @@ public class DataScreenActivity extends AppCompatActivity
         allUniqueIds.add(R.id.data_heading_image);
         // Get list of created player names
         ArrayList<String> players = GameData.getNamedPlayerList(this);
-//        List<GameItem> allGames = foxData.getAllGames(this);
         // Iterate through each player which has data
-//        int count = 0;
         while (players.size() > 0){
             // Get all named players
             String playerName;
@@ -86,29 +76,7 @@ public class DataScreenActivity extends AppCompatActivity
                 WordItem thisword = wordIterator.next();
                 setTextView("" + thisword.getWordSubmitted(), "DATA"); // + "\t\t" + thisword.getPlayerName() + "\t\t" + thisword.isFinal() + "\t\t" + thisword.isValid(), "DATA");    //
             }
-////            // DB Rounds section
-//            setTextView("Letters", "HEADER");
-//            List<RoundItem> allRounds = foxData.getAllRounds();
-//            Iterator<RoundItem> roundItemIterator = allRounds.iterator();
-//            setTextView("Number of rounds: " + foxData.getCountRounds(), "DATA");    //
-//            while(roundItemIterator.hasNext()){
-//                setTextView("" + roundItemIterator.next().getLetters(), "DATA");    //
-//            }
-////            // DB Games section
-//            setTextView("Games Won", "HEADER");
-//            Iterator<GameItem> gameItemIterator = allGames.iterator();
-//            while(gameItemIterator.hasNext()){
-//                GameItem thisGame = gameItemIterator.next();
-//                if(thisGame.getWinners().contains(playerName)){
-//
-////                    setTextView(
-////                            "" + thisGame.getLetters(0)  + thisGame.getWinnerWords().get(0) + "\n"
-////                            + thisGame.getLetters(1)  + thisGame.getWinnerWords().get(1) + "\n"
-////                            + thisGame.getLetters(2)  + thisGame.getWinnerWords().get(2)
-////                            , "DATA"
-////                    );    //
-//                }
-//            }
+
             // Games section
             setTextView("Games", "HEADER");
             setTextView("Played " + myGameData.getGameCount() + " games", "DATA");

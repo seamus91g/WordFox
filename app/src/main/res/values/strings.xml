@@ -94,4 +94,6 @@
     <string name="SettingsActivityLabel">Settings</string>
     <string name="title_activity_player_switch">PlayerSwitchActivity</string>
     <string name="title_activity_end_screen_single_player1">EndScreenSinglePlayer1</string>
+    <string name="title_activity_data">DataActivity</string>
+    <string name="title_activity_data_page">DataPageActivity</string>
 </resources>

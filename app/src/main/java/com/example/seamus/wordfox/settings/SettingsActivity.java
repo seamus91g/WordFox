@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.settings;
 
 
 import android.annotation.TargetApi;
@@ -22,6 +22,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.seamus.wordfox.AppCompatPreferenceActivity;
+import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.List;
 

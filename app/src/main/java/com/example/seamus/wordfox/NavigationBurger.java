@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.seamus.wordfox.data_page.DataPageActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 /**

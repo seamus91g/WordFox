@@ -5,6 +5,8 @@ import android.support.annotation.IdRes;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.seamus.wordfox.game_screen.GameActivity;
+
 import java.util.ArrayList;
 
 /**

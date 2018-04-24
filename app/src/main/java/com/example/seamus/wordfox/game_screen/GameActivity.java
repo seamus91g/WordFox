@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.game_screen;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.seamus.wordfox.GameScreen.GamescreenContract;
-import com.example.seamus.wordfox.GameScreen.GamescreenPresenter;
+import com.example.seamus.wordfox.FoxUtils;
+import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.GameInstance;
+import com.example.seamus.wordfox.GameTimer;
+import com.example.seamus.wordfox.MainActivity;
+import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 import com.example.seamus.wordfox.data.Diction;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.RoundItem;

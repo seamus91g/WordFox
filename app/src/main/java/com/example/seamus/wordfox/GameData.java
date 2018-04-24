@@ -129,7 +129,7 @@ public class GameData extends AppCompatActivity {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         return foxPreferences.getInt(NAMED_PLAYER_COUNT_KEY, 0);
     }
-    static ArrayList<String> getNamedPlayerList(Context myContext){
+    public static ArrayList<String> getNamedPlayerList(Context myContext){
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         ArrayList<String> namedPlayers = new ArrayList<String>();
         int namedPlayerCount = getNamedPlayerCount(myContext);

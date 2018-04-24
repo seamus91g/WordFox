@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.seamus.wordfox.PlayerSwitchActivity">
+    tools:activity="com.example.seamus.wordfox.player_switch.PlayerSwitchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

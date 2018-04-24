@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox;
+package com.example.seamus.wordfox.player_switch;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +22,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.FoxUtils;
+import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.GameInstance;
+import com.example.seamus.wordfox.MainActivity;
+import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;

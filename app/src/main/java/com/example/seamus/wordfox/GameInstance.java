@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.seamus.wordfox.game_screen.GameActivity;
+import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
+import com.example.seamus.wordfox.results_screen.RoundnGameResults;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -59,16 +63,16 @@ public class GameInstance {
         longestWord = "";       // Longest of the current round
         myGameState = GameState.ONGOING;
     }
-    GameInstance(int thisGameIndex) {
+    public GameInstance(int thisGameIndex) {
         this("Player " + (thisGameIndex + 1), thisGameIndex, null);
     }
-    GameInstance(int thisGameIndex, ArrayList<String> roundIDs) {
+    public GameInstance(int thisGameIndex, ArrayList<String> roundIDs) {
         this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
     }
-    GameInstance(String pId, int thisGameIndex) {
+    public GameInstance(String pId, int thisGameIndex) {
         this(pId, thisGameIndex, null);
     }
-    GameInstance(String pId ,int thisGameIndex, ArrayList<String> roundIDs) {
+    public GameInstance(String pId, int thisGameIndex, ArrayList<String> roundIDs) {
         if (pId.equals("")){
             pId = "Unknown";
         }
