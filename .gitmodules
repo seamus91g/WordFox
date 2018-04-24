@@ -1,0 +1,3 @@
+[submodule "groupie"]
+	path = groupie
+	url = https://github.com/seamus91g/groupie.git

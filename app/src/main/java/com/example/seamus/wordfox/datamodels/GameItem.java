@@ -42,16 +42,21 @@ public class GameItem {
         winners = new ArrayList<String>(Arrays.asList(winner.split("\\s*,\\s*")));
         organiseWinnerWords(word1, word2, word3);
     }
-
+    // Detect blank, fill quotes
+    // Detect all empty, enter one
     private void organiseWinnerWords(String word1, String word2, String word3){
         ArrayList<String> firstWords = new ArrayList<>(Arrays.asList (word1.split("\\s*,\\s*")));
         ArrayList<String> secondWords = new ArrayList<>(Arrays.asList(word2.split("\\s*,\\s*")));
         ArrayList<String> thirdWords = new ArrayList<>(Arrays.asList (word3.split("\\s*,\\s*")));
-        for(int i=0; i<firstWords.size(); ++i){
+        int minWinners = 1;
+        for(int i=0; i<firstWords.size() || i<secondWords.size() || i<thirdWords.size() || i<minWinners; ++i){
+            String first = (firstWords.size() <= i) ? "" : firstWords.get(i);
+            String second = (secondWords.size() <= i) ? "" : secondWords.get(i);
+            String third = (thirdWords.size() <= i) ? "" : thirdWords.get(i);
             words.add(new ArrayList<String>(Arrays.asList(
-                    firstWords.get(i),
-                    secondWords.get(i),
-                    thirdWords.get(i))));
+                    first,
+                    second,
+                    third)));
         }
     }
 
@@ -78,7 +83,7 @@ public class GameItem {
         populateRoundData(myDB);
         return letters;
     }
-    private void populateRoundData(FoxSQLData myDB){
+    public void populateRoundData(FoxSQLData myDB){
         RoundItem thisRound1 = myDB.getRound(round1Id);
         RoundItem thisRound2 = myDB.getRound(round2Id);
         RoundItem thisRound3 = myDB.getRound(round3Id);
@@ -113,6 +118,9 @@ public class GameItem {
 
     public String getRound3Id() {
         return round3Id;
+    }
+    public ArrayList<String> getRoundIDs(){
+        return new ArrayList<>(Arrays.asList(round1Id, round2Id, round3Id));
     }
 
     public String getWord1Id() {

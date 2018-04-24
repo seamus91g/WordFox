@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.seamus.wordfox.profile.ProfileActivity;
+
 /**
  * Created by Seamus on 06/07/2017.
  */
@@ -24,7 +26,7 @@ public class NavigationBurger {
             fromContext.startActivity(homeScreenIntent);
         } else if (id == R.id.nav_data) {
             Log.d(MONITOR_TAG, "nav_data");
-            Intent dataScreenIntent = new Intent(fromContext, DataScreenActivity.class);
+            Intent dataScreenIntent = new Intent(fromContext, DataPageActivity.class);
             fromContext.startActivity(dataScreenIntent);
         } else if (id == R.id.nav_profile) {
             Log.d(MONITOR_TAG, "nav_profile");
