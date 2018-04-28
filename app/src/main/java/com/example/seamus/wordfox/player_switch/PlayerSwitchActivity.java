@@ -24,97 +24,29 @@ import android.widget.Toast;
 
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
-import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
-import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class PlayerSwitchActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        PlayerSwitchContract.View {
     private int gameIndexNumber;
     private boolean backButtonPressedOnce = false;
     private NavigationBurger navBurger = new NavigationBurger();
     private final String MONITOR_TAG = "myTag";
-    EditText et;
+    private PlayerSwitchPresenter presenter;
+    EditText createNewPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(MONITOR_TAG, "OnCreate player switch!");
         setContentView(R.layout.activity_player_switch);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // What game number are we on
-        gameIndexNumber = getIntent().getExtras().getInt("game_index");
-
-        String nextPlayerMessage = "Pass the game to player " + (gameIndexNumber + 1);
-        TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
-        nextPlayerTextView.setText(nextPlayerMessage);
-
-        Button setProfileNameButton = (Button) findViewById(R.id.nextPlayerButton);
-        setProfileNameButton.setOnClickListener(nextPlayerButtonListener);
-
-        //get the spinner from the xml.
-        Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
-        //create a list of items for the spinner.
-        ArrayList<String> items = new ArrayList<String>();
-        items.add("Player " + (gameIndexNumber + 1));
-        // track already chosen players so they can't be chosen again
-        ArrayList<String> previousPlayers = new ArrayList<>();
-        for (int i=0; i<gameIndexNumber; i++){
-            previousPlayers.add(MainActivity.allGameInstances.get(i).getPlayerID());
-        }
-        // Show the user a list of available player names excluding already chosen ones
-        Pattern p = Pattern.compile("Player\\s\\d");    // TODO     .. really??
-
-        for(String playerID : GameData.getNamedPlayerList(this)){
-            if(previousPlayers.contains(playerID)){
-                continue;
-            }
-            Matcher m = p.matcher(playerID);
-            if(m.matches()){
-                Log.d(MONITOR_TAG, "Matched: " + playerID);
-            }
-            Log.d(MONITOR_TAG, "Didn't match: " + playerID);
-            items.add(playerID);
-        }
-        // Create an adapter to describe how the items are displayed
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        // Set the spinners adapter to the previously created one.
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(adapter);
-        // If user chooses a name, assign the name to the current game instance
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                // The first option is not a name, just a player number
-                String nextPlayerMessage;
-
-                String choice = (String) parent.getItemAtPosition(position);
-//              MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(choice);
-                MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(choice, gameIndexNumber, MainActivity.allGameInstances.get(0).getRoundIDs()));
-                nextPlayerMessage = "Pass the game to " + choice;
-
-                TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
-                nextPlayerTextView.setText(nextPlayerMessage);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
-            }
-        });
-        // User can type in a new name for their player if it doesn't exist
-        et = (EditText) findViewById(R.id.create_player);
-        Button setProfileName = (Button) findViewById(R.id.pswitch_create_player_button);
-        setProfileName.setOnClickListener(usernameButtonListener);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -124,43 +56,45 @@ public class PlayerSwitchActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
+        // What game number are we on
+        gameIndexNumber = getIntent().getExtras().getInt("game_index");
+
+        // Button to continue to the next player
+        Button setProfileNameButton = (Button) findViewById(R.id.nextPlayerButton);
+        setProfileNameButton.setOnClickListener(nextPlayerButtonListener);
+
+        // User can create a new player name
+        createNewPlayer = (EditText) findViewById(R.id.create_player);
+        Button setProfileName = (Button) findViewById(R.id.pswitch_create_player_button);
+        setProfileName.setOnClickListener(usernameButtonListener);
+
+        presenter = new PlayerSwitchPresenter(this, gameIndexNumber, MainActivity.allGameInstances, GameData.getNamedPlayerList(this));
+        presenter.setupMenu();
+    }
+    // After typing a username, the player can press 'Save' to keep the username
     private View.OnClickListener usernameButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String username_prof = et.getText().toString();
-//            new GameData(v.getContext(), username_prof);    // TODO Invoke static method to add player instead
-            // Assign a username instead of just a player number
-//            MainActivity.allGameInstances.get(gameIndexNumber).setPlayerID(username_prof);
-            MainActivity.allGameInstances.set(gameIndexNumber, new GameInstance(username_prof, gameIndexNumber, MainActivity.allGameInstances.get(0).getRoundIDs()));
-            String nextPlayerMessage = "Pass the game to " + username_prof;
-            TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
-            nextPlayerTextView.setText(nextPlayerMessage);
+            String username_prof = createNewPlayer.getText().toString();
+//            presenter.setupMenu();
+//            presenter.setChoice(username_prof);
+            presenter.newPlayer(username_prof);
             clearEdittextFocus();
-            Log.d(MONITOR_TAG, "User entered: " + username_prof + ", END");
         }
     };
-    private void clearEdittextFocus(){
-        FoxUtils.clearViewFocus(et, this);
-    }
-
-    // User can type into text field and click 'save' button to save their profile user name
+    // Press 'Continue' button to proceed to the next player
     private View.OnClickListener nextPlayerButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startGame();
+            presenter.startGame();
         }
     };
-
-    private void startGame() {
-        Log.d(MONITOR_TAG, "starting game instance from player switch: " + this.gameIndexNumber);
-        Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", gameIndexNumber);
-        this.startActivity(gameIntent);
-
+    // Clear focus and close the keyboard
+    private void clearEdittextFocus(){
+        FoxUtils.clearViewFocus(createNewPlayer, this);
     }
-
+    // User must press back button twice consecutively to exit the game
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -183,6 +117,38 @@ public class PlayerSwitchActivity extends AppCompatActivity
             }, 1500);
         }
     }
+    // Instruct the user of what to do. (Pass the game to the next player)
+    @Override
+    public void displayMessage(String message) {
+        TextView nextPlayerTextView = (TextView) findViewById(R.id.playerSwitchTV);
+        nextPlayerTextView.setText(message);
+    }
+    // User has a choice of existing player names to choose from.
+    @Override
+    public void populateMenu(ArrayList<String> items) {
+        // Create an adapter to describe how the items are displayed
+        Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdown.setAdapter(adapter);
+        // If user chooses a name, assign the name to the current game instance
+        dropdown.setOnItemSelectedListener(itemSelectedListener);
+    }
+    // When user has choosen a name from the menu, set up the game instance
+    private AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view,
+                                   int position, long id) {
+            // The first option is not a name, just a player number
+            String choice = (String) parent.getItemAtPosition(position);
+            presenter.setChoice(choice);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            // TODO Auto-generated method stub
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,5 +187,4 @@ public class PlayerSwitchActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
