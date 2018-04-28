@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,18 +13,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.FoxUtils;
+import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 
@@ -36,10 +41,12 @@ public class ProfileActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener,
         ProfileContract.View {
     static final int SELECT_PICTURE = 0;
+    private static final String TAG = "profile_tag";
     private NavigationBurger navBurger = new NavigationBurger();
     private ProfilePresenter presenter;
     private ImageView profileIB;
     private EditText nameEditText;
+    private Button setProfileNameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,22 +63,45 @@ public class ProfileActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // Keep soft keyboard hidden when activity opens
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        nameEditText = findViewById(R.id.username_profile);
+        // User can click the profile picture to allow them to change the picture
         profileIB = findViewById(R.id.profileImageButton);
         profileIB.setOnClickListener(profileImageListener);
+        // User can type in a new user name
+        nameEditText = findViewById(R.id.profile_username);
+        nameEditText.setOnFocusChangeListener(edittextFocusChange);
         // Button to save user name to GameData class.
-        Button setProfileNameButton = findViewById(R.id.button);
+        setProfileNameButton = findViewById(R.id.profile_save_name);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
         // The presenter handles preparing relevant data to display
-        presenter = new ProfilePresenter(this);
+        presenter = new ProfilePresenter(this, new GameData(this, GameData.DEFAULT_P1_NAME));
         presenter.displayLongestWord();
         presenter.displayProfileName();
         presenter.displayProfileImage();
         presenter.displayBestWords();
         presenter.displayRecentGame();
     }
+    // Keep the 'Save Username' button in view when the soft keyboard appears
+    private View.OnFocusChangeListener edittextFocusChange = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                // Get screen dimensions
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                // Scroll so that the Save button is 1/4 way from the top of the screen
+                int scrollyY = setProfileNameButton.getBottom() - displayMetrics.heightPixels / 4;
+                ScrollView scroll = findViewById(R.id.profile_scrollview);
+                findViewById(R.id.profile_scrollview).post(
+                        () -> scroll.smoothScrollTo(0, scrollyY)
+                );
+            }
+        }
+    };
     // User can click the existing profile image to load a different image
     private View.OnClickListener profileImageListener = new View.OnClickListener() {
         @Override
@@ -85,12 +115,13 @@ public class ProfileActivity extends AppCompatActivity
         public void onClick(View v) {
             String username_prof = nameEditText.getText().toString();
             presenter.updateProfileName(username_prof);
-            nameEditText.clearFocus();
+            clearViewFocus(nameEditText);
         }
     };
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // if permission has been granted resume tasks needing this permission
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -161,11 +192,6 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     @Override
-    public void setProfileDrawable(Drawable drawable) {
-        profileIB.setImageDrawable(drawable);
-    }
-
-    @Override
     public void setLongestWord(String longestWord) {
         // Display longest word
         TextView longestWordProfilePage = findViewById(R.id.profPicLongestWord);
@@ -175,6 +201,10 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setUsername(String name) {
         nameEditText.setText(name);
+    }
+
+    public void clearViewFocus(View viewWithFocus) {
+        FoxUtils.clearViewFocus(viewWithFocus, this);
     }
 
     @Override

@@ -30,45 +30,48 @@ import java.util.ArrayList;
  * Created by Gilroy on 4/19/2018.
  */
 
-class ProfilePresenter implements ProfileContract.Listener {
+public class ProfilePresenter implements ProfileContract.Listener {
     private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final String MONITOR_TAG = "myTag";
-    private static final int MAX_SCREEN_DIMENSION = 2048;
+    private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
 
     private final GameData myGameData;
     private final Activity activity;
     private final ProfileContract.View view;
 
-    ProfilePresenter(ProfileActivity activity) {
+    public ProfilePresenter(ProfileActivity activity, GameData data) {
         this.activity = activity;
         this.view = activity;
-        myGameData = new GameData(activity.getApplicationContext(), GameData.DEFAULT_P1_NAME);
+        this.myGameData = data;
     }
     // Find longest word and display it on the profile screen
-    void displayLongestWord() {
+    public void displayLongestWord() {
         String longestWord = myGameData.findLongest();
+        if (longestWord.equals("")){
+            longestWord = "No words found!";
+        }
         view.setLongestWord(longestWord);
     }
     // Save username to preference file. Update the displayed profile name.
-    void updateProfileName(String name) {
+    public void updateProfileName(String name) {
         myGameData.setUsername(name);
         displayProfileName();
     }
     // Display the user name. Do not display if still default
-    void displayProfileName() {
+    public void displayProfileName() {
         String username_prof = myGameData.getUsername();
         if (!username_prof.equals(GameData.DEFAULT_P1_NAME)) {  // TODO .. This can never be true?? Default return is Fox
             view.setUsername(username_prof);
         }
     }
     // Attempt to load and display the profile image.
-    void displayProfileImage() {
+    public void displayProfileImage() {
         if (isStoragePermissionGranted()) {
             permissionGrantedDisplayImage();
         }
     }
     // permission granted so get the image
-    void permissionGrantedDisplayImage() {
+    public void permissionGrantedDisplayImage() {
         String profPicStr = myGameData.getProfilePicture();
         Bitmap bitmap = null;
         if (!profPicStr.equals("")) {
@@ -84,14 +87,14 @@ class ProfilePresenter implements ProfileContract.Listener {
         view.setProfileImage(bitmap);
     }
     // When user is finished choosing a picture from the image gallery
-    void activityResult(Intent data) {
+    public void activityResult(Intent data) {
         Uri selectedImage = data.getData();
         assert selectedImage != null;
         myGameData.setProfilePicture(selectedImage.toString());     // Save path to chosen pic for future loading
         displayProfileImage();
     }
     // Load bitmap from asset contained within the project
-    private Bitmap loadAssetImage(String assetName) {
+    public Bitmap loadAssetImage(String assetName) {
         AssetManager assetmanager = activity.getAssets();
         InputStream inStr = null;
         try {
@@ -125,7 +128,7 @@ class ProfilePresenter implements ProfileContract.Listener {
             }
             // Resize bitmap if it exceeds screen resolution
             assert myBitmap != null;
-            if (myBitmap.getHeight() > MAX_SCREEN_DIMENSION || myBitmap.getWidth() > MAX_SCREEN_DIMENSION) {
+            if (myBitmap.getHeight() > MAX_RESOLUTION_IMAGE || myBitmap.getWidth() > MAX_RESOLUTION_IMAGE) {
                 DisplayMetrics metrics = new DisplayMetrics();
                 activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
                 myBitmap = resize(myBitmap, metrics);
@@ -177,7 +180,7 @@ class ProfilePresenter implements ProfileContract.Listener {
         return image;
     }
     // Allow user to choose image from their phone when the profile image is clicked
-    void choosePicture() {
+    public void choosePicture() {
         if (isStoragePermissionGranted()) {
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
             intent.setType("image/*");
@@ -197,12 +200,11 @@ class ProfilePresenter implements ProfileContract.Listener {
             }
         } else {
             //permission is automatically granted on sdk<23 upon installation
-            Log.v(MONITOR_TAG, "Permission is granted");
             return true;
         }
     }
     // Display statistics from the most recent played game
-    void displayRecentGame() {
+    public void displayRecentGame() {
         String rgID = myGameData.getRecentGame();
         // Exit if no recent game exists
         if (rgID.equals("")) {
@@ -261,7 +263,7 @@ class ProfilePresenter implements ProfileContract.Listener {
         view.setDataPreviousGame(lastGameStrings);
     }
     // Find best words found in a game
-    void displayBestWords() {
+    public void displayBestWords() {
         ArrayList<String> bestWords = myGameData.getBestWords();
         // Exit if no best words exist
         if (bestWords.get(0).equals(GameData.NONE_FOUND)) {
