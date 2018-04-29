@@ -2,52 +2,19 @@ package com.example.seamus.wordfox;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-
-
-import android.content.res.AssetManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 import static java.util.Collections.shuffle;
 
@@ -59,7 +26,7 @@ public class FoxDictionary {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
-    private static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
+    public static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
 
     private LetterPool letterPool;
     private Collator col;
@@ -109,7 +76,7 @@ public class FoxDictionary {
         }
     }
     // Store how many of each letter to use. Example, 8 letter Ts, 3 letter Bs, 1 letter Z
-    private void populateLetterDistribution(InputStream myIpStr) throws IOException {
+    public static void populateLetterDistribution(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
@@ -276,52 +243,5 @@ public class FoxDictionary {
 
 //    }
 
-    private class LetterPool {
-        private final HashMap<String, Integer> poolDistribution; // = new HashMap<String, Integer>();
-        private String allVowels = "AEIOU";
-        private String allConsonants = "BCDFGHJKLMNPQRSTVWXYZ";
-        ArrayList<String> alreadyPicked = new ArrayList<String>();
-        ArrayList<String> allVowelCards;
-        ArrayList<String> allConsonantCards;
-
-        LetterPool(HashMap<String, Integer> poolDistribution) {
-            this.poolDistribution = poolDistribution;
-            allVowelCards = createCards(allVowels);
-            allConsonantCards = createCards(allConsonants);
-        }
-
-        private ArrayList<String> createCards(String letterSequence) {
-            ArrayList<String> sequenceOfCards = new ArrayList<String>();
-            String[] allLetters = letterSequence.split("(?<=.)");
-            for (String letter : allLetters) {
-                int count = poolDistribution.get(letter);
-                for (int x = 0; x < count; x++) {
-                    sequenceOfCards.add(letter);
-                }
-            }
-            return sequenceOfCards;
-        }
-
-        public String getVowel() {
-            return returnAndDeleteRandom(allVowelCards);
-        }
-
-        public String getConsonant() {
-            return returnAndDeleteRandom(allConsonantCards);
-        }
-
-        private String returnAndDeleteRandom(ArrayList<String> letterList) {
-            int random = (int) (Math.random() * letterList.size());
-            String randomLetter = letterList.get(random);
-            // If letter already chosen, try again. Keep if same found again on second attempt.
-            if (alreadyPicked.contains(randomLetter)) {
-                alreadyPicked.remove(alreadyPicked.indexOf(randomLetter));
-                randomLetter = returnAndDeleteRandom(letterList);
-            } else {
-                letterList.remove(random);
-                alreadyPicked.add(randomLetter);
-            }
-            return randomLetter;
-        }
-    }
 }
+

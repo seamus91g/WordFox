@@ -37,7 +37,26 @@
     </style>
 
 
-    <!-- Style for the TextView displaying the letters to be chosen-->
+
+
+    <!-- Style for the TextView displaying the falling letters -->
+    <style name="FallingLetters">
+        <item name="android:textColor">@android:color/primary_text_dark
+        </item>
+        <item name="android:textSize">6dp
+        </item>
+        <item name="android:textStyle">bold
+        </item>
+        <item name="android:padding">0.2dp
+        </item>
+        <item name="android:fontFamily">monospace
+        </item>
+        <item name="android:background">@drawable/turquoise_background_rounded_border_textview
+        </item>
+    </style>
+
+
+    <!-- Style for the TextView displaying the letters to be chosen from in game-->
     <style name="TextViewButtons">
         <item name="android:textColor">@android:color/primary_text_dark
         </item>
