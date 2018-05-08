@@ -12,4 +12,10 @@ public class HomeRobot extends ScreenRobot<HomeRobot> {
     public HomeRobot startGame(){
         return performClick(R.id.bStartGame);
     }
+    public HomeRobot setPlayerCount(int count){
+        for (int i=1; i<count; ++i){
+            advanceNumberPicker(R.id.numberPicker);
+        }
+        return this;
+    }
 }

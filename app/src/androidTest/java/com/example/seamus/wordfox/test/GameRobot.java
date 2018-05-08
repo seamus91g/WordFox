@@ -6,6 +6,9 @@ package com.example.seamus.wordfox.test;
 
 import com.example.seamus.wordfox.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -21,6 +24,18 @@ public class GameRobot extends ScreenRobot<GameRobot> {
         performClick(R.id.resetButton);
         return this;
     }
+    public GameRobot isClickable(int cellNumber){
+        String tag = "guessGridCell" + cellNumber;
+        checkIsClickable(tag);
+        return this;
+    }
+    public GameRobot isNotClickable(int cellNumber){
+        String tag = "guessGridCell" + cellNumber;
+
+        checkNotClickable(tag);
+        return this;
+    }
+
     public GameRobot submit() {
         performClick(R.id.submitButton);
         return this;
@@ -38,6 +53,12 @@ public class GameRobot extends ScreenRobot<GameRobot> {
         performClick(R.id.guessGridCell7);
         performClick(R.id.guessGridCell8);
         performClick(R.id.guessGridCell9);
+        return this;
+    }
+    public GameRobot typeShortWord2() {
+        performClick(R.id.guessGridCell1);
+        performClick(R.id.guessGridCell2);
+        performClick(R.id.guessGridCell3);
         return this;
     }
     public GameRobot typeMediumWord() {
@@ -63,6 +84,10 @@ public class GameRobot extends ScreenRobot<GameRobot> {
 
     public GameRobot shuffle() {
         performClick(R.id.shuffleButton);
+        return this;
+    }
+    public GameRobot endGame() {
+        performDoubleClick(R.id.resetButton);
         return this;
     }
 }

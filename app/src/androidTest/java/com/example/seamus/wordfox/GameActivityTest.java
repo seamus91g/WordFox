@@ -13,12 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
 /**
  * Created by Gilroy on 4/12/2018.
  */
@@ -40,6 +34,15 @@ public class GameActivityTest {
     @Test
     public void checkGuessStartsEmpty(){
         new GameRobot().longestAttempt("");
+    }
+    @Test
+    public void checkCantClickTwice(){
+        new GameRobot()
+                .typeShortWord()
+                .isClickable(6)
+                .isNotClickable(7)
+                .isNotClickable(8)
+                .isClickable(9);
     }
     @Test
     public void checkReset() {
@@ -66,7 +69,7 @@ public class GameActivityTest {
                 .lengthLongestIs("3");
     }
     @Test
-    public void checkShuffle(){
+    public void checkShuffle(){     // TODO: .. this is not extensive.
         new GameRobot()
                 .typeShortWord()
                 .currentAttemptIs("RUM")
@@ -82,6 +85,19 @@ public class GameActivityTest {
                 .typeLongWord()
                 .submit()
                 .longestAttempt("CONUNDRUM");
+    }
+    @Test
+    public void checkEqualLengthReplaces(){
+        new GameRobot()
+                .typeShortWord()
+                .submit()
+                .longestAttempt("RUM")
+                .typeShortWord2()
+                .submit()
+                .longestAttempt("CON")
+                .typeShortWord()
+                .submit()
+                .longestAttempt("RUM");
     }
     @Test
     public void shorterGuessDoesntReplaceLonger(){
