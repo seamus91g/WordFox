@@ -1,13 +1,9 @@
 package com.example.seamus.wordfox;
 
 import android.os.CountDownTimer;
-import android.support.annotation.IdRes;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.example.seamus.wordfox.game_screen.GameActivity;
-
-import java.util.ArrayList;
+import com.example.seamus.wordfox.game_screen.GamescreenContract;
 
 /**
  * Created by Desmond on 12/07/2017.
@@ -15,39 +11,36 @@ import java.util.ArrayList;
 
 public class GameTimer {
     public static final String MONITOR_TAG = "myTag";
-    public final GameActivity activity;
-    private ArrayList<Integer> viewIds;
-    CountDownTimer countDownTimer;
+    public final GamescreenContract.View view;
+    private CountDownTimer countDownTimer;
 
-    public GameTimer(final GameActivity _activity, @IdRes final ArrayList<Integer> IDs) {
-        this.activity = _activity;
-        this.viewIds = IDs;
-        _activity.setTimeUp(false);
-        countDownTimer = new CountDownTimer(GameActivity.GAME_TIME_SECONDS*1000, 1000) {
+    public GameTimer(GamescreenContract.View view) {
+        this.view = view;
+        countDownTimer = new CountDownTimer(GameActivity.GAME_TIME_SECONDS * 1000, 1000) {
             int blocksRemaining = GameActivity.GAME_TIME_SECONDS;
+            // Hide one of the time segments for each second that passes
             public void onTick(long millisUntilFinished) {
                 int time = (int) millisUntilFinished / 1000;
                 while (time < blocksRemaining) {
-                    TextView secondsLeft = (TextView) activity.findViewById(R.id.secondsRemaining);
-                    secondsLeft.setText(String.valueOf(time));
-                    TextView timeBlock = (TextView) activity.findViewById(viewIds.get(GameActivity.GAME_TIME_SECONDS - blocksRemaining));
-                    timeBlock.setBackgroundColor(0);
+                    view.updateSecondsCounter(time);
+                    view.hideTimeSection(GameActivity.GAME_TIME_SECONDS - blocksRemaining);
                     --blocksRemaining;
                 }
             }
             public void onFinish() {
-                TextView timeBlock = (TextView) activity.findViewById(viewIds.get(GameActivity.GAME_TIME_SECONDS -1));
-                timeBlock.setBackgroundColor(0);
-                _activity.setTimeUp(true);
-                if (_activity.isGameInFocus()) {
-                    activity.completeGame();
+                view.hideTimeSection(GameActivity.GAME_TIME_SECONDS - 1);
+                // If game in focus, proceed to score screen
+                if (view.isGameInFocus()) {
+                    view.completeGame();
+                }
+                // Else set 'time up' flag. OnResume() method will check the flag
+                else {
+                    view.setTimeUp(true);
                 }
             }
         }.start();
     }
-
     public void killTimer() {
-        Log.d(MONITOR_TAG, "Killing timer from killTimer");
         countDownTimer.cancel();
     }
 }

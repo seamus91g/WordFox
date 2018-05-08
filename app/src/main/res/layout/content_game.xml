@@ -80,18 +80,21 @@
 
             <Button
                 android:id="@+id/guessGridCell1"
+                android:tag="guessGridCell1"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="B" />
 
             <Button
                 android:id="@+id/guessGridCell4"
+                android:tag="guessGridCell4"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="B" />
 
             <Button
                 android:id="@+id/guessGridCell7"
+                android:tag="guessGridCell7"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="B" />
@@ -104,18 +107,21 @@
 
             <Button
                 android:id="@+id/guessGridCell2"
+                android:tag="guessGridCell2"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="A" />
 
             <Button
                 android:id="@+id/guessGridCell5"
+                android:tag="guessGridCell5"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="A" />
 
             <Button
                 android:id="@+id/guessGridCell8"
+                android:tag="guessGridCell8"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="A" />
@@ -128,12 +134,14 @@
 
             <Button
                 android:id="@+id/guessGridCell3"
+                android:tag="guessGridCell3"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="C" />
 
             <Button
                 android:id="@+id/guessGridCell6"
+                android:tag="guessGridCell6"
                 style="@style/TextViewButtons"
                 android:layout_width="match_parent"
                 android:onClick="gridCellClicked"
@@ -141,6 +149,7 @@
 
             <Button
                 android:id="@+id/guessGridCell9"
+                android:tag="guessGridCell9"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
                 android:text="C" />

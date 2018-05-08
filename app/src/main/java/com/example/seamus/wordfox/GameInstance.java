@@ -89,6 +89,9 @@ public class GameInstance {
         this.playerID = pId;
     }
 
+    public String getRoundID() {
+        return roundIDs.get(round);
+    }
     public String getRoundID(int roundNum) {
         return roundIDs.get(roundNum);
     }
