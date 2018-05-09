@@ -144,26 +144,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     }
 
     public void completeGame() {
-        int currentRound = gameInstance.getRound();
-        switch (currentRound) {
-            case 0:
-                gameInstance.setRound1Word(gameInstance.getLongestWord());
-                gameInstance.setRound1Length(gameInstance.getLongestWord().length());
-//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
-                break;
-            case 1:
-                gameInstance.setRound2Word(gameInstance.getLongestWord());
-                gameInstance.setRound2Length(gameInstance.getLongestWord().length());
-//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
-                break;
-            case 2:
-                gameInstance.setRound3Word(gameInstance.getLongestWord());
-                gameInstance.setRound3Length(gameInstance.getLongestWord().length());
-//                Log.d(MONITOR_TAG, "CURRENT ROUND, WORD FOR THIS ROUND, " + currentRound + myGameInstance.getLongestWord());
-                break;
-            default:
-                break;
-        }
+        gameInstance.setRoundWord(gameInstance.getLongestWord());
         startScoreScreen1Act();
     }
 

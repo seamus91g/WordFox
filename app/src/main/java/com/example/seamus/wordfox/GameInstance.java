@@ -10,6 +10,7 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -26,20 +27,13 @@ public class GameInstance {
     private int score;   // score is just the score from the current round.
     private int round;   // round is a counter for the round of the game.
     private ArrayList<String> allLongestPossible = new ArrayList<>();
-    private String longestWord;
+    private String longestWord;     // TODO: .. Changes every round. Does it belong in this class??
     private ArrayList<String> letters = new ArrayList<>();
     private ArrayList<ArrayList<String>> wordForEachLengthPerRound = new ArrayList<>();
-    private String round1Word = "";
-    private String round2Word = "";
-    private String round3Word = "";
+    private String[] bestWordFoundEachRound = new String[NUMBER_ROUNDS];
     private int highestPossibleScore = 0;
-    private int round1Length = 0;
-    private int round2Length = 0;
-    private int round3Length = 0;
     private final int thisGameIndex;
     private String playerID;   // Only exists if created on the player switch screen
-
-
 
     private final ArrayList<String> roundIDs = new ArrayList<>();
 
@@ -48,12 +42,11 @@ public class GameInstance {
     }
 
     public void setMaxNumberOfRounds(int maxNumberOfRounds) {
-        this.NUMBER_ROUNDS = maxNumberOfRounds;
+        NUMBER_ROUNDS = maxNumberOfRounds;
     }
 
     private enum GameState {ONGOING, FINISHED}
 
-    ;
     private GameState myGameState;
 
     {
@@ -63,27 +56,29 @@ public class GameInstance {
         longestWord = "";       // Longest of the current round
         myGameState = GameState.ONGOING;
     }
+
     public GameInstance(int thisGameIndex) {
         this("Player " + (thisGameIndex + 1), thisGameIndex, null);
     }
+
     public GameInstance(int thisGameIndex, ArrayList<String> roundIDs) {
         this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
     }
+
     public GameInstance(String pId, int thisGameIndex) {
         this(pId, thisGameIndex, null);
     }
+
     public GameInstance(String pId, int thisGameIndex, ArrayList<String> roundIDs) {
-        if (pId.equals("")){
+        if (pId.equals("")) {
             pId = "Unknown";
         }
-        if(roundIDs == null){
-            for (int i = 0; i< NUMBER_ROUNDS; i++){
+        if (roundIDs == null) {
+            for (int i = 0; i < NUMBER_ROUNDS; i++) {
                 this.roundIDs.add(UUID.randomUUID().toString());
             }
-        }else{                              // Defensive copying
-            for (String ID: roundIDs) {
-                this.roundIDs.add(ID);
-            }
+        } else {                              // Defensive copying
+            this.roundIDs.addAll(roundIDs);
         }
         this.thisGameIndex = thisGameIndex;
         this.playerID = pId;
@@ -92,9 +87,11 @@ public class GameInstance {
     public String getRoundID() {
         return roundIDs.get(round);
     }
+
     public String getRoundID(int roundNum) {
         return roundIDs.get(roundNum);
     }
+
     public ArrayList<String> getRoundIDs() {
         return roundIDs;
     }
@@ -111,10 +108,6 @@ public class GameInstance {
         return letters.get(roundIndex);
     }
 
-    public String getRoundLetters() {
-        return letters.get(round);
-    }
-
     public void setLetters(String letters) {
         this.letters.add(letters);
     }
@@ -123,14 +116,11 @@ public class GameInstance {
         return thisGameIndex;
     }
 
-    public GameState getMyGameState() {
-        return myGameState;
-    }
-
-    public void addListOfSuggestedWords(ArrayList<String> suggestedWords){
+    public void addListOfSuggestedWords(ArrayList<String> suggestedWords) {
         wordForEachLengthPerRound.add(suggestedWords);
     }
-    public ArrayList<String> getSuggestedWordsOfRound(int requestedRound){
+
+    public ArrayList<String> getSuggestedWordsOfRound(int requestedRound) {
         return wordForEachLengthPerRound.get(requestedRound);
     }
 
@@ -160,7 +150,6 @@ public class GameInstance {
     }
 
     public void setLongestPossible(String word) {
-//        longestPossible = word;
         allLongestPossible.add(word);
         highestPossibleScore += word.length();
         Log.d("Check this out", "highest possible score is " + highestPossibleScore);
@@ -184,89 +173,33 @@ public class GameInstance {
         score = 0;
         round = 0;
         longestWord = "";
-//        Log.d(MONITOR_TAG, "Clearing all scores");
     }
 
     public void clearRoundScores() {
         score = 0;
         longestWord = "";
-//        Log.d(MONITOR_TAG, "Clearing round scores");
-    }
-    public ArrayList<String> getAllFinalWords(){
-        ArrayList<String> finalWordList = new ArrayList<>(
-                Arrays.asList(  round1Word,
-                                round2Word,
-                                round3Word));
-        return finalWordList;
-    }
-    public void setRound1Word(String word) {
-        round1Word = word;
     }
 
-    public void setRound1Length(int len) {
-        round1Length = len;
+    public ArrayList<String> getAllFinalWords() {
+        return new ArrayList<String>(Arrays.asList(bestWordFoundEachRound));
     }
 
-    public void setRound2Word(String word) {
-        round2Word = word;
+    public void setRoundWord(int whichRound, String word) {
+        bestWordFoundEachRound[whichRound] = word;
     }
 
-    public void setRound2Length(int len) {
-        round2Length = len;
+    public void setRoundWord(String word) {
+        bestWordFoundEachRound[round] = word;
     }
-
-    public void setRound3Word(String word) {
-        round3Word = word;
+    public String getRoundWord(int whichRound){
+        return bestWordFoundEachRound[whichRound];
     }
-
-    public void setRound3Length(int len) {
-        round3Length = len;
+    public int getRoundScore(int whichRound){
+        return bestWordFoundEachRound[whichRound].length();
     }
-
-    public String getRound1Word() {
-        return round1Word;
-    }
-
-    public int getRound1Length() {
-        return round1Length;
-    }
-
-    public String getRound2Word() {
-        return round2Word;
-    }
-
-    public int getRound2Length() {
-        return round2Length;
-    }
-
-    public String getRound3Word() {
-        return round3Word;
-    }
-
-    public int getRound3Length() {
-        return round3Length;
-    }
-
-    public String getRoundXWord(int x) {
-        String guess = "";
-        switch (x){
-            case 1:  guess = getRound1Word();
-                    break;
-            case 2: guess = getRound2Word();
-                    break;
-            case 3: guess = getRound3Word();
-                    break;
-        }
-        return guess;
-    }
-
-
+    // TODO: GameInstance should not be handling intents/contexts. Delegate to activity
     public void startGame(Context context) {
         round++;
-        Log.d(MONITOR_TAG, "startGame: game_index = " + thisGameIndex);
-        Log.d(MONITOR_TAG, "startGame: no. of rounds = " + round);
-
-        int currentRound = MainActivity.allGameInstances.get(thisGameIndex).getRound();
         // if the current round is anything but the last round, start a new round following on
         // from the previous round
         if (round < NUMBER_ROUNDS) {

@@ -232,11 +232,11 @@ public class RoundnGameResults extends AppCompatActivity
         StringBuilder winWords3 = new StringBuilder();
         StringBuilder winNames = new StringBuilder();
         for(GameInstance g : gInstances){
-            winWords1.append(g.getRound1Word());
+            winWords1.append(g.getRoundWord(0));
             winWords1.append(", ");
-            winWords2.append(g.getRound2Word());
+            winWords2.append(g.getRoundWord(1));
             winWords2.append(", ");
-            winWords3.append(g.getRound3Word());
+            winWords3.append(g.getRoundWord(2));
             winWords3.append(", ");
             winNames.append(g.getPlayerID());
             winNames.append(", ");
@@ -471,7 +471,7 @@ public class RoundnGameResults extends AppCompatActivity
             Log.d("getRoundOrGameBestGuess", "getting the best guess for a round: " + roundOrGameEnd);
             int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             GameInstance currentPlayer = MainActivity.allGameInstances.get(gameIndexNumber);
-            String Guess = currentPlayer.getRoundXWord(round+1);
+            String Guess = currentPlayer.getRoundWord(round);
             bestGuess = Guess + " (" + String.valueOf(Guess.length()) + ")";
 
 //            bestGuess = myGameInstance.getRoundXWord(MainActivity.allGameInstances.get(j).getRound()+1) + " (" + String.valueOf(myGameInstance.getRoundXWord(MainActivity.allGameInstances.get(j).getRound()+1).length()) + ")";
@@ -481,7 +481,7 @@ public class RoundnGameResults extends AppCompatActivity
 //            bestPossibleWord = bestWordPoss + " (" + String.valueOf(bestWordPoss.length()) + ")";
 
             GameInstance myGameInstance = MainActivity.allGameInstances.get(i);
-            bestGuess = myGameInstance.getRoundXWord(j+1) + " (" + String.valueOf(myGameInstance.getRoundXWord(j+1)).length() + ")";
+            bestGuess = myGameInstance.getRoundWord(j) + " (" + String.valueOf(myGameInstance.getRoundWord(j)).length() + ")";
         }
         return bestGuess;
 
@@ -605,7 +605,7 @@ public class RoundnGameResults extends AppCompatActivity
             if (roundOrGameEnd.equals("round")){
                 // if it's the end of a round get the players score and the max possible score from that round
                     // the player's total score at the end of the round
-                    totalScore = myGameInstance.getRoundXWord(myGameInstance.getRound()+1).length();
+                    totalScore = myGameInstance.getRoundWord(myGameInstance.getRound()).length();
                     // the max possible score at the end of the round
                     maxScore = myGameInstance.getRoundLongestPossible(myGameInstance.getRound()).length();
 
