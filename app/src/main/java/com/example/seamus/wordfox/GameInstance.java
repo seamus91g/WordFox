@@ -45,10 +45,18 @@ public class GameInstance {
         NUMBER_ROUNDS = maxNumberOfRounds;
     }
 
-    private enum GameState {ONGOING, FINISHED}
+    public enum GameState {ONGOING, FINISHED}
 
     private GameState myGameState;
 
+    public void gamestateFinished(){
+        myGameState = GameState.FINISHED;
+    }
+    public boolean isGameOngoing(){
+        return (myGameState.equals(GameState.ONGOING));
+    }
+
+    // TODO: Unit test to validate scores
     {
         totalScore = 0;         // These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
@@ -191,68 +199,16 @@ public class GameInstance {
     public void setRoundWord(String word) {
         bestWordFoundEachRound[round] = word;
     }
-    public String getRoundWord(int whichRound){
+
+    public String getRoundWord(int whichRound) {
         return bestWordFoundEachRound[whichRound];
     }
-    public int getRoundScore(int whichRound){
-        return bestWordFoundEachRound[whichRound].length();
-    }
-    // TODO: GameInstance should not be handling intents/contexts. Delegate to activity
-    public void startGame(Context context) {
+    public void incrementRound(){
         round++;
-        // if the current round is anything but the last round, start a new round following on
-        // from the previous round
-        if (round < NUMBER_ROUNDS) {
+    }
 
-            Intent gameIntent = new Intent(context, GameActivity.class);
-            gameIntent.putExtra("game_index", thisGameIndex);
-            context.startActivity(gameIntent);
-        } else {
-            Log.d(MONITOR_TAG, "startGame: round is more than max no. of rounds so switch player or end game = " + round);
-            // if the current round is the last round but there are still players to play, launch
-            // the PlayerSwitchActivity
-            myGameState = GameState.FINISHED;
-
-
-            // check each player to see if there's anyone yet to play, if there is then start the
-            // player switch activity
-            for (int x = 0; x < MainActivity.allGameInstances.size(); x++) {
-                if ((MainActivity.allGameInstances.get(x).myGameState).equals(GameState.ONGOING)) {
-
-
-                    // the round counter is not being correctly reset to zero when the new player
-                    // takes over, getting a game index of 0 with round = 4 even when p2 has started
-                    // meaning you'll need to move the game index along to the next player so that
-                    // the round counter resets back to zero
-                    Log.d(MONITOR_TAG, "startGame: starting player switch: " + x);
-
-                    Intent gameIntent = new Intent(context, PlayerSwitchActivity.class);
-                    gameIntent.putExtra("game_index", x);
-                    context.startActivity(gameIntent);
-                    return;
-                }
-            }
-
-            //only start the end of game screen if the current player has played all their rounds
-            // and there's no player still yet to play
-            Log.d(MONITOR_TAG, "GameInstance: Moving to score screen 2! ");
-            //commented this out while testing the new End screen
-//            Intent ScoreScreen2Intent = new Intent(context, ScoreScreen2Activity.class);
-//            context.startActivity(ScoreScreen2Intent);
-
-            //testing new end screen
-//            Intent EndScreenIntent = new Intent(context, RoundnGameResults.class);
-//            context.startActivity(EndScreenIntent);
-
-
-            //testing new end screen
-            Intent EndScreenIntent = new Intent(context, RoundnGameResults.class);
-            Bundle endScreenBundle = new Bundle();
-            endScreenBundle.putString("key", "game");
-            endScreenBundle.putInt("gameIndexNumber", thisGameIndex);
-            EndScreenIntent.putExtras(endScreenBundle);
-            context.startActivity(EndScreenIntent);
-        }
+    public int getRoundScore(int whichRound) {
+        return bestWordFoundEachRound[whichRound].length();
     }
 
 }

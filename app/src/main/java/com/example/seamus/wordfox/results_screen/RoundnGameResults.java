@@ -1,6 +1,7 @@
 package com.example.seamus.wordfox.results_screen;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,8 @@ import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.database.PlayerStatsTable;
 import com.example.seamus.wordfox.datamodels.GameItem;
+import com.example.seamus.wordfox.game_screen.GameActivity;
+import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
@@ -41,7 +44,7 @@ public class RoundnGameResults extends AppCompatActivity
     private NavigationBurger navBurger = new NavigationBurger();
 
     public static final String MONITOR_TAG = "EndScreen: ";
-    private static final String TAG = "RoundnGameResults" ;
+    private static final String TAG = "RoundnGameResults";
     private boolean backButtonPressedOnce = false;
     public Activity activity;
     //declare a String for the heading at the top of the results page (Game Over OR Time Up!)
@@ -73,6 +76,7 @@ public class RoundnGameResults extends AppCompatActivity
 
 
     private LinearLayout.LayoutParams lp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +100,7 @@ public class RoundnGameResults extends AppCompatActivity
         EndOfRoundOrGameResults(roundOrGameEnd);
     }
 
-    public void EndOfRoundOrGameResults(String roundOrGameEnd){
+    public void EndOfRoundOrGameResults(String roundOrGameEnd) {
 //        this.activity = _activity;
         numPlayers = MainActivity.allGameInstances.size();
 
@@ -106,12 +110,12 @@ public class RoundnGameResults extends AppCompatActivity
 
         populateHeaderMsg(roundOrGameEnd);
         populateResultLL(roundOrGameEnd);
-        if (roundOrGameEnd.equals("round")){
+        if (roundOrGameEnd.equals("round")) {
             //do what you need for the end of a round
             Log.d(MONITOR_TAG, "IT'S THE END OF A ROUND: " + roundOrGameEnd);
             createRoundSummary(roundOrGameEnd);
 
-        }else if (roundOrGameEnd.equals("game")){
+        } else if (roundOrGameEnd.equals("game")) {
             //do what you need for the end of the game
             Log.d(MONITOR_TAG, "IT'S THE END OF A GAME: " + roundOrGameEnd);
 
@@ -120,7 +124,7 @@ public class RoundnGameResults extends AppCompatActivity
             foxData.open();
             // Separate winners and losers into two lists
             ArrayList<GameInstance> winners = new ArrayList<GameInstance>();
-            if(numPlayers > 1) {
+            if (numPlayers > 1) {
                 HashMap<Boolean, ArrayList<GameInstance>> playerGroups = sortWinnersLosers(MainActivity.allGameInstances);
                 winners = playerGroups.get(Boolean.TRUE);
                 // Increment individual win/draw counters
@@ -154,7 +158,7 @@ public class RoundnGameResults extends AppCompatActivity
                         foxData.updateOpponentItem(winner, loser, draw);
                     }
                 }
-            }else{
+            } else {
                 winners.add(MainActivity.allGameInstances.get(0)); // addAll();
             }
             // Store most recent words for each player
@@ -178,34 +182,34 @@ public class RoundnGameResults extends AppCompatActivity
             //get the name of the player with the highest score and set it to be the winner or if
             // there's a draw, say who drew
             //create an array of strings to hold the name(s) of the player(s) with the highest score
-            if (numPlayers>1){
+            if (numPlayers > 1) {
 //                ArrayList<GameInstance> winners = playerGroups.get(Boolean.TRUE);
                 victoryMessage = "";
                 Log.d("Hello", "xxxx 3.1 victoryMessage is: " + victoryMessage);
 
-                if (winners.size() == 1){
+                if (winners.size() == 1) {
                     //if there's only one name in the list of winners then it wasn't a draw and that player won
 
                     String winnerName = winners.get(0).getPlayerID();
-                    if (winnerName.equals(GameData.DEFAULT_P1_NAME)){
+                    if (winnerName.equals(GameData.DEFAULT_P1_NAME)) {
                         GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
                         winnerName = fox.getUsername();
                     }
 
                     victoryMessage = "Winner is " + winnerName + "!";
                     Log.d("Hello", "xxxx 3.2 victoryMessage is: " + victoryMessage);
-                }else {
+                } else {
                     //if there's more than one name in the list of winners then it was a draw
                     victoryMessage = "It was a draw between ";
 
-                    for (int f = 0; f<winners.size(); f++){
+                    for (int f = 0; f < winners.size(); f++) {
                         Log.d("Hello", "xxxx 3.3 victoryMessage is: " + victoryMessage);
 
-                        if (f == (winners.size() - 1)){
+                        if (f == (winners.size() - 1)) {
                             //if you're entering the name of the last player to tie the score,
                             // end with an !
                             victoryMessage = (victoryMessage + getPlayerNameorID(f) + "!");
-                        }else{
+                        } else {
                             victoryMessage = (victoryMessage + getPlayerNameorID(f) + " and ");
                         }
                     }
@@ -226,12 +230,12 @@ public class RoundnGameResults extends AppCompatActivity
         }
     }
 
-    private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances){
+    private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances) {
         StringBuilder winWords1 = new StringBuilder();
         StringBuilder winWords2 = new StringBuilder();
         StringBuilder winWords3 = new StringBuilder();
         StringBuilder winNames = new StringBuilder();
-        for(GameInstance g : gInstances){
+        for (GameInstance g : gInstances) {
             winWords1.append(g.getRoundWord(0));
             winWords1.append(", ");
             winWords2.append(g.getRoundWord(1));
@@ -241,28 +245,29 @@ public class RoundnGameResults extends AppCompatActivity
             winNames.append(g.getPlayerID());
             winNames.append(", ");
         }
-        String ww1 = winWords1.length() > 0 ? winWords1.substring(0, winWords1.length() - 2): "";
-        String ww2 = winWords2.length() > 0 ? winWords2.substring(0, winWords2.length() - 2): "";
-        String ww3 = winWords3.length() > 0 ? winWords3.substring(0, winWords3.length() - 2): "";
-        String wn = winNames.length() > 0 ? winNames.substring(0, winNames.length() - 2): "";
+        String ww1 = winWords1.length() > 0 ? winWords1.substring(0, winWords1.length() - 2) : "";
+        String ww2 = winWords2.length() > 0 ? winWords2.substring(0, winWords2.length() - 2) : "";
+        String ww3 = winWords3.length() > 0 ? winWords3.substring(0, winWords3.length() - 2) : "";
+        String wn = winNames.length() > 0 ? winNames.substring(0, winNames.length() - 2) : "";
 
         GameInstance myGameInstance = MainActivity.allGameInstances.get(0);
         String round1Id = myGameInstance.getRoundID(0);
         String round2Id = myGameInstance.getRoundID(1);
         String round3Id = myGameInstance.getRoundID(2);
-                GameItem thisGame = new GameItem(
+        GameItem thisGame = new GameItem(
                 round1Id, round2Id, round3Id, ww1, ww2, ww3, wn, numPlayers
         );
         return thisGame;
     }
-// Get a list of comma separated values from an Array List
-    private String getCslFromList(ArrayList<String> strings){
+
+    // Get a list of comma separated values from an Array List
+    private String getCslFromList(ArrayList<String> strings) {
         StringBuilder strBl = new StringBuilder();
-        for(String string : strings) {
+        for (String string : strings) {
             strBl.append(string);
             strBl.append(",");
         }
-        return strBl.length() > 0 ? strBl.substring(0, strBl.length() - 1): "";
+        return strBl.length() > 0 ? strBl.substring(0, strBl.length() - 1) : "";
     }
 
     private void createRoundSummary(String roundOrGameEnd) {
@@ -277,9 +282,9 @@ public class RoundnGameResults extends AppCompatActivity
         // if this method is being called for the end of a game, you'll need to do the
         // below for loop for each player. If it's just the end of a round, you'll only need to do
         // the for loop once, for the player that just completed the round
-        if(roundOrGameEnd.equals("game")){
+        if (roundOrGameEnd.equals("game")) {
             rounds = GameInstance.getNumberRounds();
-        }else if (roundOrGameEnd.equals("round")){
+        } else if (roundOrGameEnd.equals("round")) {
             rounds = 1;
         }
 
@@ -288,9 +293,9 @@ public class RoundnGameResults extends AppCompatActivity
         // if this method is being called for the end of a game, you'll need to do the
         // below for loop for each player. If it's just the end of a round, you'll only need to do
         // the for loop once, for the player that just completed the round
-        if(roundOrGameEnd.equals("game")){
+        if (roundOrGameEnd.equals("game")) {
             players = numPlayers;
-        }else if (roundOrGameEnd.equals("round")){
+        } else if (roundOrGameEnd.equals("round")) {
             players = 1;
         }
 
@@ -301,20 +306,20 @@ public class RoundnGameResults extends AppCompatActivity
         //Opposite do the following
         //add the round letters
         //add the best possible word
-        for (int j=0; j<rounds; j++){
+        for (int j = 0; j < rounds; j++) {
             // create and add a TextView displaying the current round
-            String roundNo ="";
+            String roundNo = "";
 
             int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             // if it's the end of the game, each round number will need to be displayed, also on the
             // final iteration of the loop set the title of the screen to be 'Final Results' and
             // the button at the bottom to say 'Next' and  to go home when pressed
-            if(roundOrGameEnd.equals("game")){
+            if (roundOrGameEnd.equals("game")) {
 
-                roundNo = "Round " + String.valueOf(j+1) + ": ";
+                roundNo = "Round " + String.valueOf(j + 1) + ": ";
 
                 //final iteration of loop
-                if (j==rounds-1){
+                if (j == rounds - 1) {
                     this.setTitle("Final Results");
                     endOfRoundOrGameButton.setText("Home");
                     endOfRoundOrGameButton.setOnClickListener(new View.OnClickListener() {
@@ -324,7 +329,7 @@ public class RoundnGameResults extends AppCompatActivity
                         }
                     });
                 }
-            }else if (roundOrGameEnd.equals("round")){
+            } else if (roundOrGameEnd.equals("round")) {
 
                 // this works for single player but not for multi player - if it's the end of the
                 // round in a multiplayer game, j will be 0 but by the time you go to a new player,
@@ -332,13 +337,13 @@ public class RoundnGameResults extends AppCompatActivity
 
 
 //                int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
-                this.setTitle("Round " + String.valueOf(round+1) + " Score");
-                roundNo = "Round " + String.valueOf(round+1) + ": ";
+                this.setTitle("Round " + String.valueOf(round + 1) + " Score");
+                roundNo = "Round " + String.valueOf(round + 1) + ": ";
 
                 endOfRoundOrGameButton.setText("Next");
                 endOfRoundOrGameButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        MainActivity.allGameInstances.get(gameIndexNumber).startGame(v.getContext());
+                        startGame(MainActivity.allGameInstances.get(gameIndexNumber));
                     }
                 });
             }
@@ -352,9 +357,9 @@ public class RoundnGameResults extends AppCompatActivity
 
             // create and add a TextView displaying the title 'Best Word: '
             String suggestionTitle;
-            if(rounds == 1){
+            if (rounds == 1) {
                 suggestionTitle = "Possible words: ";
-            }else{
+            } else {
                 suggestionTitle = "Best word: ";
             }
             TextView bestWordTitleTV = createTVwithText(suggestionTitle);
@@ -384,7 +389,7 @@ public class RoundnGameResults extends AppCompatActivity
                 GameInstance gi = thisGameInstance;
                 int curRound = gi.getRound();
                 suggestedWords = gi.getSuggestedWordsOfRound(curRound);
-                for (int i=0; i<suggestedWords.size(); ++i){ // String w : suggestedWords){
+                for (int i = 0; i < suggestedWords.size(); ++i) { // String w : suggestedWords){
                     String w = suggestedWords.get(i);
                     StringBuilder suggestedToPlayer = new StringBuilder();
                     suggestedToPlayer.append(w.toUpperCase());
@@ -392,14 +397,14 @@ public class RoundnGameResults extends AppCompatActivity
                     TextView bestPossibleWordTV = createTVwithText(suggestedToPlayer.toString());
                     bestPossibleWordTV.setLayoutParams(lp);
                     wordsLL.addView(bestPossibleWordTV);
-                    if (i>0) {
+                    if (i > 0) {
                         TextView spaceTV = createTVwithText("");
                         spaceTV.setLayoutParams(lp);
                         playersLL.addView(spaceTV);
                     }
                 }
-            }else{
-                wordSuggestion = getRoundOrGameBestPossibleWord(roundOrGameEnd,j);
+            } else {
+                wordSuggestion = getRoundOrGameBestPossibleWord(roundOrGameEnd, j);
                 TextView bestPossibleWordTV = createTVwithText(wordSuggestion);
                 bestPossibleWordTV.setLayoutParams(lp);
                 wordsLL.addView(bestPossibleWordTV);
@@ -412,14 +417,14 @@ public class RoundnGameResults extends AppCompatActivity
             // for the end of the game do this step for each player, doing the following:
             // adding a new TextView for the players' names
             // Opposite add a new TextView for the players' best words
-            for (int i = 0 ; i<players; i++){
+            for (int i = 0; i < players; i++) {
                 Log.d("Hello", "xxxx 5.0 " + i);
 
                 String name = "";
 
-                if(roundOrGameEnd.equals("game")) {
+                if (roundOrGameEnd.equals("game")) {
                     name = getPlayerNameorID(i);
-                } else if(roundOrGameEnd.equals("round")) {
+                } else if (roundOrGameEnd.equals("round")) {
                     name = getPlayerNameorID(gameIndexNumber);
                 }
 
@@ -430,7 +435,7 @@ public class RoundnGameResults extends AppCompatActivity
                 //get their best guess
                 // create a reference to the object instance of the GameInstance class created in the main activity
 //                GameInstance myGameInstance = MainActivity.allGameInstances.get(i);
-                String bestGuess = getRoundOrGameBestGuess(roundOrGameEnd,i,j);
+                String bestGuess = getRoundOrGameBestGuess(roundOrGameEnd, i, j);
                 TextView bestGuessTV = createTVwithText(bestGuess);
                 bestGuessTV.setLayoutParams(lp);
                 bestGuessTV.setContentDescription("Player longest word");
@@ -439,6 +444,35 @@ public class RoundnGameResults extends AppCompatActivity
 
         }
 
+    }
+
+    public void startGame(GameInstance gameInstance) {
+        gameInstance.incrementRound();
+        // Start new round if the current round is not the last round
+        if (gameInstance.getRound() < GameInstance.NUMBER_ROUNDS) {
+            Intent gameIntent = new Intent(this, GameActivity.class);
+            gameIntent.putExtra("game_index", gameIndexNumber);
+            startActivity(gameIntent);
+        } else {
+            // If Last Round but there are still players to play -> launch the PlayerSwitchActivity
+            gameInstance.gamestateFinished();
+            for (int x = 0; x < MainActivity.allGameInstances.size(); x++) {
+                if (MainActivity.allGameInstances.get(x).isGameOngoing()) {
+                    Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
+                    gameIntent.putExtra("game_index", x);
+                    startActivity(gameIntent);
+                    return;
+                }
+            }
+            // Only start the end of game screen if the current player has played all their rounds
+            // and there's no player still yet to play
+            Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
+            Bundle endScreenBundle = new Bundle();
+            endScreenBundle.putString("key", "game");
+            endScreenBundle.putInt("gameIndexNumber", gameIndexNumber);
+            EndScreenIntent.putExtras(endScreenBundle);
+            startActivity(EndScreenIntent);
+        }
     }
 
     private String getPlayerNameorID(int playerNum) {
@@ -455,9 +489,9 @@ public class RoundnGameResults extends AppCompatActivity
 //            myGameData = new GameData(this, playerNum);
 
 //        } else {
-            // if the playerID is not blank then the new player has set a user ID which
-            // must be retrieved using the GameData constructor that takes the playerID
-            myGameData = new GameData(this, playerID);
+        // if the playerID is not blank then the new player has set a user ID which
+        // must be retrieved using the GameData constructor that takes the playerID
+        myGameData = new GameData(this, playerID);
 //        }
 
         // return the player's name or ID retrieved from the GameData class
@@ -467,7 +501,7 @@ public class RoundnGameResults extends AppCompatActivity
     private String getRoundOrGameBestGuess(String roundOrGameEnd, int i, int j) {
 
         String bestGuess = "";
-        if (roundOrGameEnd.equals("round")){
+        if (roundOrGameEnd.equals("round")) {
             Log.d("getRoundOrGameBestGuess", "getting the best guess for a round: " + roundOrGameEnd);
             int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             GameInstance currentPlayer = MainActivity.allGameInstances.get(gameIndexNumber);
@@ -475,7 +509,7 @@ public class RoundnGameResults extends AppCompatActivity
             bestGuess = Guess + " (" + String.valueOf(Guess.length()) + ")";
 
 //            bestGuess = myGameInstance.getRoundXWord(MainActivity.allGameInstances.get(j).getRound()+1) + " (" + String.valueOf(myGameInstance.getRoundXWord(MainActivity.allGameInstances.get(j).getRound()+1).length()) + ")";
-        }else if(roundOrGameEnd.equals("game")){
+        } else if (roundOrGameEnd.equals("game")) {
             Log.d("getRoundOrGameBestGuess", "getting the best Guess for a game: " + roundOrGameEnd);
 //            String Guess = player1GameInstance.getRoundLongestPossible(j);
 //            bestPossibleWord = bestWordPoss + " (" + String.valueOf(bestWordPoss.length()) + ")";
@@ -491,13 +525,13 @@ public class RoundnGameResults extends AppCompatActivity
         String bestPossibleWord = "";
         GameInstance player1GameInstance = MainActivity.allGameInstances.get(0);
 
-        if (roundOrGameEnd.equals("round")){
+        if (roundOrGameEnd.equals("round")) {
             Log.d("getBestPossibleWord", "getting the best word for a round: " + roundOrGameEnd);
             int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             GameInstance currentPlayer = MainActivity.allGameInstances.get(gameIndexNumber);
             String bestWordPoss = currentPlayer.getRoundLongestPossible(round);
             bestPossibleWord = bestWordPoss + " (" + String.valueOf(bestWordPoss.length()) + ")";
-        }else if(roundOrGameEnd.equals("game")){
+        } else if (roundOrGameEnd.equals("game")) {
             Log.d("getBestPossibleWord", "getting the best word for a game: " + roundOrGameEnd);
             String bestWordPoss = player1GameInstance.getRoundLongestPossible(j);
             bestPossibleWord = bestWordPoss + " (" + String.valueOf(bestWordPoss.length()) + ")";
@@ -511,13 +545,13 @@ public class RoundnGameResults extends AppCompatActivity
         //the letters available for each player are the same so you can get the letters for just the first player
         GameInstance player1GameInstance = MainActivity.allGameInstances.get(0);
 
-        if (roundOrGameEnd.equals("round")){
+        if (roundOrGameEnd.equals("round")) {
 
             int round = MainActivity.allGameInstances.get(gameIndexNumber).getRound();
             letters = MainActivity.allGameInstances.get(gameIndexNumber).getLetters(round);
 
 //            letters = player1GameInstance.getLetters(MainActivity.allGameInstances.get(gameIndexNumber).getRound());
-        }else if(roundOrGameEnd.equals("game")){
+        } else if (roundOrGameEnd.equals("game")) {
             letters = player1GameInstance.getLetters(j);
         }
 
@@ -530,11 +564,11 @@ public class RoundnGameResults extends AppCompatActivity
         // GAME OVER for the end of a game or TIME UP for the end of a round
         TextView gameOverTV = (TextView) findViewById(R.id.gameOverEndScreenTV);
 
-        if (roundOrGameEnd.equals("round")){
+        if (roundOrGameEnd.equals("round")) {
             //do what you need for the end of a round
             gameOverTV.setText("TIME UP!");
             Log.d(TAG, "populateHeaderMsg: roundOrGameEnd should be round: " + roundOrGameEnd);
-        }else if (roundOrGameEnd.equals("game")) {
+        } else if (roundOrGameEnd.equals("game")) {
             //do what you need for the end of the game
             Log.d(TAG, "populateHeaderMsg: roundOrGameEnd should be GAME: " + roundOrGameEnd);
 
@@ -564,11 +598,11 @@ public class RoundnGameResults extends AppCompatActivity
         // if this method is being called for the end of a game, you'll need to do the
         // below for loop for each player. If it's just the end of a round, you'll only need to do
         // the for loop once, for the player that just completed the round
-        if(roundOrGameEnd.equals("game")){
+        if (roundOrGameEnd.equals("game")) {
             Log.d(TAG, "roundOrGameEnd should be game, is: " + roundOrGameEnd);
             steps = numPlayers;
 
-        }else if (roundOrGameEnd.equals("round")){
+        } else if (roundOrGameEnd.equals("round")) {
             Log.d(TAG, "roundOrGameEnd should be round, is: " + roundOrGameEnd);
             steps = 1;
         }
@@ -576,14 +610,14 @@ public class RoundnGameResults extends AppCompatActivity
 
         //for the number of players add a line stating the score each player achieved to the
         // horizontal linear layout called resultsLL
-        for (int k=0; k<steps; k++){
+        for (int k = 0; k < steps; k++) {
 
             //create empty strings to be filled with the individual components of the result
             String result = "";
             String playername = "";
             String greeting = "";
-            int totalScore=0;
-            int maxScore=0;
+            int totalScore = 0;
+            int maxScore = 0;
 
             // create a reference to the object instance of the GameInstance class created in the main activity
             GameInstance myGameInstance = MainActivity.allGameInstances.get(gameIndexNumber);
@@ -592,42 +626,39 @@ public class RoundnGameResults extends AppCompatActivity
             // set the greeting to be "You scored" for the end of a round in any game type,
             // set the greeting to say "You scored" for end of round and game in one player,
             // set the greeting to be "#name scored" for the end of a game in multiplayer
-            if (roundOrGameEnd.equals("round") || (numPlayers == 1)){
+            if (roundOrGameEnd.equals("round") || (numPlayers == 1)) {
                 greeting = "You scored ";
-            }else if (roundOrGameEnd.equals("game") && (numPlayers > 1)){
+            } else if (roundOrGameEnd.equals("game") && (numPlayers > 1)) {
                 //get the player name
                 playername = getPlayerNameorID(k);
                 greeting = playername + " scored ";
             }
 
 
-
-            if (roundOrGameEnd.equals("round")){
+            if (roundOrGameEnd.equals("round")) {
                 // if it's the end of a round get the players score and the max possible score from that round
-                    // the player's total score at the end of the round
-                    totalScore = myGameInstance.getRoundWord(myGameInstance.getRound()).length();
-                    // the max possible score at the end of the round
-                    maxScore = myGameInstance.getRoundLongestPossible(myGameInstance.getRound()).length();
+                // the player's total score at the end of the round
+                totalScore = myGameInstance.getRoundWord(myGameInstance.getRound()).length();
+                // the max possible score at the end of the round
+                maxScore = myGameInstance.getRoundLongestPossible(myGameInstance.getRound()).length();
 
-            }else if (roundOrGameEnd.equals("game")){
+            } else if (roundOrGameEnd.equals("game")) {
                 // if it's the end of a game get the players score and the max possible score from that game
-                    GameInstance eachGameInstance = MainActivity.allGameInstances.get(k);
+                GameInstance eachGameInstance = MainActivity.allGameInstances.get(k);
 
-                    // the player's total score at the end of the game
-                    totalScore = eachGameInstance.getTotalScore();
-                    // the max possible score at the end of the game
-                    maxScore = eachGameInstance.getHighestPossibleScore();
+                // the player's total score at the end of the game
+                totalScore = eachGameInstance.getTotalScore();
+                // the max possible score at the end of the game
+                maxScore = eachGameInstance.getHighestPossibleScore();
             }
             Log.d(TAG, "xxxx 2 iteration no. " + k);
-
-
 
 
             //set the text of the resultsRatioTV on the end screen to show the users points
             String resultsRatio = String.valueOf(totalScore) + " out of " + String.valueOf(maxScore) + " = ";
 
             //declare and initialise a double for the percent success at the end of the game
-            Double successPercent = (Double.valueOf(totalScore)/Double.valueOf(maxScore)*100);
+            Double successPercent = (Double.valueOf(totalScore) / Double.valueOf(maxScore) * 100);
             String resultsPercent = String.valueOf(successPercent.intValue()) + "%";
 
             //assemble the result to contain all the components and show in the TextView
@@ -638,7 +669,7 @@ public class RoundnGameResults extends AppCompatActivity
         }
     }
 
-    private HashMap<Boolean, ArrayList<GameInstance>>  sortWinnersLosers(ArrayList<GameInstance> allPlayers) {
+    private HashMap<Boolean, ArrayList<GameInstance>> sortWinnersLosers(ArrayList<GameInstance> allPlayers) {
         int maxScore = 0;   // Note: In single player, getting a score of zero will register as a lose
         // Sort players into two groups. Those with the highest score (winners) and those with a lower score (losers)
         // In the hashmap, 'true' is the key for the winners and 'false' is the key for the losers
@@ -663,12 +694,12 @@ public class RoundnGameResults extends AppCompatActivity
         return playersByCategory;
     }
 
-    public int dpTOpx (int dp){
+    public int dpTOpx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        return (int)((dp * displayMetrics.density) + 0.5);
+        return (int) ((dp * displayMetrics.density) + 0.5);
     }
 
-    public TextView createTVwithText(String text4TV){
+    public TextView createTVwithText(String text4TV) {
         TextView newTV = new TextView(this);
         newTV.setText(text4TV);
         return newTV;
