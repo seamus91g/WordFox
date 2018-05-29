@@ -2,6 +2,11 @@ package com.example.seamus.wordfox.RV;
 
 import java.util.List;
 
+/*
+ * Interface for all the viewHolders used in WFAdapter. The adapter data set consists only
+ * of items which implement this interface.
+ */
+
 public interface DataListItem {
     int PLAYER = 0;
     int CATEGORY = 1;

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--<android.support.constraint.Guideline-->
+    <!--android:id="@+id/guideline_game_details_2"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--app:layout_constraintGuide_begin="75dp" />-->
+
+    <!-- Player 1 -->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_1"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/game_details_player_1_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 1"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_1" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            android:visibility="visible"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_1_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_1" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            android:visibility="visible"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_1"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_1" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            android:visibility="visible"
+
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_1"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- Player 2 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_2"
+        app:layout_constraintTop_toBottomOf="@id/game_details_row_1"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_details_player_2_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_2" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_2_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_2" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_2"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_2" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_2"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <!-- Player 3 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_3"
+        app:layout_constraintTop_toBottomOf="@id/game_details_row_2"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_details_player_3_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_3" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_3_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_3" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_3"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_3" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_3"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <!-- Player 4 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_4"
+        app:layout_constraintTop_toBottomOf="@id/game_details_row_3"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_details_player_4_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 4"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_4" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_4_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_4" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_4"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_4" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_4"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <!-- Player 5 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_5"
+        app:layout_constraintTop_toBottomOf="@id/game_details_row_4"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_details_player_5_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_5" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_5_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_5" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_5"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_5" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_5"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <!-- Player 6 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/game_details_row_6"
+        app:layout_constraintTop_toBottomOf="@id/game_details_row_5"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_details_player_6_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 6"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/best_found_1_player_6" />
+
+        <TextView
+            android:id="@+id/best_found_1_player_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/game_details_player_6_name"
+            app:layout_constraintRight_toLeftOf="@id/best_found_2_player_6" />
+
+        <TextView
+            android:id="@+id/best_found_2_player_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@id/best_found_1_player_6"
+            app:layout_constraintRight_toLeftOf="@id/best_found_3_player_6" />
+
+        <TextView
+            android:id="@+id/best_found_3_player_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/best_found_2_player_6"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

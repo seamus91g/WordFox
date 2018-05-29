@@ -96,4 +96,10 @@
     <string name="title_activity_end_screen_single_player1">EndScreenSinglePlayer1</string>
     <string name="title_activity_data">DataActivity</string>
     <string name="title_activity_data_page">DataPageActivity</string>
+    <string name="home_button_text">Home</string>
+    <string name="next_button_text">Next</string>
+    <string name="title_activity_statistics">Statistics</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>
