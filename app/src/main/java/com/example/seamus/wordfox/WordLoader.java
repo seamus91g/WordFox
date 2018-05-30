@@ -63,7 +63,7 @@ public class WordLoader {
         return dataPerHeader;
     }
 
-    public static List<DataPerGame> getGames(Context context, String player){
+    public static List<DataPerGame> getGames(Context context){
 
         FoxSQLData foxDB = new FoxSQLData(context);
         List<GameItem> allGs = foxDB.getAllGames();
@@ -79,6 +79,7 @@ public class WordLoader {
             List<String> longest = new ArrayList<>();
             // Find words for each round ID. Filter 'final', Then sort the words by which player found each.
             HashMap<String, List<WordItem>> allWordsByRound = new HashMap<>();
+            // Form correct list of playerNames
             for (String rid : rIDs){
                 List<WordItem> words = foxDB.getWordsByRound(rid);
                 for (WordItem w : words){
@@ -97,7 +98,10 @@ public class WordLoader {
             }
             int winScore = 0;
             if (!wordsPerPlayer.isEmpty()){
-                for (String word : wordsPerPlayer.get(g.getWinner(0))){
+                for (String word : wordsPerPlayer.get(g.getWinner(0))){     // All 'winners' have same score
+                    if(word.equals("<none>")){
+                        continue;
+                    }
                     winScore += word.length();
                 }
             }

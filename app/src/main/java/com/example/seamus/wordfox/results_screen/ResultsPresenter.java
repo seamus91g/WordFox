@@ -161,9 +161,10 @@ public class ResultsPresenter {
                     foxData.updateOpponentItem(winner, loser, draw);
                 }
             }
-        } else {
-            winners.add(gameInstances.get(0)); // addAll();
         }
+//        else {
+//            winners.add(gameInstances.get(0)); // addAll();
+//        }
         // Store most recent words for each player
         // Store most recent Game ID
         for (GameInstance pgi : gameInstances) {

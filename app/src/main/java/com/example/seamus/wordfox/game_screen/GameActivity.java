@@ -232,6 +232,7 @@ public class GameActivity extends AppCompatActivity
         TextView currentAttemptTV = findViewById(R.id.currentAttempt);
         currentAttemptTV.setText("");
         presenter.setGridClickable();
+        presenter.clearOnGoingAttempt();
         // Quick exit the game by tapping reset button twice
         if (this.resetButtonPressedOnce) {
             completeGame();

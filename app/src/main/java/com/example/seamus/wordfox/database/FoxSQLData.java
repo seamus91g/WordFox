@@ -191,7 +191,8 @@ public class FoxSQLData {
         List<WordItem> words = new ArrayList<>();
 //        (String table,
 //            String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
-        Cursor cursor = wfDatabase.query(WordTable.TABLE_WORDS, WordTable.ALL_COLUMNS, WordTable.COLUMN_PLAYER + " = '" + player + "'", null, null, null, null);
+        String whereClause = WordTable.COLUMN_PLAYER + " = '" + player + "' AND " + WordTable.COLUMN_VALID + " = 1";
+        Cursor cursor = wfDatabase.query(WordTable.TABLE_WORDS, WordTable.ALL_COLUMNS, whereClause, null, null, null, null);
 //        Cursor cursor = wfDatabase.query(WordTable.TABLE_WORDS, WordTable.ALL_COLUMNS, null, null, null, null, null);
 
         while (cursor.moveToNext()) {

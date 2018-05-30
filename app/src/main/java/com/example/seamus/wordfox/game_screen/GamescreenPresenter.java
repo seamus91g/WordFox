@@ -84,7 +84,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             givenLetters = new ArrayList<>(
                     Arrays.asList(
                             Arrays.copyOfRange(
-                                    givenLettersSTR.split(""), 1, givenLettersSTR.length() +1))
+                                    givenLettersSTR.split(""), 1, givenLettersSTR.length() + 1))
             );
         }
         gameInstance.setLetters(givenLettersSTR);
@@ -152,7 +152,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     public void submitCurrentAttempt(String attempt) {
         // Set all letters to be chooseable again.
         setGridClickable();
-        onGoingAttempt = "";
+        clearOnGoingAttempt();
         // All words in dictionary are lower case
         String lcAttempt = attempt.toLowerCase();
         // Keep track of what words the user has already tried
@@ -174,21 +174,33 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         }
     }
 
+    public void clearOnGoingAttempt() {
+        onGoingAttempt = "";
+    }
+
     // Update the stored data with information on words found during the game  // TODO: .. run this on separate thread
     public void updateData() {
+        String longestWord = gameInstance.getLongestWord();
+        gameData.gameCountUp();
+        gameData.roundCountUp();
+        boolean isBlankRound = true;
+//        if (!allWordsSubmitted.containsValue(true)) {
+//            longestWord = "<none>";
+//            allWordsSubmitted.put(longestWord, true);
+//        }
         for (Map.Entry<String, Boolean> word : allWordsSubmitted.entrySet()) {
             // The users best attempt at the end of the round is marked as the 'final' word
-            String longestWord = gameInstance.getLongestWord();
             boolean isFinal = false;
-            if (word.getKey().equals(longestWord)) {
+            if (word.getKey().toUpperCase().equals(longestWord)) {
                 isFinal = true;
+                isBlankRound = false;
             }
             // Write word to sql database
             String wordId = UUID.randomUUID().toString();
-            WordItem wrongWord = new WordItem(
+            WordItem wordFoundByPlayer = new WordItem(
                     wordId, word.getKey(), gameInstance.getPlayerID(), word.getValue(), isFinal, gameInstance.getRoundID(gameInstance.getRound())
             );
-            createWordItem(wrongWord);
+            createWordItem(wordFoundByPlayer);
             // Update preferences file
             gameData.addWord(word.getKey());
             if (word.getValue()) {
@@ -197,8 +209,12 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
                 gameData.incorrectCountUp();
             }
         }
-        gameData.gameCountUp();
-        gameData.roundCountUp();
+        if(isBlankRound){
+            WordItem wordFoundByPlayer = new WordItem(
+                    UUID.randomUUID().toString(), "<none>", gameInstance.getPlayerID(), false, true, gameInstance.getRoundID(gameInstance.getRound())
+            );
+            createWordItem(wordFoundByPlayer);
+        }
     }
 
     // Detect if user clicks a cell in the 3x3 letter grid. Prevent choosing the same cell twice!
