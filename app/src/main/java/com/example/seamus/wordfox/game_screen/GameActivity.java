@@ -233,18 +233,13 @@ public class GameActivity extends AppCompatActivity
         currentAttemptTV.setText("");
         presenter.setGridClickable();
         presenter.clearOnGoingAttempt();
+        updateHeaderLetters();
         // Quick exit the game by tapping reset button twice
         if (this.resetButtonPressedOnce) {
             completeGame();
         }
         this.resetButtonPressedOnce = true;
         new Handler().postDelayed(() -> resetButtonPressedOnce = false, 500);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                resetButtonPressedOnce = false;
-//            }
-//        }, 500);
     }
 
     // Check if word is valid & longer than current best. If so, set as longest attempt.

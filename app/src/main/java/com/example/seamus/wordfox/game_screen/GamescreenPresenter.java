@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox.game_screen;
 
 import android.widget.TextView;
-
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.MainActivity;
@@ -32,7 +31,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     private FoxSQLData foxData;
     private Diction dictionary;
     private Map<String, Boolean> allWordsSubmitted = new HashMap<>();
-    private LinkedList<SingleCell> alreadyClicked = new LinkedList<>();
+    private LinkedList<SingleCell> alreadyClicked = new LinkedList<>(); //TODO: LinkedHashMap so can search quickly
     private ArrayList<SingleCell> listOfGridCells;
     private String onGoingAttempt = "";
 
@@ -42,7 +41,6 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         this.dictionary = dictionary;
         this.foxData = data;
         this.gameData = gameData;
-
         foxData.open();
         listOfGridCells = createLetters();
     }
@@ -108,11 +106,24 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
 
     // Get the game letters as one string
     public String getLettersSTR() {
-        StringBuilder givenLettersSTR = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < listOfGridCells.size(); i++) {
-            givenLettersSTR.append(listOfGridCells.get(i).letter);
+            if (cellAlreadyClicked(listOfGridCells.get(i))) {
+                stringBuilder.append(" ");
+            } else {
+                stringBuilder.append(listOfGridCells.get(i).letter);
+            }
         }
-        return givenLettersSTR.toString();
+        return stringBuilder.toString();
+    }
+
+    private boolean cellAlreadyClicked(SingleCell cell) {
+        for (SingleCell clicked : alreadyClicked) {
+            if (clicked.tag.equals(cell.tag)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void startScoreScreen1Act() {
@@ -135,11 +146,11 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         view.createTimer(textViews);
     }
 
-    public void createWordItem(WordItem word) {
+    private void createWordItem(WordItem word) {
         foxData.createWordItem(word);
     }
 
-    public void clearRoundScores() {
+    private void clearRoundScores() {
         gameInstance.clearRoundScores();  // TODO: ... is this needed ..?
     }
 
@@ -153,6 +164,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         // Set all letters to be chooseable again.
         setGridClickable();
         clearOnGoingAttempt();
+        view.updateHeaderLetters();
         // All words in dictionary are lower case
         String lcAttempt = attempt.toLowerCase();
         // Keep track of what words the user has already tried
@@ -184,10 +196,6 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         gameData.gameCountUp();
         gameData.roundCountUp();
         boolean isBlankRound = true;
-//        if (!allWordsSubmitted.containsValue(true)) {
-//            longestWord = "<none>";
-//            allWordsSubmitted.put(longestWord, true);
-//        }
         for (Map.Entry<String, Boolean> word : allWordsSubmitted.entrySet()) {
             // The users best attempt at the end of the round is marked as the 'final' word
             boolean isFinal = false;
@@ -209,7 +217,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
                 gameData.incorrectCountUp();
             }
         }
-        if(isBlankRound){
+        if (isBlankRound) {
             WordItem wordFoundByPlayer = new WordItem(
                     UUID.randomUUID().toString(), "<none>", gameInstance.getPlayerID(), false, true, gameInstance.getRoundID(gameInstance.getRound())
             );
@@ -246,6 +254,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         }
         view.setCurrentAttempt(currentGuess);
         onGoingAttempt = currentGuess;
+        view.updateHeaderLetters();
     }
 
     // Set the clickable attribute to true on each letter in the 3x3 grid. Run after word is submitted

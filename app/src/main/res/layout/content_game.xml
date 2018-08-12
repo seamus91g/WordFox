@@ -23,7 +23,7 @@
         android:fontFamily="monospace"
         android:gravity="center_vertical"
         android:text="JDUENFISL"
-        android:textColor="#01848f"
+        android:textColor="@color/game_font_color"
         android:textSize="@dimen/big_text_size"
         android:textStyle="bold"/>
 
@@ -43,7 +43,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical"
         android:text=""
-        android:textColor="#01848f"
+        android:textColor="@color/game_font_color"
         android:fontFamily="monospace" />
     <TextView
         android:layout_width="wrap_content"
