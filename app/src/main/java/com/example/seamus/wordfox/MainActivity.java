@@ -71,35 +71,6 @@ public class MainActivity extends AppCompatActivity
         numberOfPlayers = 1;
         Log.d(MONITOR_TAG, "Number of game instances: " + allGameInstances.size() + ", END");
 
-
-        findViewById(R.id.exportsql).setOnClickListener(sqlListener);
-    }
-
-    private View.OnClickListener sqlListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            exportDB();
-        }
-    };
-    private void exportDB(){
-        File sd = Environment.getExternalStorageDirectory();
-        File data = Environment.getDataDirectory();
-        FileChannel source=null;
-        FileChannel destination=null;
-        String currentDBPath = "/data/"+ "com.example.seamus.wordfox" +"/databases/"+ DBHelper.DB_FILE_NAME;
-        String backupDBPath = DBHelper.DB_FILE_NAME;
-        File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
-        try {
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Toast.makeText(this, "DB Exported!", Toast.LENGTH_LONG).show();
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void startGameAct(View v) {
