@@ -15,7 +15,11 @@ android {
         main {
             java {
                 exclude '**/DataActivity.java'
+                exclude '**/DataPageActivity.java'
                 exclude '**/BNR_ExpandableRecycler'
+                exclude '**/DataScreenActivity.java'
+                exclude '**/ScoreScreen2Activity.java'
+                exclude '**/ScoreScreen1Activity.java'
             }
         }
         androidTest {

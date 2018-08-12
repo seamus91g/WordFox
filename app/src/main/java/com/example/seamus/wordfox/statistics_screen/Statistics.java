@@ -37,7 +37,7 @@ import com.example.seamus.wordfox.RV.WFAdapter;
 import com.example.seamus.wordfox.WordLoader;
 import com.example.seamus.wordfox.dataWordsRecycler.WordData;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
-import com.example.seamus.wordfox.data_page.DataPageActivity;
+//import com.example.seamus.wordfox.data_page.DataPageActivity;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.WordItem;
