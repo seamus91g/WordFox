@@ -41,10 +41,7 @@ import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.WordItem;
-import com.example.seamus.wordfox.list.CardItem;
-import com.example.seamus.wordfox.list.ExpandableHeaderItem;
 import com.example.seamus.wordfox.profile.ProfileActivity;
-import com.xwray.groupie.ExpandableGroup;
 
 import java.util.ArrayList;
 import java.util.HashSet;

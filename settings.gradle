@@ -1,4 +1,1 @@
 include ':app', ':library-databinding', ':library', ':example-shared'
-project(':library-databinding').projectDir = new File('groupie/library-databinding')
-project(':library').projectDir = new File('groupie/library')
-project(':example-shared').projectDir = new File('groupie/example-shared')
