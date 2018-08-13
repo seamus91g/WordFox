@@ -1,10 +1,7 @@
 package com.example.seamus.wordfox;
 
-import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 
-import com.example.seamus.wordfox.GameInstance;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.test.GameRobot;
 import com.example.seamus.wordfox.test.HomeRobot;
 import com.example.seamus.wordfox.test.PlayerSwitchRobot;
@@ -45,6 +42,18 @@ public class FullGameTest {
         new PlayerSwitchRobot()
                 .startNextPlayer();
         playAllRounds();
+    }
+    @Test
+    public void sixPlayerGame(){
+        new HomeRobot()
+                .setPlayerCount(6)
+                .startGame();
+        playAllRounds();
+        for (int i=0; i<5; ++i) {
+            new PlayerSwitchRobot()
+                    .startNextPlayer();
+            playAllRounds();
+        }
     }
     private void playAllRounds() {
         for (int i = 0; i< GameInstance.NUMBER_ROUNDS; ++i){

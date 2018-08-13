@@ -11,22 +11,138 @@
 
 
     <TextView
-        android:id="@+id/numberPlayers"
+        android:id="@+id/welcomeMessage"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="176dp"
-        android:text="Number of players: "
-        app:layout_constraintEnd_toStartOf="@+id/numberPicker"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <NumberPicker
-        android:id="@+id/numberPicker"
-        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="16dp"
+        android:text="Choose your number of players to begin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageButton
+        android:id="@+id/fox2Button"
+        android:tag="@string/Tag2player"
+        style="@style/gameActionButtons"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        android:onClick="setNumPlayers" />
+
+    <ImageButton
+        android:id="@+id/fox1Button"
+        android:tag="@string/Tag1player"
+        style="@style/gameActionButtons"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/fox2Button"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        android:onClick="setNumPlayers" />
+
+    <ImageButton
+        android:id="@+id/fox3Button"
+        android:tag="@string/Tag3player"
+        style="@style/gameActionButtons"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox3"
+        app:layout_constraintLeft_toRightOf="@id/fox2Button"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        android:onClick="setNumPlayers" />
+
+    <ImageButton
+        android:id="@+id/fox5Button"
+        style="@style/gameActionButtons"
+        android:tag="@string/Tag5player"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fox2Button"
+        android:onClick="setNumPlayers" />
+
+    <ImageButton
+        android:id="@+id/fox4Button"
+        android:tag="@string/Tag4player"
+        style="@style/gameActionButtons"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/fox5Button"
+        app:layout_constraintTop_toBottomOf="@id/fox1Button"
+        android:onClick="setNumPlayers" />
+
+    <ImageButton
+        android:id="@+id/fox6Button"
+        android:tag="@string/Tag6player"
+        style="@style/gameActionButtons"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:layout_marginTop="8dp"
+        android:cropToPadding="false"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fox6"
+        app:layout_constraintLeft_toRightOf="@id/fox5Button"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fox3Button"
+        android:onClick="setNumPlayers" />
+
+    <TextView
+        android:id="@+id/numPlayersTV"
+        android:hint="number of players chosen"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fox5Button"/>
+
+    <!--<TextView-->
+        <!--android:id="@+id/numberPlayers"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:text="Number of players: "-->
+        <!--app:layout_constraintEnd_toStartOf="@+id/numberPicker"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/bStartGame" />-->
+
+    <!--<NumberPicker-->
+        <!--android:id="@+id/numberPicker"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="96dp"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/bStartGame" />-->
 
     <Button
         android:id="@+id/bStartGame"
@@ -39,8 +155,6 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/numberPicker"
-        app:layout_constraintVertical_bias="0.223" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

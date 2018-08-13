@@ -9,9 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/groupie/example-shared" />
-            <option value="$PROJECT_DIR$/groupie/library" />
-            <option value="$PROJECT_DIR$/groupie/library-databinding" />
+            <option value="$PROJECT_DIR$/example-shared" />
+            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library-databinding" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

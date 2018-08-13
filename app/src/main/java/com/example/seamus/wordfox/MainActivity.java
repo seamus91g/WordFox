@@ -2,7 +2,6 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,18 +14,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.example.seamus.wordfox.database.DBHelper;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -37,7 +30,6 @@ public class MainActivity extends AppCompatActivity
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
     private int numberOfPlayers;
     private final static int maxPlayerCount = 6;
-
 
 
     public static int getMaxPlayerCount() {
@@ -53,9 +45,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
 
-        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-        np.setMinValue(1);
-        np.setMaxValue(maxPlayerCount);
+//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+//        np.setMinValue(1);
+//        np.setMaxValue(maxPlayerCount);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,12 +65,49 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void setNumPlayers(View myView){
+        String Players = (String) myView.getTag();
+        TextView numPlayersTV = (TextView) findViewById(R.id.numPlayersTV);
+
+        switch (Players){
+            case "1players":
+                numPlayersTV.setText("1");
+                numberOfPlayers = 1;
+                break;
+            case "2players":
+                numPlayersTV.setText("2");
+                numberOfPlayers = 2;
+                break;
+            case "3players":
+                numPlayersTV.setText("3");
+                numberOfPlayers = 3;
+                break;
+            case "4players":
+                numPlayersTV.setText("4");
+                numberOfPlayers = 4;
+                break;
+            case "5players":
+                numPlayersTV.setText("5");
+                numberOfPlayers = 5;
+                break;
+            case "6players":
+                numPlayersTV.setText("6");
+                numberOfPlayers = 6;
+                break;
+            default:
+        }
+
+        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+        allGameInstances.clear();
+
+    }
+
     public void startGameAct(View v) {
 //        GameInstance myInstance = new GameInstance();
 //        myInstance.startGame(this);
-        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-        numberOfPlayers = np.getValue();
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+//        numberOfPlayers = np.getValue();
+//        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
 //        for (int i=0; i<maxNumberOfRounds; i++){
 //            this.roundIDs.add(UUID.randomUUID().toString());

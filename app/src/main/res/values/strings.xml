@@ -102,4 +102,10 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="Tag6player">6players</string>
+    <string name="Tag4player">4players</string>
+    <string name="Tag5player">5players</string>
+    <string name="Tag3player">3players</string>
+    <string name="Tag1player">1players</string>
+    <string name="Tag2player">2players</string>
 </resources>
