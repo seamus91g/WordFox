@@ -204,7 +204,7 @@ public class ResultsPresenter {
         for (int round = 0; round < rounds; round++) {      // TODO: round? ongoingRound? curRound? Tidy this
             String roundNo = "Round " + String.valueOf(ongoingRound + 1) + ": ";
             view.addResultSpacer();
-            view.addResultName(roundNo);
+            view.addResultHeading(roundNo);
             // Different suggestions if entire game or just round is over
             String suggestionTitle;
             if (rounds == 1) {
@@ -212,7 +212,7 @@ public class ResultsPresenter {
             } else {
                 suggestionTitle = "Best word: ";
             }
-            view.addResultName(suggestionTitle);
+            view.addResultHeading(suggestionTitle);
             // create a TextView displaying the letters for the round
             String letters = getRoundLetters(ongoingRound);
             view.addResultValue(letters);
@@ -228,6 +228,9 @@ public class ResultsPresenter {
                     String suggestedToPlayer = w.toUpperCase() +
                             " (" + w.length() + ")";
                     view.addResultValue(suggestedToPlayer);
+                    if(i > 0){
+                        view.addResultHeading(" ");
+                    }
                 }
             } else {
                 String wordSuggestion = getRoundOrGameBestPossibleWord(ongoingRound);
@@ -236,7 +239,7 @@ public class ResultsPresenter {
             // Display best word found of each player
             for (int playerNum = 0; playerNum < players; playerNum++) {
                 String name = gameInstances.get(playerNum).getPlayerID();
-                view.addResultName(name + ": ");
+                view.addResultHeading(name + ": ");
                 //get their best guess
                 String bestGuess = getRoundOrGameBestGuess(playerNum, ongoingRound);
                 view.addResultValue(bestGuess, "Player longest word");

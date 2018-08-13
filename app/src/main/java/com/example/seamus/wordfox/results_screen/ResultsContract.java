@@ -11,6 +11,8 @@ public interface ResultsContract {
         void setGameOverMessage(String gameOverMessage);
         void makeToast(String message);
 
+        void addResultHeading(String result);
+
         void addTVtoResults(String result);
 
         void setVictoryMessage(String victoryMessage);
@@ -19,8 +21,6 @@ public interface ResultsContract {
         void prepareContinueButton();
 
         void displayTitle(String title);
-
-        void addResultName(String resultTitle);
 
         void addResultValue(String resultContent);
         void addResultValue(String resultContent, String description);

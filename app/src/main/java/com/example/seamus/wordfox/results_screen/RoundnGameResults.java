@@ -50,8 +50,8 @@ public class RoundnGameResults extends AppCompatActivity
     private ResultsPresenter presenter;
 
     private LinearLayout resultsLL;
-    private LinearLayout playersLL;
     private LinearLayout wordsLL;
+    private LinearLayout resultSectionEndScreenLL;
     private LinearLayout.LayoutParams lp;
     Button endOfRoundOrGameButton;
 
@@ -75,13 +75,10 @@ public class RoundnGameResults extends AppCompatActivity
         boolean gameOver = (roundOrGameEnd.equals("game"));
         gameIndexNumber = getIntent().getExtras().getInt("gameIndexNumber");
 
-        Log.v(MONITOR_TAG, "IT'S THE END OF A: " + gameOver);
-//        endOfRoundOrGameResults(roundOrGameEnd);
-
         lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
         resultsLL = (LinearLayout) findViewById(R.id.resultEndScreenLL);
-        playersLL = (LinearLayout) findViewById(R.id.playersEndScreenLL);
         wordsLL = (LinearLayout) findViewById(R.id.wordsEndScreenLL);
+        resultSectionEndScreenLL = (LinearLayout) findViewById(R.id.resultSectionEndScreenLL);
 
         endOfRoundOrGameButton = (Button) findViewById(R.id.endOfRoundOrGameButton);
 
@@ -97,7 +94,6 @@ public class RoundnGameResults extends AppCompatActivity
         presenter.endOfRoundOrGameResults();
         presenter.createRoundSummary();
         presenter.updateData();
-
     }
 
     @Override
@@ -153,11 +149,11 @@ public class RoundnGameResults extends AppCompatActivity
     }
 
     @Override
-    public void addResultName(String resultTitle) {
+    public void addResultHeading(String resultTitle) {
         TextView resultTV = new TextView(this);
         resultTV.setLayoutParams(lp);
         resultTV.setText(resultTitle);
-        playersLL.addView(resultTV);
+        resultSectionEndScreenLL.addView(resultTV);
     }
 
     @Override
@@ -183,7 +179,7 @@ public class RoundnGameResults extends AppCompatActivity
         params.setMargins(0, FoxUtils.dp2px(this, 50), 0, 0);
         TextView spacerTV = new TextView(this);
         spacerTV.setLayoutParams(params);
-        playersLL.addView(spacerTV);
+        resultSectionEndScreenLL.addView(spacerTV);
         // Cant add same view to two parents
         spacerTV = new TextView(this);
         spacerTV.setLayoutParams(params);
