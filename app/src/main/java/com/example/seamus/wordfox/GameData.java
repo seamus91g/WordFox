@@ -114,9 +114,9 @@ public class GameData extends AppCompatActivity {
         for (int i = 0; i < namedPlayerCount; ++i) {
             String KEY = "name_" + i;
             String name = foxPreferences.getString(KEY, "Unknown");
-            if (name.equals(DEFAULT_P1_NAME)) {
-                foxPreferences.getString("username_" + DEFAULT_P1_NAME, "Fox");
-            }
+//            if (name.equals(DEFAULT_P1_NAME)) {
+//                name = foxPreferences.getString("username_" + DEFAULT_P1_NAME, "Fox");
+//            }
             namedPlayers.add(name);
         }
         return namedPlayers;

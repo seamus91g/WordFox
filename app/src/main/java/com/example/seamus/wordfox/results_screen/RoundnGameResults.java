@@ -53,6 +53,7 @@ public class RoundnGameResults extends AppCompatActivity
     private LinearLayout wordsLL;
     private LinearLayout resultSectionEndScreenLL;
     private LinearLayout.LayoutParams lp;
+    private String p1Name = "";
     Button endOfRoundOrGameButton;
 
     @Override
@@ -224,8 +225,11 @@ public class RoundnGameResults extends AppCompatActivity
 
     @Override
     public String defaultP1Name() {
-        GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
-        return fox.getUsername();
+        if(p1Name.equals("")){
+            GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
+            p1Name = fox.getUsername();
+        }
+        return p1Name;
     }
 
     @Override

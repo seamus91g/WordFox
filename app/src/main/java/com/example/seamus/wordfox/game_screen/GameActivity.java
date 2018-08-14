@@ -75,7 +75,7 @@ public class GameActivity extends AppCompatActivity
                 game,
                 dictionary.getDictionary(),
                 new FoxSQLData(this),
-                new GameData(this, game.getPlayerID())
+                new GameData(this, game.getPlayerName())
         );
         presenter.setup();
 

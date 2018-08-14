@@ -36,9 +36,7 @@
             android:textAllCaps="true"
             android:textStyle="bold"
             tools:text="header" />
-
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/resultEndScreenLL"

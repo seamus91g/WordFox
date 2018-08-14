@@ -113,7 +113,12 @@ public class MainActivity extends AppCompatActivity
 //            this.roundIDs.add(UUID.randomUUID().toString());
 //        }
 
-        GameInstance thisGame = new GameInstance(0);
+        String p1ID;
+        {
+            GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
+            p1ID = fox.getUsername();
+        }
+        GameInstance thisGame = new GameInstance(p1ID, GameData.DEFAULT_P1_NAME, 0);
         allGameInstances.add(thisGame);
         for (int i = 1; i < numberOfPlayers; i++) {
             thisGame = new GameInstance(i, thisGame.getRoundIDs());

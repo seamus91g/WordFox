@@ -34,6 +34,7 @@ public class GameInstance {
     private int highestPossibleScore = 0;
     private final int thisGameIndex;
     private String playerID;   // Only exists if created on the player switch screen
+    private String playerName;   // Only exists if created on the player switch screen
 
     private final ArrayList<String> roundIDs = new ArrayList<>();
 
@@ -43,6 +44,10 @@ public class GameInstance {
 
     public void setMaxNumberOfRounds(int maxNumberOfRounds) {
         NUMBER_ROUNDS = maxNumberOfRounds;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public enum GameState {ONGOING, FINISHED}
@@ -76,11 +81,16 @@ public class GameInstance {
     public GameInstance(String pId, int thisGameIndex) {
         this(pId, thisGameIndex, null);
     }
+    public GameInstance(String pId, String name, int thisGameIndex) {
+        this(pId, thisGameIndex, null);
+        playerName = name;
+    }
 
     public GameInstance(String pId, int thisGameIndex, ArrayList<String> roundIDs) {
         if (pId.equals("")) {
             pId = "Unknown";
         }
+        playerName = pId;       // Only different for player 1
         if (roundIDs == null) {
             for (int i = 0; i < NUMBER_ROUNDS; i++) {
                 this.roundIDs.add(UUID.randomUUID().toString());
