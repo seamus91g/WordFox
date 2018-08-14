@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout_game_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/root_layout_game_details"
     android:background="#CBCBCB"
-    android:padding="12dp">
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/game_details_letters_row"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="LETTERS"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline_game_details"
+        app:layout_constraintRight_toLeftOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
 
     <TextView
@@ -22,23 +22,37 @@
         android:layout_height="wrap_content"
         android:text="Longest"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline_game_details"
+        app:layout_constraintRight_toLeftOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_game_details"
+        android:id="@+id/barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="75dp" />
+        app:layout_constraintGuide_percent="0.22" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.48" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/barrier3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.74" />
 
     <TextView
         android:id="@+id/data_round_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline_game_details"
-        app:layout_constraintRight_toLeftOf="@+id/data_round_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier"
+        app:layout_constraintRight_toLeftOf="@+id/barrier2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -46,25 +60,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 2"
-        app:layout_constraintLeft_toRightOf="@+id/data_round_1"
-        app:layout_constraintRight_toLeftOf="@+id/data_round_3" />
+        app:layout_constraintLeft_toRightOf="@+id/barrier2"
+        app:layout_constraintRight_toLeftOf="@+id/barrier3" />
 
     <TextView
         android:id="@+id/data_round_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 3"
-        app:layout_constraintLeft_toRightOf="@+id/data_round_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier3"
         app:layout_constraintRight_toRightOf="parent" />
-
 
     <TextView
         android:id="@+id/data_letters_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Letters 1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline_game_details"
-        app:layout_constraintRight_toLeftOf="@+id/data_letters_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier"
+        app:layout_constraintRight_toLeftOf="@+id/barrier2"
         app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
 
     <TextView
@@ -72,8 +85,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Letters 2"
-        app:layout_constraintLeft_toRightOf="@+id/data_letters_1"
-        app:layout_constraintRight_toLeftOf="@+id/data_letters_3"
+        app:layout_constraintLeft_toRightOf="@+id/barrier2"
+        app:layout_constraintRight_toLeftOf="@+id/barrier3"
         app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
 
     <TextView
@@ -81,18 +94,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Letters 3"
-        app:layout_constraintLeft_toRightOf="@+id/data_letters_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier3"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
-
 
     <TextView
         android:id="@+id/best_possible_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 1"
-        app:layout_constraintLeft_toRightOf="@+id/guideline_game_details"
-        app:layout_constraintRight_toLeftOf="@+id/best_possible_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier"
+        app:layout_constraintRight_toLeftOf="@+id/barrier2"
         app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
 
     <TextView
@@ -100,8 +112,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 2"
-        app:layout_constraintLeft_toRightOf="@+id/best_possible_1"
-        app:layout_constraintRight_toLeftOf="@+id/best_possible_3"
+        app:layout_constraintLeft_toRightOf="@+id/barrier2"
+        app:layout_constraintRight_toLeftOf="@+id/barrier3"
         app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
 
     <TextView
@@ -109,15 +121,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Round 3"
-        app:layout_constraintLeft_toRightOf="@+id/best_possible_2"
+        app:layout_constraintLeft_toRightOf="@+id/barrier3"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
 
-
     <include
         layout="@layout/rv_data_game_details_table"
-        app:layout_constraintTop_toBottomOf="@id/best_possible_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/best_possible_1" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,24 +1,18 @@
 package com.example.seamus.wordfox.RV.viewholders;
 
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.constraint.Group;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.BaseWFViewHolder;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.RV.RVTypes.TypeGamesDetail;
-import com.example.seamus.wordfox.RV.RVTypes.TypeWordsDetail;
-import com.example.seamus.wordfox.RV.WFAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class GameDetailsVH extends BaseWFViewHolder {
     private final TextView letters1TV;
@@ -55,62 +49,65 @@ public class GameDetailsVH extends BaseWFViewHolder {
     }
 
     private void displayPlayerDetails(List<String> playerNames) {
-        ConstraintLayout layout;
+        Group singleRow;
         int maxIndex = playerNames.size() - 1;
         switch (maxIndex) {
             case 0:
-                layout = rootLayout.findViewById(R.id.game_details_row_1);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_1);
+                singleRow.setVisibility(View.GONE);
             case 1:
-                layout = rootLayout.findViewById(R.id.game_details_row_2);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_2);
+                singleRow.setVisibility(View.GONE);
             case 2:
-                layout = rootLayout.findViewById(R.id.game_details_row_3);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_3);
+                singleRow.setVisibility(View.GONE);
             case 3:
-                layout = rootLayout.findViewById(R.id.game_details_row_4);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_4);
+                singleRow.setVisibility(View.GONE);
             case 4:
-                layout = rootLayout.findViewById(R.id.game_details_row_5);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_5);
+                singleRow.setVisibility(View.GONE);
             case 5:
-                layout = rootLayout.findViewById(R.id.game_details_row_6);
-                layout.setVisibility(View.GONE);
+                singleRow = rootLayout.findViewById(R.id.game_details_row_6);
+                singleRow.setVisibility(View.GONE);
         }
         switch (maxIndex) {
             case 5:
-                layout = rootLayout.findViewById(R.id.game_details_row_6);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(5));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_6);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(5), 5);
             case 4:
-                layout = rootLayout.findViewById(R.id.game_details_row_5);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(4));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_5);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(4), 4);
             case 3:
-                layout = rootLayout.findViewById(R.id.game_details_row_4);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(3));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_4);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(3), 3);
             case 2:
-                layout = rootLayout.findViewById(R.id.game_details_row_3);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(2));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_3);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(2), 2);
             case 1:
-                layout = rootLayout.findViewById(R.id.game_details_row_2);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(1));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_2);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(1), 1);
             case 0:
-                layout = rootLayout.findViewById(R.id.game_details_row_1);
-                layout.setVisibility(View.VISIBLE);
-                populateRow(layout, playerNames.get(0));
+                singleRow = rootLayout.findViewById(R.id.game_details_row_1);
+                singleRow.setVisibility(View.VISIBLE);
+                populateRow(playerNames.get(0), 0);
         }
     }
 
-    public void populateRow(ConstraintLayout layout, String player) {
-        ArrayList<String> words = wordsPerPlayer.get(player);
-        TextView name = (TextView) layout.getChildAt(0);
+    public void populateRow(String player, int playerNumber) {
+
+        String tag = "game_details_player_" + (playerNumber+1) + "_name";
+        TextView name = (TextView) rootLayout.findViewWithTag(tag);
         name.setText(player);
+        ArrayList<String> words = wordsPerPlayer.get(player);
         for (int i = 0; i < words.size(); ++i) {
-            TextView word = (TextView) layout.getChildAt(i + 1);
+            tag  = "best_found_" + (i+1) + "_player_" + (playerNumber+1);
+            TextView word = (TextView) rootLayout.findViewWithTag(tag);
             word.setText(words.get(i));
         }
     }
