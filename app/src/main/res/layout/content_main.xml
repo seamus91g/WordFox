@@ -9,22 +9,10 @@
     tools:activity="com.example.seamus.wordfox.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-
-    <TextView
-        android:id="@+id/welcomeMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Choose your number of players to begin"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
     <ImageButton
         android:id="@+id/fox2Button"
         android:tag="@string/Tag2player"
-        style="@style/gameActionButtons"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
@@ -32,15 +20,16 @@
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox2"
+        app:layout_constraintBottom_toTopOf="@id/fox5Button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        app:layout_constraintTop_toTopOf="parent"
         android:onClick="setNumPlayers" />
 
     <ImageButton
         android:id="@+id/fox1Button"
         android:tag="@string/Tag1player"
-        style="@style/gameActionButtons"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
@@ -50,13 +39,14 @@
         android:src="@drawable/fox1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/fox2Button"
-        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fox4Button"
         android:onClick="setNumPlayers" />
 
     <ImageButton
         android:id="@+id/fox3Button"
         android:tag="@string/Tag3player"
-        style="@style/gameActionButtons"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
@@ -66,29 +56,31 @@
         android:src="@drawable/fox3"
         app:layout_constraintLeft_toRightOf="@id/fox2Button"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fox6Button"
         android:onClick="setNumPlayers" />
 
     <ImageButton
         android:id="@+id/fox5Button"
-        style="@style/gameActionButtons"
-        android:tag="@string/Tag5player"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox5"
+        android:tag="@string/Tag5player"
+        app:layout_constraintBottom_toTopOf="@+id/bStartGame"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fox2Button"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toBottomOf="@id/fox2Button" />
 
     <ImageButton
         android:id="@+id/fox4Button"
         android:tag="@string/Tag4player"
-        style="@style/gameActionButtons"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
@@ -99,12 +91,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/fox5Button"
         app:layout_constraintTop_toBottomOf="@id/fox1Button"
+        app:layout_constraintBottom_toTopOf="@id/bStartGame"
         android:onClick="setNumPlayers" />
 
     <ImageButton
         android:id="@+id/fox6Button"
         android:tag="@string/Tag6player"
-        style="@style/gameActionButtons"
+        style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
@@ -115,46 +108,115 @@
         app:layout_constraintLeft_toRightOf="@id/fox5Button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fox3Button"
+        app:layout_constraintBottom_toTopOf="@id/bStartGame"
         android:onClick="setNumPlayers" />
-
-    <TextView
-        android:id="@+id/numPlayersTV"
-        android:hint="number of players chosen"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fox5Button"/>
-
-    <!--<TextView-->
-        <!--android:id="@+id/numberPlayers"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:text="Number of players: "-->
-        <!--app:layout_constraintEnd_toStartOf="@+id/numberPicker"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/bStartGame" />-->
-
-    <!--<NumberPicker-->
-        <!--android:id="@+id/numberPicker"-->
-        <!--android:layout_width="60dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="96dp"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/bStartGame" />-->
 
     <Button
         android:id="@+id/bStartGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        style="@style/RectangularButtons"
         android:gravity="center"
         android:onClick="startGameAct"
-        android:text="Start Game"
-        android:textSize="20sp"
+        android:text="start"
+        android:textSize="35sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bStartGame"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+            >
+
+                <Space
+                    android:id="@+id/verticalspace1"
+                    android:layout_height="0dp"
+                    android:layout_width="50dp"
+                    android:layout_weight=".15"
+                    />
+
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.45"
+                    android:orientation="horizontal"
+                    >
+
+                    <Space
+                        android:id="@+id/horizontalspace"
+                        android:layout_height="10dp"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"/>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight=".3" >
+
+                        <TextView
+                            android:id="@+id/speechTV"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Choose your number of players!"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </android.support.constraint.ConstraintLayout>
+
+
+                    <Space
+                        android:layout_height="10dp"
+                        android:layout_width="0dp"
+                        android:layout_weight=".1"/>
+
+                </android.support.v7.widget.LinearLayoutCompat>
+
+                <Space
+                    android:id="@+id/verticalspace2"
+                    android:layout_height="0dp"
+                    android:layout_width="50dp"
+                    android:layout_weight="0.4"
+                    />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/foxwithspeech"
+                android:adjustViewBounds="true"
+                android:paddingEnd="6dp"
+                android:paddingRight="6dp"
+                android:layout_gravity="bottom"
+            />
+
+
+
+
+    </FrameLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

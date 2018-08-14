@@ -67,39 +67,43 @@ public class MainActivity extends AppCompatActivity
 
     public void setNumPlayers(View myView){
         String Players = (String) myView.getTag();
-        TextView numPlayersTV = (TextView) findViewById(R.id.numPlayersTV);
 
         switch (Players){
             case "1players":
-                numPlayersTV.setText("1");
                 numberOfPlayers = 1;
+                changeTextTV(R.id.speechTV);
                 break;
             case "2players":
-                numPlayersTV.setText("2");
                 numberOfPlayers = 2;
+                changeTextTV(R.id.speechTV);
                 break;
             case "3players":
-                numPlayersTV.setText("3");
                 numberOfPlayers = 3;
+                changeTextTV(R.id.speechTV);
                 break;
             case "4players":
-                numPlayersTV.setText("4");
                 numberOfPlayers = 4;
+                changeTextTV(R.id.speechTV);
                 break;
             case "5players":
-                numPlayersTV.setText("5");
                 numberOfPlayers = 5;
+                changeTextTV(R.id.speechTV);
                 break;
             case "6players":
-                numPlayersTV.setText("6");
                 numberOfPlayers = 6;
+                changeTextTV(R.id.speechTV);
                 break;
             default:
         }
 
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
+    }
 
+    private void changeTextTV(int speechTV) {
+        TextView myTV = (TextView) findViewById(speechTV);
+        String numPlayersChosen = "Press START to begin your " + numberOfPlayers + " player game!!";
+        myTV.setText(numPlayersChosen);
     }
 
     public void startGameAct(View v) {

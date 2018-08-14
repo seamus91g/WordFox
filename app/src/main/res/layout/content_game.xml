@@ -194,7 +194,7 @@
 
         <Button
             android:id="@+id/resetButton"
-            style="@style/gameActionButtons"
+            style="@style/gameResetButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
             android:drawableTop="@mipmap/ic_reset_button"
@@ -208,7 +208,7 @@
 
         <Button
             android:id="@+id/submitButton"
-            style="@style/gameActionButtons"
+            style="@style/gameSubmitButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
             android:drawableTop="@mipmap/ic_submit_button"
@@ -222,7 +222,7 @@
 
         <Button
             android:id="@+id/shuffleButton"
-            style="@style/gameActionButtons"
+            style="@style/gameShuffleButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
             android:drawableTop="@mipmap/ic_shuffle_button"
