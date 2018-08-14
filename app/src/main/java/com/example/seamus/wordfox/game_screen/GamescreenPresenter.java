@@ -1,6 +1,7 @@
 package com.example.seamus.wordfox.game_screen;
 
 import android.widget.TextView;
+
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.MainActivity;
@@ -206,7 +207,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             // Write word to sql database
             String wordId = UUID.randomUUID().toString();
             WordItem wordFoundByPlayer = new WordItem(
-                    wordId, word.getKey(), gameInstance.getPlayerID(), word.getValue(), isFinal, gameInstance.getRoundID(gameInstance.getRound())
+                    wordId, word.getKey(), gameInstance.getPlayerName(), word.getValue(), isFinal, gameInstance.getRoundID(gameInstance.getRound())
             );
             createWordItem(wordFoundByPlayer);
             // Update preferences file
@@ -219,7 +220,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         }
         if (isBlankRound) {
             WordItem wordFoundByPlayer = new WordItem(
-                    UUID.randomUUID().toString(), "<none>", gameInstance.getPlayerID(), false, true, gameInstance.getRoundID(gameInstance.getRound())
+                    UUID.randomUUID().toString(), "<none>", gameInstance.getPlayerName(), false, true, gameInstance.getRoundID(gameInstance.getRound())
             );
             createWordItem(wordFoundByPlayer);
         }

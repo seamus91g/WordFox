@@ -135,19 +135,19 @@ public class ResultsPresenter {
             if (winners.size() > 1) {
                 // Game was a draw if the winner group contains more than one player
                 for (GameInstance player : winners) {
-                    foxData.updatePlayerStats(player.getPlayerID(), PlayerStatsTable.COLUMN_DRAWS);
+                    foxData.updatePlayerStats(player.getPlayerName(), PlayerStatsTable.COLUMN_DRAWS);
                 }
             } else {
-                foxData.updatePlayerStats(winners.get(0).getPlayerID(), PlayerStatsTable.COLUMN_WINS);
+                foxData.updatePlayerStats(winners.get(0).getPlayerName(), PlayerStatsTable.COLUMN_WINS);
             }
             // Increment lose counters
             for (GameInstance player : playerGroups.get(Boolean.FALSE)) {
-                foxData.updatePlayerStats(player.getPlayerID(), PlayerStatsTable.COLUMN_LOSES);
+                foxData.updatePlayerStats(player.getPlayerName(), PlayerStatsTable.COLUMN_LOSES);
             }
             // Loop through player and register win/lose/draw respective to every other player
             for (GameInstance player : gameInstances) {
                 for (GameInstance opponent : gameInstances) {
-                    String winner = player.getPlayerID(), loser = opponent.getPlayerID();
+                    String winner = player.getPlayerName(), loser = opponent.getPlayerName();
                     if (winner.equals(loser)) {
                         continue;
                     }
@@ -155,8 +155,8 @@ public class ResultsPresenter {
                     if (player.getTotalScore() == opponent.getTotalScore()) {
                         draw = true;
                     } else if (player.getTotalScore() < opponent.getTotalScore()) {
-                        winner = opponent.getPlayerID();
-                        loser = player.getPlayerID();
+                        winner = opponent.getPlayerName();
+                        loser = player.getPlayerName();
                     }
                     foxData.updateOpponentItem(winner, loser, draw);
                 }
@@ -168,7 +168,7 @@ public class ResultsPresenter {
         // Store most recent words for each player
         // Store most recent Game ID
         for (GameInstance pgi : gameInstances) {
-            GameData plyrGd = view.getPlayerData(pgi.getPlayerID());
+            GameData plyrGd = view.getPlayerData(pgi.getPlayerName());
             plyrGd.setRecentGame(pgi.getRoundID(0));
             plyrGd.setRecentWords(pgi.getAllFinalWords());
             if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
@@ -298,7 +298,7 @@ public class ResultsPresenter {
             winWords2.append(", ");
             winWords3.append(g.getRoundWord(2));
             winWords3.append(", ");
-            winNames.append(g.getPlayerID());
+            winNames.append(g.getPlayerName());
             winNames.append(", ");
         }
         String ww1 = winWords1.length() > 0 ? winWords1.substring(0, winWords1.length() - 2) : "";
