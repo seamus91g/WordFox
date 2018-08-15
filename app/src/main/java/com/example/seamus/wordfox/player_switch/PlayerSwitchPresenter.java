@@ -33,7 +33,7 @@ public class PlayerSwitchPresenter implements PlayerSwitchContract.Listener {
         ArrayList<String> previousPlayers = new ArrayList<>();
         ArrayList<String> all = new ArrayList<>();
         for (int i = 0; i < gameIndex; i++) {
-            previousPlayers.add(allGameInstances.get(i).getPlayerID());
+            previousPlayers.add(allGameInstances.get(i).getPlayerName());
         }
         String thisPlayer = "Player " + (gameIndex + 1);
         if(!previousPlayers.contains(thisPlayer)){
