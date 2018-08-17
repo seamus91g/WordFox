@@ -35,6 +35,7 @@ public class GameData extends AppCompatActivity {
     private String RECENT_WORDS_KEY;
     private String RECENT_GAME_ID_KEY;
     private String BEST_WORDS_KEY;
+    private String BEST_LETTERS_KEY;
     private static String NAMED_PLAYER_COUNT_KEY = "named_player_count";
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
@@ -134,6 +135,19 @@ public class GameData extends AppCompatActivity {
 
     // BEST_WORDS_KEY
     // Set of most picked words during the most recent game played
+    public void setBestGame(ArrayList<String> lettersBestGame, ArrayList<String> wordsBestGame){
+        setBestWords(wordsBestGame);
+        setLettersBestGame(lettersBestGame);
+    }
+
+    private void setLettersBestGame(ArrayList<String> lettersBestGame) {
+        for (int i = 0; i < lettersBestGame.size(); ++i) {
+            String BEST_LETTERS_KEY_i = BEST_LETTERS_KEY + "_" + i;
+            editor.putString(BEST_LETTERS_KEY_i, lettersBestGame.get(i));
+            editor.apply();
+        }
+    }
+
     public void setBestWords(ArrayList<String> bestWords) {
         for (int i = 0; i < bestWords.size(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
@@ -146,9 +160,17 @@ public class GameData extends AppCompatActivity {
         ArrayList<String> bestWords = new ArrayList<>();
         for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
-            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, "None Found!"));
+            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, NONE_FOUND));
         }
         return bestWords;
+    }
+    public ArrayList<String> getBestLetters() {
+        ArrayList<String> bestLetters = new ArrayList<>();
+        for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
+            String BEST_LETTERS_KEY_i = BEST_LETTERS_KEY + "_" + i;
+            bestLetters.add(foxPreferences.getString(BEST_LETTERS_KEY_i, NONE_FOUND));
+        }
+        return bestLetters;
     }
 
     // Set of most picked words during the most recent game played

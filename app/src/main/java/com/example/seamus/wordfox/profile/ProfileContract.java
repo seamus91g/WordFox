@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox.profile;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 
@@ -19,6 +18,13 @@ public interface ProfileContract {
         void setBestWords(ArrayList<String> words);
 
         void setDataPreviousGame(ArrayList<String> info);
+
+        Bitmap getButtonGridImage();
+        int getNotPressedButtonColor();
+        int getPressedButtonColorPrimary();
+        int getPressedButtonColorSecondary();
+
+        void setBestWord(Bitmap bmp, int index, String s);
     }
     interface Listener{
 

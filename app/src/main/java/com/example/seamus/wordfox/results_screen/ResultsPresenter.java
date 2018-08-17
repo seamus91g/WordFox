@@ -172,7 +172,7 @@ public class ResultsPresenter {
             plyrGd.setRecentGame(pgi.getRoundID(0));
             plyrGd.setRecentWords(pgi.getAllFinalWords());
             if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
-                plyrGd.setBestWords(pgi.getAllFinalWords());
+                plyrGd.setBestGame(pgi.getLetters(), pgi.getAllFinalWords());
                 plyrGd.setHighestScore(pgi.getTotalScore());
             } else {
                 Log.d(TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
@@ -228,7 +228,7 @@ public class ResultsPresenter {
                     String suggestedToPlayer = w.toUpperCase() +
                             " (" + w.length() + ")";
                     view.addResultValue(suggestedToPlayer);
-                    if(i > 0){
+                    if (i > 0) {
                         view.addResultHeading(" ");
                     }
                 }
@@ -285,6 +285,7 @@ public class ResultsPresenter {
     private String getRoundLetters(int round) {
         return gameInstances.get(0).getLetters(round);
     }
+
     // Create GameItem classes, to facilitate storing relevant data to the sql database
     private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances) {
         StringBuilder winWords1 = new StringBuilder();

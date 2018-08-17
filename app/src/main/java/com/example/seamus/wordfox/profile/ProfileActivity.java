@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity
     private ImageView profileIB;
     private EditText nameEditText;
     private Button setProfileNameButton;
+    Bitmap buttongGridImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,10 @@ public class ProfileActivity extends AppCompatActivity
         presenter.displayProfileImage();
         presenter.displayBestWords();
         presenter.displayRecentGame();
+        presenter.pressedKeys();
+
     }
+
     // Keep the 'Save Username' button in view when the soft keyboard appears
     private View.OnFocusChangeListener edittextFocusChange = new View.OnFocusChangeListener() {
         @Override
@@ -229,5 +233,54 @@ public class ProfileActivity extends AppCompatActivity
             LinearLayout linearLayout = findViewById(R.id.recent_game);
             linearLayout.addView(textView);
         }
+    }
+
+    @Override
+    public Bitmap getButtonGridImage() {
+        if (buttongGridImage == null) {
+            buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
+        }
+        return buttongGridImage;
+    }
+
+    @Override
+    public int getNotPressedButtonColor() {
+        return getResources().getColor(R.color.game_font_color);
+    }
+
+    @Override
+    public int getPressedButtonColorPrimary() {
+        return getResources().getColor(R.color.colorAccent);
+    }
+
+    @Override
+    public int getPressedButtonColorSecondary() {
+        return getResources().getColor(R.color.colorLightAccent);
+    }
+
+    @Override
+    public void setBestWord(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.bestgame_grid1);
+                tv = findViewById(R.id.bestword1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.bestgame_grid2);
+                tv = findViewById(R.id.bestword2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.bestgame_grid3);
+                tv = findViewById(R.id.bestword3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.bestgame_grid1);
+                tv = findViewById(R.id.bestword1);
+        }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
     }
 }

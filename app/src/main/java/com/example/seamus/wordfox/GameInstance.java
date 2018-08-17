@@ -126,6 +126,10 @@ public class GameInstance {
         return letters.get(roundIndex);
     }
 
+    public ArrayList<String> getLetters() {
+        return letters;
+    }
+
     public void setLetters(String letters) {
         this.letters.add(letters);
     }
