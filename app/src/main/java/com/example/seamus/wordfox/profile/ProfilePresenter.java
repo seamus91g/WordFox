@@ -17,14 +17,18 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.constraint.Group;
 import android.support.v4.app.ActivityCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 
 import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.GridImage;
+import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
 
@@ -223,205 +227,69 @@ public class ProfilePresenter implements ProfileContract.Listener {
         }
     }
 
-    // Display statistics from the most recent played game
-    public void displayRecentGame() {
+    public void recentGameWords() {
         String rgID = myGameData.getRecentGame();
-        // Exit if no recent game exists
-        if (rgID.equals("")) {
-            return;
-        }
-        ArrayList<String> recentWords = myGameData.getRecentWords();
-
         FoxSQLData foxData = new FoxSQLData(activity);
         foxData.open();
         GameItem recentGame = foxData.getGame(rgID);
         // Load data for player. Use this to find recent words and Game ID. Use Game ID to load Game from SQL DB
-        ArrayList<String> lastGameStrings = new ArrayList<>();
-
-        // Declare winner
-        ArrayList<String> winners = recentGame.getWinners();
-        String winMessage;
-        if (winners.size() > 1) {
-            winMessage = "Draw: " + recentGame.getWinnerString();
-        } else {
-            winMessage = "Winner: " + winners.get(0);
-        }
-        lastGameStrings.add(winMessage);
-
         ArrayList<ArrayList<String>> words = recentGame.getWinnerWords();
+        ArrayList<String> recentLetters = recentGame.getLetters(foxData);
         // Winner words
-        StringBuilder myRec = new StringBuilder();
-        for (int i = 0; i < words.size(); ++i) {
-            myRec.append(words.get(0).get(i));
-            myRec.append(", ");
-        }
-        String myRecent = myRec.toString();
-        lastGameStrings.add(myRecent);
+        ArrayList<String> yourWords = myGameData.getRecentWords();
+        ArrayList<String> winnerWords;
+        ArrayList<String> winners = recentGame.getWinners();
+        String winnerMsg;
 
-        // Recent words
-        winMessage = "Your words: ";
-        lastGameStrings.add(winMessage);
-        myRec = new StringBuilder();
-        for (int i = 0; i < recentWords.size(); ++i) {
-            myRec.append(recentWords.get(i));
-            myRec.append(", ");
+        if (winners.contains(GameData.DEFAULT_P1_NAME)) {
+            // Hide 'you' section
+            // Create message: 'You won'
+            winnerMsg = "You won!";
+            view.setRecentGameYourWordsInvisible();
+            winnerWords = yourWords;
+        } else {
+            int score = 0;
+            for (int i = 0; i < yourWords.size(); ++i) {
+                Bitmap bmp = pressedKey(recentLetters.get(i), yourWords.get(i));
+                view.setRecentWordYou(bmp, i, yourWords.get(i));
+                score += yourWords.get(i).length();
+            }
+            winnerMsg = winners.get(0) + " won";
+            String msg = "Your score: " + score;
+            view.setRecentGameWinnerYourMessage(msg);
+            winnerWords = recentGame.getWinnerWords().get(0);
         }
-        myRecent = myRec.toString();
-        lastGameStrings.add(myRecent);
 
-        ArrayList<String> recentLetter = recentGame.getLetters(foxData);
-        ArrayList<String> recentBest = recentGame.getLongestWords(foxData);
-        StringBuilder lettersAndWords = new StringBuilder();
-        for (int i = 0; i < recentLetter.size(); ++i) {
-            lettersAndWords.append(recentLetter.get(i));
-            lettersAndWords.append("\t\t\t");
-            lettersAndWords.append(recentBest.get(i));
-            lettersAndWords.append("\n");
+        int winnerScore = 0;
+        for (int i = 0; i < winnerWords.size(); ++i) {
+            Bitmap bmp = pressedKey(recentLetters.get(i), words.get(0).get(i));
+            view.setRecentWord(bmp, i, words.get(0).get(i));
+            winnerScore += words.get(0).get(i).length();
         }
-        lastGameStrings.add(lettersAndWords.toString());
-
-        view.setDataPreviousGame(lastGameStrings);
+        winnerMsg = winnerMsg + " (" + winnerScore + ")";
+        view.setRecentGameWinnerMessage(winnerMsg);
     }
-
-    // Find best words found in a game
-    public void displayBestWords() {
-        ArrayList<String> bestWords = myGameData.getBestWords();
-        // Exit if no best words exist
-        if (bestWords.get(0).equals(GameData.NONE_FOUND)) {
-            return;
-        }
-        ArrayList<String> bestWordsStrings = new ArrayList<>();
-        bestWordsStrings.add("== Best Words == ");
-        for (String word : bestWords) {
-            bestWordsStrings.add(word + " (" + word.length() + ")");
-        }
-        view.setBestWords(bestWordsStrings);
-    }
-
-    public Bitmap drawText(Bitmap b, String mytext, int color, int section) {
-        int scalex = b.getWidth()/3;
-        int scaley = b.getHeight()/3;
-        section -= 1;
-
-        TextPaint mTextPaint = new TextPaint();
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setTextSize(250);
-        mTextPaint.setColor(0xFFFFFFFF);
-
-        float width = mTextPaint.measureText(mytext);
-        float height = -mTextPaint.ascent() + mTextPaint.descent();
-        int h = (int) height;
-        int w = (int) width;
-        /////////
-
-        int x = ((section % 3)*scalex + scalex/2) - w/2;  // TODO: Should be different scale for x/y
-        int y = ((section / 3));
-        y = y*scaley;
-        y = y + scaley/2;
-        y = y - h/2;
-        y = y + (9*h)/10;
-        y = y-30;
-
-        Canvas c = new Canvas(b);
-
-        Paint paint = new Paint();
-        paint.setStrokeWidth(5);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(color);
-        // Draw text
-        c.save();
-        c.translate(x, y);
-        c.drawText(mytext, 0, 0, mTextPaint);
-//        c.drawRect(textBounds, paint);
-        c.restore();
-
-        return b;
-    }
-
 
     public void pressedKeys() {
         ArrayList<String> bestWords = myGameData.getBestWords();
         ArrayList<String> bestLetters = myGameData.getBestLetters();
-        // Verify data exists
-        for(String bestWord : bestWords){
-            if(bestWord.equals(GameData.NONE_FOUND)){
-                return;
-            }
-        }
-        for(String bestletter : bestLetters){
-            if(bestletter.equals(GameData.NONE_FOUND)){
-                return;
-            }
-        }
 
         for (int i = 0; i < bestWords.size(); ++i) {
-            ArrayList<Integer> clickedIndices = new ArrayList<>();
-            String[] bestWord = bestWords.get(i).split("");
-            String[] bestLetter = bestLetters.get(i).split("");
-            for (int j = 1; j < bestWord.length; ++j) {
-                for (int k = 1; k < bestLetter.length; ++k) {
-                    if (bestWord[j].equals(bestLetter[k])){
-                        clickedIndices.add(k);
-                        bestLetter[k] = "0";
-                        break;
-                    }
-                }
-            }
-            bestLetter = bestLetters.get(i).split("");
-            Bitmap bmp = view.getButtonGridImage();
-            bmp = replaceColor(bmp, view.getNotPressedButtonColor(), view.getPressedButtonColorSecondary(), clickedIndices);
-            for(int y=1; y<bestLetter.length; ++y){
-                bmp = drawText(bmp,
-                        bestLetter[y],
-                        Color.parseColor("#4025ed"), y);
-            }
+            Bitmap bmp = pressedKey(bestLetters.get(i), bestWords.get(i));
             view.setBestWord(bmp, i, bestWords.get(i));
         }
     }
 
-    public Bitmap replaceColor(Bitmap mImage, int fromColor, int targetColor, ArrayList<Integer> sections) {
-        if (mImage == null) {
+    private Bitmap pressedKey(String letters, String word) {
+        if (letters.equals(GameData.NONE_FOUND)) {    // TODO: Throw exception
+            return null;
+        }
+        if (word.equals(GameData.NONE_FOUND)) {
             return null;
         }
 
-        int width = mImage.getWidth();
-        int height = mImage.getHeight();
-        int[] pixels = new int[width * height];
-        mImage.getPixels(pixels, 0, width, 0, 0, width, height);
-        int sectionWidth = width / 3;
-
-        for (int section : sections) {
-            int start = 0;
-            int steps = ((section - 1) / 3);
-            for (int i = 0; i < steps; ++i) {
-                int t2 = (width * height) / 3;
-                start += t2;  // Skip 3 blocks
-            }
-            int end = ((width * height) * (steps + 1)) / 3;
-            start -= steps * sectionWidth;        // TODO: Not sure why this is necessary ... ???
-
-            int position = start;
-            int skip = 0;
-            while (position < end) {
-                int tempPosition = position;
-                skip = ((section + 2) % 3) * sectionWidth;
-                tempPosition += skip;
-                int run = sectionWidth;
-                while (run > 0) {
-                    if (pixels[tempPosition] == fromColor) {
-                        pixels[tempPosition] = targetColor;
-                    }
-                    ++tempPosition;
-                    --run;
-                }
-                position += width;
-            }
-        }
-
-        Bitmap newImage = Bitmap.createBitmap(width, height, mImage.getConfig());
-        newImage.setPixels(pixels, 0, width, 0, 0, width, height);
-
-        return newImage;
+        GridImage grid = new GridImage(view.getButtonGridImage(), word, letters, view.getNotPressedButtonColor(), view.getPressedButtonColorSecondary());
+        return grid.getBmp();
     }
 
 }

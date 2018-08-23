@@ -1,12 +1,16 @@
 package com.example.seamus.wordfox.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.Group;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -83,9 +87,10 @@ public class ProfileActivity extends AppCompatActivity
         presenter.displayLongestWord();
         presenter.displayProfileName();
         presenter.displayProfileImage();
-        presenter.displayBestWords();
-        presenter.displayRecentGame();
+//        presenter.displayBestWords();
+//        presenter.displayRecentGame();
         presenter.pressedKeys();
+        presenter.recentGameWords();
 
     }
 
@@ -211,37 +216,74 @@ public class ProfileActivity extends AppCompatActivity
         FoxUtils.clearViewFocus(viewWithFocus, this);
     }
 
-    @Override
-    public void setBestWords(ArrayList<String> words) {
-        for (String message : words) {
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText(message);
+//    @Override
+//    public void setBestWords(ArrayList<String> words) {
+//        for (String message : words) {
+//            TextView textView = new TextView(this);
+//            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//            textView.setText(message);
+//
+//            LinearLayout linearLayout = findViewById(R.id.recent_game);
+//            linearLayout.addView(textView);
+//        }
+//    }
 
-            LinearLayout linearLayout = findViewById(R.id.recent_game);
-            linearLayout.addView(textView);
-        }
-    }
-
-    @Override
-    public void setDataPreviousGame(ArrayList<String> info) {
-        for (String message : info) {
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText(message);
-
-            LinearLayout linearLayout = findViewById(R.id.recent_game);
-            linearLayout.addView(textView);
-        }
-    }
+//    @Override
+//    public void setDataPreviousGame(ArrayList<String> info) {
+//        for (String message : info) {
+//            TextView textView = new TextView(this);
+//            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//            textView.setText(message);
+//
+//            LinearLayout linearLayout = findViewById(R.id.recent_game);
+//            linearLayout.addView(textView);
+//        }
+//    }
 
     @Override
     public Bitmap getButtonGridImage() {
         if (buttongGridImage == null) {
             buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
+            buttongGridImage = getResizedBitmap(buttongGridImage, dp2px(100), dp2px(100));
         }
         return buttongGridImage;
     }
+
+    private int dp2px(final float dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    public Bitmap getScaledBitmap(int drawResource, Resources resources) {
+        float SCREEN_DENSITY = this.getResources().getDisplayMetrics().density;
+        BitmapFactory.Options bmpopt = new BitmapFactory.Options();
+        bmpopt.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+        int srcWidth = bmpopt.outWidth;
+        bmpopt.inJustDecodeBounds = false;
+        bmpopt.inSampleSize = 8;
+        bmpopt.inScaled = true;
+        bmpopt.inDensity = srcWidth;
+        bmpopt.inTargetDensity = (int) ((45 * SCREEN_DENSITY) * (bmpopt.inSampleSize));
+        return BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = newWidth / width;
+        float scaleHeight = newHeight / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
 
     @Override
     public int getNotPressedButtonColor() {
@@ -252,6 +294,19 @@ public class ProfileActivity extends AppCompatActivity
     public int getPressedButtonColorPrimary() {
         return getResources().getColor(R.color.colorAccent);
     }
+
+    @Override
+    public void setRecentGameWinnerMessage(String msg) {
+        TextView winnerMsg = findViewById(R.id.recent_game_winner);
+        winnerMsg.setText(msg);
+    }
+
+    @Override
+    public void setRecentGameWinnerYourMessage(String msg) {
+        TextView yourMessage = findViewById(R.id.recent_game_you);
+        yourMessage.setText(msg);
+    }
+
 
     @Override
     public int getPressedButtonColorSecondary() {
@@ -282,5 +337,64 @@ public class ProfileActivity extends AppCompatActivity
         gamegrid.setImageBitmap(bmp);
         tv.setText(s);
 
+    }
+
+    @Override
+    public void setRecentWord(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.recentgame_grid1);
+                tv = findViewById(R.id.lastword1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.recentgame_grid2);
+                tv = findViewById(R.id.lastword2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.recentgame_grid3);
+                tv = findViewById(R.id.lastword3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.recentgame_grid1);
+                tv = findViewById(R.id.lastword1);
+        }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
+    }
+
+    @Override
+    public void setRecentWordYou(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.recentgame_you_1);
+                tv = findViewById(R.id.lastword_you_1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.recentgame_you_2);
+                tv = findViewById(R.id.lastword_you_2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.recentgame_you_3);
+                tv = findViewById(R.id.lastword_you_3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.recentgame_you_1);
+                tv = findViewById(R.id.lastword_you_1);
+        }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
+    }
+
+    @Override
+    public void setRecentGameYourWordsInvisible() {
+        Group singleRow;
+        singleRow = findViewById(R.id.your_words);
+        singleRow.setVisibility(View.GONE);
     }
 }
