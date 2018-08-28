@@ -29,8 +29,8 @@ public class PlayerSwitchPresenterTest {
 
         GameInstance dudGI = Mockito.mock(GameInstance.class);
         GameInstance dudGI2 = Mockito.mock(GameInstance.class);
-        Mockito.when(dudGI.getPlayerID()).thenReturn("Player 1");
-        Mockito.when(dudGI2.getPlayerID()).thenReturn("Player 2");
+        Mockito.when(dudGI.getPlayerName()).thenReturn("Player 1");
+        Mockito.when(dudGI2.getPlayerName()).thenReturn("Player 2");
         ArrayList<GameInstance> gameInstances = new ArrayList<>(Arrays.asList(dudGI, dudGI2));
 
         ArrayList<String> playerNames = new ArrayList<>(Arrays.asList("Alan", "Joe", "Player 1"));

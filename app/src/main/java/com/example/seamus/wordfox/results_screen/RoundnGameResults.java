@@ -102,10 +102,8 @@ public class RoundnGameResults extends AppCompatActivity
             }
         });
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         String roundOrGameEnd = getIntent().getExtras().getString("key");
         boolean gameOver = (roundOrGameEnd.equals("game"));
@@ -219,19 +217,19 @@ public class RoundnGameResults extends AppCompatActivity
             case 3:
                 return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
             case 4:
-                return new FoxRank(R.drawable.arcticfox, "Arctic Fox");
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
             case 5:
                 return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
             case 6:
-                return new FoxRank(R.drawable.arcticfox, "Arctic Fox");
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
             case 7:
                 return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
             case 8:
-                return new FoxRank(R.drawable.arcticfox, "Arctic Fox");
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
             case 9:
                 return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
             default:
-                return new FoxRank(R.drawable.onefox_trans, "Gray Fox");
+                return new FoxRank(R.drawable.onefox_silhouette, "Gray Fox");
         }
     }
 

@@ -28,8 +28,8 @@ public class FoxDictionaryTest {
 
     @Test
     public void longestLettersTest() {
-        ArrayList<String> longestWords = dictionary.longestWordFromLetters("murdnunoc");
-        String[] expectedWords = {"conundrum", "corundum", "nondum", "round", "mound"};
+        ArrayList<String> longestWords = dictionary.longestWordFromLetters("murdnunoc", 5);
+        String[] expectedWords = {"conundrum", "corundum", "nondum", "round", "mourn", "dunno", "mound"};
         assertEquals(expectedWords[0], longestWords.get(0));
         assertArrayEquals(expectedWords , longestWords.toArray());
     }

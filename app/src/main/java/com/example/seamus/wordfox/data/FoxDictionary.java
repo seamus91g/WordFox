@@ -142,11 +142,13 @@ public class FoxDictionary implements Diction {
         }
     }
     // Find longest word from the random 9 game letters.
-    public ArrayList<String> longestWordFromLetters(String givenLetters) {
+        public ArrayList<String> longestWordFromLetters(String givenLetters) {
+            return longestWordFromLetters(givenLetters, 7);     // Default is 7
+        }
+    public ArrayList<String> longestWordFromLetters(String givenLetters, int numberToSave) {
         givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
 
-        // Save 3 of the longest words that can be found. Also store 1 of each length down to length 5
-        int numberToSave = 7;
+        // Save 'numberToSave' of the longest words that can be found. Also store 1 of each length down to length 5
         ArrayList<String> multipleLengths = new ArrayList<String>();
         if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
             String niner = validWordsAlphabeticalKey.get(givenLetters);
