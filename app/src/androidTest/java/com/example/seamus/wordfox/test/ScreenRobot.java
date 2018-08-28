@@ -63,7 +63,9 @@ public abstract class ScreenRobot<T extends ScreenRobot> {
     }
 
     public T checkLinearLayoutHasItemText(@IdRes int viewId, String string) {
-        onView(allOf(withParent(withId(viewId)), withText(string), withContentDescription("Player longest word")))
+//        onView(allOf(withParent(withId(viewId)), withText(string), withContentDescription("Player longest word")))
+//                .check(matches(withText(string)));
+        onView(allOf(withId(viewId), withContentDescription("Player longest word")))
                 .check(matches(withText(string)));
         return (T) this;
     }

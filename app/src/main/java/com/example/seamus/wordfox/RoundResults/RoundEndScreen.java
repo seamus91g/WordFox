@@ -113,6 +113,9 @@ public class RoundEndScreen extends AppCompatActivity
         TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_player_score);
         String playerResult = playerScore + " out of " + maxScore;
         resultPlayerScoreView.setText(playerResult);
+        TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
+        String longestWordHeader = getResources().getString(R.string.your_longest_word_was) + " " + gameInstance.getLongestWord();
+        longestWordView.setText(longestWordHeader);
 
 //        int scaleFactor = ImageHandler.getScaleFactor(getResources(), R.drawable.letter_grid_blank, 200);
 //        Bitmap testProf = ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, getResources());

@@ -62,7 +62,7 @@ public class FullGameTest {
                     .submit()
                     .endGame();
             new ScoreScreenRobot()
-                    .bestWord("RUM (3)")
+                    .bestWord("Your longest word was RUM")
                     .nextRound();
         }
     }
@@ -71,7 +71,7 @@ public class FullGameTest {
             new GameRobot()
                     .endGame();
             new ScoreScreenRobot()
-                    .bestWord(" (0)")
+//                    .bestWord(" (0)")
                     .nextRound();
         }
     }
