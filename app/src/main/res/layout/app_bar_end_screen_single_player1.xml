@@ -22,4 +22,12 @@
 
     <include layout="@layout/content_end_screen_single_player1" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_end_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
+
 </android.support.design.widget.CoordinatorLayout>
