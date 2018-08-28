@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox.profile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -23,12 +22,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +34,6 @@ import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
-
-import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -244,7 +239,7 @@ public class ProfileActivity extends AppCompatActivity
     public Bitmap getButtonGridImage() {
         if (buttongGridImage == null) {
             buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
-            buttongGridImage = getResizedBitmap(buttongGridImage, dp2px(100), dp2px(100));
+            buttongGridImage = getResizedBitmap(buttongGridImage, dp2px(100), dp2px(100));  // TODO: Adjust to screen size
         }
         return buttongGridImage;
     }
@@ -254,7 +249,7 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public Bitmap getScaledBitmap(int drawResource, Resources resources) {
-        float SCREEN_DENSITY = this.getResources().getDisplayMetrics().density;
+        float SCREEN_DENSITY = resources.getDisplayMetrics().density;
         BitmapFactory.Options bmpopt = new BitmapFactory.Options();
         bmpopt.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(resources, drawResource, bmpopt);
@@ -319,20 +314,20 @@ public class ProfileActivity extends AppCompatActivity
         TextView tv;
         switch (index) {
             case 0:
-                gamegrid = findViewById(R.id.bestgame_grid1);
-                tv = findViewById(R.id.bestword1);
+                gamegrid = findViewById(R.id.grid_row_grid1);
+                tv = findViewById(R.id.grid_row_bestword1);
                 break;
             case 1:
-                gamegrid = findViewById(R.id.bestgame_grid2);
-                tv = findViewById(R.id.bestword2);
+                gamegrid = findViewById(R.id.grid_row_grid2);
+                tv = findViewById(R.id.grid_row_bestword2);
                 break;
             case 2:
-                gamegrid = findViewById(R.id.bestgame_grid3);
-                tv = findViewById(R.id.bestword3);
+                gamegrid = findViewById(R.id.grid_row_grid3);
+                tv = findViewById(R.id.grid_row_bestword3);
                 break;
             default:
-                gamegrid = findViewById(R.id.bestgame_grid1);
-                tv = findViewById(R.id.bestword1);
+                gamegrid = findViewById(R.id.grid_row_grid1);
+                tv = findViewById(R.id.grid_row_bestword1);
         }
         gamegrid.setImageBitmap(bmp);
         tv.setText(s);

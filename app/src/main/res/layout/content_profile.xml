@@ -18,9 +18,7 @@
         android:fillViewport="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -113,73 +111,73 @@
                 android:gravity="center"
                 android:text="BEST GAME"
                 android:textSize="30dp"
-                app:layout_constraintBottom_toTopOf="@id/bestword1"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_bestword1"
                 app:layout_constraintTop_toBottomOf="@id/best_game_divider" />
 
             <TextView
-                android:id="@+id/bestword1"
-                android:layout_width="100dp"
+                android:id="@+id/grid_row_bestword1"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 1"
-                app:layout_constraintBottom_toTopOf="@id/bestgame_grid1"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/bestword2"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword2"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
             <TextView
-                android:id="@+id/bestword2"
-                android:layout_width="100dp"
+                android:id="@+id/grid_row_bestword2"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 2"
-                app:layout_constraintBottom_toTopOf="@id/bestgame_grid1"
-                app:layout_constraintLeft_toRightOf="@+id/bestword1"
-                app:layout_constraintRight_toLeftOf="@+id/bestword3"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword1"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword3"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
             <TextView
-                android:id="@+id/bestword3"
-                android:layout_width="100dp"
+                android:id="@+id/grid_row_bestword3"
+                android:layout_width="@dimen/grid_snapshot_size"
 
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 3"
-                app:layout_constraintBottom_toTopOf="@id/bestgame_grid1"
-                app:layout_constraintLeft_toRightOf="@+id/bestword2"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword2"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
 
             <ImageView
-                android:id="@+id/bestgame_grid1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/grid_row_grid1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toTopOf="@+id/recent_game_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/bestgame_grid2"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_grid2"
                 app:layout_constraintTop_toBottomOf="@id/profile_save_name" />
 
             <ImageView
-                android:id="@+id/bestgame_grid2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/grid_row_grid2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
-                app:layout_constraintBottom_toBottomOf="@+id/bestgame_grid1"
-                app:layout_constraintLeft_toRightOf="@+id/bestgame_grid1"
-                app:layout_constraintRight_toLeftOf="@+id/bestgame_grid3"
-                app:layout_constraintTop_toTopOf="@id/bestgame_grid1" />
+                app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_grid1"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_grid3"
+                app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
 
             <ImageView
-                android:id="@+id/bestgame_grid3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/grid_row_grid3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
-                app:layout_constraintBottom_toBottomOf="@+id/bestgame_grid1"
-                app:layout_constraintLeft_toRightOf="@+id/bestgame_grid2"
+                app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_grid2"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/bestgame_grid1" />
+                app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
 
 
             <View
@@ -189,7 +187,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintBottom_toTopOf="@id/recent_game_header"
-                app:layout_constraintTop_toBottomOf="@id/bestgame_grid1" />
+                app:layout_constraintTop_toBottomOf="@id/grid_row_grid1" />
 
             <TextView
                 android:id="@+id/recent_game_header"
@@ -219,7 +217,7 @@
 
             <TextView
                 android:id="@+id/lastword1"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 1"
@@ -230,7 +228,7 @@
 
             <TextView
                 android:id="@+id/lastword2"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 2"
@@ -241,7 +239,7 @@
 
             <TextView
                 android:id="@+id/lastword3"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 3"
@@ -253,8 +251,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_grid1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toTopOf="@+id/recent_game_you"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -263,8 +261,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_grid2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toBottomOf="@+id/recentgame_grid1"
                 app:layout_constraintLeft_toRightOf="@+id/recentgame_grid1"
@@ -273,8 +271,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_grid3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toBottomOf="@+id/recentgame_grid1"
                 app:layout_constraintLeft_toRightOf="@+id/recentgame_grid2"
@@ -300,7 +298,7 @@
 
             <TextView
                 android:id="@+id/lastword_you_1"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 1"
@@ -311,7 +309,7 @@
 
             <TextView
                 android:id="@+id/lastword_you_2"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 2"
@@ -322,7 +320,7 @@
 
             <TextView
                 android:id="@+id/lastword_you_3"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Word 3"
@@ -334,8 +332,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_you_1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/recentgame_you_2"
@@ -343,8 +341,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_you_2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toBottomOf="@+id/recentgame_you_1"
                 app:layout_constraintLeft_toRightOf="@+id/recentgame_you_1"
@@ -353,8 +351,8 @@
 
             <ImageView
                 android:id="@+id/recentgame_you_3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
                 android:src="@drawable/letter_grid_blank"
                 app:layout_constraintBottom_toBottomOf="@+id/recentgame_you_1"
                 app:layout_constraintLeft_toRightOf="@+id/recentgame_you_2"

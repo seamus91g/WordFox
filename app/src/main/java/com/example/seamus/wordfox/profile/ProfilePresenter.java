@@ -28,6 +28,7 @@ import android.view.View;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GridImage;
+import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
@@ -90,15 +91,16 @@ public class ProfilePresenter implements ProfileContract.Listener {
     public void permissionGrantedDisplayImage() {
         String profPicStr = myGameData.getProfilePicture();
         Bitmap bitmap = null;
+        ImageHandler imageHandler = new ImageHandler(activity);
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            bitmap = getBitmapFromUri(myFileUri);
+            bitmap = imageHandler.getBitmapFromUri(myFileUri);
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
             view.setAdjustViewBounds(true);
         } else {
-            bitmap = loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+            bitmap = imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
         }
         view.setProfileImage(bitmap);
     }
@@ -112,94 +114,94 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     // Load bitmap from asset contained within the project
-    public Bitmap loadAssetImage(String assetName) {
-        AssetManager assetmanager = activity.getAssets();
-        InputStream inStr = null;
-        try {
-            inStr = assetmanager.open(assetName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return BitmapFactory.decodeStream(inStr);
-    }
+//    public Bitmap loadAssetImage(String assetName) {
+//        AssetManager assetmanager = activity.getAssets();
+//        InputStream inStr = null;
+//        try {
+//            inStr = assetmanager.open(assetName);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return BitmapFactory.decodeStream(inStr);
+//    }
 
     // Load bitmap from its location on the device. Resize it if it exceeds screen dimensions.
     // Rotate the image if it was not taken in portrait view.
-    private Bitmap getBitmapFromUri(Uri imgUri) {
-        Bitmap myBitmap = null;
-        ContentResolver cr = activity.getContentResolver();
-        String[] projection = {MediaStore.MediaColumns.DATA};
-        Cursor myCur = cr.query(imgUri, projection, null, null, null);
-        // Verify the file path returned a valid cursor
-        if (myCur == null) {
-            return null;
-        }
-        if (myCur.moveToFirst()) {
-            String filePath = myCur.getString(0);
-            if (!new File(filePath).exists()) {
-                return null;
-            }
-            // Attempt to load bitmap from file path
-            try {
-                myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // Resize bitmap if it exceeds screen resolution
-            assert myBitmap != null;
-            if (myBitmap.getHeight() > MAX_RESOLUTION_IMAGE || myBitmap.getWidth() > MAX_RESOLUTION_IMAGE) {
-                DisplayMetrics metrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                myBitmap = resize(myBitmap, metrics);
-            }
-            // Rotate image if necessary
-            myBitmap = correctOrientation(myBitmap, imgUri);
-        }
-        myCur.close();
-        return myBitmap;
-    }
+//    private Bitmap getBitmapFromUri(Uri imgUri) {
+//        Bitmap myBitmap = null;
+//        ContentResolver cr = activity.getContentResolver();
+//        String[] projection = {MediaStore.MediaColumns.DATA};
+//        Cursor myCur = cr.query(imgUri, projection, null, null, null);
+//        // Verify the file path returned a valid cursor
+//        if (myCur == null) {
+//            return null;
+//        }
+//        if (myCur.moveToFirst()) {
+//            String filePath = myCur.getString(0);
+//            if (!new File(filePath).exists()) {
+//                return null;
+//            }
+//            // Attempt to load bitmap from file path
+//            try {
+//                myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            // Resize bitmap if it exceeds screen resolution
+//            assert myBitmap != null;
+//            if (myBitmap.getHeight() > MAX_RESOLUTION_IMAGE || myBitmap.getWidth() > MAX_RESOLUTION_IMAGE) {
+//                DisplayMetrics metrics = new DisplayMetrics();
+//                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//                myBitmap = resize(myBitmap, metrics);
+//            }
+//            // Rotate image if necessary
+//            myBitmap = correctOrientation(myBitmap, imgUri);
+//        }
+//        myCur.close();
+//        return myBitmap;
+//    }
 
     // Rotate image to correct orientation. Example, picture may have be taken in landscape view
-    private Bitmap correctOrientation(Bitmap bitmap, Uri imgUri) {
-        Matrix rotateMatrix = new Matrix();
-        String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-        Cursor cur = activity.getContentResolver().query(imgUri, orientationColumn, null, null, null);
-        int orientation = -1;
-        if (cur != null && cur.moveToFirst()) {
-            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-            cur.close();
-        }
-        rotateMatrix.postRotate(orientation);
-        if (!rotateMatrix.isIdentity() && bitmap != null) {
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
-        }
-        return bitmap;
-    }
+//    private Bitmap correctOrientation(Bitmap bitmap, Uri imgUri) {
+//        Matrix rotateMatrix = new Matrix();
+//        String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+//        Cursor cur = activity.getContentResolver().query(imgUri, orientationColumn, null, null, null);
+//        int orientation = -1;
+//        if (cur != null && cur.moveToFirst()) {
+//            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+//            cur.close();
+//        }
+//        rotateMatrix.postRotate(orientation);
+//        if (!rotateMatrix.isIdentity() && bitmap != null) {
+//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
+//        }
+//        return bitmap;
+//    }
 
     // Resize image to fit within screen metrics
-    private Bitmap resize(Bitmap image, DisplayMetrics metrics) {
-        int maxWidth = metrics.widthPixels;
-        int maxHeight = metrics.heightPixels;
-        if (!(maxHeight > 0 && maxWidth > 0)) {
-            return image;
-        }
-        // get the width and the height of the image to be resized
-        int width = image.getWidth();
-        int height = image.getHeight();
-        // get the ratio of the image dimensions to screen dimensions
-        float widthRatio = (float) width / (float) maxWidth;
-        float heightRatio = (float) height / (float) maxHeight;
-        // check which ratio is larger to determine which dimension is more out of bounds
-        float maxRatio = (widthRatio > heightRatio) ? widthRatio : heightRatio;
-        // scale down both dimensions by the ratio that's most out of bounds to bring whichever
-        //  was most out of bound down to the max while maintain aspect ratio
-        int finalWidth = (int) Math.floor(width / maxRatio);
-        int finalHeight = (int) Math.floor(height / maxRatio);
-        Log.d(MONITOR_TAG, "New width is " + finalWidth + ", New height is " + finalHeight + ", END");
-
-        image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-        return image;
-    }
+//    private Bitmap resize(Bitmap image, DisplayMetrics metrics) {
+//        int maxWidth = metrics.widthPixels;
+//        int maxHeight = metrics.heightPixels;
+//        if (!(maxHeight > 0 && maxWidth > 0)) {
+//            return image;
+//        }
+//        // get the width and the height of the image to be resized
+//        int width = image.getWidth();
+//        int height = image.getHeight();
+//        // get the ratio of the image dimensions to screen dimensions
+//        float widthRatio = (float) width / (float) maxWidth;
+//        float heightRatio = (float) height / (float) maxHeight;
+//        // check which ratio is larger to determine which dimension is more out of bounds
+//        float maxRatio = (widthRatio > heightRatio) ? widthRatio : heightRatio;
+//        // scale down both dimensions by the ratio that's most out of bounds to bring whichever
+//        //  was most out of bound down to the max while maintain aspect ratio
+//        int finalWidth = (int) Math.floor(width / maxRatio);
+//        int finalHeight = (int) Math.floor(height / maxRatio);
+//        Log.d(MONITOR_TAG, "New width is " + finalWidth + ", New height is " + finalHeight + ", END");
+//
+//        image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+//        return image;
+//    }
 
     // Allow user to choose image from their phone when the profile image is clicked
     public void choosePicture() {
@@ -229,6 +231,9 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     public void recentGameWords() {
         String rgID = myGameData.getRecentGame();
+        if(rgID.equals("")){        // TODO: Use a constant instead of ""?
+            return;
+        }
         FoxSQLData foxData = new FoxSQLData(activity);
         foxData.open();
         GameItem recentGame = foxData.getGame(rgID);
