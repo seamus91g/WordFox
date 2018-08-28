@@ -108,4 +108,5 @@
     <string name="Tag3player">3players</string>
     <string name="Tag1player">1players</string>
     <string name="Tag2player">2players</string>
+    <string name="title_activity_round_end_screen">RoundEndScreen</string>
 </resources>

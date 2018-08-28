@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/round_end_root_layout"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".RoundResults.RoundEndScreen"
+    tools:showIn="@layout/app_bar_round_end_screen">
+
+
+    <ImageView
+        android:id="@+id/round_end_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/foxwithspeech_small2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.7" />
+
+    <View
+        android:id="@+id/round_end_banner_divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/round_end_banner" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/round_end_profile_pic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:paddingRight="6dp"
+        android:src="@drawable/default_smiley"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_grid"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/round_end_result_grid" />
+
+    <TextView
+        android:id="@+id/round_end_result_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Joey"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/round_end_result_player_score"
+        app:layout_constraintLeft_toRightOf="@+id/round_end_profile_pic"
+        app:layout_constraintTop_toTopOf="@+id/round_end_result_grid"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/round_end_result_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  (54%)"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_player_name"
+        app:layout_constraintLeft_toRightOf="@+id/round_end_result_player_name"
+        app:layout_constraintTop_toTopOf="@+id/round_end_result_player_name" />
+
+    <TextView
+        android:id="@+id/round_end_result_player_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12 out of 22"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_grid"
+        app:layout_constraintLeft_toRightOf="@+id/round_end_profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/round_end_result_player_name"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/round_end_result_grid"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/letter_grid_blank"
+        app:layout_constraintBottom_toTopOf="@+id/round_end_player_result_divider"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintTop_toBottomOf="@+id/round_end_banner_divider" />
+
+    <TextView
+        android:id="@+id/round_end_player_result_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="POSSIBLE WORDS"
+        app:layout_constraintLeft_toLeftOf="@id/round_end_profile_pic"
+        app:layout_constraintTop_toBottomOf="@id/round_end_result_grid" />
+
+
+    <ScrollView
+        android:id="@+id/results_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/round_end_player_result_divider">
+
+        <LinearLayout
+            android:id="@+id/suggestions_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/sugestions_row_1"
+                layout="@layout/row_of_grids_with_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/sugestions_row_2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/sugestions_row_2"
+                layout="@layout/row_of_grids_with_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/sugestions_row_3"
+                app:layout_constraintTop_toBottomOf="@id/sugestions_row_1" />
+
+            <include
+                android:id="@+id/sugestions_row_3"
+                layout="@layout/row_of_grids_with_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sugestions_row_2" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

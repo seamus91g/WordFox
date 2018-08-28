@@ -25,7 +25,7 @@ public class ResultsPresenter {
     private HashMap<Boolean, ArrayList<GameInstance>> playerGroups;
     private ArrayList<GameInstance> winners;
 
-    ResultsPresenter(ResultsContract.View view, boolean isGameOver, int playerCount,
+    public ResultsPresenter(ResultsContract.View view, boolean isGameOver, int playerCount,
                      FoxSQLData foxData, ArrayList<GameInstance> gameInstances) {
         this.view = view;
         this.isGameOver = isGameOver;
@@ -274,7 +274,7 @@ public class ResultsPresenter {
     }
 
     // Get the best possible word for a particular round
-    private String getRoundOrGameBestPossibleWord(int round) {
+    public String getRoundOrGameBestPossibleWord(int round) {
         String bestPossibleWord;
         GameInstance player1GameInstance = gameInstances.get(0);
         String bestWordPoss = player1GameInstance.getRoundLongestPossible(round);

@@ -146,7 +146,7 @@ public class FoxDictionary implements Diction {
         givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
 
         // Save 3 of the longest words that can be found. Also store 1 of each length down to length 5
-        int numberToSave = 3;
+        int numberToSave = 7;
         ArrayList<String> multipleLengths = new ArrayList<String>();
         if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
             String niner = validWordsAlphabeticalKey.get(givenLetters);

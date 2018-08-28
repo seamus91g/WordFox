@@ -125,6 +125,9 @@ public class GameInstance {
     public String getLetters(int roundIndex) {
         return letters.get(roundIndex);
     }
+    public String getRoundLetters() {
+        return letters.get(round);
+    }
 
     public ArrayList<String> getLetters() {
         return letters;

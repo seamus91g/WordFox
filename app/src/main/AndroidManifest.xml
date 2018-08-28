@@ -78,7 +78,11 @@
         <activity
             android:name=".data_page.DataPageActivity"
             android:label="@string/title_activity_data_page"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RoundResults.RoundEndScreen"
+            android:label="@string/title_activity_round_end_screen"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

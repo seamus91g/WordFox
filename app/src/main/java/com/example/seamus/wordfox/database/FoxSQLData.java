@@ -311,7 +311,9 @@ public class FoxSQLData {
     public GameItem getGame(String gameId) {
         GameItem game;
         Cursor cursor = wfDatabase.query(GameTable.TABLE_GAMES, GameTable.ALL_COLUMNS, GameTable.COLUMN_R1_ID + " = '" + gameId + "'", null, null, null, null);
-
+        if(gameId.equals("")){
+            return null;        // TODO: Throw exception
+        }
         cursor.moveToNext();
         game = new GameItem(
                 cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R1_ID)),

@@ -26,6 +26,7 @@ import com.example.seamus.wordfox.GameTimer;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.RoundResults.RoundEndScreen;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
@@ -171,7 +172,8 @@ public class GameActivity extends AppCompatActivity
     // When timer ends, change to the Score Screen to show results.
     @Override
     public void startScoreScreen1Act(int index) {
-        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
+//        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
+        Intent EndScreenIntent = new Intent(this, RoundEndScreen.class);
         Bundle endScreenBundle = new Bundle();
         endScreenBundle.putString("key", "round");
         endScreenBundle.putInt("gameIndexNumber", index);
