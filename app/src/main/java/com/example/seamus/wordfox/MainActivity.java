@@ -1,5 +1,6 @@
 package com.example.seamus.wordfox;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
@@ -45,10 +47,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
 
-//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-//        np.setMinValue(1);
-//        np.setMaxValue(maxPlayerCount);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -58,17 +56,27 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Total score is accumulated across game rounds. Returning to the main menu will clear it
-//        GameActivity.myGameInstance.clearAllScores();
         numberOfPlayers = 1;
-        Log.d(MONITOR_TAG, "Number of game instances: " + allGameInstances.size() + ", END");
-
+        loadDictionary();
     }
 
-    public void setNumPlayers(View myView){
+    public void loadDictionary(){
+        if(FoxDictionary.isWordListLoaded){
+            return;
+        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets());
+            }
+        });
+        thread.start();
+    }
+
+    public void setNumPlayers(View myView) {
         String Players = (String) myView.getTag();
 
-        switch (Players){
+        switch (Players) {
             case "1players":
                 numberOfPlayers = 1;
                 changeTextTV(R.id.speechTV);
@@ -134,6 +142,14 @@ public class MainActivity extends AppCompatActivity
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("game_index", indexOfGameInstance);
 //            Log.d(MONITOR_TAG, "In startGame 2");
+        while (!FoxDictionary.isWordListLoaded){
+            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+            try {
+                Thread.sleep(100);      // Wait for dictionary to finish loading
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         this.startActivity(gameIntent);
     }
 

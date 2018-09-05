@@ -60,20 +60,25 @@ import static java.util.Collections.shuffle;
 public class FoxDictionary implements Diction {
 
     private static final ArrayList<String> allValidWords = new ArrayList<String>();
-    private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();
+    private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();     // TODO: shouldn't need to store the list twice .. ?
     private static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
+    public static boolean isWordListLoaded = false;
 
     private LetterPool letterPool;
     private Collator col;
-    private final String MONITOR_TAG_FOX = "myTag";
+    private static final String MONITOR_TAG_FOX = "myTag";
 
-    public FoxDictionary(String validWordsFileName, String letterDistributionFile, Context myGameActivity) {
+    public FoxDictionary(String validWordsFileName, String letterDistributionFile, AssetManager assetManager) {
         col = Collator.getInstance(new Locale("en", "EN"));
-        AssetManager assetManager = myGameActivity.getAssets();
+        loadWords(validWordsFileName, letterDistributionFile, assetManager );
+        resetLetterPool();
+    }
+
+    public static void loadWords(String validWordsFileName, String letterDistributionFile, AssetManager assetManager){
         if (allValidWords.isEmpty()) {
             try {
                 InputStream myIpStr = assetManager.open(validWordsFileName);
-                this.populateWords(myIpStr);
+                populateWords(myIpStr);
                 myIpStr.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -82,39 +87,37 @@ public class FoxDictionary implements Diction {
         if (letterDistributionMap.isEmpty()){
             try {
                 InputStream myIpStr = assetManager.open(letterDistributionFile);
-                this.populateLetterDistribution(myIpStr);
+                populateLetterDistribution(myIpStr);
                 myIpStr.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         }
-        resetLetterPool();
+        isWordListLoaded = true;
     }
+
     public void resetLetterPool(){
         letterPool = new LetterPool(letterDistributionMap);
     }
     // Read in text file of list of words.
     // Also store in a Hashmap where each key is a word with its letters sorted alphabetically.
     // The Hashmap value for each key is the word itself. This is used to search for longest word
-    private void populateWords(InputStream myIpStr) throws IOException {
+    private static void populateWords(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
-//        Log.d(MONITOR_TAG_FOX, "Reading dictionary again!!: 1");
         while (readString != null) {
             String thisWord = readString.toLowerCase();
             String[] wordArray = thisWord.split(" ");
             if (validWordsAlphabeticalKey.get(wordArray[1]) == null){
                 validWordsAlphabeticalKey.put(wordArray[1], wordArray[0]);
-            } // else{
-//                Log.d(MONITOR_TAG_FOX, "Found anagram: " + wordArray[0] + "," + validWordsAlphabeticalKey.get(wordArray[1]));
-//            }
+            }
             allValidWords.add(wordArray[0]);
             readString = buffreader.readLine();
         }
     }
     // Store how many of each letter to use. Example, 8 letter Ts, 3 letter Bs, 1 letter Z
-    private void populateLetterDistribution(InputStream myIpStr) throws IOException {
+    private static void populateLetterDistribution(InputStream myIpStr) throws IOException {
         Reader reader = new InputStreamReader(myIpStr);
         BufferedReader buffreader = new BufferedReader(reader);
         String readString = buffreader.readLine();
