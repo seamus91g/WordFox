@@ -21,7 +21,7 @@ import java.util.UUID;
 import static com.example.seamus.wordfox.game_screen.GameActivity.GAME_TIME_SECONDS;
 
 /**
- * Created by Gilroy on 4/17/2018.
+ * Created by Gilroy.
  */
 
 public class GamescreenPresenter implements GamescreenContract.Listener {
@@ -66,12 +66,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
                 gameLetters.append(givenLetters.get(i));
             }
             givenLettersSTR = gameLetters.toString();
-            ArrayList<String> longestWordsPossible = dictionary.longestWordFromLetters(givenLettersSTR);
-            gameInstance.setLongestPossible(longestWordsPossible.get(0));
-            gameInstance.addListOfSuggestedWords(longestWordsPossible);
-            RoundItem thisRound = new RoundItem(gameInstance.getRoundID(), givenLettersSTR, gameInstance.getLongestPossible());
-            foxData.createRoundItem(thisRound);
-
+            execBackgroundSetupTasks(givenLettersSTR);
         } else {      // If multi player game, re-use the same letters
             GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(gameInstance.getRound());
@@ -94,6 +89,26 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             gridCells.add(new SingleCell(allCellId, givenLetters.get(i)));
         }
         return gridCells;
+    }
+
+    // Finding list of longest words is slow. Run on thread to not block the UI
+    private void execBackgroundSetupTasks(String givenLettersSTR) {
+        Thread thread = new Thread(() -> {
+            calculateLongestPossibleWords(givenLettersSTR);
+            createRoundItem(givenLettersSTR);
+        });
+        thread.start();
+    }
+
+    private void calculateLongestPossibleWords(String givenLettersSTR) {
+        ArrayList<String> longestWordsPossible = dictionary.longestWordFromLetters(givenLettersSTR);
+        gameInstance.setLongestPossible(longestWordsPossible.get(0));
+        gameInstance.addListOfSuggestedWords(longestWordsPossible);
+    }
+
+    private void createRoundItem(String givenLettersSTR) {
+        RoundItem thisRound = new RoundItem(gameInstance.getRoundID(), givenLettersSTR, gameInstance.getLongestPossible());
+        foxData.createRoundItem(thisRound);
     }
 
     // Get the game letters
