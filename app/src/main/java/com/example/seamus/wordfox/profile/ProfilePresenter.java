@@ -82,13 +82,17 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     // Attempt to load and display the profile image.
     public void displayProfileImage() {
+        Bitmap bitmap;
         if (isStoragePermissionGranted()) {
-            permissionGrantedDisplayImage();
+            bitmap = permissionGrantedDisplayImage();
+        }else{
+            bitmap = defaultProfImg(new ImageHandler(activity));
         }
+        view.setProfileImage(bitmap);
     }
 
     // permission granted so get the image
-    public void permissionGrantedDisplayImage() {
+    public Bitmap permissionGrantedDisplayImage() {
         String profPicStr = myGameData.getProfilePicture();
         Bitmap bitmap = null;
         ImageHandler imageHandler = new ImageHandler(activity);
@@ -98,11 +102,14 @@ public class ProfilePresenter implements ProfileContract.Listener {
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
-            view.setAdjustViewBounds(true);
+            view.setAdjustViewBounds(true);     // TODO: ... this should work even for default
         } else {
-            bitmap = imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+            bitmap = defaultProfImg(imageHandler);
         }
-        view.setProfileImage(bitmap);
+        return bitmap;
+    }
+    private Bitmap defaultProfImg(ImageHandler imageHandler){
+        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
     }
 
     // When user is finished choosing a picture from the image gallery
