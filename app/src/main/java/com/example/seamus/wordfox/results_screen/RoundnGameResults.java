@@ -1,20 +1,13 @@
 package com.example.seamus.wordfox.results_screen;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,9 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,9 +41,6 @@ import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -178,9 +166,12 @@ public class RoundnGameResults extends AppCompatActivity
         TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
         String playerResult = playerScore + " out of " + maxScore;
         resultPlayerScoreView.setText(playerResult);
+
         ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
         TextView resultPlayerRankNameView = cl.findViewById(R.id.result_player_rank_name);
-        FoxRank foxRank = determineRank(playerScore);
+        int rank = GameData.determineRankValue(playerScore);
+        plyrGd.setRank(rank);
+        FoxRank foxRank = GameData.determineRankClass(rank);
         resultPlayerRankNameView.setText(foxRank.foxRank);
 
 
@@ -208,29 +199,6 @@ public class RoundnGameResults extends AppCompatActivity
             gridImage.setImageBitmap(pressedKey(letters, bestWord));
         }
         return cl;
-    }
-
-    private FoxRank determineRank(int score) {
-        float avg = score / 3;
-        int rankValue = Math.round(avg);
-        switch (rankValue) {
-            case 3:
-                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-            case 4:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
-            case 5:
-                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-            case 6:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
-            case 7:
-                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-            case 8:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Arctic Fox");
-            case 9:
-                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-            default:
-                return new FoxRank(R.drawable.onefox_silhouette, "Gray Fox");
-        }
     }
 
     private Bitmap pressedKey(String letters, String word) {

@@ -2,7 +2,6 @@ package com.example.seamus.wordfox.RV.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.BaseWFViewHolder;
 import com.example.seamus.wordfox.RV.DataListItem;
@@ -20,6 +19,7 @@ public class GameHeadingVH extends BaseWFViewHolder {
 
     @Override
     public void bindType(DataListItem item) {
+        super.setSelected(item.isListExpanded());
         TypeGamesHeader categoryHeader = (TypeGamesHeader) item;
         String winString = "Winner:  " +  categoryHeader.getGameWinner() + "  (" + categoryHeader.getWinnerScore() + ")";
         gameHeaderTV.setText(winString);

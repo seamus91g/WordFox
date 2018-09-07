@@ -88,7 +88,7 @@ public class RoundEndScreen extends AppCompatActivity
         populatePossibleWords(MainActivity.allGameInstances.get(gameIndexNumber));
     }
 
-    public void populatePlayerDetails(GameInstance gameInstance){
+    public void populatePlayerDetails(GameInstance gameInstance){       // TODO:  Tidy this. Use MVP
         ConstraintLayout cl = findViewById(R.id.round_end_root_layout);
         GameData plyrGd = new GameData(this, gameInstance.getPlayerName());
 

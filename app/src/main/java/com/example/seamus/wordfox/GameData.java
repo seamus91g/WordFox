@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.profile.FoxRank;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,6 +42,7 @@ public class GameData extends AppCompatActivity {
     private static String NAMED_PLAYER_COUNT_KEY = "named_player_count";
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
+    private String FOX_RANK_KEY;
 
     // Instantiate using a name
     // The stats for each player are stored separately
@@ -61,6 +64,7 @@ public class GameData extends AppCompatActivity {
         RECENT_WORDS_KEY = "recent_words_" + playerID;
         RECENT_GAME_ID_KEY = "recent_game_id_" + playerID;
         BEST_WORDS_KEY = "best_words_" + playerID;
+        FOX_RANK_KEY = "fox_rank_" + playerID;
 
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
@@ -136,7 +140,7 @@ public class GameData extends AppCompatActivity {
 
     // BEST_WORDS_KEY
     // Set of most picked words during the most recent game played
-    public void setBestGame(ArrayList<String> lettersBestGame, ArrayList<String> wordsBestGame){
+    public void setBestGame(ArrayList<String> lettersBestGame, ArrayList<String> wordsBestGame) {
         setBestWords(wordsBestGame);
         setLettersBestGame(lettersBestGame);
     }
@@ -165,6 +169,7 @@ public class GameData extends AppCompatActivity {
         }
         return bestWords;
     }
+
     public ArrayList<String> getBestLetters() {
         ArrayList<String> bestLetters = new ArrayList<>();
         for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
@@ -335,5 +340,43 @@ public class GameData extends AppCompatActivity {
 
     public int findOccurence(int requestLength) {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
+    }
+
+    public static FoxRank determineRankClass(int rankValue) {
+        switch (rankValue) {
+            case 3:
+                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+            case 4:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
+            case 5:
+                return new FoxRank(R.drawable.onefox_silhouette, "Kit Fox");
+            case 6:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Gray Fox");
+            case 7:
+                return new FoxRank(R.drawable.onefox_silhouette, "Arctic Fox");
+            case 8:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Silver Fox");
+            case 9:
+                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
+            default:
+                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+        }
+    }
+
+    public static int determineRankValue(int score) {
+        float avg = score / 3;
+        return Math.round(avg);
+    }
+
+    public void setRank(int rank) {
+        int existingRank = foxPreferences.getInt(FOX_RANK_KEY, 0);
+        if (existingRank >= rank) {
+            return;
+        }
+        editor.putInt(FOX_RANK_KEY, rank);
+        editor.apply();
+    }
+    public int getRank(){
+        return foxPreferences.getInt(FOX_RANK_KEY, 0);
     }
 }

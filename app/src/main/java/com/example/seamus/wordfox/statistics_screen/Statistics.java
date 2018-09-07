@@ -1,7 +1,9 @@
 package com.example.seamus.wordfox.statistics_screen;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
+import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
@@ -37,10 +40,11 @@ import com.example.seamus.wordfox.RV.WFAdapter;
 import com.example.seamus.wordfox.WordLoader;
 import com.example.seamus.wordfox.dataWordsRecycler.WordData;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
-//import com.example.seamus.wordfox.data_page.DataPageActivity;
+//import com.example.seamus.wordfox._junk.DataPageActivity;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.WordItem;
+import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
@@ -84,7 +88,9 @@ public class Statistics extends AppCompatActivity
 
             GameData playerGameData = new GameData(this, playerName);
             ArrayList<DataListItem> allCategories = new ArrayList<>();
-            DataListItem playerHeader = new TypePlayer(playerGameData.getUsername(), allCategories);
+            Bitmap profPic = loadPlayerBitmap(playerGameData.getProfilePicture());
+            FoxRank foxRank = GameData.determineRankClass(playerGameData.getRank());
+            DataListItem playerHeader = new TypePlayer(playerGameData.getUsername(), allCategories, profPic, foxRank.foxRank);
             gameData.add(playerHeader);
 
             ///////// Get stats
@@ -150,6 +156,17 @@ public class Statistics extends AppCompatActivity
         WFAdapter mAdapter = new WFAdapter(gameData);
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    private Bitmap loadPlayerBitmap(String profPicStr) {
+        Bitmap profPic = null;
+        ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
+        if (!profPicStr.equals("")) {
+            Uri myFileUri = Uri.parse(profPicStr);
+            profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
+//            int scale = ImageHandler.getScaleFactor(getResources(), )
+        }
+        return profPic;
     }
 
     @Override
