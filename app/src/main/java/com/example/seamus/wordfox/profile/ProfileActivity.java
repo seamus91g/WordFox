@@ -3,7 +3,6 @@ package com.example.seamus.wordfox.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -84,9 +83,33 @@ public class ProfileActivity extends AppCompatActivity
         presenter.displayProfileImage();
 //        presenter.displayBestWords();
 //        presenter.displayRecentGame();
-        presenter.pressedKeys();
+        presenter.bestGameWords();
         presenter.recentGameWords();
 
+    }
+
+    // When no stats are available, can not show recent game
+    @Override
+    public void hideRecentGame() {
+        TextView recentGameSubHeader = findViewById(R.id.recent_game_winner);
+        recentGameSubHeader.setText(R.string.no_games_played_profile);
+        Group recentWinner = findViewById(R.id.recent_winner_words);
+        Group recentYou = findViewById(R.id.recent_your_words);
+        recentWinner.setVisibility(View.GONE);
+        recentYou.setVisibility(View.GONE);
+    }
+
+    // When no stats are available, can not show best game
+    @Override
+    public void hideBestGame() {
+        TextView bestGameSubHeader = findViewById(R.id.best_game_non_existant);
+        bestGameSubHeader.setVisibility(View.VISIBLE);
+        bestGameSubHeader.setText(R.string.no_games_played_profile);
+
+        Group bestGame = findViewById(R.id.best_game_words);
+        bestGame.setVisibility(View.INVISIBLE);
+        Group bestGameGrids = findViewById(R.id.best_game_grids);
+        bestGameGrids.setVisibility(View.GONE);
     }
 
     // Keep the 'Save Username' button in view when the soft keyboard appears
@@ -198,8 +221,14 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setLongestWord(String longestWord) {
         // Display longest word
-        TextView longestWordProfilePage = findViewById(R.id.profPicLongestWord);
-        longestWordProfilePage.setText(longestWord);
+        String longestWordSpeechBubble;
+        if (longestWord.equals("")) {
+            longestWordSpeechBubble = "You haven't played any games yet!";
+        }else{
+            longestWordSpeechBubble = "Your longest word ever was " + longestWord + "!";
+        }
+        TextView longestWordProfilePage = findViewById(R.id.profile_longest_word);
+        longestWordProfilePage.setText(longestWordSpeechBubble);
     }
 
     @Override
@@ -210,30 +239,6 @@ public class ProfileActivity extends AppCompatActivity
     public void clearViewFocus(View viewWithFocus) {
         FoxUtils.clearViewFocus(viewWithFocus, this);
     }
-
-//    @Override
-//    public void setBestWords(ArrayList<String> words) {
-//        for (String message : words) {
-//            TextView textView = new TextView(this);
-//            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            textView.setText(message);
-//
-//            LinearLayout linearLayout = findViewById(R.id.recent_game);
-//            linearLayout.addView(textView);
-//        }
-//    }
-
-//    @Override
-//    public void setDataPreviousGame(ArrayList<String> info) {
-//        for (String message : info) {
-//            TextView textView = new TextView(this);
-//            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            textView.setText(message);
-//
-//            LinearLayout linearLayout = findViewById(R.id.recent_game);
-//            linearLayout.addView(textView);
-//        }
-//    }
 
     @Override
     public Bitmap getButtonGridImage() {
@@ -248,21 +253,7 @@ public class ProfileActivity extends AppCompatActivity
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
-    public Bitmap getScaledBitmap(int drawResource, Resources resources) {
-        float SCREEN_DENSITY = resources.getDisplayMetrics().density;
-        BitmapFactory.Options bmpopt = new BitmapFactory.Options();
-        bmpopt.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-        int srcWidth = bmpopt.outWidth;
-        bmpopt.inJustDecodeBounds = false;
-        bmpopt.inSampleSize = 8;
-        bmpopt.inScaled = true;
-        bmpopt.inDensity = srcWidth;
-        bmpopt.inTargetDensity = (int) ((45 * SCREEN_DENSITY) * (bmpopt.inSampleSize));
-        return BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-    }
-
-    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {
+    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {     // TODO: Use ImageHandler
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = newWidth / width;
@@ -389,7 +380,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setRecentGameYourWordsInvisible() {
         Group singleRow;
-        singleRow = findViewById(R.id.your_words);
+        singleRow = findViewById(R.id.recent_your_words);
         singleRow.setVisibility(View.GONE);
     }
 }

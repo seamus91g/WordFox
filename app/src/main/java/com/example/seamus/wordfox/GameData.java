@@ -20,6 +20,7 @@ public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
     public static final String DEFAULT_P1_NAME = "Player 1";
     public static final String NONE_FOUND = "None Found!";
+    public static final String NON_EXISTANT = "non_existant";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -160,7 +161,7 @@ public class GameData extends AppCompatActivity {
         ArrayList<String> bestWords = new ArrayList<>();
         for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
-            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, NONE_FOUND));
+            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, NON_EXISTANT));
         }
         return bestWords;
     }
@@ -168,7 +169,7 @@ public class GameData extends AppCompatActivity {
         ArrayList<String> bestLetters = new ArrayList<>();
         for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
             String BEST_LETTERS_KEY_i = BEST_LETTERS_KEY + "_" + i;
-            bestLetters.add(foxPreferences.getString(BEST_LETTERS_KEY_i, NONE_FOUND));
+            bestLetters.add(foxPreferences.getString(BEST_LETTERS_KEY_i, NON_EXISTANT));
         }
         return bestLetters;
     }

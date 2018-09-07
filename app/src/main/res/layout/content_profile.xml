@@ -53,7 +53,7 @@
                 android:layout_marginBottom="25dp"
                 android:gravity="center_horizontal"
                 android:hint="Name here"
-                app:layout_constraintBottom_toTopOf="@+id/longest_word_profile"
+                app:layout_constraintBottom_toTopOf="@+id/profile_longest_word_speech"
                 app:layout_constraintLeft_toRightOf="@+id/username_prompt"
                 app:layout_constraintRight_toLeftOf="@+id/profile_save_name"
                 app:layout_constraintTop_toBottomOf="@+id/profileImageButton" />
@@ -68,33 +68,31 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/profile_username" />
 
-            <LinearLayout
-                android:id="@+id/longest_word_profile"
-                android:layout_width="368dp"
+
+
+            <ImageView
+                android:id="@+id/profile_longest_word_speech"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/best_game_divider"
+                android:adjustViewBounds="true"
+                android:src="@drawable/foxwithspeech_small2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_username">
+                app:layout_constraintTop_toBottomOf="@id/profile_save_name"
+                app:layout_constraintWidth_percent="0.7" />
 
-                <TextView
-                    android:id="@+id/profPicLongestWordText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Longest Word: "
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/profPicLongestWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_longest_word"
+                android:contentDescription="Profile longest word"
+                android:maxWidth="135dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/profile_longest_word_speech"
+                app:layout_constraintHorizontal_bias="0.97"
+                app:layout_constraintLeft_toLeftOf="@id/profile_longest_word_speech"
+                app:layout_constraintRight_toRightOf="@id/profile_longest_word_speech"
+                app:layout_constraintTop_toTopOf="@id/profile_longest_word_speech" />
 
             <View
                 android:id="@+id/best_game_divider"
@@ -102,7 +100,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintBottom_toTopOf="@id/best_game_header"
-                app:layout_constraintTop_toBottomOf="@id/longest_word_profile" />
+                app:layout_constraintTop_toBottomOf="@id/profile_longest_word_speech" />
 
             <TextView
                 android:id="@+id/best_game_header"
@@ -113,6 +111,19 @@
                 android:textSize="30dp"
                 app:layout_constraintBottom_toTopOf="@id/grid_row_bestword1"
                 app:layout_constraintTop_toBottomOf="@id/best_game_divider" />
+
+            <TextView
+                android:id="@+id/best_game_non_existant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recent_game_divider"
+                app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
             <TextView
                 android:id="@+id/grid_row_bestword1"
@@ -147,7 +158,6 @@
                 app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword2"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
-
 
             <ImageView
                 android:id="@+id/grid_row_grid1"
@@ -359,20 +369,40 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/recentgame_you_1" />
 
+            <android.support.constraint.Group
+                android:id="@+id/best_game_grids"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="grid_row_grid1,grid_row_grid2,grid_row_grid3" />
 
             <android.support.constraint.Group
-                android:id="@+id/your_words"
+                android:id="@+id/best_game_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="grid_row_bestword1,grid_row_bestword2,grid_row_bestword3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/recent_your_words"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
                 app:constraint_referenced_ids="recent_game_you,recentgame_you_1,recentgame_you_2,recentgame_you_3,lastword_you_1,lastword_you_2,lastword_you_3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/recent_winner_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="recentgame_grid1,recentgame_grid2,recentgame_grid3,lastword1,lastword2,lastword3" />
 
             <android.support.constraint.Barrier
                 android:id="@+id/lastgame_barrier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="recentgame_you_1,recentgame_you_2,recentgame_you_3,recentgame_grid1,recentgame_grid2,recentgame_grid3" />
+                app:constraint_referenced_ids="recent_game_winner,recentgame_you_1,recentgame_you_2,recentgame_you_3,recentgame_grid1,recentgame_grid2,recentgame_grid3" />
 
             <View
                 android:layout_width="match_parent"

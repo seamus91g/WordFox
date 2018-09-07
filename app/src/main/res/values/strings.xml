@@ -110,4 +110,5 @@
     <string name="Tag2player">2players</string>
     <string name="title_activity_round_end_screen">RoundEndScreen</string>
     <string name="your_longest_word_was">Your longest word was</string>
+    <string name="no_games_played_profile">No games played!</string>
 </resources>

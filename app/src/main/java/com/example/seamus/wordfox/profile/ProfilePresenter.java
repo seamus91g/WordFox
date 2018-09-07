@@ -59,11 +59,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     // Find longest word and display it on the profile screen
     public void displayLongestWord() {
-        String longestWord = myGameData.findLongest();
-        if (longestWord.equals("")) {
-            longestWord = "No words found!";
-        }
-        view.setLongestWord(longestWord);
+        view.setLongestWord(myGameData.findLongest());
     }
 
     // Save username to preference file. Update the displayed profile name.
@@ -239,6 +235,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
     public void recentGameWords() {
         String rgID = myGameData.getRecentGame();
         if(rgID.equals("")){        // TODO: Use a constant instead of ""?
+            view.hideRecentGame();
             return;
         }
         FoxSQLData foxData = new FoxSQLData(activity);
@@ -282,8 +279,12 @@ public class ProfilePresenter implements ProfileContract.Listener {
         view.setRecentGameWinnerMessage(winnerMsg);
     }
 
-    public void pressedKeys() {
+    public void bestGameWords() {
         ArrayList<String> bestWords = myGameData.getBestWords();
+        if(bestWords.get(0).equals(GameData.NON_EXISTANT)){
+            view.hideBestGame();
+            return;
+        }
         ArrayList<String> bestLetters = myGameData.getBestLetters();
 
         for (int i = 0; i < bestWords.size(); ++i) {

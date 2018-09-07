@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 public interface ProfileContract {
     interface View {
+        void hideRecentGame();
+
+        void hideBestGame();
+
         void setAdjustViewBounds(Boolean bool);
 
         void setProfileImage(Bitmap bitmap);
