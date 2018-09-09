@@ -83,9 +83,8 @@ public class Statistics extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.data_list);
 
         ArrayList<String> allPlayers = GameData.getNamedPlayerList(this);
-        List<DataPerGame> allGameData = WordLoader.getGames(this);
+        final List<DataPerGame> allGameData = WordLoader.getGames(this);
         for (String playerName : allPlayers) {
-
             GameData playerGameData = new GameData(this, playerName);
             ArrayList<DataListItem> allCategories = new ArrayList<>();
             Bitmap profPic = loadPlayerBitmap(playerGameData.getProfilePicture());
@@ -94,61 +93,17 @@ public class Statistics extends AppCompatActivity
             gameData.add(playerHeader);
 
             ///////// Get stats
-            ArrayList<DataListItem> allDataItems = new ArrayList<>();
-            DataListItem statsCategory = new TypeCategory("Stats", allDataItems);
+            DataListItem statsCategory = new TypeCategory("Stats", createStats(playerGameData));
             allCategories.add(statsCategory);
 
-            // Player X games
-            allDataItems.add(new TypeStats<>("Games played: ", playerGameData.getGameCount()));
-            // Played X round
-            allDataItems.add(new TypeStats<>("Rounds played: ", playerGameData.getRoundCount()));
-            // Longest word
-            allDataItems.add(new TypeStats<>("Longest word: ", playerGameData.findLongest()));
-            // Average word length
-            allDataItems.add(new TypeStats<>("Average word length: ", playerGameData.getAverageWordLength()));
-            // Rounds where no word found
-            allDataItems.add(new TypeStats<>("Round where no word found: ", playerGameData.getNoneFoundCount()));
-            // Times each word length found
-            for (int i = 3; i <= 9; ++i) {
-                allDataItems.add(new TypeStats<>("Length " + i + " words found: ", playerGameData.findOccurence(i)));
-            }
-            // Highest score in a game
-            allDataItems.add(new TypeStats<>("Highest score: ", playerGameData.getHighestTotalScore()));
-            // Number valid words submitted
-            allDataItems.add(new TypeStats<>("Valid words submitted: ", playerGameData.getSubmittedCorrectCount()));
-            // Invalid words submitted
-            allDataItems.add(new TypeStats<>("Invalid words submitted: ", playerGameData.getSubmittedIncorrectCount()));
-            // Times shuffled
-            allDataItems.add(new TypeStats<>("Times shuffled: ", playerGameData.getShuffleCount()));
-            // Average shuffles per round
-            allDataItems.add(new TypeStats<>("Average shuffles per round: ", playerGameData.getShuffleAverage()));
-
             ///////// Get games
-            ArrayList<DataListItem> allGameHeaders = new ArrayList<>();
-            DataListItem gamesCategory = new TypeCategory("Games", allGameHeaders);
+            DataListItem gamesCategory = new TypeCategory("Games", createGameData(playerGameData.getUsername(), playerName, allGameData));
             allCategories.add(gamesCategory);
 
-            for (DataPerGame game : allGameData) {
-                if (!game.players.contains(playerName)) {
-                    continue;
-                }
-                if(game.players.contains(GameData.DEFAULT_P1_NAME)){    // TODO: Surely will always be true?
-                    game.swapName(GameData.DEFAULT_P1_NAME, playerGameData.getUsername());
-                }
-                DataListItem dliGame = new TypeGamesDetail(game);  // get an ID for each view we will require
-                DataListItem dliHeader = new TypeGamesHeader(game, dliGame);
-                allGameHeaders.add(dliHeader);
-            }
-
             ///////// Get words
-            ArrayList<DataListItem> allWordHeaders = new ArrayList<>();
-            DataListItem wordsCategory = new TypeCategory("Words", allWordHeaders);
+            DataListItem wordsCategory = new TypeCategory("Words", createWordData(playerName));
             allCategories.add(wordsCategory);
-            ArrayList<WordDataHeader> pData = WordLoader.getValid(this, playerName); //TODO: Deprecate WordDataHeader/WordData, use only Type classes
-            for (WordDataHeader wdh : pData) {
-                DataListItem dli = new TypeWordsHeader(wdh);
-                allWordHeaders.add(dli);
-            }
+
         }
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -156,6 +111,74 @@ public class Statistics extends AppCompatActivity
         WFAdapter mAdapter = new WFAdapter(gameData);
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    private ArrayList<DataListItem> createWordData(String playerName){
+
+        ArrayList<DataListItem> allWordHeaders = new ArrayList<>();
+        ArrayList<WordDataHeader> pData = WordLoader.getValid(this, playerName); //TODO: Deprecate WordDataHeader/WordData, use only Type classes
+        if(pData.size() == 0){
+            allWordHeaders.add(new TypeStats<>("No words found yet!", ""));
+        }
+        for (WordDataHeader wdh : pData) {
+            DataListItem dli = new TypeWordsHeader(wdh);
+            allWordHeaders.add(dli);
+        }
+        return allWordHeaders;
+    }
+
+
+    private ArrayList<DataListItem> createGameData(String username, String ID, List<DataPerGame> allGameData){
+
+        ArrayList<DataListItem> allGameHeaders = new ArrayList<>();
+        if(allGameData.size() == 0){
+            allGameHeaders.add(new TypeStats<>("No games played yet!", ""));
+        }
+        for (DataPerGame game : allGameData) {
+            if (!game.players.contains(ID)) {
+                continue;
+            }
+            if(game.players.contains(GameData.DEFAULT_P1_NAME)){    // TODO: Surely will always be true?
+                game.swapName(GameData.DEFAULT_P1_NAME, username);
+            }
+            DataListItem dliGame = new TypeGamesDetail(game);  // get an ID for each view we will require
+            DataListItem dliHeader = new TypeGamesHeader(game, dliGame);
+            allGameHeaders.add(dliHeader);
+        }
+        return allGameHeaders;
+    }
+
+    private ArrayList<DataListItem> createStats(GameData playerGameData) {
+        ArrayList<DataListItem> allDataItems = new ArrayList<>();
+        if(playerGameData.getGameCount() == 0){
+            allDataItems.add(new TypeStats<>("No games played yet!", ""));
+            return allDataItems;
+        }
+        // Player X games
+        allDataItems.add(new TypeStats<>("Games played: ", playerGameData.getGameCount()));
+        // Played X round
+        allDataItems.add(new TypeStats<>("Rounds played: ", playerGameData.getRoundCount()));
+        // Longest word
+        allDataItems.add(new TypeStats<>("Longest word: ", playerGameData.findLongest()));
+        // Average word length
+        allDataItems.add(new TypeStats<>("Average word length: ", playerGameData.getAverageWordLength()));
+        // Rounds where no word found
+        allDataItems.add(new TypeStats<>("Round where no word found: ", playerGameData.getNoneFoundCount()));
+        // Times each word length found
+        for (int i = 3; i <= 9; ++i) {
+            allDataItems.add(new TypeStats<>("Length " + i + " words found: ", playerGameData.findOccurence(i)));
+        }
+        // Highest score in a game
+        allDataItems.add(new TypeStats<>("Highest score: ", playerGameData.getHighestTotalScore()));
+        // Number valid words submitted
+        allDataItems.add(new TypeStats<>("Valid words submitted: ", playerGameData.getSubmittedCorrectCount()));
+        // Invalid words submitted
+        allDataItems.add(new TypeStats<>("Invalid words submitted: ", playerGameData.getSubmittedIncorrectCount()));
+        // Times shuffled
+        allDataItems.add(new TypeStats<>("Times shuffled: ", playerGameData.getShuffleCount()));
+        // Average shuffles per round
+        allDataItems.add(new TypeStats<>("Average shuffles per round: ", playerGameData.getShuffleAverage()));
+        return allDataItems;
     }
 
     private Bitmap loadPlayerBitmap(String profPicStr) {
