@@ -81,7 +81,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         Bitmap bitmap;
         if (isStoragePermissionGranted()) {
             bitmap = permissionGrantedDisplayImage();
-        }else{
+        } else {
             bitmap = defaultProfImg(new ImageHandler(activity));
         }
         view.setProfileImage(bitmap);
@@ -104,7 +104,8 @@ public class ProfilePresenter implements ProfileContract.Listener {
         }
         return bitmap;
     }
-    private Bitmap defaultProfImg(ImageHandler imageHandler){
+
+    private Bitmap defaultProfImg(ImageHandler imageHandler) {
         return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
     }
 
@@ -234,7 +235,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     public void recentGameWords() {
         String rgID = myGameData.getRecentGame();
-        if(rgID.equals("")){        // TODO: Use a constant instead of ""?
+        if (rgID.equals("")) {        // TODO: Use a constant instead of ""?
             view.hideRecentGame();
             return;
         }
@@ -281,7 +282,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     public void bestGameWords() {
         ArrayList<String> bestWords = myGameData.getBestWords();
-        if(bestWords.get(0).equals(GameData.NON_EXISTANT)){
+        if (bestWords.get(0).equals(GameData.NON_EXISTANT)) {
             view.hideBestGame();
             return;
         }
@@ -305,4 +306,9 @@ public class ProfilePresenter implements ProfileContract.Listener {
         return grid.getBmp();
     }
 
+    public void displayRank() {
+        FoxRank foxRank = GameData.determineRankClass(myGameData.getRank());
+        view.setRankText(foxRank.foxRank);
+        view.setRankImage(ImageHandler.getScaledBitmap(foxRank.imageResource, 120, activity.getResources()));
+    }
 }

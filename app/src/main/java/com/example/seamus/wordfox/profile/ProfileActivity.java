@@ -85,7 +85,19 @@ public class ProfileActivity extends AppCompatActivity
 //        presenter.displayRecentGame();
         presenter.bestGameWords();
         presenter.recentGameWords();
+        presenter.displayRank();
 
+    }
+
+    @Override
+    public void setRankImage(Bitmap rankImage){
+        ImageView rankIV = findViewById(R.id.profile_rank_image);
+        rankIV.setImageBitmap(rankImage);
+    }
+    @Override
+    public void setRankText(String rank){
+        TextView rankTV = findViewById(R.id.highest_rank_text);
+        rankTV.setText(rank);
     }
 
     // When no stats are available, can not show recent game

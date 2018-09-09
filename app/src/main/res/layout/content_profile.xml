@@ -53,7 +53,7 @@
                 android:layout_marginBottom="25dp"
                 android:gravity="center_horizontal"
                 android:hint="Name here"
-                app:layout_constraintBottom_toTopOf="@+id/profile_longest_word_speech"
+                app:layout_constraintBottom_toTopOf="@+id/profile_rank_image"
                 app:layout_constraintLeft_toRightOf="@+id/username_prompt"
                 app:layout_constraintRight_toLeftOf="@+id/profile_save_name"
                 app:layout_constraintTop_toBottomOf="@+id/profileImageButton" />
@@ -63,12 +63,44 @@
                 android:layout_width="88dp"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                app:layout_constraintBottom_toBottomOf="@+id/profile_username"
-                app:layout_constraintLeft_toRightOf="@+id/profile_username"
+                app:layout_constraintBottom_toBottomOf="@id/profile_username"
+                app:layout_constraintLeft_toRightOf="@id/profile_username"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/profile_username" />
+                app:layout_constraintTop_toTopOf="@id/profile_username" />
 
+            <ImageView
+                android:id="@+id/profile_rank_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:layout_constraintBottom_toTopOf="@id/profile_longest_word_speech"
+                app:layout_constraintHorizontal_bias="0.65"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profile_username" />
 
+            <TextView
+                android:id="@+id/highest_rank_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:text="Highest rank"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/highest_rank_text"
+                app:layout_constraintRight_toLeftOf="@id/profile_rank_image"
+                app:layout_constraintTop_toTopOf="@id/profile_rank_image" />
+
+            <TextView
+                android:id="@+id/highest_rank_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:text="Common Fox"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_rank_image"
+                app:layout_constraintRight_toLeftOf="@id/profile_rank_image"
+                app:layout_constraintTop_toBottomOf="@id/highest_rank_header" />
 
             <ImageView
                 android:id="@+id/profile_longest_word_speech"
@@ -78,16 +110,16 @@
                 android:src="@drawable/foxwithspeech_small2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profile_save_name"
+                app:layout_constraintTop_toBottomOf="@id/profile_rank_image"
                 app:layout_constraintWidth_percent="0.7" />
 
             <TextView
+                android:id="@+id/profile_longest_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profile_longest_word"
                 android:contentDescription="Profile longest word"
-                android:maxWidth="135dp"
                 android:gravity="center"
+                android:maxWidth="135dp"
                 app:layout_constraintBottom_toBottomOf="@id/profile_longest_word_speech"
                 app:layout_constraintHorizontal_bias="0.97"
                 app:layout_constraintLeft_toLeftOf="@id/profile_longest_word_speech"
@@ -119,10 +151,10 @@
                 android:gravity="center"
                 android:textSize="20dp"
                 android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/recent_game_divider"
                 app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/recent_game_divider"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
             <TextView

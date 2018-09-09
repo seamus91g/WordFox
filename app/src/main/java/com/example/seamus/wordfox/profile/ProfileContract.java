@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 public interface ProfileContract {
     interface View {
+        void setRankImage(Bitmap rankImage);
+
+        void setRankText(String rank);
+
         void hideRecentGame();
 
         void hideBestGame();

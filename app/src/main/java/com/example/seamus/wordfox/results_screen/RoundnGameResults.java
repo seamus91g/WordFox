@@ -184,9 +184,9 @@ public class RoundnGameResults extends AppCompatActivity
             profilePicView.setImageBitmap(profPic);
         }
         profPic = null;
-        Bitmap foxRankImage = ImageHandler.getScaledBitmap(foxRank.imageResource, 120, getResources());
+        Bitmap foxRankImage = ImageHandler.getScaledBitmap(foxRank.imageResource, 120, getResources());    // TODO: Adjust to screen size
 //        Bitmap foxRankImage = BitmapFactory.decodeResource(getResources(), foxRank.imageResource);      // TODO: Re-use fox pics if players get the same rank
-        foxRankImage = ImageHandler.getResizedBitmap(foxRankImage, ImageHandler.dp2px(this, 60), ImageHandler.dp2px(this, 60));  // TODO: Adjust to screen size
+//        foxRankImage = ImageHandler.getResizedBitmap(foxRankImage, ImageHandler.dp2px(this, 60), ImageHandler.dp2px(this, 60));
         resultPlayerFoxPicView.setImageBitmap(foxRankImage);
         for (int i = 0; i < GameInstance.NUMBER_ROUNDS; ++i) {
             String gridTag = "player_grid" + (i + 1);
