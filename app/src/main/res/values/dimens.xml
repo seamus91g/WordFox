@@ -12,6 +12,7 @@
     <dimen name="small_text_size">24dp</dimen>
 
     <dimen name="grid_button_height">72dp</dimen>
+    <dimen name="standard_button_height">40dp</dimen>
     <dimen name="action_button_dimension">76dp</dimen>
 
     <dimen name="grid_button_text_size">38dp</dimen>

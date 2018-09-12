@@ -8,4 +8,30 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
+
+    <!--Style for rectangular buttons throughout the non-game screens-->
+    <style name="RectangularButtons">
+        <item name="android:textColor">@drawable/selector_rectangularbutton_color
+        </item>
+        <item name="android:layout_margin">4dp
+        </item>
+        <item name="android:textSize">@dimen/grid_button_text_size
+        </item>
+        <item name="android:textStyle">bold
+        </item>
+        <item name="android:paddingTop">2dp
+        </item>
+        <item name="android:paddingBottom">2dp
+        </item>
+        <item name="android:paddingLeft">8dp
+        </item>
+        <item name="android:paddingRight">8dp
+        </item>
+        <item name="android:fontFamily">monospace
+        </item>
+        <item name="android:drawableLeft">@drawable/selector_play_pic_icon
+        </item>
+        <item name="android:background">@drawable/selector_rectangularbutton
+        </item>
+    </style>
 </resources>

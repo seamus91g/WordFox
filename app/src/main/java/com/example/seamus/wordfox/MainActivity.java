@@ -2,6 +2,9 @@ package com.example.seamus.wordfox;
 
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -15,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,10 +62,19 @@ public class MainActivity extends AppCompatActivity
 
         numberOfPlayers = 1;
         loadDictionary();
+
+        if (Build.VERSION.SDK_INT < 23) {
+            int buttonHeight = getResources().getDimensionPixelSize(R.dimen.standard_button_height);
+            Drawable drawable = getResources().getDrawable(R.drawable.play_pic_white_icon);
+            drawable.setBounds(0, 0, (int) (buttonHeight), (int) (buttonHeight));
+            ScaleDrawable sd = new ScaleDrawable(drawable, 0, 1, 1);    // TODO: .. second two parameters don't seem to change anything
+            Button btn = findViewById(R.id.bStartGame);
+            btn.setCompoundDrawables(sd.getDrawable(), null, null, null);
+        }
     }
 
-    public void loadDictionary(){
-        if(FoxDictionary.isWordListLoaded){
+    public void loadDictionary() {
+        if (FoxDictionary.isWordListLoaded) {
             return;
         }
         Thread thread = new Thread(new Runnable() {
@@ -142,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("game_index", indexOfGameInstance);
 //            Log.d(MONITOR_TAG, "In startGame 2");
-        while (!FoxDictionary.isWordListLoaded){
+        while (!FoxDictionary.isWordListLoaded) {
             Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
             try {
                 Thread.sleep(100);      // Wait for dictionary to finish loading
