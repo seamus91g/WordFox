@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class FoxDictionaryTest {
     Context context = InstrumentationRegistry.getTargetContext();
     FoxDictionary dictionary = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", context.getAssets());
+
     @Test
     public void wordExists() {
         assertEquals(true, dictionary.checkWordExists("chair"));
@@ -31,24 +32,29 @@ public class FoxDictionaryTest {
         ArrayList<String> longestWords = dictionary.longestWordFromLetters("murdnunoc", 5);
         String[] expectedWords = {"conundrum", "corundum", "nondum", "round", "mourn", "dunno", "mound"};
         assertEquals(expectedWords[0], longestWords.get(0));
-        assertArrayEquals(expectedWords , longestWords.toArray());
+        assertArrayEquals(expectedWords, longestWords.toArray());
     }
+
+    // Check 3 vowels, 6 consonants
     @Test
-    public void getLettersTest(){
-        // Check 3 vowels, 6 consonants
-        ArrayList<String> letters = dictionary.getGivenLetters();
-        String alphabet = "AEIOUBCDFGHJKLMNPQRSTVWXYZ";
-        int vowelCount = 0, consonantCount = 0;
-        for (String letter : letters){
-            int index = alphabet.indexOf(letter);
-            if (index > 4){
-                ++consonantCount;
-            }else if(index >= 0){       // If letter not found, -1 is returned
-                ++vowelCount;
+    public void getLettersTest() {
+        // Run it a bunch of times, since randomness is involved
+        for (int i = 0; i < 10; ++i) {
+            ArrayList<String> letters = dictionary.getGivenLetters();
+            String alphabet = "AEIOUBCDFGHJKLMNPQRSTVWXYZ";
+            int vowelCount = 0, consonantCount = 0;
+            for (String letter : letters) {
+                int index = alphabet.indexOf(letter);
+                if (index > 4) {
+                    ++consonantCount;
+                } else if (index >= 0) {       // If letter not found, -1 is returned
+                    ++vowelCount;
+                }
             }
+            assertEquals(9, letters.size());
+            assertTrue((vowelCount >= 2 && vowelCount <= 4));
+            assertTrue((consonantCount >= 5 && consonantCount <= 7));
+            assertEquals(vowelCount + consonantCount, letters.size());
         }
-        assertEquals(9, letters.size());
-        assertEquals(3, vowelCount);
-        assertEquals(6, consonantCount);
     }
 }
