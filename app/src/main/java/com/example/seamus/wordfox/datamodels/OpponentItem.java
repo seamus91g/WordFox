@@ -11,15 +11,15 @@ import java.util.UUID;
  */
 
 public class OpponentItem {
-    private final String name;
-    private final String opponentName;
+    private final UUID playerID;
+    private final UUID opponentID;
     private final int wins;
     private final int loses;
     private final int draws;
 
-    public OpponentItem(String name, String opponentName, int wins, int loses, int draws) {
-        this.name = name;
-        this.opponentName = opponentName;
+    public OpponentItem(UUID playerID, UUID opponentID, int wins, int loses, int draws) {
+        this.playerID = playerID;
+        this.opponentID = opponentID;
         this.wins = wins;
         this.loses = loses;
         this.draws = draws;
@@ -27,20 +27,20 @@ public class OpponentItem {
 
     public ContentValues toValues(){
         ContentValues values = new ContentValues(5);
-        values.put(OpponentTable.COLUMN_NAME, name);
-        values.put(OpponentTable.COLUMN_OPPONENT_NAME, opponentName);
+        values.put(OpponentTable.COLUMN_NAME, playerID.toString());
+        values.put(OpponentTable.COLUMN_OPPONENT_NAME, opponentID.toString());
         values.put(OpponentTable.COLUMN_WINS, wins);
         values.put(OpponentTable.COLUMN_LOSES, loses);
         values.put(OpponentTable.COLUMN_DRAWS, draws);
         return values;
     }
 
-    public String getName() {
-        return name;
+    public UUID getPlayerID() {
+        return playerID;
     }
 
-    public String getOpponentName() {
-        return opponentName;
+    public UUID getOpponentID() {
+        return opponentID;
     }
 
     public int getWins() {

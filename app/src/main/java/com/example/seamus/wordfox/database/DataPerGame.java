@@ -1,9 +1,12 @@
 package com.example.seamus.wordfox.database;
 
+import com.example.seamus.wordfox.PlayerIdentity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Gilroy
@@ -12,20 +15,29 @@ import java.util.Set;
  */
 
 public class DataPerGame {
-    public String winner;
-    public int scoreWinner;
-    public List<String> letters;
-    public List<String> bestPossible;
-    public Set<String> players;
-    public Map<String, ArrayList<String>> wordsPerPlayer;
+    public final ArrayList<PlayerIdentity> winners;
+    public final int scoreWinner;
+    public final List<String> letters;
+    public final List<String> bestPossible;
+    public final ArrayList<PlayerIdentity> players;
+    public final Map<UUID, ArrayList<String>> wordsPerPlayer;
+
+    public DataPerGame(ArrayList<PlayerIdentity> winners, int scoreWinner, List<String> letters, List<String> bestPossible, ArrayList<PlayerIdentity> players, Map<UUID, ArrayList<String>> wordsPerPlayer) {
+        this.winners = winners;
+        this.scoreWinner = scoreWinner;
+        this.letters = letters;
+        this.bestPossible = bestPossible;
+        this.players = players;
+        this.wordsPerPlayer = wordsPerPlayer;
+    }
 
     // Swap the name of a player for a new name
-    public void swapName(String oldName, String newName) {
-        winner = winner.replaceAll(oldName, newName);
-        players.remove(oldName);
-        players.add(newName);
-        wordsPerPlayer.put(newName, wordsPerPlayer.get(oldName));
-        wordsPerPlayer.remove(oldName);
-    }
+//    public void swapName(String oldName, String newName) {    TODO: Remove this. Not necessary when tracking by ID
+//        winner = winner.replaceAll(oldName, newName);
+//        players.remove(oldName);
+//        players.add(newName);
+//        wordsPerPlayer.put(newName, wordsPerPlayer.get(oldName));
+//        wordsPerPlayer.remove(oldName);
+//    }
 }
 

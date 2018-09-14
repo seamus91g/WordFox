@@ -15,20 +15,20 @@ import java.util.UUID;
  */
 
 public class GameItem {
-    private final String round1Id;
-    private final String round2Id;
-    private final String round3Id;
+    private final UUID round1Id;
+    private final UUID round2Id;
+    private final UUID round3Id;
     private final String word1;
     private final String word2;
     private final String word3;
     private final String winner;
     private final int playerCount;
-    private final ArrayList<String> winners;
+    private final ArrayList<UUID> winners;
     private final ArrayList<String> letters = new ArrayList<>();
     private final ArrayList<String> longestPossible = new ArrayList<>();
     private final ArrayList<ArrayList<String>> words = new ArrayList<>();   // Words of the winners, multiple winners if draw
 
-    public GameItem(String round1Id, String round2Id, String round3Id,
+    public GameItem(UUID round1Id, UUID round2Id, UUID round3Id,
                     String word1, String word2, String word3,
                     String winner, int playerCount) {
         this.round1Id = round1Id;
@@ -39,17 +39,22 @@ public class GameItem {
         this.word3 = word3;
         this.winner = winner;
         this.playerCount = playerCount;
-        winners = new ArrayList<String>(Arrays.asList(winner.split("\\s*,\\s*")));
+        winners = new ArrayList<>();
+        ArrayList<String> tempStringIDs = new ArrayList<>(Arrays.asList(winner.split("\\s*,\\s*")));   // TODO: This needs to be done better. Have each winner as uuid in separate column instead of concatenating the winners.
+        for (String id : tempStringIDs) {
+            winners.add(UUID.fromString(id));
+        }
         organiseWinnerWords(word1, word2, word3);
     }
+
     // Detect blank, fill quotes
     // Detect all empty, enter one
-    private void organiseWinnerWords(String word1, String word2, String word3){
-        ArrayList<String> firstWords = new ArrayList<>(Arrays.asList (word1.split("\\s*,\\s*")));
+    private void organiseWinnerWords(String word1, String word2, String word3) {
+        ArrayList<String> firstWords = new ArrayList<>(Arrays.asList(word1.split("\\s*,\\s*")));
         ArrayList<String> secondWords = new ArrayList<>(Arrays.asList(word2.split("\\s*,\\s*")));
-        ArrayList<String> thirdWords = new ArrayList<>(Arrays.asList (word3.split("\\s*,\\s*")));
+        ArrayList<String> thirdWords = new ArrayList<>(Arrays.asList(word3.split("\\s*,\\s*")));
         int minWinners = 1;
-        for(int i=0; i<firstWords.size() || i<secondWords.size() || i<thirdWords.size() || i<minWinners; ++i){
+        for (int i = 0; i < firstWords.size() || i < secondWords.size() || i < thirdWords.size() || i < minWinners; ++i) {
             String first = (firstWords.size() <= i) ? "" : firstWords.get(i);
             String second = (secondWords.size() <= i) ? "" : secondWords.get(i);
             String third = (thirdWords.size() <= i) ? "" : thirdWords.get(i);
@@ -60,30 +65,35 @@ public class GameItem {
         }
     }
 
-    public ArrayList<ArrayList<String>> getWinnerWords(){
+    public ArrayList<ArrayList<String>> getWinnerWords() {
         return words;
     }
-    public ArrayList<String> getLetters(){
+
+    public ArrayList<String> getLetters() {
         return letters;
     }
-    public ArrayList<String> getLongestWords(){
+
+    public ArrayList<String> getLongestWords() {
         return letters;
     }
-    public ArrayList<String> getLetters(FoxSQLData myDB){
-        if (letters.size()>0){
+
+    public ArrayList<String> getLetters(FoxSQLData myDB) {
+        if (letters.size() > 0) {
             return letters;
         }
         populateRoundData(myDB);
         return letters;
     }
-    public ArrayList<String> getLongestWords(FoxSQLData myDB){
-        if (longestPossible.size()>0){
+
+    public ArrayList<String> getLongestWords(FoxSQLData myDB) {
+        if (longestPossible.size() > 0) {
             return longestPossible;
         }
         populateRoundData(myDB);
         return letters;
     }
-    public void populateRoundData(FoxSQLData myDB){
+
+    public void populateRoundData(FoxSQLData myDB) {
         RoundItem thisRound1 = myDB.getRound(round1Id);
         RoundItem thisRound2 = myDB.getRound(round2Id);
         RoundItem thisRound3 = myDB.getRound(round3Id);
@@ -95,11 +105,11 @@ public class GameItem {
         letters.add(thisRound3.getLetters());
     }
 
-    public ContentValues toValues(){
+    public ContentValues toValues() {
         ContentValues values = new ContentValues(8);
-        values.put(GameTable.COLUMN_R1_ID, round1Id);
-        values.put(GameTable.COLUMN_R2_ID, round2Id);
-        values.put(GameTable.COLUMN_R3_ID, round3Id);
+        values.put(GameTable.COLUMN_R1_ID, round1Id.toString());
+        values.put(GameTable.COLUMN_R2_ID, round2Id.toString());
+        values.put(GameTable.COLUMN_R3_ID, round3Id.toString());
         values.put(GameTable.COLUMN_W1_ID, word1);
         values.put(GameTable.COLUMN_W2_ID, word2);
         values.put(GameTable.COLUMN_W3_ID, word3);
@@ -108,19 +118,20 @@ public class GameItem {
         return values;
     }
 
-    public String getRound1Id() {
+    public UUID getRound1Id() {
         return round1Id;
     }
 
-    public String getRound2Id() {
+    public UUID getRound2Id() {
         return round2Id;
     }
 
-    public String getRound3Id() {
+    public UUID getRound3Id() {
         return round3Id;
     }
-    public ArrayList<String> getRoundIDs(){
-        return new ArrayList<>(Arrays.asList(round1Id, round2Id, round3Id));
+
+    public ArrayList<UUID> getRoundIDs() {
+        return new ArrayList<UUID>(Arrays.asList(round1Id, round2Id, round3Id));
     }
 
     public String getWord1Id() {
@@ -135,27 +146,30 @@ public class GameItem {
         return word3;
     }
 
-//    public String getWinner() {
-//        return winner;
-//    }
-    public String getWinner(int index) {
+    public UUID getWinner(int index) {
         return winners.get(index);
     }
-    public String getWinnerString(){
+
+    public String getWinnerString() {
         return winner;
     }
-    public ArrayList<String> getWinners(){
+
+    public ArrayList<UUID> getWinners() {
         return winners;
     }
-    public boolean isWinner(String userName){
+
+    public boolean isWinner(UUID userName) {
         return winners.contains(userName);
     }
-    public boolean isDraw(){
+
+    public boolean isDraw() {
         return (winners.size() > 1);
     }
-    public String getLetters(int index){
+
+    public String getLetters(int index) {
         return letters.get(index);
     }
+
     public int getPlayerCount() {
         return playerCount;
     }
