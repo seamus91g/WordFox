@@ -48,17 +48,20 @@ public class GameData extends AppCompatActivity {
     private UUID playerID;
     private static String PREF_FILE_PREFIX = "word_fox_gamedata_";
 
-    // Instantiate using a name
     // The stats for each player are stored separately
-    static {
-
+    public GameData(Context myContext) {
+        this(myContext, "");
     }
 
-    public GameData(Context myContext) {
-        this(myContext, UUID.randomUUID());
+    public GameData(Context myContext, String name) {
+        this(myContext, UUID.randomUUID(), name);
     }
 
     public GameData(Context myContext, UUID playerID) {
+        this(myContext, playerID, "");
+    }
+
+    public GameData(Context myContext, UUID playerID, String name) {
         this.playerID = playerID;
         GAME_COUNT_KEY = "game_count_" + playerID;
         ROUND_COUNT_KEY = "round_count_" + playerID;
@@ -80,8 +83,12 @@ public class GameData extends AppCompatActivity {
         editor = foxPreferences.edit();
         editor.apply();
 
-        if (!doesPlayerExist(playerID, myContext)) {
+        if (name.equals("") && !doesPlayerExist(playerID, myContext)) {
             setDefaultUsername(getPlayerList(myContext));
+            addPlayer(playerID, myContext);
+        }
+        if (name.equals(DEFAULT_NAME)) {
+            setUsername(name);
             addPlayer(playerID, myContext);
         }
     }
@@ -140,7 +147,7 @@ public class GameData extends AppCompatActivity {
         String name;
         if (PlayerIDString.equals(NON_EXISTANT)) {
             name = DEFAULT_NAME;
-            GameData p1d = new GameData(myContext);
+            GameData p1d = new GameData(myContext, name);
             p1d.setUsername(name);
             playerID = p1d.getPlayerID();
         } else {
@@ -192,7 +199,7 @@ public class GameData extends AppCompatActivity {
             String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
             playerList.add(new PlayerIdentity(ID, name));
         }
-        if(playerList.size() == 0){
+        if (playerList.size() == 0) {
             playerList.add(getPlayer1Identity(myContext));
         }
         return playerList;
@@ -202,14 +209,13 @@ public class GameData extends AppCompatActivity {
         ArrayList<PlayerIdentity> allPlayers = getPlayerList(myContext);
         ArrayList<PlayerIdentity> namedPlayers = new ArrayList<>();
         String pattern = "Player\\s\\d";
-        for(PlayerIdentity player : allPlayers){
-            if(!player.username.matches(pattern)){
+        for (PlayerIdentity player : allPlayers) {
+            if (!player.username.matches(pattern)) {
                 namedPlayers.add(player);
             }
         }
         return namedPlayers;
     }
-
 
 
     public void setUsername(String nameEntered) {
