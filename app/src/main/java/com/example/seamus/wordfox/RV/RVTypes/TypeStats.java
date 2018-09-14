@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypeStats<T> implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private final String statistic;
     private T statValue;
     private boolean isExpanded = false;
@@ -14,7 +14,7 @@ public class TypeStats<T> implements DataListItem {
     public TypeStats(String statistic, T statValue) {
         this.statistic = statistic;
         this.statValue = statValue;
-        ID = UUID.randomUUID().toString();
+        ID = UUID.randomUUID();
     }
 
     public String getStatistic() {
@@ -51,7 +51,7 @@ public class TypeStats<T> implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 }

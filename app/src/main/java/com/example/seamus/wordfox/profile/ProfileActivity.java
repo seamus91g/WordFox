@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
 
 public class ProfileActivity extends AppCompatActivity
@@ -77,12 +79,10 @@ public class ProfileActivity extends AppCompatActivity
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
         // The presenter handles preparing relevant data to display
-        presenter = new ProfilePresenter(this, new GameData(this, GameData.DEFAULT_P1_NAME));
+        presenter = new ProfilePresenter(this, new GameData(this, GameData.getPlayer1Identity(this).ID));
         presenter.displayLongestWord();
         presenter.displayProfileName();
         presenter.displayProfileImage();
-//        presenter.displayBestWords();
-//        presenter.displayRecentGame();
         presenter.bestGameWords();
         presenter.recentGameWords();
         presenter.displayRank();
@@ -234,7 +234,7 @@ public class ProfileActivity extends AppCompatActivity
     public void setLongestWord(String longestWord) {
         // Display longest word
         String longestWordSpeechBubble;
-        if (longestWord.equals("")) {
+        if (longestWord.equals(GameData.NON_EXISTANT)) {
             longestWordSpeechBubble = "You haven't played any games yet!";
         }else{
             longestWordSpeechBubble = "Your longest word ever was " + longestWord + "!";
@@ -296,7 +296,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setRecentGameWinnerMessage(String msg) {
         TextView winnerMsg = findViewById(R.id.recent_game_winner);
-        winnerMsg.setText(msg);
+        winnerMsg.setText(Html.fromHtml(msg));
     }
 
     @Override

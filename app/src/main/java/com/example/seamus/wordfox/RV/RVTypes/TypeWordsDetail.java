@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypeWordsDetail implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private final String letters;
     private final String longestPossible;
     private boolean isExpanded = false;
@@ -15,7 +15,7 @@ public class TypeWordsDetail implements DataListItem {
     public TypeWordsDetail(WordData wd) {
         this.letters = wd.getGivenLetters();
         this.longestPossible = wd.getLongestPossibleWord();
-        ID = UUID.randomUUID().toString();
+        ID = UUID.randomUUID();
     }
 
     public String getLetters() {
@@ -37,7 +37,7 @@ public class TypeWordsDetail implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 

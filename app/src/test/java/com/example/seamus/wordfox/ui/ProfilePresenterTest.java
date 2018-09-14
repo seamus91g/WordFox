@@ -42,9 +42,9 @@ public class ProfilePresenterTest {
     }
     @Test
     public void noLongestWordTest(){
-        Mockito.when(myGameData.findLongest()).thenReturn("");
+        Mockito.when(myGameData.findLongest()).thenReturn(GameData.NON_EXISTANT);       // TODO: Pointless test
         presenter.displayLongestWord();
-        Mockito.verify(view, Mockito.times(1)).setLongestWord("No words found!");
+        Mockito.verify(view, Mockito.times(1)).setLongestWord(GameData.NON_EXISTANT);
     }
 
     @Test

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypePlayer implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private String player;
     private ArrayList<DataListItem> subItems;
     private Bitmap profPic;
@@ -21,7 +21,7 @@ public class TypePlayer implements DataListItem {
         this.subItems = subItems;
         this.profPic = profPic;
         this.rank = rank;
-        this.ID = UUID.randomUUID().toString();
+        this.ID = UUID.randomUUID();
     }
 
     public String getPlayer() {
@@ -62,7 +62,7 @@ public class TypePlayer implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 }

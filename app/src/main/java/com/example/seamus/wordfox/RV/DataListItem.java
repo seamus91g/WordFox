@@ -1,6 +1,7 @@
 package com.example.seamus.wordfox.RV;
 
 import java.util.List;
+import java.util.UUID;
 
 /*
  * Interface for all the viewHolders used in WFAdapter. The adapter data set consists only
@@ -26,5 +27,5 @@ public interface DataListItem {
 
     int getSubItemCount();
 
-    String getID();
+    UUID getID();
 }

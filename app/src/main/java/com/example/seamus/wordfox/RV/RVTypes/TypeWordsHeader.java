@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypeWordsHeader implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private final List<DataListItem> childItems = new ArrayList<>();
     private String word;
     private boolean isExpanded = false;
 
     public TypeWordsHeader(WordDataHeader wdh) {
         this.word = wdh.getWordSubmitted();
-        ID = UUID.randomUUID().toString();
+        ID = UUID.randomUUID();
         for (WordData wd : wdh.getChildList()) {
             childItems.add(new TypeWordsDetail(wd));
         }
@@ -46,7 +46,7 @@ public class TypeWordsHeader implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 

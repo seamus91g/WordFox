@@ -2,15 +2,10 @@ package com.example.seamus.wordfox.statistics_screen;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,14 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
-import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
-import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.ImageHandler;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.RV.RVTypes.TypeCategory;
@@ -34,23 +26,18 @@ import com.example.seamus.wordfox.RV.RVTypes.TypeGamesDetail;
 import com.example.seamus.wordfox.RV.RVTypes.TypeGamesHeader;
 import com.example.seamus.wordfox.RV.RVTypes.TypePlayer;
 import com.example.seamus.wordfox.RV.RVTypes.TypeStats;
-import com.example.seamus.wordfox.RV.RVTypes.TypeWordsDetail;
 import com.example.seamus.wordfox.RV.RVTypes.TypeWordsHeader;
 import com.example.seamus.wordfox.RV.WFAdapter;
 import com.example.seamus.wordfox.WordLoader;
-import com.example.seamus.wordfox.dataWordsRecycler.WordData;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 //import com.example.seamus.wordfox._junk.DataPageActivity;
 import com.example.seamus.wordfox.database.DataPerGame;
-import com.example.seamus.wordfox.database.FoxSQLData;
-import com.example.seamus.wordfox.datamodels.WordItem;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 public class Statistics extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,10 +69,14 @@ public class Statistics extends AppCompatActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.data_list);
 
-        ArrayList<String> allPlayers = GameData.getNamedPlayerList(this);
+        ArrayList<PlayerIdentity> allPlayers = GameData.getPlayerList(this);
         final List<DataPerGame> allGameData = WordLoader.getGames(this);
-        for (String playerName : allPlayers) {
-            GameData playerGameData = new GameData(this, playerName);
+        for (PlayerIdentity identity : allPlayers) {
+            GameData playerGameData = new GameData(this, identity.ID);
+            // Don't display players with no data, except player one
+            if(playerGameData.getGameCount() == 0 && !allPlayers.get(0).equals(identity)){
+                continue;
+            }
             ArrayList<DataListItem> allCategories = new ArrayList<>();
             Bitmap profPic = loadPlayerBitmap(playerGameData.getProfilePicture());
             FoxRank foxRank = GameData.determineRankClass(playerGameData.getRank());
@@ -97,11 +88,11 @@ public class Statistics extends AppCompatActivity
             allCategories.add(statsCategory);
 
             ///////// Get games
-            DataListItem gamesCategory = new TypeCategory("Games", createGameData(playerGameData.getUsername(), playerName, allGameData));
+            DataListItem gamesCategory = new TypeCategory("Games", createGameData(identity.ID, allGameData));
             allCategories.add(gamesCategory);
 
             ///////// Get words
-            DataListItem wordsCategory = new TypeCategory("Words", createWordData(playerName));
+            DataListItem wordsCategory = new TypeCategory("Words", createWordData(identity.ID));
             allCategories.add(wordsCategory);
 
         }
@@ -113,10 +104,10 @@ public class Statistics extends AppCompatActivity
 
     }
 
-    private ArrayList<DataListItem> createWordData(String playerName){
+    private ArrayList<DataListItem> createWordData(UUID playerID){
 
         ArrayList<DataListItem> allWordHeaders = new ArrayList<>();
-        ArrayList<WordDataHeader> pData = WordLoader.getValid(this, playerName); //TODO: Deprecate WordDataHeader/WordData, use only Type classes
+        ArrayList<WordDataHeader> pData = WordLoader.getValid(this, playerID); //TODO: Deprecate WordDataHeader/WordData, use only Type classes
         if(pData.size() == 0){
             allWordHeaders.add(new TypeStats<>("No words found yet!", ""));
         }
@@ -127,25 +118,29 @@ public class Statistics extends AppCompatActivity
         return allWordHeaders;
     }
 
-
-    private ArrayList<DataListItem> createGameData(String username, String ID, List<DataPerGame> allGameData){
-
+    private ArrayList<DataListItem> createGameData(UUID ID, List<DataPerGame> allGameData){
         ArrayList<DataListItem> allGameHeaders = new ArrayList<>();
-        if(allGameData.size() == 0){
-            allGameHeaders.add(new TypeStats<>("No games played yet!", ""));
-        }
         for (DataPerGame game : allGameData) {
-            if (!game.players.contains(ID)) {
+            if (!containsPlayer(game.players, ID)) {
                 continue;
-            }
-            if(game.players.contains(GameData.DEFAULT_P1_NAME)){    // TODO: Surely will always be true?
-                game.swapName(GameData.DEFAULT_P1_NAME, username);
             }
             DataListItem dliGame = new TypeGamesDetail(game);  // get an ID for each view we will require
             DataListItem dliHeader = new TypeGamesHeader(game, dliGame);
             allGameHeaders.add(dliHeader);
         }
+        if(allGameHeaders.size() == 0){
+            allGameHeaders.add(new TypeStats<>("No games played yet!", ""));
+        }
         return allGameHeaders;
+    }
+
+    private boolean containsPlayer(ArrayList<PlayerIdentity> players, UUID ID) {
+        for (PlayerIdentity p : players) {        // TODO: Seems like this check shouldn't be necessary
+            if (p.ID.equals(ID)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ArrayList<DataListItem> createStats(GameData playerGameData) {

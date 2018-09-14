@@ -2,41 +2,22 @@ package com.example.seamus.wordfox.profile;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
-import android.support.constraint.Group;
 import android.support.v4.app.ActivityCompat;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.ImageHandler;
-import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Gilroy on 4/19/2018.
@@ -71,9 +52,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
     // Display the user name. Do not display if still default
     public void displayProfileName() {
         String username_prof = myGameData.getUsername();
-        if (!username_prof.equals(GameData.DEFAULT_P1_NAME)) {  // TODO .. This can never be true?? Default return is Fox
-            view.setUsername(username_prof);
-        }
+        view.setUsername(username_prof);
     }
 
     // Attempt to load and display the profile image.
@@ -117,96 +96,6 @@ public class ProfilePresenter implements ProfileContract.Listener {
         displayProfileImage();
     }
 
-    // Load bitmap from asset contained within the project
-//    public Bitmap loadAssetImage(String assetName) {
-//        AssetManager assetmanager = activity.getAssets();
-//        InputStream inStr = null;
-//        try {
-//            inStr = assetmanager.open(assetName);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return BitmapFactory.decodeStream(inStr);
-//    }
-
-    // Load bitmap from its location on the device. Resize it if it exceeds screen dimensions.
-    // Rotate the image if it was not taken in portrait view.
-//    private Bitmap getBitmapFromUri(Uri imgUri) {
-//        Bitmap myBitmap = null;
-//        ContentResolver cr = activity.getContentResolver();
-//        String[] projection = {MediaStore.MediaColumns.DATA};
-//        Cursor myCur = cr.query(imgUri, projection, null, null, null);
-//        // Verify the file path returned a valid cursor
-//        if (myCur == null) {
-//            return null;
-//        }
-//        if (myCur.moveToFirst()) {
-//            String filePath = myCur.getString(0);
-//            if (!new File(filePath).exists()) {
-//                return null;
-//            }
-//            // Attempt to load bitmap from file path
-//            try {
-//                myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            // Resize bitmap if it exceeds screen resolution
-//            assert myBitmap != null;
-//            if (myBitmap.getHeight() > MAX_RESOLUTION_IMAGE || myBitmap.getWidth() > MAX_RESOLUTION_IMAGE) {
-//                DisplayMetrics metrics = new DisplayMetrics();
-//                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//                myBitmap = resize(myBitmap, metrics);
-//            }
-//            // Rotate image if necessary
-//            myBitmap = correctOrientation(myBitmap, imgUri);
-//        }
-//        myCur.close();
-//        return myBitmap;
-//    }
-
-    // Rotate image to correct orientation. Example, picture may have be taken in landscape view
-//    private Bitmap correctOrientation(Bitmap bitmap, Uri imgUri) {
-//        Matrix rotateMatrix = new Matrix();
-//        String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-//        Cursor cur = activity.getContentResolver().query(imgUri, orientationColumn, null, null, null);
-//        int orientation = -1;
-//        if (cur != null && cur.moveToFirst()) {
-//            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-//            cur.close();
-//        }
-//        rotateMatrix.postRotate(orientation);
-//        if (!rotateMatrix.isIdentity() && bitmap != null) {
-//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
-//        }
-//        return bitmap;
-//    }
-
-    // Resize image to fit within screen metrics
-//    private Bitmap resize(Bitmap image, DisplayMetrics metrics) {
-//        int maxWidth = metrics.widthPixels;
-//        int maxHeight = metrics.heightPixels;
-//        if (!(maxHeight > 0 && maxWidth > 0)) {
-//            return image;
-//        }
-//        // get the width and the height of the image to be resized
-//        int width = image.getWidth();
-//        int height = image.getHeight();
-//        // get the ratio of the image dimensions to screen dimensions
-//        float widthRatio = (float) width / (float) maxWidth;
-//        float heightRatio = (float) height / (float) maxHeight;
-//        // check which ratio is larger to determine which dimension is more out of bounds
-//        float maxRatio = (widthRatio > heightRatio) ? widthRatio : heightRatio;
-//        // scale down both dimensions by the ratio that's most out of bounds to bring whichever
-//        //  was most out of bound down to the max while maintain aspect ratio
-//        int finalWidth = (int) Math.floor(width / maxRatio);
-//        int finalHeight = (int) Math.floor(height / maxRatio);
-//        Log.d(MONITOR_TAG, "New width is " + finalWidth + ", New height is " + finalHeight + ", END");
-//
-//        image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-//        return image;
-//    }
-
     // Allow user to choose image from their phone when the profile image is clicked
     public void choosePicture() {
         if (isStoragePermissionGranted()) {
@@ -248,10 +137,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
         // Winner words
         ArrayList<String> yourWords = myGameData.getRecentWords();
         ArrayList<String> winnerWords;
-        ArrayList<String> winners = recentGame.getWinners();
+        ArrayList<UUID> winners = recentGame.getWinners();
         String winnerMsg;
 
-        if (winners.contains(GameData.DEFAULT_P1_NAME)) {
+        if (winners.contains(myGameData.getPlayerID())) {
             // Hide 'you' section
             // Create message: 'You won'
             winnerMsg = "You won!";
@@ -264,7 +153,8 @@ public class ProfilePresenter implements ProfileContract.Listener {
                 view.setRecentWordYou(bmp, i, yourWords.get(i));
                 score += yourWords.get(i).length();
             }
-            winnerMsg = winners.get(0) + " won";
+            String winnerName = "<b>" + GameData.getUsername(winners.get(0), activity) + "</b>";
+            winnerMsg = winnerName + " won";
             String msg = "Your score: " + score;
             view.setRecentGameWinnerYourMessage(msg);
             winnerWords = recentGame.getWinnerWords().get(0);

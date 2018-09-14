@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypeCategory implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private final String categoryTitle;
     private final ArrayList<DataListItem> subItems;
     private boolean isExpanded = false;
@@ -15,7 +15,7 @@ public class TypeCategory implements DataListItem {
     public TypeCategory(String categoryTitle, ArrayList<DataListItem> subItems) {
         this.categoryTitle = categoryTitle;
         this.subItems = subItems;
-        ID = UUID.randomUUID().toString();
+        ID = UUID.randomUUID();
     }
 
     public String getCategoryTitle() {
@@ -48,7 +48,7 @@ public class TypeCategory implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 }

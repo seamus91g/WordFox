@@ -45,7 +45,6 @@
         android:id="@+id/player_header_drop_down_arrow"
         android:tag="drop_down_arrow"
         android:layout_marginRight="24dp"
-        android:src="@drawable/ic_arrow_drop_menu_selector"
         app:layout_constraintBottom_toBottomOf="@id/data_page_player_pic"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/data_page_player_pic" />
