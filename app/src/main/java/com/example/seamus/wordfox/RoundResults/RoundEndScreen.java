@@ -35,6 +35,7 @@ import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -90,7 +91,7 @@ public class RoundEndScreen extends AppCompatActivity
 
     public void populatePlayerDetails(GameInstance gameInstance){       // TODO:  Tidy this. Use MVP
         ConstraintLayout cl = findViewById(R.id.round_end_root_layout);
-        GameData plyrGd = new GameData(this, gameInstance.getPlayerName());
+        GameData plyrGd = new GameData(this, gameInstance.getID());
 
         String profPicStr = plyrGd.getProfilePicture();
         Bitmap profPic = null;
@@ -105,7 +106,7 @@ public class RoundEndScreen extends AppCompatActivity
         int percentScore = (100 * playerScore) / (maxScore);
 
         TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
-        String playerName = gameInstance.getPlayerID();
+        String playerName = gameInstance.getName();
         resultPlayerNameView.setText(playerName);
         TextView roundEndPercent = cl.findViewById(R.id.round_end_result_percent);
         String playerPercent = "  (" + percentScore + "%)";
@@ -314,12 +315,7 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public String defaultP1Name() {
-        return null;
-    }
-
-    @Override
-    public GameData getPlayerData(String playerID) {
+    public GameData getPlayerData(UUID playerID) {
         return null;
     }
 }

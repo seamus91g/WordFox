@@ -28,7 +28,6 @@ import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RoundResults.RoundEndScreen;
 import com.example.seamus.wordfox.database.FoxSQLData;
-import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
@@ -76,7 +75,7 @@ public class GameActivity extends AppCompatActivity
                 game,
                 dictionary.getDictionary(),
                 new FoxSQLData(this),
-                new GameData(this, game.getPlayerName())
+                new GameData(this, game.getID())
         );
         presenter.setup();
 

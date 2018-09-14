@@ -1,6 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
@@ -27,6 +26,7 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -128,33 +128,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void startGameAct(View v) {
-//        GameInstance myInstance = new GameInstance();
-//        myInstance.startGame(this);
-//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-//        numberOfPlayers = np.getValue();
-//        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
-//        for (int i=0; i<maxNumberOfRounds; i++){
-//            this.roundIDs.add(UUID.randomUUID().toString());
-//        }
 
-        String p1ID;
-        {
-            GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
-            p1ID = fox.getUsername();
-        }
-        GameInstance thisGame = new GameInstance(p1ID, GameData.DEFAULT_P1_NAME, 0);
-        allGameInstances.add(thisGame);
-        for (int i = 1; i < numberOfPlayers; i++) {
-            thisGame = new GameInstance(i, thisGame.getRoundIDs());
+        PlayerIdentity playerOne = GameData.getPlayer1Identity(this);
+        GameInstance playerOneGame = new GameInstance(playerOne.ID, playerOne.username, 0);
+        allGameInstances.add(playerOneGame);
+
+        ArrayList<PlayerIdentity> players = GameData.fetchSomeIdentities(numberOfPlayers - 1, this);    // TODO: Include p1 in this, seems pointless loading p1 separately
+        for (int i = 0; i < players.size(); i++) {
+            GameInstance thisGame = new GameInstance(players.get(i).ID, players.get(i).username, i + 1);
             allGameInstances.add(thisGame);
         }
 
-        int indexOfGameInstance = 0;
-        allGameInstances.get(indexOfGameInstance).clearAllScores(); // Is this necessary??  :S
         Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", indexOfGameInstance);
-//            Log.d(MONITOR_TAG, "In startGame 2");
+        gameIntent.putExtra("game_index", 0);
+
+        // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
             Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
             try {

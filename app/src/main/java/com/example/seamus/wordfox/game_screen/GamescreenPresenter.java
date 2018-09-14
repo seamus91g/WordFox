@@ -220,9 +220,9 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
                 isBlankRound = false;
             }
             // Write word to sql database
-            String wordId = UUID.randomUUID().toString();
+            UUID wordId = UUID.randomUUID();
             WordItem wordFoundByPlayer = new WordItem(
-                    wordId, word.getKey(), gameInstance.getPlayerName(), word.getValue(), isFinal, gameInstance.getRoundID(gameInstance.getRound())
+                    wordId, word.getKey(), gameInstance.getID(), word.getValue(), isFinal, gameInstance.getRoundID(gameInstance.getRound())
             );
             createWordItem(wordFoundByPlayer);
             // Update preferences file
@@ -235,7 +235,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         }
         if (isBlankRound) {
             WordItem wordFoundByPlayer = new WordItem(
-                    UUID.randomUUID().toString(), "<none>", gameInstance.getPlayerName(), false, true, gameInstance.getRoundID(gameInstance.getRound())
+                    UUID.randomUUID(), "<none>", gameInstance.getID(), false, true, gameInstance.getRoundID(gameInstance.getRound())
             );
             createWordItem(wordFoundByPlayer);
         }

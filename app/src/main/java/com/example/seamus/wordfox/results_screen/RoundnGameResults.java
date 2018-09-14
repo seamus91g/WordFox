@@ -42,6 +42,7 @@ import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -136,7 +137,7 @@ public class RoundnGameResults extends AppCompatActivity
         for (int i = 0; i < MainActivity.allGameInstances.size(); ++i) {
             if (MainActivity.allGameInstances.get(i).getTotalScore() > highScore) {
                 highScore = MainActivity.allGameInstances.get(i).getTotalScore();
-                winner = MainActivity.allGameInstances.get(i).getPlayerID();
+                winner = MainActivity.allGameInstances.get(i).getName();
             }
         }
         TextView winnerText = findViewById(R.id.winner_banner_text);
@@ -147,7 +148,7 @@ public class RoundnGameResults extends AppCompatActivity
     private LinearLayout inflatePlayerResult(GameInstance gameInstance) {
         LinearLayout cl = (LinearLayout) resultInflater.inflate(R.layout.result_player_layout, null);
 
-        GameData plyrGd = new GameData(this, gameInstance.getPlayerName());
+        GameData plyrGd = new GameData(this, gameInstance.getID());
 
         String profPicStr = plyrGd.getProfilePicture();
         Bitmap profPic = null;
@@ -161,7 +162,7 @@ public class RoundnGameResults extends AppCompatActivity
         int percentScore = (100 * playerScore) / (maxScore);
 
         TextView resultPlayerNameView = cl.findViewById(R.id.result_player_name);
-        String playerName = gameInstance.getPlayerID() + "  (" + percentScore + "%)";
+        String playerName = gameInstance.getName() + "  (" + percentScore + "%)";
         resultPlayerNameView.setText(playerName);
         TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
         String playerResult = playerScore + " out of " + maxScore;
@@ -346,17 +347,17 @@ public class RoundnGameResults extends AppCompatActivity
         startActivity(EndScreenIntent);
     }
 
-    @Override
-    public String defaultP1Name() {
-        if (p1Name.equals("")) {
-            GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
-            p1Name = fox.getUsername();
-        }
-        return p1Name;
-    }
+//    @Override
+//    public String defaultP1Name() {
+//        if (p1Name.equals("")) {
+//            GameData fox = new GameData(this, GameData.DEFAULT_P1_ID);
+//            p1Name = fox.getUsername();
+//        }
+//        return p1Name;
+//    }
 
     @Override
-    public GameData getPlayerData(String playerID) {
+    public GameData getPlayerData(UUID playerID) {
         return new GameData(this, playerID);
     }
 
