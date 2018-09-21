@@ -220,8 +220,9 @@ public class FoxSQLData {
         RoundItem round;
         Cursor cursor = wfDatabase.query(RoundTable.TABLE_ROUNDS, RoundTable.ALL_COLUMNS, RoundTable.COLUMN_ID + " = '" + rID.toString() + "'", null, null, null, null);
 
+        // If the app is killed before the round finishes, the round might not be recorded even though the submitted words will be.
         if (cursor.getCount() == 0) {
-            throw new IllegalStateException();      // TODO: Validate where this might occur
+            return null;
         } else {
             cursor.moveToNext();
             round = new RoundItem(

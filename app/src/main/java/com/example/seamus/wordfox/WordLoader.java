@@ -38,6 +38,9 @@ public class WordLoader {
         // Find duplicate words -> use hashmap to store arraylist of rounds for each word
         for (WordItem word : validWords) {
             RoundItem round = foxDB.getRound(word.getGameId());
+            if(round == null){
+                continue;
+            }
             String wordFound = word.getWordSubmitted();
             if (roundsPerWord.containsKey(wordFound)) {
                 roundsPerWord.get(wordFound).add(round);
