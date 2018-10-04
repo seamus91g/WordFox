@@ -6,7 +6,13 @@ import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.NavigationView;
+import android.support.transition.ChangeBounds;
+import android.support.transition.Transition;
+import android.support.transition.TransitionManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +24,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +46,16 @@ public class MainActivity extends AppCompatActivity
     private final static int maxPlayerCount = 6;
 
 
+
+    private ConstraintLayout constraint;
+    private ConstraintSet constraintSet = new ConstraintSet();
+
     public static int getMaxPlayerCount() {
         return maxPlayerCount;
     }
 //    public GameData myGameData = new GameData(this);
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +63,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
+
+        View parentView = findViewById(R.id.contentMainxml);
+        parentView.post(new Runnable() {
+            @Override
+            public void run() {
+                startAnimation();
+            }
+        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,7 +108,35 @@ public class MainActivity extends AppCompatActivity
         thread.start();
     }
 
-    public void setNumPlayers(View myView) {
+    private void startAnimation() {
+        constraint = findViewById(R.id.contentMainxml);
+        constraintSet.clone(MainActivity.this, R.layout.content_main_detail);
+
+        Transition transition = new ChangeBounds();
+        transition.setInterpolator(new AccelerateDecelerateInterpolator());
+        transition.setDuration(1000);
+
+        TransitionManager.beginDelayedTransition(constraint,transition);
+        constraintSet.applyTo(constraint);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImageView talkingFoxIV = findViewById(R.id.talkingFoxIV);
+                talkingFoxIV.setImageResource(R.drawable.foxwithspeech);
+
+                TextView speechTV = findViewById(R.id.speechTV);
+                speechTV.setText("Choose your number of players!");
+
+
+
+            }
+        }, 1300);
+
+    }
+
+    public void setNumPlayers(View myView){
         String Players = (String) myView.getTag();
 
         switch (Players) {
@@ -222,5 +272,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 }

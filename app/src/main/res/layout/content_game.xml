@@ -197,7 +197,6 @@
             style="@style/gameResetButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
-            android:drawableTop="@mipmap/ic_reset_button"
             android:onClick="clearCurrentAttempt"
             android:text="RESET"
             android:textSize="@dimen/action_button_text_size" />
@@ -211,7 +210,6 @@
             style="@style/gameSubmitButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
-            android:drawableTop="@mipmap/ic_submit_button"
             android:onClick="submitCurrentAttempt"
             android:text="SUBMIT"
             android:textSize="@dimen/action_button_text_size" />
@@ -225,7 +223,6 @@
             style="@style/gameShuffleButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
-            android:drawableTop="@mipmap/ic_shuffle_button"
             android:onClick="shuffleGivenLetters"
             android:text="SHUFFLE"
             android:textSize="@dimen/action_button_text_size" />
