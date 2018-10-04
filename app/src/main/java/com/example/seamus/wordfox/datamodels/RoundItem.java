@@ -12,13 +12,13 @@ import java.util.UUID;
  */
 
 public class RoundItem {
-    private final String roundId;
+    private final UUID roundId;
     private final String letters;
     private final String longestPossible;
 
-    public RoundItem(String roundId, String letters, String longestPossible) {
+    public RoundItem(UUID roundId, String letters, String longestPossible) {
         if (roundId == null){
-            roundId = UUID.randomUUID().toString();
+            roundId = UUID.randomUUID();
         }
         this.roundId = roundId;
         this.letters = letters;
@@ -27,13 +27,13 @@ public class RoundItem {
 
     public ContentValues toValues(){
         ContentValues values = new ContentValues(3);
-        values.put(RoundTable.COLUMN_ID, roundId);
+        values.put(RoundTable.COLUMN_ID, roundId.toString());
         values.put(RoundTable.COLUMN_LETTERS, letters);
         values.put(RoundTable.COLUMN_LONGEST_POSSIBLE, longestPossible);
         return values;
     }
 
-    public String getRoundId() {
+    public UUID getRoundId() {
         return roundId;
     }
 

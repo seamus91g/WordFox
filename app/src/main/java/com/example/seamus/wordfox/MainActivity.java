@@ -1,6 +1,9 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -14,13 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,10 +51,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.d(MONITOR_TAG, "Main activity, END");
 
-//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-//        np.setMinValue(1);
-//        np.setMaxValue(maxPlayerCount);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -58,17 +60,36 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Total score is accumulated across game rounds. Returning to the main menu will clear it
-//        GameActivity.myGameInstance.clearAllScores();
         numberOfPlayers = 1;
-        Log.d(MONITOR_TAG, "Number of game instances: " + allGameInstances.size() + ", END");
+        loadDictionary();
 
+        if (Build.VERSION.SDK_INT < 23) {
+            int buttonHeight = getResources().getDimensionPixelSize(R.dimen.standard_button_height);
+            Drawable drawable = getResources().getDrawable(R.drawable.play_pic_white_icon);
+            drawable.setBounds(0, 0, (int) (buttonHeight), (int) (buttonHeight));
+            ScaleDrawable sd = new ScaleDrawable(drawable, 0, 1, 1);    // TODO: .. second two parameters don't seem to change anything
+            Button btn = findViewById(R.id.bStartGame);
+            btn.setCompoundDrawables(sd.getDrawable(), null, null, null);
+        }
     }
 
-    public void setNumPlayers(View myView){
+    public void loadDictionary() {
+        if (FoxDictionary.isWordListLoaded) {
+            return;
+        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets());
+            }
+        });
+        thread.start();
+    }
+
+    public void setNumPlayers(View myView) {
         String Players = (String) myView.getTag();
 
-        switch (Players){
+        switch (Players) {
             case "1players":
                 numberOfPlayers = 1;
                 changeTextTV(R.id.speechTV);
@@ -107,33 +128,30 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void startGameAct(View v) {
-//        GameInstance myInstance = new GameInstance();
-//        myInstance.startGame(this);
-//        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
-//        numberOfPlayers = np.getValue();
-//        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
         allGameInstances.clear();
-//        for (int i=0; i<maxNumberOfRounds; i++){
-//            this.roundIDs.add(UUID.randomUUID().toString());
-//        }
 
-        String p1ID;
-        {
-            GameData fox = new GameData(this, GameData.DEFAULT_P1_NAME);
-            p1ID = fox.getUsername();
-        }
-        GameInstance thisGame = new GameInstance(p1ID, GameData.DEFAULT_P1_NAME, 0);
-        allGameInstances.add(thisGame);
-        for (int i = 1; i < numberOfPlayers; i++) {
-            thisGame = new GameInstance(i, thisGame.getRoundIDs());
+        PlayerIdentity playerOne = GameData.getPlayer1Identity(this);
+        GameInstance playerOneGame = new GameInstance(playerOne.ID, playerOne.username, 0);
+        allGameInstances.add(playerOneGame);
+
+        ArrayList<PlayerIdentity> players = GameData.fetchSomeIdentities(numberOfPlayers - 1, this);    // TODO: Include p1 in this, seems pointless loading p1 separately
+        for (int i = 0; i < players.size(); i++) {
+            GameInstance thisGame = new GameInstance(players.get(i).ID, players.get(i).username, i + 1);
             allGameInstances.add(thisGame);
         }
 
-        int indexOfGameInstance = 0;
-        allGameInstances.get(indexOfGameInstance).clearAllScores(); // Is this necessary??  :S
         Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", indexOfGameInstance);
-//            Log.d(MONITOR_TAG, "In startGame 2");
+        gameIntent.putExtra("game_index", 0);
+
+        // Wait for dictionary to finish loading
+        while (!FoxDictionary.isWordListLoaded) {
+            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+            try {
+                Thread.sleep(100);      // Wait for dictionary to finish loading
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         this.startActivity(gameIntent);
     }
 

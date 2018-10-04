@@ -2,14 +2,15 @@ package com.example.seamus.wordfox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.seamus.wordfox.profile.FoxRank;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Seamus on 05/07/2017.
@@ -18,12 +19,16 @@ import java.util.Set;
 // Class to store game data and statistics
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
-    public static final String DEFAULT_P1_NAME = "Player 1";
+    //    public static final String DEFAULT_P1_ID = "Player 1";
     public static final String NONE_FOUND = "None Found!";
+    public static final String NON_EXISTANT = "non_existant";
+    public static final String ID_KEY_PREFIX = "ID_";
+    private static final String DEFAULT_NAME = "Fox";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
     private String USERNAME_KEY;
+    private static final String USERNAME_PREFIX = "username_";
     private String PREF_FILE_NAME;
     private static final String PREF_FILE_NAME_STATIC = "word_fox_gamedata_static";
     private String PROFILE_PIC_KEY;
@@ -35,21 +40,34 @@ public class GameData extends AppCompatActivity {
     private String RECENT_WORDS_KEY;
     private String RECENT_GAME_ID_KEY;
     private String BEST_WORDS_KEY;
+    private String BEST_LETTERS_KEY;
     private static String NAMED_PLAYER_COUNT_KEY = "named_player_count";
     private SharedPreferences foxPreferences;
     private SharedPreferences.Editor editor;
+    private String FOX_RANK_KEY;
+    private UUID playerID;
+    private static String PREF_FILE_PREFIX = "word_fox_gamedata_";
 
-    // Instantiate using a name
     // The stats for each player are stored separately
-    public GameData(Context myContext, String playerID) {
-        if (playerID.equals("")) {
-            Toast.makeText(myContext, "Player name is empty!", Toast.LENGTH_SHORT).show();
-        }
+    public GameData(Context myContext) {
+        this(myContext, "");
+    }
+
+    public GameData(Context myContext, String name) {
+        this(myContext, UUID.randomUUID(), name);
+    }
+
+    public GameData(Context myContext, UUID playerID) {
+        this(myContext, playerID, "");
+    }
+
+    public GameData(Context myContext, UUID playerID, String name) {
+        this.playerID = playerID;
         GAME_COUNT_KEY = "game_count_" + playerID;
         ROUND_COUNT_KEY = "round_count_" + playerID;
         LONGEST_WORD_KEY = "longest_word_" + playerID;
-        USERNAME_KEY = "username_" + playerID;
-        PREF_FILE_NAME = "word_fox_gamedata_" + playerID;
+        USERNAME_KEY = USERNAME_PREFIX + playerID;
+        PREF_FILE_NAME = PREF_FILE_PREFIX + playerID;
         PROFILE_PIC_KEY = "wordfox_profile_pic_" + playerID;
         SUBMITTED_CORRECT_COUNT_KEY = "submitted_correct_count_" + playerID;
         SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count_" + playerID;
@@ -59,81 +77,197 @@ public class GameData extends AppCompatActivity {
         RECENT_WORDS_KEY = "recent_words_" + playerID;
         RECENT_GAME_ID_KEY = "recent_game_id_" + playerID;
         BEST_WORDS_KEY = "best_words_" + playerID;
+        FOX_RANK_KEY = "fox_rank_" + playerID;
 
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
         editor.apply();
 
-        addPlayer(playerID, myContext);
-        if (!playerID.equals(DEFAULT_P1_NAME)) {    // If p1, don't set username. Only done in profile
-            setUsername(playerID);
+        if (name.equals("") && !doesPlayerExist(playerID, myContext)) {
+            setDefaultUsername(getPlayerList(myContext));
+            addPlayer(playerID, myContext);
+        }
+        if (name.equals(DEFAULT_NAME)) {
+            setUsername(name);
+            addPlayer(playerID, myContext);
         }
     }
 
-    // Create a new player if the name is unique
-    void addPlayer(String playerID, Context myContext) {
-        SharedPreferences foxPreferencesStatic = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
-        SharedPreferences.Editor editor = foxPreferencesStatic.edit();
-        int namedPlayerCount = getNamedPlayerCount(myContext);
+    public UUID getPlayerID() {
+        return playerID;
+    }
+
+    private static boolean doesPlayerExist(UUID ID, Context context) {
+        SharedPreferences foxPreferencesStatic = context.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+        int namedPlayerCount = getNamedPlayerCount(context);
         for (int x = 0; x < namedPlayerCount; x++) {
-            String KEY = "name_" + x;
-            String name = foxPreferencesStatic.getString(KEY, "Unknown");
-            if (name.equals(playerID)) {
-                return;
+            String KEY = ID_KEY_PREFIX + x;
+            String IDString = foxPreferencesStatic.getString(KEY, "Unknown");
+            if (IDString.equals(ID.toString())) {
+                return true;
             }
         }
-        String KEY = "name_" + getNamedPlayerCount(myContext);
-        editor.putString(KEY, playerID);
+        return false;
+    }
+
+    // Create a new player if the name is unique
+    static void addPlayer(UUID playerID, Context myContext) {
+        SharedPreferences foxPreferencesStatic = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+        SharedPreferences.Editor editor = foxPreferencesStatic.edit();
+        String KEY = ID_KEY_PREFIX + getNamedPlayerCount(myContext);
+        editor.putString(KEY, playerID.toString());
         editor.apply();
         namedPlayerCountUp(myContext);
     }
 
     // Increase count of number of named players
-    private void namedPlayerCountUp(Context myContext) {
+    private static void namedPlayerCountUp(Context myContext) {
         int countIncorrect = getNamedPlayerCount(myContext);
         countIncorrect += 1;
         setNamedPlayerCount(myContext, countIncorrect);
     }
 
-    private void setNamedPlayerCount(Context myContext, int count) {
+    // TODO: Should just get size() of namedPlayers, instead of storing count separately. while(key_ID != NON_EXISTANT)
+    private static void setNamedPlayerCount(Context myContext, int count) {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         SharedPreferences.Editor editor = foxPreferences.edit();
         editor.putInt(NAMED_PLAYER_COUNT_KEY, count);
         editor.apply();
     }
 
-    static int getNamedPlayerCount(Context myContext) {
+    public static int getNamedPlayerCount(Context myContext) {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         return foxPreferences.getInt(NAMED_PLAYER_COUNT_KEY, 0);
     }
 
-    public static ArrayList<String> getNamedPlayerList(Context myContext) {
+    public static PlayerIdentity getPlayer1Identity(Context myContext) {
+        String KEY = ID_KEY_PREFIX + 0;       // Player 1 is 0
+        String PlayerIDString = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE).getString(KEY, NON_EXISTANT);
+        UUID playerID;
+        String name;
+        if (PlayerIDString.equals(NON_EXISTANT)) {
+            name = DEFAULT_NAME;
+            GameData p1d = new GameData(myContext, name);
+            p1d.setUsername(name);
+            playerID = p1d.getPlayerID();
+        } else {
+            playerID = UUID.fromString(PlayerIDString);
+            name = myContext.getSharedPreferences(PREF_FILE_PREFIX + PlayerIDString, MODE_PRIVATE).getString(USERNAME_PREFIX + PlayerIDString, NON_EXISTANT);
+        }
+        return new PlayerIdentity(playerID, name);
+    }
+
+    // Start the game with some generic identities
+    public static ArrayList<PlayerIdentity> fetchSomeIdentities(int amount, Context context) {
+        ArrayList<PlayerIdentity> identities = new ArrayList<>();
+        ArrayList<PlayerIdentity> existingPlayers = getPlayerList(context);
+        for (int i = 0; i < amount; ++i) {
+            String expectantName = "Player " + (i + 2);     // We start from player 2, player 1 is fox
+            PlayerIdentity expectantPlayer = null;
+            for (PlayerIdentity pi : existingPlayers) {
+                if (pi.username.equals(expectantName)) {
+                    expectantPlayer = pi;
+                    break;
+                }
+            }
+            // If player hasn't been found in existing players, create him.
+            if (expectantPlayer == null) {
+                GameData newPlayer = new GameData(context);
+                expectantPlayer = new PlayerIdentity(newPlayer.playerID, newPlayer.getUsername());
+            }
+            identities.add(expectantPlayer);
+        }
+
+        return identities;
+    }
+
+    public static ArrayList<PlayerIdentity> getPlayerList(Context myContext) {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
-        ArrayList<String> namedPlayers = new ArrayList<String>();
+        ArrayList<PlayerIdentity> playerList = new ArrayList<>();
         int namedPlayerCount = getNamedPlayerCount(myContext);
         for (int i = 0; i < namedPlayerCount; ++i) {
-            String KEY = "name_" + i;
-            String name = foxPreferences.getString(KEY, "Unknown");
-//            if (name.equals(DEFAULT_P1_NAME)) {
-//                name = foxPreferences.getString("username_" + DEFAULT_P1_NAME, "Fox");
-//            }
-            namedPlayers.add(name);
+            String KEY = ID_KEY_PREFIX + i;
+            String stringID = foxPreferences.getString(KEY, NON_EXISTANT);
+            UUID ID;
+            if (!stringID.equals(NON_EXISTANT)) {
+                ID = UUID.fromString(stringID);
+            } else {
+                throw new IllegalStateException();
+            }
+            String PREF_FILE_NAME = PREF_FILE_PREFIX + stringID;
+            SharedPreferences userFoxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+            String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
+            playerList.add(new PlayerIdentity(ID, name));
+        }
+        if (playerList.size() == 0) {
+            playerList.add(getPlayer1Identity(myContext));
+        }
+        return playerList;
+    }
+
+    public static ArrayList<PlayerIdentity> getNamedPlayerList(Context myContext) {
+        ArrayList<PlayerIdentity> allPlayers = getPlayerList(myContext);
+        ArrayList<PlayerIdentity> namedPlayers = new ArrayList<>();
+        String pattern = "Player\\s\\d";
+        for (PlayerIdentity player : allPlayers) {
+            if (!player.username.matches(pattern)) {
+                namedPlayers.add(player);
+            }
         }
         return namedPlayers;
     }
+
 
     public void setUsername(String nameEntered) {
         editor.putString(USERNAME_KEY, nameEntered);
         editor.apply();
     }
 
+    private void setDefaultUsername(ArrayList<PlayerIdentity> playerList) {
+        String suggestedName = "Player 2";
+        if (playerList != null && playerList.size() > 0) {
+            Set<String> uniqueNames = new HashSet<>();
+            for (PlayerIdentity p : playerList) {
+                uniqueNames.add(p.username);
+            }
+            for (int i = 0; i <= playerList.size(); ++i) {
+                suggestedName = "Player " + (i + 2);
+                if (!uniqueNames.contains(suggestedName)) {
+                    break;
+                }
+            }
+        }
+        setUsername(suggestedName);
+    }
+
     public String getUsername() {
-        String defaultName = "Fox";
+        String defaultName = DEFAULT_NAME;
         return foxPreferences.getString(USERNAME_KEY, defaultName);
+    }
+
+    public static String getUsername(UUID playerID, Context context) {
+        return context.getSharedPreferences(PREF_FILE_PREFIX + playerID, MODE_PRIVATE).getString(USERNAME_PREFIX + playerID, DEFAULT_NAME);
+    }
+
+    public static PlayerIdentity getIdentity(UUID playerID, Context context) {
+        return new PlayerIdentity(playerID, getUsername(playerID, context));
     }
 
     // BEST_WORDS_KEY
     // Set of most picked words during the most recent game played
+    public void setBestGame(ArrayList<String> lettersBestGame, ArrayList<String> wordsBestGame) {
+        setBestWords(wordsBestGame);
+        setLettersBestGame(lettersBestGame);
+    }
+
+    private void setLettersBestGame(ArrayList<String> lettersBestGame) {
+        for (int i = 0; i < lettersBestGame.size(); ++i) {
+            String BEST_LETTERS_KEY_i = BEST_LETTERS_KEY + "_" + i;     // TODO: Incorporate underscore into KEY
+            editor.putString(BEST_LETTERS_KEY_i, lettersBestGame.get(i));
+            editor.apply();
+        }
+    }
+
     public void setBestWords(ArrayList<String> bestWords) {
         for (int i = 0; i < bestWords.size(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
@@ -146,9 +280,18 @@ public class GameData extends AppCompatActivity {
         ArrayList<String> bestWords = new ArrayList<>();
         for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
             String BEST_WORDS_KEY_i = BEST_WORDS_KEY + "_" + i;
-            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, "None Found!"));
+            bestWords.add(foxPreferences.getString(BEST_WORDS_KEY_i, NON_EXISTANT));
         }
         return bestWords;
+    }
+
+    public ArrayList<String> getBestLetters() {
+        ArrayList<String> bestLetters = new ArrayList<>();
+        for (int i = 0; i < GameInstance.getNumberRounds(); ++i) {
+            String BEST_LETTERS_KEY_i = BEST_LETTERS_KEY + "_" + i;
+            bestLetters.add(foxPreferences.getString(BEST_LETTERS_KEY_i, NON_EXISTANT));
+        }
+        return bestLetters;
     }
 
     // Set of most picked words during the most recent game played
@@ -170,8 +313,8 @@ public class GameData extends AppCompatActivity {
     }
 
     // Get the ID of the most recently played game
-    public void setRecentGame(String recentGameID) {
-        editor.putString(RECENT_GAME_ID_KEY, recentGameID);
+    public void setRecentGame(UUID recentGameID) {
+        editor.putString(RECENT_GAME_ID_KEY, recentGameID.toString());
         editor.apply();
     }
 
@@ -307,10 +450,51 @@ public class GameData extends AppCompatActivity {
     }
 
     public String findLongest() {
-        return foxPreferences.getString(LONGEST_WORD_KEY, "");
+        return foxPreferences.getString(LONGEST_WORD_KEY, NON_EXISTANT);
     }
 
     public int findOccurence(int requestLength) {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
     }
+
+    public static FoxRank determineRankClass(int rankValue) {
+        switch (rankValue) {
+            case 3:
+                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+            case 4:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
+            case 5:
+                return new FoxRank(R.drawable.onefox_silhouette, "Kit Fox");
+            case 6:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Gray Fox");
+            case 7:
+                return new FoxRank(R.drawable.onefox_silhouette, "Arctic Fox");
+            case 8:
+                return new FoxRank(R.drawable.arcticfox_silhouette, "Silver Fox");
+            case 9:
+                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
+            default:
+                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+        }
+    }
+
+    public static int determineRankValue(int score) {
+        float avg = score / 3;
+        return Math.round(avg);
+    }
+
+    public void setRank(int rank) {
+        int existingRank = foxPreferences.getInt(FOX_RANK_KEY, 0);
+        if (existingRank >= rank) {
+            return;
+        }
+        editor.putInt(FOX_RANK_KEY, rank);
+        editor.apply();
+    }
+
+    public int getRank() {
+        return foxPreferences.getInt(FOX_RANK_KEY, 0);
+    }
+
 }
+

@@ -2,12 +2,10 @@ package com.example.seamus.wordfox.RV.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.BaseWFViewHolder;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.RV.RVTypes.TypeCategory;
-import com.example.seamus.wordfox.RV.RVTypes.TypePlayer;
 import com.example.seamus.wordfox.RV.WFAdapter;
 
 public class CategoryHeadingVH extends BaseWFViewHolder {
@@ -21,6 +19,7 @@ public class CategoryHeadingVH extends BaseWFViewHolder {
 
     @Override
     public void bindType(DataListItem item) {
+        super.setSelected(item.isListExpanded());
         TypeCategory categoryHeader = (TypeCategory) item;
         categoryTitleTV.setText(categoryHeader.getCategoryTitle());
     }

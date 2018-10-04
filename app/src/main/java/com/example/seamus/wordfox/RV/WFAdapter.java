@@ -54,6 +54,7 @@ public class WFAdapter extends RecyclerView.Adapter<BaseWFViewHolder> {
                 WFAdapter.this.notifyItemRangeInserted(adapterPosition + 1, item.getSubItemCount());
                 item.toggleExpanded();
             }
+            WFAdapter.this.notifyItemChanged(adapterPosition);      // So the drop down arrow gets flipped
         }
     };
 

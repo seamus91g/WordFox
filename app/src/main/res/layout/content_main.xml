@@ -2,63 +2,63 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contentMainxml"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/contentMainxml"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:activity="com.example.seamus.wordfox.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <ImageButton
         android:id="@+id/fox2Button"
-        android:tag="@string/Tag2player"
         style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox2"
+        android:tag="@string/Tag2player"
         app:layout_constraintBottom_toTopOf="@id/fox5Button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/fox1Button"
-        android:tag="@string/Tag1player"
         style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox1"
+        android:tag="@string/Tag1player"
+        app:layout_constraintBottom_toTopOf="@id/fox4Button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/fox2Button"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fox4Button"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/fox3Button"
-        android:tag="@string/Tag3player"
         style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox3"
+        android:tag="@string/Tag3player"
+        app:layout_constraintBottom_toTopOf="@id/fox6Button"
         app:layout_constraintLeft_toRightOf="@id/fox2Button"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fox6Button"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/fox5Button"
@@ -79,144 +79,131 @@
 
     <ImageButton
         android:id="@+id/fox4Button"
-        android:tag="@string/Tag4player"
         style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox4"
+        android:tag="@string/Tag4player"
+        app:layout_constraintBottom_toTopOf="@id/bStartGame"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/fox5Button"
-        app:layout_constraintTop_toBottomOf="@id/fox1Button"
-        app:layout_constraintBottom_toTopOf="@id/bStartGame"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toBottomOf="@id/fox1Button" />
 
     <ImageButton
         android:id="@+id/fox6Button"
-        android:tag="@string/Tag6player"
         style="@style/homeNumPLayersButtons"
         android:layout_width="@dimen/action_button_dimension"
         android:layout_height="@dimen/action_button_dimension"
         android:layout_marginTop="8dp"
         android:cropToPadding="false"
+        android:onClick="setNumPlayers"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/fox6"
+        android:tag="@string/Tag6player"
+        app:layout_constraintBottom_toTopOf="@id/bStartGame"
         app:layout_constraintLeft_toRightOf="@id/fox5Button"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fox3Button"
-        app:layout_constraintBottom_toTopOf="@id/bStartGame"
-        android:onClick="setNumPlayers" />
+        app:layout_constraintTop_toBottomOf="@id/fox3Button" />
 
     <Button
         android:id="@+id/bStartGame"
+        style="@style/RectangularButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/RectangularButtons"
         android:gravity="center"
         android:onClick="startGameAct"
         android:text="start"
         android:textSize="35sp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bStartGame"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        >
+        app:layout_constraintTop_toBottomOf="@id/bStartGame"
+        app:layout_constraintVertical_weight="1">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <Space
+                android:id="@+id/verticalspace1"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:layout_weight=".15" />
+
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-            >
+                android:layout_height="0dp"
+                android:layout_weight="0.45"
+                android:orientation="horizontal">
 
                 <Space
-                    android:id="@+id/verticalspace1"
-                    android:layout_height="0dp"
-                    android:layout_width="50dp"
-                    android:layout_weight=".15"
-                    />
+                    android:id="@+id/horizontalspace"
+                    android:layout_width="0dp"
+                    android:layout_height="10dp"
+                    android:layout_weight=".6" />
 
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.45"
-                    android:orientation="horizontal"
-                    >
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3">
 
-                    <Space
-                        android:id="@+id/horizontalspace"
-                        android:layout_height="10dp"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"/>
+                    <TextView
+                        android:id="@+id/speechTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Choose your number of players!"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_height="match_parent"
-                        android:layout_width="0dp"
-                        android:layout_weight=".3" >
+                </android.support.constraint.ConstraintLayout>
 
-                        <TextView
-                            android:id="@+id/speechTV"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Choose your number of players!"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:gravity="center_horizontal"
-                            />
-
-                    </android.support.constraint.ConstraintLayout>
-
-
-                    <Space
-                        android:layout_height="10dp"
-                        android:layout_width="0dp"
-                        android:layout_weight=".1"/>
-
-                </android.support.v7.widget.LinearLayoutCompat>
 
                 <Space
-                    android:id="@+id/verticalspace2"
-                    android:layout_height="0dp"
-                    android:layout_width="50dp"
-                    android:layout_weight="0.4"
-                    />
+                    android:layout_width="0dp"
+                    android:layout_height="10dp"
+                    android:layout_weight=".1" />
 
-            </LinearLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
 
+            <Space
+                android:id="@+id/verticalspace2"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.4" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/foxwithspeech"
-                android:adjustViewBounds="true"
-                android:paddingEnd="6dp"
-                android:paddingRight="6dp"
-                android:layout_gravity="bottom"
-            />
+        </LinearLayout>
 
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:adjustViewBounds="true"
+            android:paddingEnd="6dp"
+            android:paddingRight="6dp"
+            android:src="@drawable/foxwithspeech" />
 
 
     </FrameLayout>
-
 
 
 </android.support.constraint.ConstraintLayout>

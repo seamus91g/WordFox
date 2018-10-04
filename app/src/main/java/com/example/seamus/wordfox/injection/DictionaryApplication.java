@@ -13,7 +13,7 @@ public class DictionaryApplication extends Application {
     private FoxDictionary dictionary = null;
     public Diction getDictionary(){
         if(dictionary == null){
-            dictionary = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", this);
+            dictionary = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", getAssets());
         }else{
             dictionary.resetLetterPool();
         }

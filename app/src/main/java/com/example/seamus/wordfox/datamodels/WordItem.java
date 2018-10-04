@@ -11,20 +11,20 @@ import java.util.UUID;
  */
 
 public class WordItem {
-    private final String wordId;
+    private final UUID wordId;
     private final String wordSubmitted;
-    private final String playerName;
+    private final UUID playerID;
     private final boolean isValid;
     private final boolean isFinal;
-    private final String gameId;
+    private final UUID gameId;
 
-    public WordItem(String wordId, String wordSubmitted, String playerName, boolean isValid, boolean isFinal, String gameId) {
+    public WordItem(UUID wordId, String wordSubmitted, UUID playerID, boolean isValid, boolean isFinal, UUID gameId) {
         if (wordId == null){
-            wordId = UUID.randomUUID().toString();
+            wordId = UUID.randomUUID();
         }
         this.wordId = wordId;
         this.wordSubmitted = wordSubmitted;
-        this.playerName = playerName;
+        this.playerID = playerID;
         this.isValid = isValid;
         this.isFinal = isFinal;
         this.gameId = gameId;
@@ -32,16 +32,16 @@ public class WordItem {
 
     public ContentValues toValues(){
         ContentValues values = new ContentValues(6);
-        values.put(WordTable.COLUMN_ID, wordId);
+        values.put(WordTable.COLUMN_ID, wordId.toString());
         values.put(WordTable.COLUMN_WORD, wordSubmitted);
-        values.put(WordTable.COLUMN_PLAYER, playerName);
+        values.put(WordTable.COLUMN_PLAYER, playerID.toString());
         values.put(WordTable.COLUMN_VALID, (isValid) ? 1 : 0);
         values.put(WordTable.COLUMN_FINAL, (isFinal) ? 1 : 0);
-        values.put(WordTable.COLUMN_GAME_ID, gameId);
+        values.put(WordTable.COLUMN_GAME_ID, gameId.toString());
         return values;
     }
 
-    public String getWordId() {
+    public UUID getWordId() {
         return wordId;
     }
 
@@ -49,8 +49,8 @@ public class WordItem {
         return wordSubmitted;
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public UUID getPlayerID() {
+        return playerID;
     }
 
     public boolean isValid() {
@@ -61,7 +61,7 @@ public class WordItem {
         return isFinal;
     }
 
-    public String getGameId() {
+    public UUID getGameId() {
         return gameId;
     }
 }

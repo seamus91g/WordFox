@@ -14,7 +14,7 @@ public class MainActivityTest {
 
 //    @Test
 //    public void checkPlayerWheel(){
-////        ViewInteraction num_Picker = onView(withClassName(Matchers.equalTo(NumberPicker.class.getName())));
+////        ViewInteraction num_Picker = onView(withClassName(Matchers.equalTo(NumberPicker.class.getPlayerID())));
 //        NumberPicker numberPicker = (NumberPicker) activityRule.getActivity().findViewById(R.id.numberPicker);
 //        assertEquals(1, numberPicker.getValue());
 //        onView(withId(R.id.numberPicker))

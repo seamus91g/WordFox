@@ -1,5 +1,6 @@
 package com.example.seamus.wordfox.RV.RVTypes;
 
+import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.database.DataPerGame;
 
@@ -9,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypeGamesHeader implements DataListItem {
-    private final String ID;
-    private final String gameWinner;
+    private final UUID ID;
+    private final ArrayList<PlayerIdentity> gameWinner;
 
 
     private final int winnerScore;
@@ -18,13 +19,13 @@ public class TypeGamesHeader implements DataListItem {
     private boolean isExpanded = false;
 
     public TypeGamesHeader(DataPerGame gameHeader, DataListItem gameDetails) {
-        this.gameWinner = gameHeader.winner;
+        this.gameWinner = gameHeader.winners;
         this.gameDetails = gameDetails;
         this.winnerScore = gameHeader.scoreWinner;
-        ID = UUID.randomUUID().toString();
+        ID = UUID.randomUUID();
     }
 
-    public String getGameWinner() {
+    public ArrayList<PlayerIdentity> getGameWinner() {
         return gameWinner;
     }
 
@@ -58,7 +59,7 @@ public class TypeGamesHeader implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 }

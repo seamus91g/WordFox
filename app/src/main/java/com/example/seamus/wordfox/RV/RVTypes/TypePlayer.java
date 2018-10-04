@@ -1,5 +1,7 @@
 package com.example.seamus.wordfox.RV.RVTypes;
 
+import android.graphics.Bitmap;
+
 import com.example.seamus.wordfox.RV.DataListItem;
 
 import java.util.ArrayList;
@@ -7,19 +9,31 @@ import java.util.List;
 import java.util.UUID;
 
 public class TypePlayer implements DataListItem {
-    private final String ID;
+    private final UUID ID;
     private String player;
     private ArrayList<DataListItem> subItems;
+    private Bitmap profPic;
+    private String rank;
     private boolean isExpanded = false;
 
-    public TypePlayer(String playerName, ArrayList<DataListItem> subItems) {
+    public TypePlayer(String playerName, ArrayList<DataListItem> subItems, Bitmap profPic, String rank) {
         this.player = playerName;
         this.subItems = subItems;
-        this.ID = UUID.randomUUID().toString();
+        this.profPic = profPic;
+        this.rank = rank;
+        this.ID = UUID.randomUUID();
     }
 
     public String getPlayer() {
         return player;
+    }
+
+    public Bitmap getProfPic() {
+        return profPic;
+    }
+
+    public String getRank() {
+        return rank;
     }
 
     @Override
@@ -48,7 +62,7 @@ public class TypePlayer implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 }

@@ -1,16 +1,8 @@
 package com.example.seamus.wordfox;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
-import com.example.seamus.wordfox.results_screen.RoundnGameResults;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -33,89 +25,93 @@ public class GameInstance {
     private String[] bestWordFoundEachRound = new String[NUMBER_ROUNDS];
     private int highestPossibleScore = 0;
     private final int thisGameIndex;
-    private String playerID;   // Only exists if created on the player switch screen
-    private String playerName;   // Only exists if created on the player switch screen
+    private PlayerIdentity player;
 
-    private final ArrayList<String> roundIDs = new ArrayList<>();
+    private final ArrayList<UUID> roundIDs = new ArrayList<>();
 
     public static int getNumberRounds() {
         return NUMBER_ROUNDS;
-    }
-
-    public void setMaxNumberOfRounds(int maxNumberOfRounds) {
-        NUMBER_ROUNDS = maxNumberOfRounds;
-    }
-
-    public String getPlayerName() {
-        return playerName;
     }
 
     public enum GameState {ONGOING, FINISHED}
 
     private GameState myGameState;
 
-    public void gamestateFinished(){
-        myGameState = GameState.FINISHED;
-    }
-    public boolean isGameOngoing(){
-        return (myGameState.equals(GameState.ONGOING));
-    }
-
     // TODO: Unit test to validate scores
     {
-        totalScore = 0;         // These initialisations seem unnecessary since MainActivity clears scores
+        totalScore = 0;         // TODO: These initialisations seem unnecessary since MainActivity clears scores
         score = 0;
         round = 0;
         longestWord = "";       // Longest of the current round
         myGameState = GameState.ONGOING;
     }
 
-    public GameInstance(int thisGameIndex) {
-        this("Player " + (thisGameIndex + 1), thisGameIndex, null);
+//    public GameInstance(int thisGameIndex) {
+//        this("Player " + (thisGameIndex + 1), thisGameIndex, null);
+//    }
+//
+//    public GameInstance(int thisGameIndex, ArrayList<UUID> roundIDs) {
+//        this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
+//    }
+//
+//    public GameInstance(String name, int thisGameIndex) {
+//        this(name, thisGameIndex, null);
+//    }
+//    public GameInstance(String name, UUID ID, int thisGameIndex) {
+//        this(name, thisGameIndex, null);
+//        this.ID = ID;
+//    }
+
+    public GameInstance(UUID playerId, String nm, int thisGameIndex) {
+        this(playerId, nm, thisGameIndex, null);
     }
 
-    public GameInstance(int thisGameIndex, ArrayList<String> roundIDs) {
-        this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
-    }
-
-    public GameInstance(String pId, int thisGameIndex) {
-        this(pId, thisGameIndex, null);
-    }
-    public GameInstance(String pId, String name, int thisGameIndex) {
-        this(pId, thisGameIndex, null);
-        playerName = name;
-    }
-
-    public GameInstance(String pId, int thisGameIndex, ArrayList<String> roundIDs) {
-        if (pId.equals("")) {
-            pId = "Unknown";
-        }
-        playerName = pId;       // Only different for player 1
+    public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs) {
         if (roundIDs == null) {
             for (int i = 0; i < NUMBER_ROUNDS; i++) {
-                this.roundIDs.add(UUID.randomUUID().toString());
+                this.roundIDs.add(UUID.randomUUID());
             }
         } else {                              // Defensive copying
             this.roundIDs.addAll(roundIDs);
         }
+        player = new PlayerIdentity(playerId, playerName);
         this.thisGameIndex = thisGameIndex;
-        this.playerID = pId;
     }
 
-    public String getRoundID() {
+    public void setMaxNumberOfRounds(int maxNumberOfRounds) {
+        NUMBER_ROUNDS = maxNumberOfRounds;
+    }
+
+    public UUID getID() {
+        return player.ID;
+    }
+
+    public PlayerIdentity getPlayer() {
+        return player;
+    }
+
+    public void gamestateFinished() {
+        myGameState = GameState.FINISHED;
+    }
+
+    public boolean isGameOngoing() {
+        return (myGameState.equals(GameState.ONGOING));
+    }
+
+    public UUID getRoundID() {
         return roundIDs.get(round);
     }
 
-    public String getRoundID(int roundNum) {
+    public UUID getRoundID(int roundNum) {
         return roundIDs.get(roundNum);
     }
 
-    public ArrayList<String> getRoundIDs() {
+    public ArrayList<UUID> getRoundIDs() {
         return roundIDs;
     }
 
-    public String getPlayerID() {
-        return playerID;
+    public String getName() {
+        return player.username;
     }
 
     public int getHighestPossibleScore() {
@@ -124,6 +120,14 @@ public class GameInstance {
 
     public String getLetters(int roundIndex) {
         return letters.get(roundIndex);
+    }
+
+    public String getRoundLetters() {
+        return letters.get(round);
+    }
+
+    public ArrayList<String> getLetters() {
+        return letters;
     }
 
     public void setLetters(String letters) {
@@ -213,7 +217,8 @@ public class GameInstance {
     public String getRoundWord(int whichRound) {
         return bestWordFoundEachRound[whichRound];
     }
-    public void incrementRound(){
+
+    public void incrementRound() {
         round++;
     }
 

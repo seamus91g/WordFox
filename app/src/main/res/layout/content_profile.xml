@@ -12,14 +12,17 @@
     tools:showIn="@layout/app_bar_profile">
 
     <ScrollView
+        android:id="@+id/profile_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/profile_scrollview"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/profileImageButton"
@@ -27,18 +30,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:maxHeight="270dp"
+                app:layout_constraintBottom_toTopOf="@+id/profile_username"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/username_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username: "
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_username"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/profile_username"
+                app:layout_constraintTop_toTopOf="@+id/profile_username" />
 
             <EditText
                 android:id="@+id/profile_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
                 android:gravity="center_horizontal"
                 android:hint="Name here"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/profile_rank_image"
+                app:layout_constraintLeft_toRightOf="@+id/username_prompt"
+                app:layout_constraintRight_toLeftOf="@+id/profile_save_name"
                 app:layout_constraintTop_toBottomOf="@+id/profileImageButton" />
 
             <Button
@@ -46,72 +63,388 @@
                 android:layout_width="88dp"
                 android:layout_height="wrap_content"
                 android:text="Save"
+                app:layout_constraintBottom_toBottomOf="@id/profile_username"
+                app:layout_constraintLeft_toRightOf="@id/profile_username"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/profile_username" />
+
+            <ImageView
+                android:id="@+id/profile_rank_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:layout_constraintBottom_toTopOf="@id/profile_longest_word_speech"
+                app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_username" />
-
-            <LinearLayout
-                android:id="@+id/longest_word_profile"
-                android:layout_width="368dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_save_name">
-
-                <TextView
-                    android:id="@+id/profPicLongestWordText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Longest Word: "
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/profPicLongestWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/recent_game"
-                android:layout_width="368dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_save_name">
-
-                <TextView
-                    android:id="@+id/RecentGameHeading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Longest Word: "
-                    android:textSize="20sp" />
-
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/profile_username" />
 
             <TextView
-                android:id="@+id/profPicData"
+                android:id="@+id/highest_rank_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:text="Highest rank"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/highest_rank_text"
+                app:layout_constraintRight_toLeftOf="@id/profile_rank_image"
+                app:layout_constraintTop_toTopOf="@id/profile_rank_image" />
+
+            <TextView
+                android:id="@+id/highest_rank_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:text="Common Fox"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_rank_image"
+                app:layout_constraintRight_toLeftOf="@id/profile_rank_image"
+                app:layout_constraintTop_toBottomOf="@id/highest_rank_header" />
+
+            <ImageView
+                android:id="@+id/profile_longest_word_speech"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Data"
-                android:textSize="20sp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/foxwithspeech_small2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recent_game" />
+                app:layout_constraintTop_toBottomOf="@id/profile_rank_image"
+                app:layout_constraintWidth_percent="0.7" />
 
             <TextView
-                android:id="@+id/profPicSettings"
-                android:layout_width="0dp"
+                android:id="@+id/profile_longest_word"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Settings"
-                android:textSize="20sp"
+                android:contentDescription="Profile longest word"
+                android:gravity="center"
+                android:maxWidth="135dp"
+                app:layout_constraintBottom_toBottomOf="@id/profile_longest_word_speech"
+                app:layout_constraintHorizontal_bias="0.97"
+                app:layout_constraintLeft_toLeftOf="@id/profile_longest_word_speech"
+                app:layout_constraintRight_toRightOf="@id/profile_longest_word_speech"
+                app:layout_constraintTop_toTopOf="@id/profile_longest_word_speech" />
+
+            <View
+                android:id="@+id/best_game_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@id/best_game_header"
+                app:layout_constraintTop_toBottomOf="@id/profile_longest_word_speech" />
+
+            <TextView
+                android:id="@+id/best_game_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="BEST GAME"
+                android:textSize="30dp"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_bestword1"
+                app:layout_constraintTop_toBottomOf="@id/best_game_divider" />
+
+            <TextView
+                android:id="@+id/best_game_non_existant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/recent_game_divider"
+                app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profPicData" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/best_game_header" />
+
+            <TextView
+                android:id="@+id/grid_row_bestword1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 1"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword2"
+                app:layout_constraintTop_toBottomOf="@id/best_game_header" />
+
+            <TextView
+                android:id="@+id/grid_row_bestword2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 2"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword1"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword3"
+                app:layout_constraintTop_toBottomOf="@id/best_game_header" />
+
+            <TextView
+                android:id="@+id/grid_row_bestword3"
+                android:layout_width="@dimen/grid_snapshot_size"
+
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 3"
+                app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/best_game_header" />
+
+            <ImageView
+                android:id="@+id/grid_row_grid1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toTopOf="@+id/recent_game_divider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_grid2"
+                app:layout_constraintTop_toBottomOf="@id/profile_save_name" />
+
+            <ImageView
+                android:id="@+id/grid_row_grid2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_grid1"
+                app:layout_constraintRight_toLeftOf="@+id/grid_row_grid3"
+                app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
+
+            <ImageView
+                android:id="@+id/grid_row_grid3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/grid_row_grid2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
+
+
+            <View
+                android:id="@+id/recent_game_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@id/recent_game_header"
+                app:layout_constraintTop_toBottomOf="@id/grid_row_grid1" />
+
+            <TextView
+                android:id="@+id/recent_game_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="LAST GAME"
+                android:textSize="30dp"
+                app:layout_constraintBottom_toTopOf="@id/recent_game_winner"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_divider" />
+
+            <TextView
+                android:id="@+id/recent_game_winner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Winner: "
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/lastword1"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_header" />
+
+            <!---->
+
+
+            <TextView
+                android:id="@+id/lastword1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 1"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_grid1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/lastword2"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_winner" />
+
+            <TextView
+                android:id="@+id/lastword2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 2"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/lastword1"
+                app:layout_constraintRight_toLeftOf="@+id/lastword3"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_winner" />
+
+            <TextView
+                android:id="@+id/lastword3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 3"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/lastword2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_winner" />
+
+
+            <ImageView
+                android:id="@+id/recentgame_grid1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toTopOf="@+id/recent_game_you"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/recentgame_grid2"
+                app:layout_constraintTop_toBottomOf="@id/lastword1" />
+
+            <ImageView
+                android:id="@+id/recentgame_grid2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/recentgame_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/recentgame_grid1"
+                app:layout_constraintRight_toLeftOf="@+id/recentgame_grid3"
+                app:layout_constraintTop_toTopOf="@id/recentgame_grid1" />
+
+            <ImageView
+                android:id="@+id/recentgame_grid3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/recentgame_grid1"
+                app:layout_constraintLeft_toRightOf="@+id/recentgame_grid2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/recentgame_grid1" />
+
+
+            <TextView
+                android:id="@+id/recent_game_you"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Winner: "
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/lastword_you_1"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recentgame_grid1" />
+
+            <!---->
+
+
+            <TextView
+                android:id="@+id/lastword_you_1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 1"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_you_1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/lastword_you_2"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_you" />
+
+            <TextView
+                android:id="@+id/lastword_you_2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 2"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_you_1"
+                app:layout_constraintLeft_toRightOf="@+id/lastword_you_1"
+                app:layout_constraintRight_toLeftOf="@+id/lastword_you_3"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_you" />
+
+            <TextView
+                android:id="@+id/lastword_you_3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Word 3"
+                app:layout_constraintBottom_toTopOf="@id/recentgame_you_1"
+                app:layout_constraintLeft_toRightOf="@+id/lastword_you_2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recent_game_you" />
+
+
+            <ImageView
+                android:id="@+id/recentgame_you_1"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/recentgame_you_2"
+                app:layout_constraintTop_toBottomOf="@id/lastword_you_1" />
+
+            <ImageView
+                android:id="@+id/recentgame_you_2"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/recentgame_you_1"
+                app:layout_constraintLeft_toRightOf="@+id/recentgame_you_1"
+                app:layout_constraintRight_toLeftOf="@+id/recentgame_you_3"
+                app:layout_constraintTop_toTopOf="@id/recentgame_you_1" />
+
+            <ImageView
+                android:id="@+id/recentgame_you_3"
+                android:layout_width="@dimen/grid_snapshot_size"
+                android:layout_height="@dimen/grid_snapshot_size"
+                android:src="@drawable/letter_grid_blank"
+                app:layout_constraintBottom_toBottomOf="@+id/recentgame_you_1"
+                app:layout_constraintLeft_toRightOf="@+id/recentgame_you_2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/recentgame_you_1" />
+
+            <android.support.constraint.Group
+                android:id="@+id/best_game_grids"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="grid_row_grid1,grid_row_grid2,grid_row_grid3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/best_game_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="grid_row_bestword1,grid_row_bestword2,grid_row_bestword3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/recent_your_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="recent_game_you,recentgame_you_1,recentgame_you_2,recentgame_you_3,lastword_you_1,lastword_you_2,lastword_you_3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/recent_winner_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="recentgame_grid1,recentgame_grid2,recentgame_grid3,lastword1,lastword2,lastword3" />
+
+            <android.support.constraint.Barrier
+                android:id="@+id/lastgame_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="recent_game_winner,recentgame_you_1,recentgame_you_2,recentgame_you_3,recentgame_grid1,recentgame_grid2,recentgame_grid3" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="Space at bottom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/lastgame_barrier" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

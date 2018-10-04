@@ -1,44 +1,35 @@
 package com.example.seamus.wordfox.RV.RVTypes;
 
-import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.database.DataPerGame;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
 import java.util.UUID;
 
 public class TypeGamesDetail implements DataListItem {
-    private final String ID;
+    private final UUID ID;
 
-    private List<String> letters;
-    private List<String> bestPossible;
-    private List<String> players = new ArrayList<>();
-    private Map<String, ArrayList<String>> wordsPerPlayer;
     private boolean isExpanded = false;
+    private DataPerGame data;
 
     public TypeGamesDetail(DataPerGame data) {
-        this.letters = data.letters;
-        this.bestPossible = data.bestPossible;
-        players.addAll(data.players);
-        this.wordsPerPlayer = data.wordsPerPlayer;
-        ID = UUID.randomUUID().toString();
+        this.data = data;
+        ID = UUID.randomUUID();
     }
-    public List<String> getPlayers(){
-        return players;
+    public ArrayList<PlayerIdentity> getPlayers(){
+        return data.players;
     }
-    public Map<String, ArrayList<String>> getPlayerWords(){
-        return wordsPerPlayer;
+    public Map<UUID, ArrayList<String>> getPlayerWords(){
+        return data.wordsPerPlayer;
     }
     public String getLetters(int round){
-        return letters.get(round);
+        return data.letters.get(round);
     }
     public String getBestPossible(int round){
-        return bestPossible.get(round);
+        return data.bestPossible.get(round);
     }
 
     @Override
@@ -67,7 +58,7 @@ public class TypeGamesDetail implements DataListItem {
     }
 
     @Override
-    public String getID() {
+    public UUID getID() {
         return ID;
     }
 

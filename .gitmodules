@@ -1,3 +1,3 @@
-[submodule "groupie"]
-	path = groupie
-	url = https://github.com/seamus91g/groupie.git
+[submodule "CircleImageView"]
+	path = CircleImageView
+	url = https://github.com/hdodenhof/CircleImageView.git

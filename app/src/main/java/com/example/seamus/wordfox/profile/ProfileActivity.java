@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.Group;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -13,18 +16,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +33,8 @@ import android.widget.Toast;
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.NavigationBurger;
+import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
-
-import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -47,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity
     private ImageView profileIB;
     private EditText nameEditText;
     private Button setProfileNameButton;
+    Bitmap buttongGridImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +79,51 @@ public class ProfileActivity extends AppCompatActivity
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
         // The presenter handles preparing relevant data to display
-        presenter = new ProfilePresenter(this, new GameData(this, GameData.DEFAULT_P1_NAME));
+        presenter = new ProfilePresenter(this, new GameData(this, GameData.getPlayer1Identity(this).ID));
         presenter.displayLongestWord();
         presenter.displayProfileName();
         presenter.displayProfileImage();
-        presenter.displayBestWords();
-        presenter.displayRecentGame();
+        presenter.bestGameWords();
+        presenter.recentGameWords();
+        presenter.displayRank();
+
     }
+
+    @Override
+    public void setRankImage(Bitmap rankImage){
+        ImageView rankIV = findViewById(R.id.profile_rank_image);
+        rankIV.setImageBitmap(rankImage);
+    }
+    @Override
+    public void setRankText(String rank){
+        TextView rankTV = findViewById(R.id.highest_rank_text);
+        rankTV.setText(rank);
+    }
+
+    // When no stats are available, can not show recent game
+    @Override
+    public void hideRecentGame() {
+        TextView recentGameSubHeader = findViewById(R.id.recent_game_winner);
+        recentGameSubHeader.setText(R.string.no_games_played_profile);
+        Group recentWinner = findViewById(R.id.recent_winner_words);
+        Group recentYou = findViewById(R.id.recent_your_words);
+        recentWinner.setVisibility(View.GONE);
+        recentYou.setVisibility(View.GONE);
+    }
+
+    // When no stats are available, can not show best game
+    @Override
+    public void hideBestGame() {
+        TextView bestGameSubHeader = findViewById(R.id.best_game_non_existant);
+        bestGameSubHeader.setVisibility(View.VISIBLE);
+        bestGameSubHeader.setText(R.string.no_games_played_profile);
+
+        Group bestGame = findViewById(R.id.best_game_words);
+        bestGame.setVisibility(View.INVISIBLE);
+        Group bestGameGrids = findViewById(R.id.best_game_grids);
+        bestGameGrids.setVisibility(View.GONE);
+    }
+
     // Keep the 'Save Username' button in view when the soft keyboard appears
     private View.OnFocusChangeListener edittextFocusChange = new View.OnFocusChangeListener() {
         @Override
@@ -194,8 +233,14 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setLongestWord(String longestWord) {
         // Display longest word
-        TextView longestWordProfilePage = findViewById(R.id.profPicLongestWord);
-        longestWordProfilePage.setText(longestWord);
+        String longestWordSpeechBubble;
+        if (longestWord.equals(GameData.NON_EXISTANT)) {
+            longestWordSpeechBubble = "You haven't played any games yet!";
+        }else{
+            longestWordSpeechBubble = "Your longest word ever was " + longestWord + "!";
+        }
+        TextView longestWordProfilePage = findViewById(R.id.profile_longest_word);
+        longestWordProfilePage.setText(longestWordSpeechBubble);
     }
 
     @Override
@@ -208,26 +253,146 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     @Override
-    public void setBestWords(ArrayList<String> words) {
-        for (String message : words) {
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText(message);
-
-            LinearLayout linearLayout = findViewById(R.id.recent_game);
-            linearLayout.addView(textView);
+    public Bitmap getButtonGridImage() {
+        if (buttongGridImage == null) {
+            buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
+            buttongGridImage = getResizedBitmap(buttongGridImage, dp2px(100), dp2px(100));  // TODO: Adjust to screen size
         }
+        return buttongGridImage;
+    }
+
+    private int dp2px(final float dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {     // TODO: Use ImageHandler
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = newWidth / width;
+        float scaleHeight = newHeight / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
+
+    @Override
+    public int getNotPressedButtonColor() {
+        return getResources().getColor(R.color.game_font_color);
     }
 
     @Override
-    public void setDataPreviousGame(ArrayList<String> info) {
-        for (String message : info) {
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText(message);
+    public int getPressedButtonColorPrimary() {
+        return getResources().getColor(R.color.colorAccent);
+    }
 
-            LinearLayout linearLayout = findViewById(R.id.recent_game);
-            linearLayout.addView(textView);
+    @Override
+    public void setRecentGameWinnerMessage(String msg) {
+        TextView winnerMsg = findViewById(R.id.recent_game_winner);
+        winnerMsg.setText(Html.fromHtml(msg));
+    }
+
+    @Override
+    public void setRecentGameWinnerYourMessage(String msg) {
+        TextView yourMessage = findViewById(R.id.recent_game_you);
+        yourMessage.setText(msg);
+    }
+
+
+    @Override
+    public int getPressedButtonColorSecondary() {
+        return getResources().getColor(R.color.colorLightAccent);
+    }
+
+    @Override
+    public void setBestWord(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.grid_row_grid1);
+                tv = findViewById(R.id.grid_row_bestword1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.grid_row_grid2);
+                tv = findViewById(R.id.grid_row_bestword2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.grid_row_grid3);
+                tv = findViewById(R.id.grid_row_bestword3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.grid_row_grid1);
+                tv = findViewById(R.id.grid_row_bestword1);
         }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
+    }
+
+    @Override
+    public void setRecentWord(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.recentgame_grid1);
+                tv = findViewById(R.id.lastword1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.recentgame_grid2);
+                tv = findViewById(R.id.lastword2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.recentgame_grid3);
+                tv = findViewById(R.id.lastword3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.recentgame_grid1);
+                tv = findViewById(R.id.lastword1);
+        }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
+    }
+
+    @Override
+    public void setRecentWordYou(Bitmap bmp, int index, String s) {
+        ImageView gamegrid;
+        TextView tv;
+        switch (index) {
+            case 0:
+                gamegrid = findViewById(R.id.recentgame_you_1);
+                tv = findViewById(R.id.lastword_you_1);
+                break;
+            case 1:
+                gamegrid = findViewById(R.id.recentgame_you_2);
+                tv = findViewById(R.id.lastword_you_2);
+                break;
+            case 2:
+                gamegrid = findViewById(R.id.recentgame_you_3);
+                tv = findViewById(R.id.lastword_you_3);
+                break;
+            default:
+                gamegrid = findViewById(R.id.recentgame_you_1);
+                tv = findViewById(R.id.lastword_you_1);
+        }
+        gamegrid.setImageBitmap(bmp);
+        tv.setText(s);
+
+    }
+
+    @Override
+    public void setRecentGameYourWordsInvisible() {
+        Group singleRow;
+        singleRow = findViewById(R.id.recent_your_words);
+        singleRow.setVisibility(View.GONE);
     }
 }

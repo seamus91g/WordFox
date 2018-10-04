@@ -10,6 +10,7 @@ import com.example.seamus.wordfox.datamodels.GameItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Created by Gilroy
@@ -25,7 +26,7 @@ public class ResultsPresenter {
     private HashMap<Boolean, ArrayList<GameInstance>> playerGroups;
     private ArrayList<GameInstance> winners;
 
-    ResultsPresenter(ResultsContract.View view, boolean isGameOver, int playerCount,
+    public ResultsPresenter(ResultsContract.View view, boolean isGameOver, int playerCount,
                      FoxSQLData foxData, ArrayList<GameInstance> gameInstances) {
         this.view = view;
         this.isGameOver = isGameOver;
@@ -47,7 +48,7 @@ public class ResultsPresenter {
                 gameOverMessage = "GAME OVER!";
             } else {
                 // If one player, say 'GAME OVER' + name
-                String playername = gameInstances.get(0).getPlayerID();
+                String playername = gameInstances.get(0).getName();
                 gameOverMessage = "GAME OVER " + playername.toUpperCase();
             }
         }
@@ -73,7 +74,7 @@ public class ResultsPresenter {
                 greeting = "You scored ";
             } else {
                 //get the player name, form a greeting
-                greeting = gameInstances.get(k).getPlayerID() + " scored ";
+                greeting = gameInstances.get(k).getName() + " scored ";
             }
             if (!isGameOver) {
                 GameInstance myGameInstance = gameInstances.get(0);
@@ -102,16 +103,16 @@ public class ResultsPresenter {
             if (playerCount > 1) {
                 StringBuilder victoryMessage;
                 if (winners.size() == 1) {
-                    String winnerName = winners.get(0).getPlayerID();
-                    if (winnerName.equals(GameData.DEFAULT_P1_NAME)) {
-                        winnerName = view.defaultP1Name();
-                    }
+                    String winnerName = winners.get(0).getName();
+//                    if (winnerName.equals(GameData.DEFAULT_P1_ID)) {
+//                        winnerName = view.defaultP1Name();      // TODO: .... HUH?! Pointless! Using it above!
+//                    }
                     victoryMessage = new StringBuilder("Winner is " + winnerName + "!");
                 } else {
                     //if there's more than one name in the list of winners then it was a draw
                     victoryMessage = new StringBuilder("It was a draw between ");
                     for (int f = 0; f < winners.size(); f++) {
-                        victoryMessage.append(winners.get(f).getPlayerID());
+                        victoryMessage.append(winners.get(f).getName());
                         if (f < (winners.size() - 1)) {
                             victoryMessage.append(" and ");
                         } else {
@@ -135,19 +136,19 @@ public class ResultsPresenter {
             if (winners.size() > 1) {
                 // Game was a draw if the winner group contains more than one player
                 for (GameInstance player : winners) {
-                    foxData.updatePlayerStats(player.getPlayerName(), PlayerStatsTable.COLUMN_DRAWS);
+                    foxData.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_DRAWS);
                 }
             } else {
-                foxData.updatePlayerStats(winners.get(0).getPlayerName(), PlayerStatsTable.COLUMN_WINS);
+                foxData.updatePlayerStats(winners.get(0).getID(), PlayerStatsTable.COLUMN_WINS);
             }
             // Increment lose counters
             for (GameInstance player : playerGroups.get(Boolean.FALSE)) {
-                foxData.updatePlayerStats(player.getPlayerName(), PlayerStatsTable.COLUMN_LOSES);
+                foxData.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_LOSES);
             }
             // Loop through player and register win/lose/draw respective to every other player
             for (GameInstance player : gameInstances) {
                 for (GameInstance opponent : gameInstances) {
-                    String winner = player.getPlayerName(), loser = opponent.getPlayerName();
+                    UUID winner = player.getID(), loser = opponent.getID();
                     if (winner.equals(loser)) {
                         continue;
                     }
@@ -155,8 +156,8 @@ public class ResultsPresenter {
                     if (player.getTotalScore() == opponent.getTotalScore()) {
                         draw = true;
                     } else if (player.getTotalScore() < opponent.getTotalScore()) {
-                        winner = opponent.getPlayerName();
-                        loser = player.getPlayerName();
+                        winner = opponent.getID();
+                        loser = player.getID();
                     }
                     foxData.updateOpponentItem(winner, loser, draw);
                 }
@@ -168,11 +169,11 @@ public class ResultsPresenter {
         // Store most recent words for each player
         // Store most recent Game ID
         for (GameInstance pgi : gameInstances) {
-            GameData plyrGd = view.getPlayerData(pgi.getPlayerName());
+            GameData plyrGd = view.getPlayerData(pgi.getID());
             plyrGd.setRecentGame(pgi.getRoundID(0));
             plyrGd.setRecentWords(pgi.getAllFinalWords());
             if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
-                plyrGd.setBestWords(pgi.getAllFinalWords());
+                plyrGd.setBestGame(pgi.getLetters(), pgi.getAllFinalWords());
                 plyrGd.setHighestScore(pgi.getTotalScore());
             } else {
                 Log.d(TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
@@ -228,7 +229,7 @@ public class ResultsPresenter {
                     String suggestedToPlayer = w.toUpperCase() +
                             " (" + w.length() + ")";
                     view.addResultValue(suggestedToPlayer);
-                    if(i > 0){
+                    if (i > 0) {
                         view.addResultHeading(" ");
                     }
                 }
@@ -238,7 +239,7 @@ public class ResultsPresenter {
             }
             // Display best word found of each player
             for (int playerNum = 0; playerNum < players; playerNum++) {
-                String name = gameInstances.get(playerNum).getPlayerID();
+                String name = gameInstances.get(playerNum).getName();
                 view.addResultHeading(name + ": ");
                 //get their best guess
                 String bestGuess = getRoundOrGameBestGuess(playerNum, ongoingRound);
@@ -274,7 +275,7 @@ public class ResultsPresenter {
     }
 
     // Get the best possible word for a particular round
-    private String getRoundOrGameBestPossibleWord(int round) {
+    public String getRoundOrGameBestPossibleWord(int round) {
         String bestPossibleWord;
         GameInstance player1GameInstance = gameInstances.get(0);
         String bestWordPoss = player1GameInstance.getRoundLongestPossible(round);
@@ -285,6 +286,7 @@ public class ResultsPresenter {
     private String getRoundLetters(int round) {
         return gameInstances.get(0).getLetters(round);
     }
+
     // Create GameItem classes, to facilitate storing relevant data to the sql database
     private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances) {
         StringBuilder winWords1 = new StringBuilder();
@@ -298,7 +300,7 @@ public class ResultsPresenter {
             winWords2.append(", ");
             winWords3.append(g.getRoundWord(2));
             winWords3.append(", ");
-            winNames.append(g.getPlayerName());
+            winNames.append(g.getID());
             winNames.append(", ");
         }
         String ww1 = winWords1.length() > 0 ? winWords1.substring(0, winWords1.length() - 2) : "";
@@ -307,9 +309,9 @@ public class ResultsPresenter {
         String wn = winNames.length() > 0 ? winNames.substring(0, winNames.length() - 2) : "";
 
         GameInstance myGameInstance = gameInstances.get(0);
-        String round1Id = myGameInstance.getRoundID(0);
-        String round2Id = myGameInstance.getRoundID(1);
-        String round3Id = myGameInstance.getRoundID(2);
+        UUID round1Id = myGameInstance.getRoundID(0);
+        UUID round2Id = myGameInstance.getRoundID(1);
+        UUID round3Id = myGameInstance.getRoundID(2);
         GameItem thisGame = new GameItem(
                 round1Id, round2Id, round3Id, ww1, ww2, ww3, wn, playerCount
         );

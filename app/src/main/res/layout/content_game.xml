@@ -83,21 +83,21 @@
                 android:tag="guessGridCell1"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="B" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell4"
                 android:tag="guessGridCell4"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="B" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell7"
                 android:tag="guessGridCell7"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="B" />
+                android:text="" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,21 +110,21 @@
                 android:tag="guessGridCell2"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="A" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell5"
                 android:tag="guessGridCell5"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="A" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell8"
                 android:tag="guessGridCell8"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="A" />
+                android:text="" />
         </LinearLayout>
 
         <LinearLayout
@@ -137,7 +137,7 @@
                 android:tag="guessGridCell3"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="C" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell6"
@@ -145,14 +145,14 @@
                 style="@style/TextViewButtons"
                 android:layout_width="match_parent"
                 android:onClick="gridCellClicked"
-                android:text="C" />
+                android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell9"
                 android:tag="guessGridCell9"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
-                android:text="C" />
+                android:text="" />
         </LinearLayout>
 
         <Space
