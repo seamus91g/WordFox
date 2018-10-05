@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     public static final String MONITOR_TAG = "myTag";
     private boolean backButtonPressedOnce = false;
     private NavigationBurger navBurger = new NavigationBurger();
-    public static ArrayList<GameInstance> allGameInstances = new ArrayList<GameInstance>();
+    public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
     private int numberOfPlayers;
     private final static int maxPlayerCount = 6;
 
@@ -99,13 +99,13 @@ public class MainActivity extends AppCompatActivity
         if (FoxDictionary.isWordListLoaded) {
             return;
         }
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets());
-            }
-        });
+        Thread thread = new Thread(() -> FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets()));
         thread.start();
+    }
+    public void startWifi(View v) {
+
+        Intent wifiIntent = new Intent(this, LocalWifiActivity.class);
+        startActivity(wifiIntent);
     }
 
     private void startAnimation() {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", 0);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, 0);
 
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
