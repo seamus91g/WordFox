@@ -26,9 +26,9 @@ public class GameActivityTest {
         new HomeRobot().startGame();
     }
     /////////////////////////////// Tests ///////////////////////////////
-    // Reset clears letters
+    // Reset clears lettersString
     // Submit doesn't accept invalid word
-    // Submit clears letters, adds word to bottom
+    // Submit clears lettersString, adds word to bottom
     // Submit shorter word, doesn't add
     // Submit longer word, replaces previous
     @Test

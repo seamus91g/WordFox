@@ -1,12 +1,15 @@
 package com.example.seamus.wordfox.RoundResults;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +29,8 @@ import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.WifiService;
+import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
@@ -47,6 +52,9 @@ public class RoundEndScreen extends AppCompatActivity
 
     private ResultsPresenter presenter;
     private int gameIndexNumber;
+    private WifiServiceConnection netConnService;
+    private IntentFilter activityIntentFilter;
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +65,7 @@ public class RoundEndScreen extends AppCompatActivity
 
         String roundOrGameEnd = getIntent().getExtras().getString("key");
         boolean gameOver = (roundOrGameEnd.equals("game"));
-        gameIndexNumber = getIntent().getExtras().getInt("gameIndexNumber");
+        gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
 
         ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
         if (gameOver) {
@@ -87,9 +95,42 @@ public class RoundEndScreen extends AppCompatActivity
 
         populatePlayerDetails(MainActivity.allGameInstances.get(gameIndexNumber));
         populatePossibleWords(MainActivity.allGameInstances.get(gameIndexNumber));
+
+        isOnline = instancesToDisplay.get(0).isOnline();
+        if (isOnline) {
+            Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+            activityIntentFilter = new IntentFilter();
+            activityIntentFilter.addAction(WifiService.ACTION_SEND_LETTERS);
+            netConnService = new WifiServiceConnection();
+            activityIntentFilter = new IntentFilter();
+//            sendBroadcast(presenter.getLettersSTR());
+        }
     }
 
-    public void populatePlayerDetails(GameInstance gameInstance){       // TODO:  Tidy this. Use MVP
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (isOnline) {
+            bindService(new Intent(this, WifiService.class), netConnService,
+                    Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (isOnline && netConnService.isBound) {
+            unbindService(netConnService);      // TODO: ... necessary?? Kills it anyway ..
+            netConnService.isBound = false;
+        }
+    }
+
+    public void populatePlayerDetails(GameInstance gameInstance) {       // TODO:  Tidy this. Use MVP
         ConstraintLayout cl = findViewById(R.id.round_end_root_layout);
         GameData plyrGd = new GameData(this, gameInstance.getID());
 
@@ -138,21 +179,21 @@ public class RoundEndScreen extends AppCompatActivity
         }
     }
 
-    public void populatePossibleWords(GameInstance gameInstance){
+    public void populatePossibleWords(GameInstance gameInstance) {
         List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
         LinearLayout container = findViewById(R.id.suggestions_container);
         Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
         gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
 
         int count = 0;
-        for (int i=0; i<container.getChildCount(); ++i){
+        for (int i = 0; i < container.getChildCount(); ++i) {
             View row = container.getChildAt(i);
-            for (int j=0; j<GameInstance.NUMBER_ROUNDS; ++j){
-                String wordTag = "word_" + (j+1);
-                String gridTag = "grid_" + (j+1);
+            for (int j = 0; j < GameInstance.NUMBER_ROUNDS; ++j) {
+                String wordTag = "word_" + (j + 1);
+                String gridTag = "grid_" + (j + 1);
                 TextView wordTV = row.findViewWithTag(wordTag);
                 ImageView grid = row.findViewWithTag(gridTag);
-                if(count >= possibleWords.size()){
+                if (count >= possibleWords.size()) {
                     wordTV.setVisibility(View.INVISIBLE);
                     grid.setVisibility(View.INVISIBLE);
                     continue;
@@ -281,15 +322,19 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public void nextRound(int gameIndex) {
-        Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", gameIndexNumber);
-        startActivity(gameIntent);
+        gameProceed(GameActivity.class, gameIndexNumber);
+//        Intent gameIntent = new Intent(this, GameActivity.class);
+//        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndexNumber + 1);
+//        startActivity(gameIntent);
     }
 
     @Override
     public void playerSwitch(int gameIndex) {
-        Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
-        gameIntent.putExtra("game_index", gameIndex);
+        gameProceed(PlayerSwitchActivity.class, gameIndexNumber + 1);
+    }
+    private void gameProceed(Class nextActivity, int index){
+        Intent gameIntent = new Intent(this, nextActivity);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);
     }
 
@@ -309,7 +354,7 @@ public class RoundEndScreen extends AppCompatActivity
         Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
         Bundle endScreenBundle = new Bundle();
         endScreenBundle.putString("key", "game");
-        endScreenBundle.putInt("gameIndexNumber", gameIndex);
+        endScreenBundle.putInt(GameActivity.GAME_INDEX, gameIndex);
         EndScreenIntent.putExtras(endScreenBundle);
         startActivity(EndScreenIntent);
     }

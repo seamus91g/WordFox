@@ -1,6 +1,8 @@
 package com.example.seamus.wordfox.game_screen;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,8 @@ import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RoundResults.RoundEndScreen;
+import com.example.seamus.wordfox.WifiService;
+import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
 import com.example.seamus.wordfox.profile.ProfileActivity;
@@ -35,6 +40,7 @@ import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GamescreenContract.View {
+    public static final String GAME_INDEX = "game_index";
     public static int GAME_TIME_SECONDS = 30;
     public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
@@ -47,6 +53,12 @@ public class GameActivity extends AppCompatActivity
     private boolean resetButtonPressedOnce = false;
     private boolean gameInFocus = true;
     private boolean timeUp = false;
+    private WifiServiceConnection netConnService;
+//    private IntentFilter activityIntentFilter;
+    boolean isOnline;
+//    boolean isGroupOwner;
+//    boolean isBroadcastReturned = false;
+//    String letters = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +80,14 @@ public class GameActivity extends AppCompatActivity
         gridLayout = findViewById(R.id.guessGrid);
 
         DictionaryApplication dictionary = (DictionaryApplication) getApplication();
-        GameInstance game = MainActivity.allGameInstances.get(getIntent().getExtras().getInt("game_index"));
+        int gIndex = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
+        GameInstance game = MainActivity.allGameInstances.get(gIndex);
+
+        isOnline = game.isOnline();
+        if (isOnline) {
+            netConnService = new WifiServiceConnection();
+        }
+
         // Presenter handles all non-view related logic
         presenter = new GamescreenPresenter(
                 this,
@@ -79,10 +98,62 @@ public class GameActivity extends AppCompatActivity
         );
         presenter.setup();
 
+
         displayTitle();
         timeBlock = findViewById(R.id.timeBlock);
         populateTimeBlock();
     }
+
+    // Randomly shuffle locations of the letters in the grid
+    public void shuffleGivenLetters(View v) {
+        presenter.shuffleGivenLetters();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (isOnline) {
+            bindService(new Intent(this, WifiService.class), netConnService,
+                    Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (isOnline && netConnService.isBound) {
+            unbindService(netConnService);
+            netConnService.isBound = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gameInFocus = false;
+//        if (isOnline) {
+//            unregisterReceiver(activityReceiver);
+//        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if (isOnline) {
+//            registerReceiver(activityReceiver, activityIntentFilter);
+//        }
+        if (timeUp) {
+            completeGame();
+        }
+        gameInFocus = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        myGameTimerInstance.killTimer();
+        super.onDestroy();
+    }
+    // If time expired since resuming, end the game
 
     @Override
     public TextView createTimeCounterSegment(int height) {
@@ -174,16 +245,13 @@ public class GameActivity extends AppCompatActivity
 //        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
         Intent EndScreenIntent = new Intent(this, RoundEndScreen.class);
         Bundle endScreenBundle = new Bundle();
-        endScreenBundle.putString("key", "round");
-        endScreenBundle.putInt("gameIndexNumber", index);
+
+        endScreenBundle.putString("key", "round");                  // TODO:  ... get rid of this
+        endScreenBundle.putInt(GameActivity.GAME_INDEX, index);
         EndScreenIntent.putExtras(endScreenBundle);
         startActivity(EndScreenIntent);
     }
 
-    // Randomly shuffle locations of the letters in the grid
-    public void shuffleGivenLetters(View v) {
-        presenter.shuffleGivenLetters();
-    }
 
     // Display a particular letter to it's respective location on the 3x3 grid
     @Override
@@ -278,37 +346,6 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        gameInFocus = false;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        myGameTimerInstance.killTimer();
-        super.onDestroy();
-    }
-
-    // If time expired since resuming, end the game
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (timeUp) {
-            completeGame();
-        }
-        gameInFocus = true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     // Must press back button twice in quick succession to exit the game
     @Override
