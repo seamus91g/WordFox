@@ -6,7 +6,7 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.game_screen.GamescreenContract;
 
 /**
- * Created by Desmond on 12/07/2017.
+ * Created by Desmond.
  */
 
 public class GameTimer {

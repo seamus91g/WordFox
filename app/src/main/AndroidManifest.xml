@@ -69,9 +69,6 @@
             android:label="@string/title_activity_round_end_screen"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service
-            android:name=".NetService"
-            android:exported="false" />
         <service android:name=".WifiService" />
 
         <activity
