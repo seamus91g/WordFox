@@ -61,7 +61,8 @@
 
     <!-- Style for rectangular buttons throughout the non-game screens-->
     <style name="RectangularButtons">
-        <item name="android:textColor">@drawable/selector_rectangular_button_text_color</item>
+        <item name="android:textColor">@drawable/selector_rectangularbutton_color
+        </item>
         <item name="android:layout_margin">4dp
         </item>
         <item name="android:textSize">@dimen/grid_button_text_size
@@ -86,39 +87,36 @@
     <style name="gameShuffleButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_shuffle_button_icon
-        </item>
         <item name="android:layout_width">58dp
         </item>
-        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        <item name="android:textColor">@color/game_font_color
         </item>
-        <item name="android:background">@drawable/selector_game_action_button_shape</item>
+        <item name="android:background">@drawable/turquoise_border_white_background
+        </item>
     </style>
 
     <!-- Style for the action buttons in the game; shuffle, submit, reset-->
     <style name="gameResetButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_reset_button_icon
-        </item>
         <item name="android:layout_width">58dp
         </item>
-        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        <item name="android:textColor">@color/game_font_color
         </item>
-        <item name="android:background">@drawable/selector_game_action_button_shape</item>
+        <item name="android:background">@drawable/turquoise_border_white_background
+        </item>
     </style>
 
     <!-- Style for the action buttons in the game; shuffle, submit, reset-->
     <style name="gameSubmitButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_submit_button_icon
-        </item>
         <item name="android:layout_width">58dp
         </item>
-        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        <item name="android:textColor">@color/game_font_color
         </item>
-        <item name="android:background">@drawable/selector_game_action_button_shape</item>
+        <item name="android:background">@drawable/turquoise_border_white_background
+        </item>
     </style>
 
     <!-- Style for the fox buttons on the home screen for choosing number of players-->
