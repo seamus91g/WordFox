@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".injection.DictionaryApplication"
         android:allowBackup="true"
@@ -30,10 +37,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="._junk.ScoreScreen1Activity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".statistics_screen.Statistics"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -52,16 +55,6 @@
             android:label="@string/SettingsActivityLabel"
             android:screenOrientation="portrait" />
         <activity
-            android:name="._junk.ScoreScreen2Activity"
-            android:label="@string/ScoreScreen2ActivityLabel"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="._junk.DataScreenActivity"
-            android:label="@string/DataScreenActivityLabel"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".player_switch.PlayerSwitchActivity"
             android:label="@string/title_activity_player_switch"
             android:screenOrientation="portrait"
@@ -72,16 +65,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="._junk.DataActivity"
-            android:label="@string/title_activity_data"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".data_page.DataPageActivity"
-            android:label="@string/title_activity_data_page"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".RoundResults.RoundEndScreen"
             android:label="@string/title_activity_round_end_screen"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".WifiService" />
+
+        <activity
+            android:name=".LocalWifiActivity"
+            android:label="@string/title_activity_local_wifi"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

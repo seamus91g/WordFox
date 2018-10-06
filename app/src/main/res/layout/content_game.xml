@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:layout_margin="@dimen/screen_margin"
+    android:gravity="center"
     android:orientation="vertical"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -25,34 +24,38 @@
         android:text="JDUENFISL"
         android:textColor="@color/game_font_color"
         android:textSize="@dimen/big_text_size"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"/>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/small_TextView_height">
-    <TextView
-        android:id="@+id/currentAttempt"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="@dimen/small_text_size"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical"
-        android:text=""
-        android:textColor="@color/game_font_color"
-        android:fontFamily="monospace" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/secondsRemaining"
-        android:text="30"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        android:layout_weight="0.3" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_TextView_height">
+
+        <TextView
+            android:id="@+id/currentAttempt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="monospace"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/game_font_color"
+            android:textSize="@dimen/small_text_size" />
+
+        <TextView
+            android:id="@+id/secondsRemaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="30" />
+    </RelativeLayout>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -80,23 +83,23 @@
 
             <Button
                 android:id="@+id/guessGridCell1"
-                android:tag="guessGridCell1"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell1"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell4"
-                android:tag="guessGridCell4"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell4"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell7"
-                android:tag="guessGridCell7"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell7"
                 android:text="" />
         </LinearLayout>
 
@@ -107,23 +110,23 @@
 
             <Button
                 android:id="@+id/guessGridCell2"
-                android:tag="guessGridCell2"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell2"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell5"
-                android:tag="guessGridCell5"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell5"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell8"
-                android:tag="guessGridCell8"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell8"
                 android:text="" />
         </LinearLayout>
 
@@ -134,24 +137,24 @@
 
             <Button
                 android:id="@+id/guessGridCell3"
-                android:tag="guessGridCell3"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell3"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell6"
-                android:tag="guessGridCell6"
                 style="@style/TextViewButtons"
                 android:layout_width="match_parent"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell6"
                 android:text="" />
 
             <Button
                 android:id="@+id/guessGridCell9"
-                android:tag="guessGridCell9"
                 style="@style/TextViewButtons"
                 android:onClick="gridCellClicked"
+                android:tag="guessGridCell9"
                 android:text="" />
         </LinearLayout>
 
@@ -161,11 +164,11 @@
             android:layout_weight="0.5" />
 
         <LinearLayout
+            android:id="@+id/timeBlock"
             android:layout_width="@dimen/timer_width"
             android:layout_height="match_parent"
-            android:id="@+id/timeBlock"
-            android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:orientation="vertical">
 
         </LinearLayout>
@@ -179,14 +182,14 @@
 
     <LinearLayout
         android:id="@+id/gameButtons"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Space
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <Space
             android:layout_width="4dp"
@@ -197,6 +200,7 @@
             style="@style/gameResetButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
+            android:drawableTop="@mipmap/ic_reset_button"
             android:onClick="clearCurrentAttempt"
             android:text="RESET"
             android:textSize="@dimen/action_button_text_size" />
@@ -209,6 +213,7 @@
             android:id="@+id/submitButton"
             style="@style/gameSubmitButton"
             android:layout_width="@dimen/action_button_dimension"
+            android:drawableTop="@mipmap/ic_submit_button"
             android:layout_height="@dimen/action_button_dimension"
             android:onClick="submitCurrentAttempt"
             android:text="SUBMIT"
@@ -223,6 +228,7 @@
             style="@style/gameShuffleButton"
             android:layout_width="@dimen/action_button_dimension"
             android:layout_height="@dimen/action_button_dimension"
+            android:drawableTop="@mipmap/ic_shuffle_button"
             android:onClick="shuffleGivenLetters"
             android:text="SHUFFLE"
             android:textSize="@dimen/action_button_text_size" />
@@ -233,8 +239,8 @@
 
         <Space
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

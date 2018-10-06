@@ -314,7 +314,7 @@ public class RoundnGameResults extends AppCompatActivity
     @Override
     public void nextRound(int gameIndex) {
         Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("game_index", gameIndexNumber);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndexNumber);
         startActivity(gameIntent);
     }
 
@@ -333,7 +333,7 @@ public class RoundnGameResults extends AppCompatActivity
     @Override
     public void playerSwitch(int index) {
         Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
-        gameIntent.putExtra("game_index", index);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);
     }
 

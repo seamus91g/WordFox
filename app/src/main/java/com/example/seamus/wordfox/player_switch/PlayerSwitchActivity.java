@@ -27,6 +27,7 @@ import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // What game number are we on
-        gameIndexNumber = getIntent().getExtras().getInt("game_index");
+        gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
 
         // Button to continue to the next player
         Button setProfileNameButton = (Button) findViewById(R.id.nextPlayerButton);

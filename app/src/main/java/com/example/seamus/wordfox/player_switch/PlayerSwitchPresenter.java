@@ -87,7 +87,14 @@ public class PlayerSwitchPresenter implements PlayerSwitchContract.Listener {
             choosenPlayer = findPlayerIdentityFromChoice(choice);
         }
         assert choosenPlayer != null;   // Should not be possible
-        allGameInstances.set(gameIndex, new GameInstance(choosenPlayer.ID, choosenPlayer.username, gameIndex, allGameInstances.get(0).getRoundIDs()));
+        if(allGameInstances.get(gameIndex).isOnline()){
+
+            allGameInstances.set(gameIndex, new GameInstance(choosenPlayer.ID, choosenPlayer.username, gameIndex, allGameInstances.get(0).getRoundIDs(), allGameInstances.get(gameIndex).isOnline(), allGameInstances.get(gameIndex).isGroupOwner()));
+        }else{
+
+            allGameInstances.set(gameIndex, new GameInstance(choosenPlayer.ID, choosenPlayer.username, gameIndex, allGameInstances.get(0).getRoundIDs()));
+        }
+
         nextPlayerMessage = "Pass the game to " + choice;
         view.displayMessage(nextPlayerMessage);
     }
@@ -118,7 +125,7 @@ public class PlayerSwitchPresenter implements PlayerSwitchContract.Listener {
             new GameData(context, choosenPlayer.ID).setUsername(choosenPlayer.username);
         }
         Intent gameIntent = new Intent(context, GameActivity.class);
-        gameIntent.putExtra("game_index", gameIndex);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndex);
         context.startActivity(gameIntent);
     }
 }

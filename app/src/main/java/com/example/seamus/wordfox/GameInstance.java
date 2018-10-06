@@ -15,6 +15,7 @@ public class GameInstance {
 
     public static int NUMBER_ROUNDS = 3;
     public final String MONITOR_TAG = "GameInstance";
+    private final boolean isOnline;
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
     private int round;   // round is a counter for the round of the game.
@@ -28,9 +29,18 @@ public class GameInstance {
     private PlayerIdentity player;
 
     private final ArrayList<UUID> roundIDs = new ArrayList<>();
+    private boolean isGroupOwner;       // TODO: Not required to store this????
 
     public static int getNumberRounds() {
         return NUMBER_ROUNDS;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public boolean isGroupOwner() {
+        return isGroupOwner;
     }
 
     public enum GameState {ONGOING, FINISHED}
@@ -46,27 +56,17 @@ public class GameInstance {
         myGameState = GameState.ONGOING;
     }
 
-//    public GameInstance(int thisGameIndex) {
-//        this("Player " + (thisGameIndex + 1), thisGameIndex, null);
-//    }
-//
-//    public GameInstance(int thisGameIndex, ArrayList<UUID> roundIDs) {
-//        this("Player " + (thisGameIndex + 1), thisGameIndex, roundIDs);
-//    }
-//
-//    public GameInstance(String name, int thisGameIndex) {
-//        this(name, thisGameIndex, null);
-//    }
-//    public GameInstance(String name, UUID ID, int thisGameIndex) {
-//        this(name, thisGameIndex, null);
-//        this.ID = ID;
-//    }
-
     public GameInstance(UUID playerId, String nm, int thisGameIndex) {
-        this(playerId, nm, thisGameIndex, null);
+        this(playerId, nm, thisGameIndex, null, false, false);
     }
-
     public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs) {
+        this(playerId, playerName, thisGameIndex, roundIDs, false, false);
+    }
+    public GameInstance(UUID playerId, String nm, int thisGameIndex, boolean isOnline, boolean isGO) {
+        this(playerId, nm, thisGameIndex, null, isOnline, isGO);
+    }
+    public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs, boolean isOnline, boolean isGO) {
+        this.isGroupOwner = isGO;
         if (roundIDs == null) {
             for (int i = 0; i < NUMBER_ROUNDS; i++) {
                 this.roundIDs.add(UUID.randomUUID());
@@ -74,6 +74,7 @@ public class GameInstance {
         } else {                              // Defensive copying
             this.roundIDs.addAll(roundIDs);
         }
+        this.isOnline = isOnline;
         player = new PlayerIdentity(playerId, playerName);
         this.thisGameIndex = thisGameIndex;
     }
@@ -123,7 +124,10 @@ public class GameInstance {
     }
 
     public String getRoundLetters() {
-        return letters.get(round);
+        if(letters.size() > round){
+            return letters.get(round);
+        }
+        return null;
     }
 
     public ArrayList<String> getLetters() {
@@ -178,8 +182,10 @@ public class GameInstance {
     }
 
     public String getLongestPossible() {
-
-        return allLongestPossible.get(round);
+        if(allLongestPossible.size() > round){
+            return allLongestPossible.get(round);
+        }
+        return null;
     }
 
     public String getRoundLongestPossible(int roundIndex) {

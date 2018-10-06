@@ -59,29 +59,32 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         // Generate a random sequence of 9 letters to use for the game
         ArrayList<String> givenLetters;
         String givenLettersSTR;
-        if (gameInstance.getThisGameIndex() == 0) {
+        if (gameInstance.getThisGameIndex() == 0 && gameInstance.getRoundLetters() == null) {
             givenLetters = dictionary.getGivenLetters();
             StringBuilder gameLetters = new StringBuilder();
             for (int i = 0; i < givenLetters.size(); i++) {
                 gameLetters.append(givenLetters.get(i));
             }
             givenLettersSTR = gameLetters.toString();
+            gameInstance.setLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);
-        } else {      // If multi player game, re-use the same letters
+        } else if (gameInstance.getRoundLetters() == null) {
             GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(gameInstance.getRound());
+            ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(gameInstance.getRound());
+            // TODO: Instead, Create a partial copy constructor to take in values
+            gameInstance.setLetters(givenLettersSTR);
+            gameInstance.addListOfSuggestedWords(longestWordsPossibleForRound);
             gameInstance.setLongestPossible(playerOneInstance.getRoundLongestPossible(gameInstance.getRound()));
 
-            ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(gameInstance.getRound());
-            gameInstance.addListOfSuggestedWords(longestWordsPossibleForRound);
+            givenLetters = getArrayFromLetters(givenLettersSTR);
 
-            givenLetters = new ArrayList<>(
-                    Arrays.asList(
-                            Arrays.copyOfRange(
-                                    givenLettersSTR.split(""), 1, givenLettersSTR.length() + 1))
-            );
+        } else {      // If wifi multi player game
+//            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+            givenLettersSTR = gameInstance.getRoundLetters();
+            givenLetters = getArrayFromLetters(givenLettersSTR);
+            execBackgroundSetupTasks(givenLettersSTR);
         }
-        gameInstance.setLetters(givenLettersSTR);
         ArrayList<SingleCell> gridCells = new ArrayList<>();
 
         for (int i = 0; i < givenLetters.size(); i++) {
@@ -91,6 +94,13 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         return gridCells;
     }
 
+    public ArrayList<String> getArrayFromLetters(String letters){
+        return new ArrayList<String>(
+                Arrays.asList(
+                        Arrays.copyOfRange(
+                                letters.split(""), 1, letters.length() + 1))
+        );
+    }
     // Finding list of longest words is slow. Run on thread to not block the UI
     private void execBackgroundSetupTasks(String givenLettersSTR) {
         Thread thread = new Thread(() -> {
