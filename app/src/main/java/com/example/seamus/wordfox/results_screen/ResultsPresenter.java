@@ -38,93 +38,6 @@ public class ResultsPresenter {
         winners = playerGroups.get(Boolean.TRUE);
     }
 
-    // 'GAME OVER' for the end of a game or 'TIME UP' for the end of a round
-    public void populateHeaderMsg() {
-        String gameOverMessage;
-        if (!isGameOver) {
-            gameOverMessage = "TIME UP!";
-        } else {
-            if (playerCount > 1) {
-                gameOverMessage = "GAME OVER!";
-            } else {
-                // If one player, say 'GAME OVER' + name
-                String playername = gameInstances.get(0).getName();
-                gameOverMessage = "GAME OVER " + playername.toUpperCase();
-            }
-        }
-        view.setGameOverMessage(gameOverMessage);
-    }
-
-    // Display who won the game and what their score was
-    public void populateResultLL() {
-        int steps;
-        if (isGameOver) {
-            steps = playerCount;
-        } else {
-            steps = 1;
-        }
-        //for each player add a line stating the score they got
-        for (int k = 0; k < steps; k++) {
-            String greeting;
-            int totalScore;
-            int maxScore;
-            // One Player ->    "You scored"
-            // Multiplayer ->   "#name scored"
-            if (!isGameOver || (playerCount == 1)) {
-                greeting = "You scored ";
-            } else {
-                //get the player name, form a greeting
-                greeting = gameInstances.get(k).getName() + " scored ";
-            }
-            if (!isGameOver) {
-                GameInstance myGameInstance = gameInstances.get(0);
-                totalScore = myGameInstance.getRoundWord(myGameInstance.getRound()).length();
-                maxScore = myGameInstance.getRoundLongestPossible(myGameInstance.getRound()).length();
-            } else {
-                GameInstance eachGameInstance = gameInstances.get(k);
-                totalScore = eachGameInstance.getTotalScore();
-                maxScore = eachGameInstance.getHighestPossibleScore();
-            }
-            //set the text of the resultsRatioTV on the end screen to show the users points
-            String resultsRatio = String.valueOf(totalScore) + " out of " + String.valueOf(maxScore) + " = ";
-            //declare and initialise a double for the percent success at the end of the game
-            Double successPercent = ((double) totalScore / (double) maxScore) * 100;
-            String resultsPercent = String.valueOf(successPercent.intValue()) + "%";
-            //assemble the result to contain all the components and show in the TextView
-            String result = greeting + resultsRatio + resultsPercent;
-            view.addTVtoResults(result);
-        }
-    }
-
-    // Populate header, results
-    public void endOfRoundOrGameResults() {
-        if (isGameOver) {
-            // Declare the winner, or multiple winners if draw
-            if (playerCount > 1) {
-                StringBuilder victoryMessage;
-                if (winners.size() == 1) {
-                    String winnerName = winners.get(0).getName();
-//                    if (winnerName.equals(GameData.DEFAULT_P1_ID)) {
-//                        winnerName = view.defaultP1Name();      // TODO: .... HUH?! Pointless! Using it above!
-//                    }
-                    victoryMessage = new StringBuilder("Winner is " + winnerName + "!");
-                } else {
-                    //if there's more than one name in the list of winners then it was a draw
-                    victoryMessage = new StringBuilder("It was a draw between ");
-                    for (int f = 0; f < winners.size(); f++) {
-                        victoryMessage.append(winners.get(f).getName());
-                        if (f < (winners.size() - 1)) {
-                            victoryMessage.append(" and ");
-                        } else {
-                            victoryMessage.append("!");
-                        }
-                    }
-                }
-                view.setVictoryMessage(victoryMessage.toString());
-            }
-        }
-    }
-
     public void updateData() {
         if (!isGameOver) {    // Only update data at game end
             return;
@@ -163,11 +76,6 @@ public class ResultsPresenter {
                 }
             }
         }
-//        else {
-//            winners.add(gameInstances.get(0)); // addAll();
-//        }
-        // Store most recent words for each player
-        // Store most recent Game ID
         for (GameInstance pgi : gameInstances) {
             GameData plyrGd = view.getPlayerData(pgi.getID());
             plyrGd.setRecentGame(pgi.getRoundID(0));
@@ -181,72 +89,6 @@ public class ResultsPresenter {
         }
         GameItem thisGameDetails = gameitemFromInstances(winners);
         foxData.createGameItem(thisGameDetails);
-    }
-
-    public void createRoundSummary() {
-        int rounds;
-        int players;
-        int ongoingRound;
-        if (isGameOver) {
-            rounds = GameInstance.NUMBER_ROUNDS;
-            players = playerCount;
-            view.displayTitle("Final Results");
-            view.prepareHomeButton();
-            ongoingRound = 0;
-        } else {
-            rounds = 1;
-            players = 1;
-            ongoingRound = gameInstances.get(0).getRound();
-            String titleMsg = "Round " + String.valueOf(ongoingRound + 1) + " Score";
-            view.displayTitle(titleMsg);
-            view.prepareContinueButton();
-        }
-        // if End -> print results of each round, Else -> print results previous round only
-        for (int round = 0; round < rounds; round++) {      // TODO: round? ongoingRound? curRound? Tidy this
-            String roundNo = "Round " + String.valueOf(ongoingRound + 1) + ": ";
-            view.addResultSpacer();
-            view.addResultHeading(roundNo);
-            // Different suggestions if entire game or just round is over
-            String suggestionTitle;
-            if (rounds == 1) {
-                suggestionTitle = "Possible words: ";
-            } else {
-                suggestionTitle = "Best word: ";
-            }
-            view.addResultHeading(suggestionTitle);
-            // create a TextView displaying the letters for the round
-            String letters = getRoundLetters(ongoingRound);
-            view.addResultValue(letters);
-            // If 'Round End' screen, Print list of suggested words for various lengths
-            // If 'Game End' screen, Print just one longest word
-            if (rounds == 1) {      // TODO: Abstract this
-                ArrayList<String> suggestedWords;
-                GameInstance thisGameInstance = gameInstances.get(0);
-                int curRound = thisGameInstance.getRound();     // TODO: curRound same as round? Ed: same as ongoingRound
-                suggestedWords = thisGameInstance.getSuggestedWordsOfRound(curRound);
-                for (int i = 0; i < suggestedWords.size(); ++i) { // String w : suggestedWords){
-                    String w = suggestedWords.get(i);
-                    String suggestedToPlayer = w.toUpperCase() +
-                            " (" + w.length() + ")";
-                    view.addResultValue(suggestedToPlayer);
-                    if (i > 0) {
-                        view.addResultHeading(" ");
-                    }
-                }
-            } else {
-                String wordSuggestion = getRoundOrGameBestPossibleWord(ongoingRound);
-                view.addResultValue(wordSuggestion);
-            }
-            // Display best word found of each player
-            for (int playerNum = 0; playerNum < players; playerNum++) {
-                String name = gameInstances.get(playerNum).getName();
-                view.addResultHeading(name + ": ");
-                //get their best guess
-                String bestGuess = getRoundOrGameBestGuess(playerNum, ongoingRound);
-                view.addResultValue(bestGuess, "Player longest word");
-            }
-            ++ongoingRound;
-        }
     }
 
     public void startGame(GameInstance gameInstance) {
@@ -266,27 +108,6 @@ public class ResultsPresenter {
             view.proceedToFinalResults(index);
         }
     }
-
-    // Get the players best found word for the previous round. Also show the length
-    private String getRoundOrGameBestGuess(int playerNumber, int round) {
-        GameInstance currentPlayer = gameInstances.get(playerNumber);
-        String Guess = currentPlayer.getRoundWord(round);
-        return Guess + " (" + String.valueOf(Guess.length()) + ")";
-    }
-
-    // Get the best possible word for a particular round
-    public String getRoundOrGameBestPossibleWord(int round) {
-        String bestPossibleWord;
-        GameInstance player1GameInstance = gameInstances.get(0);
-        String bestWordPoss = player1GameInstance.getRoundLongestPossible(round);
-        bestPossibleWord = bestWordPoss + " (" + String.valueOf(bestWordPoss.length()) + ")";
-        return bestPossibleWord;
-    }
-
-    private String getRoundLetters(int round) {
-        return gameInstances.get(0).getLetters(round);
-    }
-
     // Create GameItem classes, to facilitate storing relevant data to the sql database
     private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances) {
         StringBuilder winWords1 = new StringBuilder();

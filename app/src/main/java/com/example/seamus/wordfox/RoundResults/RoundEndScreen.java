@@ -49,7 +49,7 @@ public class RoundEndScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ResultsContract.View {
 
-
+    public static final String MONITOR_TAG = "myTag";
     private ResultsPresenter presenter;
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
@@ -64,7 +64,7 @@ public class RoundEndScreen extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         String roundOrGameEnd = getIntent().getExtras().getString("key");
-        boolean gameOver = (roundOrGameEnd.equals("game"));
+        boolean gameOver = (roundOrGameEnd.equals("game"));     // TODO: No longer relevant .. ?
         gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
 
         ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
@@ -73,6 +73,7 @@ public class RoundEndScreen extends AppCompatActivity
         } else {
             instancesToDisplay.add(MainActivity.allGameInstances.get(gameIndexNumber));
         }
+        // TODO: Separate presenter for round and game end
         presenter = new ResultsPresenter(this, gameOver, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_round_end);
@@ -205,7 +206,6 @@ public class RoundEndScreen extends AppCompatActivity
                 ++count;
             }
         }
-
     }
 
     @Override
@@ -266,37 +266,7 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public void setGameOverMessage(String gameOverMessage) {
-
-    }
-
-    @Override
     public void makeToast(String message) {
-
-    }
-
-    @Override
-    public void addResultHeading(String result) {
-
-    }
-
-    @Override
-    public void addTVtoResults(String result) {
-
-    }
-
-    @Override
-    public void setVictoryMessage(String victoryMessage) {
-
-    }
-
-    @Override
-    public void prepareHomeButton() {
-
-    }
-
-    @Override
-    public void prepareContinueButton() {
 
     }
 
@@ -306,33 +276,16 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public void addResultValue(String resultContent) {
-
-    }
-
-    @Override
-    public void addResultValue(String resultContent, String description) {
-
-    }
-
-    @Override
-    public void addResultSpacer() {
-
-    }
-
-    @Override
     public void nextRound(int gameIndex) {
         gameProceed(GameActivity.class, gameIndexNumber);
-//        Intent gameIntent = new Intent(this, GameActivity.class);
-//        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndexNumber + 1);
-//        startActivity(gameIntent);
     }
 
     @Override
     public void playerSwitch(int gameIndex) {
         gameProceed(PlayerSwitchActivity.class, gameIndexNumber + 1);
     }
-    private void gameProceed(Class nextActivity, int index){
+
+    private void gameProceed(Class nextActivity, int index) {
         Intent gameIntent = new Intent(this, nextActivity);
         gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);

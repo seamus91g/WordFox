@@ -1,7 +1,9 @@
 package com.example.seamus.wordfox.results_screen;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -35,6 +37,8 @@ import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.WifiService;
+import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
@@ -61,13 +65,6 @@ public class RoundnGameResults extends AppCompatActivity
 
     private int gameIndexNumber;
     private ResultsPresenter presenter;
-
-    private LinearLayout resultsLL;
-    private LinearLayout wordsLL;
-    private LinearLayout resultSectionEndScreenLL;
-    private LinearLayout.LayoutParams lp;
-    private String p1Name = "";
-    Button endOfRoundOrGameButton;
 
     LayoutInflater resultInflater;
 
@@ -98,13 +95,6 @@ public class RoundnGameResults extends AppCompatActivity
         boolean gameOver = (roundOrGameEnd.equals("game"));
         gameIndexNumber = getIntent().getExtras().getInt("gameIndexNumber");
 
-        lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
-//        resultsLL = (LinearLayout) findViewById(R.id.resultEndScreenLL);
-//        wordsLL = (LinearLayout) findViewById(R.id.wordsEndScreenLL);
-//        resultSectionEndScreenLL = (LinearLayout) findViewById(R.id.resultSectionEndScreenLL);
-//
-//        endOfRoundOrGameButton = (Button) findViewById(R.id.endOfRoundOrGameButton);
-
         ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
         if (gameOver) {
             instancesToDisplay.addAll(MainActivity.allGameInstances);
@@ -117,7 +107,6 @@ public class RoundnGameResults extends AppCompatActivity
 //        presenter.endOfRoundOrGameResults();
 //        presenter.createRoundSummary();
         presenter.updateData();
-
 
         /////////
         LinearLayout resultContainer = findViewById(R.id.player_results_container);
@@ -216,38 +205,12 @@ public class RoundnGameResults extends AppCompatActivity
         return grid.getBmp();
     }
 
-
-    @Override
-    public void setGameOverMessage(String gameOverMessage) {
-//        TextView gameOverTV = (TextView) findViewById(R.id.gameOverEndScreenTV);
-//        gameOverTV.setText(gameOverMessage);
-    }
-
     @Override
     public void makeToast(String toastMessage) {
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void setVictoryMessage(String victoryMessage) {
-//        TextView winnerTV = new TextView(this);
-//        winnerTV.setText(victoryMessage);
-//        winnerTV.setGravity(Gravity.CENTER);
-//        //add the textview with the winner's name into the LinearLayout containing the Game Over message
-//        LinearLayout gameOverWinnerLL = findViewById(R.id.gameOverWinnerLLEndScreen);
-//        winnerTV.setLayoutParams(lp);
-//        gameOverWinnerLL.addView(winnerTV);
-    }
-
-    @Override
-    public void prepareHomeButton() {
-        endOfRoundOrGameButton.setText(R.string.home_button_text);
-        endOfRoundOrGameButton.setOnClickListener(v -> {
-            navigateToHome();
-        });
-    }
-
-    public void navigateToHome(){
+    public void navigateToHome() {
         Intent MainIntent = new Intent(this, MainActivity.class);
         startActivity(MainIntent);
     }
@@ -255,60 +218,6 @@ public class RoundnGameResults extends AppCompatActivity
     @Override
     public void displayTitle(String title) {
         this.setTitle("Final Results");
-    }
-
-    @Override
-    public void prepareContinueButton() {
-        endOfRoundOrGameButton.setText(R.string.next_button_text);
-        endOfRoundOrGameButton.setOnClickListener(v -> {
-            presenter.startGame(MainActivity.allGameInstances.get(gameIndexNumber));    // TODO: This is always item 0 in presenter gameinstances??
-        });
-    }
-
-    @Override
-    public void addTVtoResults(String result) {
-        TextView resultsTV = new TextView(this);
-        resultsTV.setText(result);
-        resultsTV.setLayoutParams(lp);
-        resultsLL.addView(resultsTV);
-    }
-
-    @Override
-    public void addResultHeading(String resultTitle) {
-        TextView resultTV = new TextView(this);
-        resultTV.setLayoutParams(lp);
-        resultTV.setText(resultTitle);
-        resultSectionEndScreenLL.addView(resultTV);
-    }
-
-    @Override
-    public void addResultValue(String resultContent) {
-        addResultValue(resultContent, null);
-    }
-
-    @Override
-    public void addResultValue(String resultContent, String description) {
-        TextView resultTV = new TextView(this);
-        resultTV.setLayoutParams(lp);
-        resultTV.setText(resultContent);
-        if (description != null) {
-            resultTV.setContentDescription(description);
-        }
-        wordsLL.addView(resultTV);
-    }
-
-    //  Margin of 50DP between each section
-    @Override
-    public void addResultSpacer() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, FoxUtils.dp2px(this, 50), 0, 0);
-        TextView spacerTV = new TextView(this);
-        spacerTV.setLayoutParams(params);
-        resultSectionEndScreenLL.addView(spacerTV);
-        // Cant add same view to two parents
-        spacerTV = new TextView(this);
-        spacerTV.setLayoutParams(params);
-        wordsLL.addView(spacerTV);
     }
 
     @Override
@@ -347,15 +256,6 @@ public class RoundnGameResults extends AppCompatActivity
         startActivity(EndScreenIntent);
     }
 
-//    @Override
-//    public String defaultP1Name() {
-//        if (p1Name.equals("")) {
-//            GameData fox = new GameData(this, GameData.DEFAULT_P1_ID);
-//            p1Name = fox.getUsername();
-//        }
-//        return p1Name;
-//    }
-
     @Override
     public GameData getPlayerData(UUID playerID) {
         return new GameData(this, playerID);
@@ -376,7 +276,6 @@ public class RoundnGameResults extends AppCompatActivity
             this.backButtonPressedOnce = true;
 
             new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
-
         }
     }
 
