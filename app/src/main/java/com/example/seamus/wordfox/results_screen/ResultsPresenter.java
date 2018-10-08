@@ -21,27 +21,20 @@ public class ResultsPresenter {
     private final FoxSQLData foxData;
     private ArrayList<GameInstance> gameInstances;
     private ResultsContract.View view;
-    private boolean isGameOver;
     private int playerCount;
     private HashMap<Boolean, ArrayList<GameInstance>> playerGroups;
-    private ArrayList<GameInstance> winners;
 
-    public ResultsPresenter(ResultsContract.View view, boolean isGameOver, int playerCount,
+    public ResultsPresenter(ResultsContract.View view, int playerCount,
                      FoxSQLData foxData, ArrayList<GameInstance> gameInstances) {
         this.view = view;
-        this.isGameOver = isGameOver;
         this.playerCount = playerCount;
         this.foxData = foxData;
         this.gameInstances = gameInstances;
         foxData.open();
         playerGroups = sortWinnersLosers(gameInstances);
-        winners = playerGroups.get(Boolean.TRUE);
     }
 
     public void updateData() {
-        if (!isGameOver) {    // Only update data at game end
-            return;
-        }
         // Separate winners and losers into two lists
         ArrayList<GameInstance> winners = playerGroups.get(Boolean.TRUE);
         if (playerCount > 1) {
@@ -91,23 +84,6 @@ public class ResultsPresenter {
         foxData.createGameItem(thisGameDetails);
     }
 
-    public void startGame(GameInstance gameInstance) {
-        gameInstance.incrementRound();
-        int index = gameInstance.getThisGameIndex();
-        // Start new round if the current round is not the last round
-        if (gameInstance.getRound() < GameInstance.NUMBER_ROUNDS) {
-            view.nextRound(index);
-        } else {
-            // If Last Round but there are still players to play -> launch the PlayerSwitchActivity
-            gameInstance.gamestateFinished();
-            if (view.playerSwitch()) {
-                return;
-            }
-            // Only start the end of game screen if the current player has played all their rounds
-            // and there's no player still yet to play
-            view.proceedToFinalResults(index);
-        }
-    }
     // Create GameItem classes, to facilitate storing relevant data to the sql database
     private GameItem gameitemFromInstances(ArrayList<GameInstance> gInstances) {
         StringBuilder winWords1 = new StringBuilder();
@@ -137,16 +113,6 @@ public class ResultsPresenter {
                 round1Id, round2Id, round3Id, ww1, ww2, ww3, wn, playerCount
         );
         return thisGame;
-    }
-
-    // Get a String of comma separated values from an Array List
-    private <T> String getCsl(ArrayList<T> vals) {
-        StringBuilder strBl = new StringBuilder();
-        for (T string : vals) {
-            strBl.append(String.valueOf(string));
-            strBl.append(",");
-        }
-        return strBl.length() > 0 ? strBl.substring(0, strBl.length() - 1) : "";
     }
 
     private HashMap<Boolean, ArrayList<GameInstance>> sortWinnersLosers(ArrayList<GameInstance> allPlayers) {

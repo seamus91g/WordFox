@@ -47,10 +47,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoundEndScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ResultsContract.View {
+        RoundEndContract.View {
 
     public static final String MONITOR_TAG = "myTag";
-    private ResultsPresenter presenter;
+    private RoundEndPresenter presenter;
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
     private IntentFilter activityIntentFilter;
@@ -63,24 +63,15 @@ public class RoundEndScreen extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String roundOrGameEnd = getIntent().getExtras().getString("key");
-        boolean gameOver = (roundOrGameEnd.equals("game"));     // TODO: No longer relevant .. ?
         gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
 
-        ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
-        if (gameOver) {
-            instancesToDisplay.addAll(MainActivity.allGameInstances);
-        } else {
-            instancesToDisplay.add(MainActivity.allGameInstances.get(gameIndexNumber));
-        }
         // TODO: Separate presenter for round and game end
-        presenter = new ResultsPresenter(this, gameOver, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
+        presenter = new RoundEndPresenter(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_round_end);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 presenter.startGame(MainActivity.allGameInstances.get(gameIndexNumber));
             }
         });
@@ -303,17 +294,8 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public void proceedToFinalResults(int gameIndex) {
-        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
-        Bundle endScreenBundle = new Bundle();
-        endScreenBundle.putString("key", "game");
-        endScreenBundle.putInt(GameActivity.GAME_INDEX, gameIndex);
-        EndScreenIntent.putExtras(endScreenBundle);
-        startActivity(EndScreenIntent);
-    }
-
-    @Override
-    public GameData getPlayerData(UUID playerID) {
-        return null;
+    public void proceedToFinalResults() {
+        Intent endScreenIntent = new Intent(this, RoundnGameResults.class);
+        startActivity(endScreenIntent);
     }
 }

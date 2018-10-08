@@ -1,4 +1,4 @@
-package com.example.seamus.wordfox.results_screen;
+package com.example.seamus.wordfox.RoundResults;
 
 import com.example.seamus.wordfox.GameData;
 
@@ -8,15 +8,20 @@ import java.util.UUID;
  * Created by Gilroy on 5/10/2018.
  */
 
-public interface ResultsContract {
+public interface RoundEndContract {
     interface View {
         void makeToast(String message);
 
         void displayTitle(String title);
 
+        void nextRound(int gameIndex);
+
         void playerSwitch(int gameIndex);
 
-        GameData getPlayerData(UUID playerID);
+        boolean playerSwitch();
+
+        void proceedToFinalResults();
+
     }
 
     interface Listener {

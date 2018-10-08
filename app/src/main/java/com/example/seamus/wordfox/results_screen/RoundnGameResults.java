@@ -63,7 +63,6 @@ public class RoundnGameResults extends AppCompatActivity
     private boolean backButtonPressedOnce = false;
     public Activity activity;
 
-    private int gameIndexNumber;
     private ResultsPresenter presenter;
 
     LayoutInflater resultInflater;
@@ -91,9 +90,7 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String roundOrGameEnd = getIntent().getExtras().getString("key");
-        boolean gameOver = (roundOrGameEnd.equals("game"));
-        gameIndexNumber = getIntent().getExtras().getInt("gameIndexNumber");
+        ArrayList<GameInstance> instancesToDisplay = MainActivity.allGameInstances;
 
         ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
         if (gameOver) {
@@ -101,11 +98,8 @@ public class RoundnGameResults extends AppCompatActivity
         } else {
             instancesToDisplay.add(MainActivity.allGameInstances.get(gameIndexNumber));
         }
-        presenter = new ResultsPresenter(this, gameOver, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
-//        presenter.populateHeaderMsg();
-//        presenter.populateResultLL();
-//        presenter.endOfRoundOrGameResults();
-//        presenter.createRoundSummary();
+
+        presenter = new ResultsPresenter(this, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
         presenter.updateData();
 
         /////////
@@ -221,39 +215,10 @@ public class RoundnGameResults extends AppCompatActivity
     }
 
     @Override
-    public void nextRound(int gameIndex) {
-        Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndexNumber);
-        startActivity(gameIntent);
-    }
-
-    @Override
-    public boolean playerSwitch() {
-        // TODO: next game will always be thisGameIndex + 1 ?? Why need to search? Check if 'current index' == 'player count' to end the game
-        for (int index = 0; index < MainActivity.allGameInstances.size(); index++) {
-            if (MainActivity.allGameInstances.get(index).isGameOngoing()) {
-                playerSwitch(index);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public void playerSwitch(int index) {
         Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
         gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);
-    }
-
-    @Override
-    public void proceedToFinalResults(int gameIndex) {
-        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
-        Bundle endScreenBundle = new Bundle();
-        endScreenBundle.putString("key", "game");
-        endScreenBundle.putInt("gameIndexNumber", gameIndex);
-        EndScreenIntent.putExtras(endScreenBundle);
-        startActivity(EndScreenIntent);
     }
 
     @Override

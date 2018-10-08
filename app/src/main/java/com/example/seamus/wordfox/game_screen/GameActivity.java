@@ -241,17 +241,11 @@ public class GameActivity extends AppCompatActivity
 
     // When timer ends, change to the Score Screen to show results.
     @Override
-    public void startScoreScreen1Act(int index) {
-//        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
+    public void startRoundEnd(int index) {
         Intent EndScreenIntent = new Intent(this, RoundEndScreen.class);
-        Bundle endScreenBundle = new Bundle();
-
-        endScreenBundle.putString("key", "round");                  // TODO:  ... get rid of this
-        endScreenBundle.putInt(GameActivity.GAME_INDEX, index);
-        EndScreenIntent.putExtras(endScreenBundle);
+        EndScreenIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(EndScreenIntent);
     }
-
 
     // Display a particular letter to it's respective location on the 3x3 grid
     @Override

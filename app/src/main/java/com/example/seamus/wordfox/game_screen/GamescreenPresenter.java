@@ -152,8 +152,8 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         return false;
     }
 
-    private void startScoreScreen1Act() {
-        view.startScoreScreen1Act(gameInstance.getThisGameIndex());
+    private void goToRoundEndScreen() {
+        view.startRoundEnd(gameInstance.getThisGameIndex());
     }
 
     public int getRound() {
@@ -182,7 +182,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
 
     public void completeGame() {
         gameInstance.setRoundWord(gameInstance.getLongestWord());
-        startScoreScreen1Act();
+        goToRoundEndScreen();
     }
 
     // Check if word is valid & longer than current best. If so, set as longest attempt.
