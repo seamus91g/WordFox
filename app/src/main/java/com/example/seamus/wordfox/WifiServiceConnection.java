@@ -12,20 +12,20 @@ public class WifiServiceConnection implements ServiceConnection {
     private WifiService wifiService;
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        isBound = true;
         Log.d(MONITOR_TAG, "Service starting ... ");
-
         WifiService.WifiBinder binder = (WifiService.WifiBinder) service;
         wifiService = binder.getService();
-
+        isBound = true;
     }
 
     public WifiService getWifiService(){
+        assert wifiService != null;         // TODO: Verify doesnt occur
         return wifiService;
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-
+        Log.d(MONITOR_TAG, "|||||||||| Disconnecting service ||||||||||");
+        isBound = false;
     }
 }
