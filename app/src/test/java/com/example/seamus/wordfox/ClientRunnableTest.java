@@ -1,7 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.support.test.espresso.core.deps.guava.base.Predicate;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertTrue;
 
@@ -34,10 +33,10 @@ public class ClientRunnableTest {
     }
 
     private <T> boolean isValueWithinTime(Predicate<T> validate, int time, T val) throws InterruptedException {
-        for (int i = 0; i < time && !validate.apply(val); ++i) {
+        for (int i = 0; i < time && !validate.test(val); ++i) {
             Thread.sleep(10);
         }
-        return validate.apply(val);
+        return validate.test(val);
     }
 
     @Test

@@ -2,6 +2,9 @@ package com.example.seamus.wordfox;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,6 +109,7 @@ class ClientRunnable implements ChatServer {
                     messageHandler.handleReceivedMessage(line, ClientRunnable.this);
                 }
             } catch (IOException e) {
+                Crashlytics.logException(e);
                 e.printStackTrace();
             } finally {
                 isAlive = false;    // TODO: Will be false already in all cases??
