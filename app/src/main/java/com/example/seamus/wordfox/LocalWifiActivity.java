@@ -137,6 +137,7 @@ public class LocalWifiActivity extends AppCompatActivity
 
         activityReceiver = new WifiBroadcastReceiver();
 
+        startService(new Intent(this, WifiService.class));
     }
 
     private String arrayToLetters(ArrayList<String> letterArray) {

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -53,7 +54,6 @@ public class RoundEndScreen extends AppCompatActivity
     private RoundEndPresenter presenter;
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
-    private IntentFilter activityIntentFilter;
     boolean isOnline;
 
     @Override
@@ -88,38 +88,48 @@ public class RoundEndScreen extends AppCompatActivity
         populatePlayerDetails(MainActivity.allGameInstances.get(gameIndexNumber));
         populatePossibleWords(MainActivity.allGameInstances.get(gameIndexNumber));
 
-        isOnline = instancesToDisplay.get(0).isOnline();
-        if (isOnline) {
+        boolean isFinalRound;
+        isFinalRound = MainActivity.allGameInstances.get(0).getRound() == GameInstance.NUMBER_ROUNDS - 1;
+        isOnline = MainActivity.allGameInstances.get(0).isOnline();
+        if (isOnline && isFinalRound) {
             Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
-            activityIntentFilter = new IntentFilter();
-            activityIntentFilter.addAction(WifiService.ACTION_SEND_LETTERS);
             netConnService = new WifiServiceConnection();
-            activityIntentFilter = new IntentFilter();
-//            sendBroadcast(presenter.getLettersSTR());
+            bindService();
+            // Allow time for service to finish binding
+            // TODO: Is service guaranteed to be bound in time for this??
+            new Handler().post(() -> broadcastMyResults(MainActivity.allGameInstances.get(0)));
         }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void onPause() {
+        super.onPause();
+        unBindService();
+    }
+
+    private void unBindService() {
+        if (!isOnline || netConnService == null || !netConnService.isBound) {
+            return;
+        }
+        Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+        unbindService(netConnService);
+        netConnService.isBound = false;
+
+    }
+
+    private void bindService() {
         if (isOnline) {
+            Log.d(MONITOR_TAG, "Binding " + this.toString());
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (isOnline && netConnService.isBound) {
-            unbindService(netConnService);      // TODO: ... necessary?? Kills it anyway ..
-            netConnService.isBound = false;
-        }
+    private void broadcastMyResults(GameInstance myGameInstance) {
+        Log.d(MONITOR_TAG, "Json results: " + myGameInstance.resultAsJson().toString());
+        WifiService ws = netConnService.getWifiService();
+        String jsString = myGameInstance.resultAsJson().toString();
+        ws.sendData(jsString);
     }
 
     public void populatePlayerDetails(GameInstance gameInstance) {       // TODO:  Tidy this. Use MVP
@@ -133,6 +143,14 @@ public class RoundEndScreen extends AppCompatActivity
             Uri myFileUri = Uri.parse(profPicStr);
             profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
 //            int scale = ImageHandler.getScaleFactor(getResources(), )
+        }
+        // Race condition if player ends game really quickly. Longest possible words might not yet be calculated.
+        while (gameInstance.getLongestPossible() == null){
+            try {
+                wait(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         int maxScore = gameInstance.getLongestPossible().length();
         int playerScore = gameInstance.getScore();
@@ -151,9 +169,6 @@ public class RoundEndScreen extends AppCompatActivity
         String longestWordHeader = getResources().getString(R.string.your_longest_word_was) + " " + gameInstance.getLongestWord();
         longestWordView.setText(longestWordHeader);
 
-//        int scaleFactor = ImageHandler.getScaleFactor(getResources(), R.drawable.letter_grid_blank, 200);
-//        Bitmap testProf = ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, getResources());
-//        int d = 7;  // ??
         Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
         gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
 

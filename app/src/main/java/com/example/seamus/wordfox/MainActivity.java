@@ -1,5 +1,7 @@
 package com.example.seamus.wordfox;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
@@ -45,8 +47,6 @@ public class MainActivity extends AppCompatActivity
     private int numberOfPlayers;
     private final static int maxPlayerCount = 6;
 
-
-
     private ConstraintLayout constraint;
     private ConstraintSet constraintSet = new ConstraintSet();
 
@@ -65,14 +65,8 @@ public class MainActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "Main activity, END");
 
         View parentView = findViewById(R.id.contentMainxml);
-        parentView.post(new Runnable() {
-            @Override
-            public void run() {
-                startAnimation();
-            }
-        });
-
-
+        parentView.post(() -> startAnimation());
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -93,6 +87,11 @@ public class MainActivity extends AppCompatActivity
             Button btn = findViewById(R.id.bStartGame);
             btn.setCompoundDrawables(sd.getDrawable(), null, null, null);
         }
+        new Thread(() -> {
+            if(isServiceRunning(WifiService.class)){
+                stopService(new Intent(MainActivity.this, WifiService.class));
+            }
+        }).start();
     }
 
     public void loadDictionary() {
@@ -102,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         Thread thread = new Thread(() -> FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets()));
         thread.start();
     }
-    public void startWifi(View v) {
 
+    public void startWifi(View v) {
         Intent wifiIntent = new Intent(this, LocalWifiActivity.class);
         startActivity(wifiIntent);
     }
@@ -121,6 +120,7 @@ public class MainActivity extends AppCompatActivity
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 ImageView talkingFoxIV = findViewById(R.id.talkingFoxIV);
@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity
 
                 TextView speechTV = findViewById(R.id.speechTV);
                 speechTV.setText("Choose your number of players!");
-
-
 
             }
         }, 1300);
@@ -203,6 +201,16 @@ public class MainActivity extends AppCompatActivity
             }
         }
         this.startActivity(gameIntent);
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

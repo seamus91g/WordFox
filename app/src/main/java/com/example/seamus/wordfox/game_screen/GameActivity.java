@@ -53,12 +53,8 @@ public class GameActivity extends AppCompatActivity
     private boolean resetButtonPressedOnce = false;
     private boolean gameInFocus = true;
     private boolean timeUp = false;
-    private WifiServiceConnection netConnService;
-//    private IntentFilter activityIntentFilter;
-    boolean isOnline;
-//    boolean isGroupOwner;
-//    boolean isBroadcastReturned = false;
-//    String letters = null;
+//    private WifiServiceConnection netConnService;
+//    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +79,10 @@ public class GameActivity extends AppCompatActivity
         int gIndex = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
         GameInstance game = MainActivity.allGameInstances.get(gIndex);
 
-        isOnline = game.isOnline();
-        if (isOnline) {
-            netConnService = new WifiServiceConnection();
-        }
+//        isOnline = game.isOnline();
+//        if (isOnline) {
+//            netConnService = new WifiServiceConnection();
+//        }
 
         // Presenter handles all non-view related logic
         presenter = new GamescreenPresenter(
@@ -97,7 +93,6 @@ public class GameActivity extends AppCompatActivity
                 new GameData(this, game.getID())
         );
         presenter.setup();
-
 
         displayTitle();
         timeBlock = findViewById(R.id.timeBlock);
@@ -112,35 +107,43 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (isOnline) {
-            bindService(new Intent(this, WifiService.class), netConnService,
-                    Context.BIND_AUTO_CREATE);
-        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (isOnline && netConnService.isBound) {
-            unbindService(netConnService);
-            netConnService.isBound = false;
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         gameInFocus = false;
-//        if (isOnline) {
-//            unregisterReceiver(activityReceiver);
+//        if(isOnline){
+//            unBindService();
 //        }
     }
+
+//    private void unBindService() {
+//        if (isOnline && netConnService.isBound) {
+//            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+//            unbindService(netConnService);
+//            netConnService.isBound = false;
+//        }
+//    }
+//
+//    private void bindService() {
+//        if (isOnline) {
+//            Log.d(MONITOR_TAG, "Binding " + this.toString());
+//            bindService(new Intent(this, WifiService.class), netConnService,
+//                    Context.BIND_AUTO_CREATE);
+//        }
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if (isOnline) {
-//            registerReceiver(activityReceiver, activityIntentFilter);
+//        if(isOnline && !netConnService.isBound){
+//            bindService();
 //        }
         if (timeUp) {
             completeGame();
