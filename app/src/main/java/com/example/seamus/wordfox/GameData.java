@@ -460,7 +460,7 @@ public class GameData extends AppCompatActivity {
     public static FoxRank determineRankClass(int rankValue) {
         switch (rankValue) {
             case 3:
-                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
             case 4:
                 return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
             case 5:
@@ -474,7 +474,7 @@ public class GameData extends AppCompatActivity {
             case 9:
                 return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
             default:
-                return new FoxRank(R.drawable.onefox_silhouette, "Common Fox");
+                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
         }
     }
 

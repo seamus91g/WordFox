@@ -57,6 +57,7 @@ class ClientRunnable implements ChatServer {
             while (isAlive) {
                 if (!outputMessages.isEmpty()) {
                     writeMessageOut(outputStreamWriter);
+                    messageHandler.log("C : Wrote message on outstream ...");
                 }
                 messageHandler.log( "C : Sleeping ... " + myIndex);
                 Thread.sleep(500);

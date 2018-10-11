@@ -1,19 +1,23 @@
 package com.example.seamus.wordfox;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +116,15 @@ public class LocalWifiActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(!isStoragePermissionGranted(android.Manifest.permission.ACCESS_COARSE_LOCATION)){
+            makeToast("Permission not granted. Can not use Wifi-Direct.");
+        }
         setup();
+    }
+
+    public void makeToast(String toastMessage) {
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void setup() {
@@ -140,6 +152,23 @@ public class LocalWifiActivity extends AppCompatActivity
         startService(new Intent(this, WifiService.class));
     }
 
+    private boolean isStoragePermissionGranted(String permission) {
+        Log.v(MONITOR_TAG, "Checking permission " + permission);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (LocalWifiActivity.this.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(MONITOR_TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(MONITOR_TAG, "Permission is revoked. Requesting ... ");
+                ActivityCompat.requestPermissions(LocalWifiActivity.this, new String[]{permission}, 1);
+                return false;
+            }
+        } else {
+            //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
     private String arrayToLetters(ArrayList<String> letterArray) {
         StringBuilder gameLetters = new StringBuilder();
         for (int i = 0; i < letterArray.size(); i++) {
@@ -151,7 +180,7 @@ public class LocalWifiActivity extends AppCompatActivity
     private void startWifiGame() {
         if (letters == null) {
             Log.d(MONITOR_TAG, "Letters not set ... ");
-            Toast.makeText(this, "Letters not set!", Toast.LENGTH_SHORT).show();
+            makeToast("Letters not set!");
             return;
         }
         Log.d(MONITOR_TAG, "Starting wifi game ");
