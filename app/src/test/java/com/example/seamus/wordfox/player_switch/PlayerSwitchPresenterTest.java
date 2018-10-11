@@ -37,32 +37,30 @@ public class PlayerSwitchPresenterTest {
         playerNames.add(dummyPlayerOne);
         presenter = new PlayerSwitchPresenter(activity, index, gameInstances, playerNames);
     }
-//    @Test
-//    public void testSetChoiceEmpty(){
-//        String expectedResult = "Pass the game to player " + (index + 1);
-//        presenter.setChoice("");
-//        Mockito.verify(view, Mockito.times(1)).displayMessage(expectedResult);
-//    }
+
     @Test
-    public void testSetChoice(){
+    public void testSetChoice() {
         String expectedResult = "Pass the game to Alan";
         presenter.setChoice("Alan");
         Mockito.verify(view, Mockito.times(1)).displayMessage(expectedResult);
     }
+
     @Test
-    public void testSetupMenu(){
+    public void testSetupMenu() {
         ArrayList<String> expectedItems = new ArrayList<>((Arrays.asList("Player 2", "Alan", "Joe")));
         presenter.setupMenu();
         Mockito.verify(view, Mockito.times(1)).populateMenu(expectedItems);
     }
+
     @Test
-    public void testAddNewPlayer(){
+    public void testAddNewPlayer() {
         ArrayList<String> expectedItems = new ArrayList<>(Arrays.asList("Baz", "Player 2", "Alan", "Joe"));
         presenter.newPlayer("Baz");
         Mockito.verify(view, Mockito.times(1)).populateMenu(expectedItems);
     }
+
     @Test
-    public void testAddExistingPlayer(){
+    public void testAddExistingPlayer() {
         ArrayList<String> expectedItems = new ArrayList<>(Arrays.asList("Joe", "Player 2", "Alan"));
         presenter.newPlayer("Joe");
         Mockito.verify(view, Mockito.times(1)).populateMenu(expectedItems);
