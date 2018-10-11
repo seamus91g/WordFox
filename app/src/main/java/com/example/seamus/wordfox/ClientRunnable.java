@@ -16,64 +16,59 @@ import static com.example.seamus.wordfox.MainActivity.MONITOR_TAG;
 
 class ClientRunnable implements ChatServer {
 
-    private InetAddress groupOwnerAddress;
-    private int port;
-    private MessageHandler messageHandler;
-    private Queue<String> outputMessages = new ArrayDeque<>();
-    private boolean isAlive = true;
+    private final InetAddress groupOwnerAddress;
+    private final int port;
+    private final MessageHandler messageHandler;
+    private final Queue<String> outputMessages = new ArrayDeque<>();
+    private volatile boolean isAlive = true;
     private Socket socket;
-    private static int index = 0;
-    private int myIndex = 0;
+    private static int index = 0;   // TODO: delete. Only used for debugging.
+    private final int myIndex;
 
     public ClientRunnable(Socket socket, MessageHandler messageHandler) {
         this.socket = socket;
         this.messageHandler = messageHandler;
         myIndex = ++index;
+        groupOwnerAddress = null;
+        port = -1;
     }
 
     public ClientRunnable(InetAddress groupOwnerAddress, int port, MessageHandler messageHandler) {
         this.groupOwnerAddress = groupOwnerAddress;
         this.port = port;
         this.messageHandler = messageHandler;
+        myIndex = ++index;
     }
 
     @Override
     public void run() {
-        Log.d(MainActivity.MONITOR_TAG, "Running Client runnable : " + myIndex);
+        messageHandler.log( "Running Client runnable : " + myIndex);
         try {
             if (socket == null) {
-                Log.d(MainActivity.MONITOR_TAG, "C : Running non-host configuration");
+                messageHandler.log( "C : Running non-host configuration");
                 assert groupOwnerAddress != null;
                 socket = new Socket(groupOwnerAddress, port);
+            } else {
+                messageHandler.log( "C : Running host configuration");
             }
-            else {
-                Log.d(MainActivity.MONITOR_TAG, "C : Running host configuration");
-            }
-
             new Thread(serverListener).start();
-
             OutputStreamWriter outputStreamWriter;
             outputStreamWriter = new OutputStreamWriter(socket.getOutputStream());
-
-//            outputStreamWriter.write("I am the serverToClient! \n");
-//            outputStreamWriter.flush();
             while (isAlive) {
                 if (!outputMessages.isEmpty()) {
-                    String msg = outputMessages.remove();
-                    Log.d(MainActivity.MONITOR_TAG, "C : Sending message to client " + myIndex + " : " + msg);
-                    outputStreamWriter.write(msg + "\n");
-                    outputStreamWriter.flush();
+                    writeMessageOut(outputStreamWriter);
                 }
-                Log.d(MainActivity.MONITOR_TAG, "C : Sleeping ... " + myIndex);
-                Thread.sleep(3500);
+                messageHandler.log( "C : Sleeping ... " + myIndex);
+                Thread.sleep(500);
             }
-
+            messageHandler.log( "C : Exiting client ... " + myIndex);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            Log.d(MONITOR_TAG, "C : Client is finished");
+            messageHandler.log( "C : Client is finished");
+            messageHandler.handleChatClosed(this);
             if (socket != null) {
                 try {
                     socket.close();
@@ -84,6 +79,13 @@ class ClientRunnable implements ChatServer {
         }
     }
 
+    private synchronized void writeMessageOut(OutputStreamWriter outputStreamWriter) throws IOException {
+        String msg = outputMessages.remove();
+        messageHandler.log( "C : Sending message to client " + myIndex + " : " + msg);
+        outputStreamWriter.write(msg + "\n");
+        outputStreamWriter.flush();
+    }
+
     private Runnable serverListener = new Runnable() {
         @Override
         public void run() {
@@ -92,14 +94,14 @@ class ClientRunnable implements ChatServer {
                 inputStream = socket.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 while (isAlive) {
-                    Log.d(MONITOR_TAG, "*********** Waiting for buffer ***********");
+                    messageHandler.log( "*********** Waiting for buffer ***********");
                     String line = bufferedReader.readLine();
                     if (line == null) {
-                        Log.d(MONITOR_TAG, "C : ********* Client dead *********");
+                        messageHandler.log( "C : ********* Client dead *********");
                         isAlive = false;
                         return;
                     }
-                    Log.d(MONITOR_TAG, "C : Received from server: " + line);
+                    messageHandler.log( "C : Received from server: " + line);
                     messageHandler.handleReceivedMessage(line, ClientRunnable.this);
                 }
             } catch (IOException e) {
@@ -116,8 +118,8 @@ class ClientRunnable implements ChatServer {
     };
 
     @Override
-    public void sendMessage(String message) {
-        Log.d(MainActivity.MONITOR_TAG, "C : Adding message");
+    public synchronized void sendMessage(String message) {
+        messageHandler.log( "C : Adding message");
         outputMessages.add(message);
     }
 
