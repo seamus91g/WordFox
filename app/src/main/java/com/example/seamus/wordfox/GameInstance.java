@@ -1,7 +1,13 @@
 package com.example.seamus.wordfox;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +17,13 @@ import java.util.UUID;
  * Created by Desmond on 05/07/2017.
  */
 
-public class GameInstance {
+public class GameInstance implements GameDetails {
 
+    public static final String PLAYER_NAME = "player_name_key";
+    public static final String PLAYER_ID = "player_id_key";
+    public static final String BEST_WORDS = "best_words_key";
     public static int NUMBER_ROUNDS = 3;
-    public final String MONITOR_TAG = "GameInstance";
+    public final String MONITOR_TAG = "myTag";
     private final boolean isOnline;
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
@@ -43,6 +52,19 @@ public class GameInstance {
         return isGroupOwner;
     }
 
+    public JSONObject resultAsJson() {
+        JSONObject gameJSON = new JSONObject();
+        try {
+            gameJSON.put(BEST_WORDS, new JSONArray(Arrays.asList(bestWordFoundEachRound)));
+            gameJSON.put(PLAYER_ID, player.ID);
+            gameJSON.put(PLAYER_NAME, player.username);
+        } catch (JSONException e) {
+            Log.d(MONITOR_TAG, "GameInstance : Failed to create json result");
+            e.printStackTrace();
+        }
+        return gameJSON;
+    }
+
     public enum GameState {ONGOING, FINISHED}
 
     private GameState myGameState;
@@ -59,12 +81,15 @@ public class GameInstance {
     public GameInstance(UUID playerId, String nm, int thisGameIndex) {
         this(playerId, nm, thisGameIndex, null, false, false);
     }
+
     public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs) {
         this(playerId, playerName, thisGameIndex, roundIDs, false, false);
     }
+
     public GameInstance(UUID playerId, String nm, int thisGameIndex, boolean isOnline, boolean isGO) {
         this(playerId, nm, thisGameIndex, null, isOnline, isGO);
     }
+
     public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs, boolean isOnline, boolean isGO) {
         this.isGroupOwner = isGO;
         if (roundIDs == null) {
@@ -83,6 +108,7 @@ public class GameInstance {
         NUMBER_ROUNDS = maxNumberOfRounds;
     }
 
+    @Override
     public UUID getID() {
         return player.ID;
     }
@@ -111,20 +137,23 @@ public class GameInstance {
         return roundIDs;
     }
 
+    @Override
     public String getName() {
         return player.username;
     }
 
+    @Override
     public int getHighestPossibleScore() {
         return highestPossibleScore;
     }
 
+    @Override
     public String getLetters(int roundIndex) {
         return letters.get(roundIndex);
     }
 
     public String getRoundLetters() {
-        if(letters.size() > round){
+        if (letters.size() > round) {
             return letters.get(round);
         }
         return null;
@@ -150,6 +179,7 @@ public class GameInstance {
         return wordForEachLengthPerRound.get(requestedRound);
     }
 
+    @Override
     public int getTotalScore() {
         return totalScore;
     }
@@ -180,9 +210,11 @@ public class GameInstance {
         highestPossibleScore += word.length();
         Log.d("Check this out", "highest possible score is " + highestPossibleScore);
     }
-
+    public ArrayList<String> getAllLongestPossible(){
+        return allLongestPossible;
+    }
     public String getLongestPossible() {
-        if(allLongestPossible.size() > round){
+        if (allLongestPossible.size() > round) {
             return allLongestPossible.get(round);
         }
         return null;
@@ -220,6 +252,7 @@ public class GameInstance {
         bestWordFoundEachRound[round] = word;
     }
 
+    @Override
     public String getRoundWord(int whichRound) {
         return bestWordFoundEachRound[whichRound];
     }

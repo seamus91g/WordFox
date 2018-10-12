@@ -32,6 +32,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String wifiAction = intent.getAction();
+        Log.d(MONITOR_TAG, "&&&&&&&&&&&& Received wifi intent: " + wifiAction + " &&&&&&&&&&&&");
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(wifiAction)) {
             // Check if wifi is enabled or disabled
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);

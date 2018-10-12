@@ -14,10 +14,11 @@ import java.util.ArrayList;
 import static com.example.seamus.wordfox.MainActivity.MONITOR_TAG;
 
 class GroupOwnerRunnable implements MessageHandler, ChatServer {
-    private int port;
-    private MessageHandler messageHandler;
-    private boolean isAlive = true;
-    private ArrayList<ChatServer> clients = new ArrayList<>();
+    private final int port;
+    private final MessageHandler messageHandler;
+    private volatile boolean isAlive = true;
+    private final ArrayList<ChatServer> clients = new ArrayList<>();
+    private ServerSocket server;
 
     GroupOwnerRunnable(int port, MessageHandler messageHandler) {
         this.port = port;
@@ -27,7 +28,6 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
     @Override
     public void run() {
         Log.d(MainActivity.MONITOR_TAG, "Running GO runnable ");
-        ServerSocket server = null;
         try {
             server = new ServerSocket(port);
             while (isAlive) {
@@ -35,17 +35,20 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
                 Socket serverToClient = server.accept();
                 Log.d(MONITOR_TAG, "GO: Client connected!! There are " + clients.size() + " clients. ");
                 ChatServer cr = new ClientRunnable(serverToClient, this);
-                clients.add(cr);
+                synchronized (this) {
+                    clients.add(cr);
+                }
                 new Thread(cr).start();
             }
         } catch (IOException e) {
+            Log.d(MONITOR_TAG, "GO: Forcefully closed server socket");
             e.printStackTrace();
         } finally {
             Log.d(MONITOR_TAG, "C : GO is finished");
-            for(ChatServer c : clients){
+            for (ChatServer c : clients) {
                 c.close();
             }
-            if(server != null){
+            if (server != null) {
                 try {
                     server.close();
                 } catch (IOException e) {
@@ -60,7 +63,8 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
         messageAllClients(message, null);
     }
 
-    private void messageAllClients(String message, ChatServer originator) {
+    // Synchronise because other thread may remove elements
+    private synchronized void messageAllClients(String message, ChatServer originator) {
         Log.d(MONITOR_TAG, "Messaging " + message + " to " + clients.size() + " clients");
         for (ChatServer client : clients) {
             Log.d(MONITOR_TAG, "Sending " + message + " ... ");
@@ -75,6 +79,13 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
     @Override
     public void close() {
         isAlive = false;
+        if (server != null) {
+            try {
+                server.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -84,7 +95,16 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
     }
 
     @Override
+    public void log(String msg) {
+        messageHandler.log(msg);
+    }
+
+    @Override
     public void handleChatClosed(ChatServer chatServer) {
-        clients.remove(chatServer);         // TODO: Should kill if clients.size == 0   ??
+        // Synchronize because other thread may be iterating elements to message each client
+        synchronized (this) {
+            clients.remove(chatServer);         // TODO: Should kill if clients.size == 0   ??
+        }
+        messageHandler.handleChatClosed(chatServer);
     }
 }

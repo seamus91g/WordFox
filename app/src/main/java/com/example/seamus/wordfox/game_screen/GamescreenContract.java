@@ -24,7 +24,7 @@ public interface GamescreenContract {
 
         void completeGame();
 
-        void startScoreScreen1Act(int thisGameIndex);
+        void startRoundEnd(int thisGameIndex);
 
 //        void setGameInFocus(boolean isGameFocused);
 

@@ -1,18 +1,23 @@
 package com.example.seamus.wordfox;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +40,10 @@ import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +55,7 @@ public class LocalWifiActivity extends AppCompatActivity
         WifiP2pManager.ConnectionInfoListener,
         DeviceActionListener {
 
+    public static final String JSON_LETTERS = "json_letters_key";
     private static final String MONITOR_TAG = "myTag";
     private final WifiServiceConnection netConnService = new WifiServiceConnection();
 
@@ -63,8 +73,7 @@ public class LocalWifiActivity extends AppCompatActivity
     public static final String INTENT_LETTERS = "intent_letters_key";
     public static final String INTENT_GROUP_OWNER = "group_owner_key";
     private boolean isGroupOwner = false;
-    String lettersString;
-    ArrayList<String> letters = new ArrayList<>();
+    ArrayList<String> letters;
 
     private WifiBroadcastReceiver activityReceiver;
 
@@ -73,20 +82,19 @@ public class LocalWifiActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             Log.d(MONITOR_TAG, "L : Received any ol thing : " + intent.getAction());
             if (intent.getAction().equals(WifiService.ACTION_SEND_LETTERS)) {
-                lettersString = intent.getExtras().getString(INTENT_LETTERS);
-                letters = lettersFromSingleString(lettersString);
+                String lettersString = intent.getExtras().getString(INTENT_LETTERS);
+                try {
+                    JSONArray jArray = new JSONObject(lettersString).getJSONArray(LocalWifiActivity.JSON_LETTERS);
+                    letters = new ArrayList<>();
+                    for (int i = 0; i < jArray.length(); ++i) {
+                        letters.add(jArray.getString(i));
+                    }
+                    Log.d(MONITOR_TAG, "Received jArray: " + jArray.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.d(MONITOR_TAG, "L : Received intent in activity from service. Letters: " + lettersString);
             }
-//            else if (intent.getAction().equals(WifiService.ACTION_DECLARE_GROUP_OWNER)) {
-//                Log.d(MONITOR_TAG, "L : Received Declare group owner broadcast ");
-//                isGroupOwner = intent.getExtras().getBoolean(INTENT_GROUP_OWNER);
-//                if(isGroupOwner){
-//                    DictionaryApplication dictionary = (DictionaryApplication) getApplication();
-//                    ArrayList<String> lettersAr = dictionary.getDictionary().getGivenLetters();
-//                    lettersString = arrayToLetters(lettersAr);
-//                    sendBroadcast(lettersString);
-//                }
-//            }
         }
     }
 
@@ -108,7 +116,15 @@ public class LocalWifiActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(!isStoragePermissionGranted(android.Manifest.permission.ACCESS_COARSE_LOCATION)){
+            makeToast("Permission not granted. Can not use Wifi-Direct.");
+        }
         setup();
+    }
+
+    public void makeToast(String toastMessage) {
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void setup() {
@@ -133,15 +149,25 @@ public class LocalWifiActivity extends AppCompatActivity
 
         activityReceiver = new WifiBroadcastReceiver();
 
+        startService(new Intent(this, WifiService.class));
     }
 
-//    private void sendBroadcast(String message) {
-//        Log.d(MONITOR_TAG, "G: Broadcasting: " + WifiService.ACTION_STRING_SERVICE);
-//        Intent intent = new Intent();
-//        intent.setAction(WifiService.ACTION_STRING_SERVICE);
-//        intent.putExtra(INTENT_LETTERS, message);
-//        sendBroadcast(intent);
-//    }
+    private boolean isStoragePermissionGranted(String permission) {
+        Log.v(MONITOR_TAG, "Checking permission " + permission);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (LocalWifiActivity.this.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(MONITOR_TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(MONITOR_TAG, "Permission is revoked. Requesting ... ");
+                ActivityCompat.requestPermissions(LocalWifiActivity.this, new String[]{permission}, 1);
+                return false;
+            }
+        } else {
+            //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
 
     private String arrayToLetters(ArrayList<String> letterArray) {
         StringBuilder gameLetters = new StringBuilder();
@@ -151,24 +177,24 @@ public class LocalWifiActivity extends AppCompatActivity
         return gameLetters.toString();
     }
 
-    private ArrayList<String> lettersFromSingleString(String letters){
-        ArrayList<String> lts = new ArrayList<>();
-        lts.add(letters.substring(0, 9));
-        lts.add(letters.substring(9, 18));
-        lts.add(letters.substring(18));
-        return lts;
-    }
-
     private void startWifiGame() {
-        if (lettersString == null) {
+        if (letters == null) {
             Log.d(MONITOR_TAG, "Letters not set ... ");
-            Toast.makeText(this, "Letters not set!", Toast.LENGTH_SHORT).show();
+            makeToast("Letters not set!");
             return;
         }
         Log.d(MONITOR_TAG, "Starting wifi game ");
-        if(isGroupOwner){
-            Log.d(MONITOR_TAG, "Starting game. As GO, sending lettersString " + lettersString);
-            netConnService.getWifiService().sendData(lettersString);
+        if (isGroupOwner) {
+            JSONArray jsonLetters = new JSONArray(letters);
+            try {
+                JSONObject jObj = new JSONObject();
+                jObj.put(JSON_LETTERS, jsonLetters);
+                netConnService.getWifiService().sendData(jObj.toString());
+                Log.d(MONITOR_TAG, "Starting game. As GO, sending json " + jObj.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d(MONITOR_TAG, "Starting game. As GO, sending lettersString " + jsonLetters.toString());
         }
 
         MainActivity.allGameInstances.clear();
@@ -194,7 +220,6 @@ public class LocalWifiActivity extends AppCompatActivity
         }
         this.startActivity(gameIntent);
     }
-
 
     private void discoverPeers() {
         if (!isWifiP2pEnabled) {
@@ -232,6 +257,22 @@ public class LocalWifiActivity extends AppCompatActivity
         registerReceiver(activityReceiver, activityIntentFilter);
         wifiReceiver = new com.example.seamus.wordfox.WifiBroadcastReceiver(manager, channel, this, this, this);
         registerReceiver(wifiReceiver, wifiIntentFilter);
+        bindService();
+//        new Handler().post(this::bindService);
+    }
+
+    private void unBindService() {
+        if (netConnService.isBound) {
+            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+            unbindService(netConnService);
+            netConnService.isBound = false;
+        }
+    }
+
+    private void bindService() {
+        Log.d(MONITOR_TAG, "Binding " + this.toString());
+        bindService(new Intent(this, WifiService.class), netConnService,
+                Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -240,23 +281,19 @@ public class LocalWifiActivity extends AppCompatActivity
         Log.d(MONITOR_TAG, "W : unregistering receiver ");
         unregisterReceiver(wifiReceiver);
         unregisterReceiver(activityReceiver);
+        unBindService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        bindService(new Intent(this, WifiService.class), netConnService,
-                Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (netConnService.isBound) {
-            unbindService(netConnService);
-            netConnService.isBound = false;
-        }
     }
+
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList availablePeers) {
@@ -276,24 +313,41 @@ public class LocalWifiActivity extends AppCompatActivity
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
-        Log.d(MONITOR_TAG, "Connection info available ... ");
+        isGroupOwner = info.isGroupOwner;
+        if (netConnService.isBound) {
+            signalWhoConnectedTo(info);
+        } else {
+            new Thread(() -> handleConnectionInfo(info)).start();
+        }
+        if (isGroupOwner && letters == null) {
+            populateLetters();
+        }
+    }
+
+    private void handleConnectionInfo(WifiP2pInfo info) {
+        try {
+            while (!netConnService.isBound) {       // TODO: Improve
+                Thread.sleep(100);
+                Log.d(MONITOR_TAG, "Waiting to be bound ...");
+            }
+            signalWhoConnectedTo(info);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void signalWhoConnectedTo(WifiP2pInfo info) {
         WifiService wfWifiDirect = netConnService.getWifiService();
         wfWifiDirect.connectedTo(info);
+    }
 
-        isGroupOwner = info.isGroupOwner;
-        if (isGroupOwner && lettersString == null) {
-            DictionaryApplication dictionary = (DictionaryApplication) getApplication();
-            letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-            letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-            letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-            StringBuilder sb = new StringBuilder();
-            for (String l : letters){
-                sb.append(l);
-            }
-            lettersString = sb.toString();
-            Log.d(MONITOR_TAG, "LW : Decided on lettersString :  " + lettersString);
-        }
-
+    private void populateLetters() {
+        DictionaryApplication dictionary = (DictionaryApplication) getApplication();
+        letters = new ArrayList<>();
+        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        Log.d(MONITOR_TAG, "LW : letters as json: " + new JSONArray(letters).toString());
     }
 
     @Override

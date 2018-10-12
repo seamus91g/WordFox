@@ -1,7 +1,10 @@
 package com.example.seamus.wordfox.results_screen;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,27 +23,34 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.GameDetails;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.WifiGameInstance;
+import com.example.seamus.wordfox.WifiService;
+import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,25 +60,43 @@ public class RoundnGameResults extends AppCompatActivity
         ResultsContract.View {
     private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
+    public static final String INTENT_GAME_RESULTS = "intent_game_results_key";
+
+    private WifiServiceConnection netConnService;
+    private IntentFilter activityIntentFilter;
+    boolean isOnline;
 
     private NavigationBurger navBurger = new NavigationBurger();
 
-    public static final String MONITOR_TAG = "EndScreen: ";
+    public static final String MONITOR_TAG = "myTag";
     private static final String TAG = "RoundnGameResults";
     private boolean backButtonPressedOnce = false;
     public Activity activity;
 
-    private int gameIndexNumber;
     private ResultsPresenter presenter;
+    private LinearLayout resultContainer;
 
-    private LinearLayout resultsLL;
-    private LinearLayout wordsLL;
-    private LinearLayout resultSectionEndScreenLL;
-    private LinearLayout.LayoutParams lp;
-    private String p1Name = "";
-    Button endOfRoundOrGameButton;
+    private LayoutInflater resultInflater;
+    private ResultBroadcastReceiver resultReceiver;
+    private Queue<JSONObject> wifiGameResults;
 
-    LayoutInflater resultInflater;
+    class ResultBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(MONITOR_TAG, "L : Received any ol thing : " + intent.getAction());
+            if (intent.getAction().equals(WifiService.ACTION_GAME_RESULTS)) {
+                String resultMessage = intent.getExtras().getString(INTENT_GAME_RESULTS);
+                try {
+                    synchronized (RoundnGameResults.this) {
+                        wifiGameResults.add(new JSONObject(resultMessage));
+                    }
+                    Log.d(MONITOR_TAG, "L : Received result intent. Result: " + new JSONObject(resultMessage).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,36 +121,29 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String roundOrGameEnd = getIntent().getExtras().getString("key");
-        boolean gameOver = (roundOrGameEnd.equals("game"));
-        gameIndexNumber = getIntent().getExtras().getInt("gameIndexNumber");
+        ArrayList<GameInstance> instancesToDisplay = MainActivity.allGameInstances;
 
-        lp = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT); // width is first then height
-//        resultsLL = (LinearLayout) findViewById(R.id.resultEndScreenLL);
-//        wordsLL = (LinearLayout) findViewById(R.id.wordsEndScreenLL);
-//        resultSectionEndScreenLL = (LinearLayout) findViewById(R.id.resultSectionEndScreenLL);
-//
-//        endOfRoundOrGameButton = (Button) findViewById(R.id.endOfRoundOrGameButton);
-
-        ArrayList<GameInstance> instancesToDisplay = new ArrayList<>();
-        if (gameOver) {
-            instancesToDisplay.addAll(MainActivity.allGameInstances);
-        } else {
-            instancesToDisplay.add(MainActivity.allGameInstances.get(gameIndexNumber));
+        isOnline = instancesToDisplay.get(0).isOnline();
+        if (isOnline) {
+            Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+            activityIntentFilter = new IntentFilter();
+            activityIntentFilter.addAction(WifiService.ACTION_GAME_RESULTS);
+            wifiGameResults = new ArrayDeque<>();
+            netConnService = new WifiServiceConnection();
+            resultReceiver = new ResultBroadcastReceiver();
+            registerReceiver(resultReceiver, activityIntentFilter);
+            activityIntentFilter = new IntentFilter();
+            new Thread(wifiResultFeed).start();
         }
-        presenter = new ResultsPresenter(this, gameOver, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
-//        presenter.populateHeaderMsg();
-//        presenter.populateResultLL();
-//        presenter.endOfRoundOrGameResults();
-//        presenter.createRoundSummary();
+
+        presenter = new ResultsPresenter(this, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
         presenter.updateData();
 
-
         /////////
-        LinearLayout resultContainer = findViewById(R.id.player_results_container);
+        resultContainer = findViewById(R.id.player_results_container);
         resultInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         for (int i = 0; i < MainActivity.allGameInstances.size(); ++i) {
-            resultContainer.addView(inflatePlayerResult(MainActivity.allGameInstances.get(i)));
+            addResultDetail(MainActivity.allGameInstances.get(i));
         }
         GameInstance gameInstance = MainActivity.allGameInstances.get(0);
         TextView best1 = findViewById(R.id.bestword_heading_1);
@@ -145,7 +165,62 @@ public class RoundnGameResults extends AppCompatActivity
         winnerText.setText(winner);
     }
 
-    private LinearLayout inflatePlayerResult(GameInstance gameInstance) {
+    private void unBindService() {
+        if (isOnline && netConnService.isBound) {
+            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+            unbindService(netConnService);
+            netConnService.isBound = false;
+        }
+    }
+
+    private void bindService() {
+        if (isOnline) {
+            Log.d(MONITOR_TAG, "Binding " + this.toString());
+            bindService(new Intent(this, WifiService.class), netConnService,
+                    Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    private void addResultDetail(GameDetails game) {
+        resultContainer.addView(inflatePlayerResult(game));
+    }
+
+    private Runnable wifiResultFeed = new Runnable() {
+        @Override
+        public void run() {
+            // TODO: End loop when results received equals player count
+            while (true) {
+                if (!wifiGameResults.isEmpty()) {
+                    runOnUiThread(wifiResultsToUI);
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+    private Runnable wifiResultsToUI = new Runnable() {
+        @Override
+        public void run() {
+            JSONObject gameResult;
+            synchronized (RoundnGameResults.this) {
+                // If UI thread is slow runnable may have been triggered more times than there
+                // are elements, so check if empty
+                if(wifiGameResults.isEmpty()){
+                    return;
+                }
+                gameResult = wifiGameResults.remove();
+            }
+            GameDetails game = new WifiGameInstance(gameResult,
+                    MainActivity.allGameInstances.get(0).getAllLongestPossible(),
+                    MainActivity.allGameInstances.get(0).getLetters());
+            addResultDetail(game);
+        }
+    };
+
+    private LinearLayout inflatePlayerResult(GameDetails gameInstance) {
         LinearLayout cl = (LinearLayout) resultInflater.inflate(R.layout.result_player_layout, null);
 
         GameData plyrGd = new GameData(this, gameInstance.getID());
@@ -216,38 +291,39 @@ public class RoundnGameResults extends AppCompatActivity
         return grid.getBmp();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isOnline){
+            bindService();
+            new Handler().post(() -> netConnService.getWifiService().declareGameOver());
+        }
+    }
 
     @Override
-    public void setGameOverMessage(String gameOverMessage) {
-//        TextView gameOverTV = (TextView) findViewById(R.id.gameOverEndScreenTV);
-//        gameOverTV.setText(gameOverMessage);
+    public void onPause() {
+        super.onPause();
+        if (isOnline) {
+            unBindService();
+        }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 
     @Override
     public void makeToast(String toastMessage) {
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void setVictoryMessage(String victoryMessage) {
-//        TextView winnerTV = new TextView(this);
-//        winnerTV.setText(victoryMessage);
-//        winnerTV.setGravity(Gravity.CENTER);
-//        //add the textview with the winner's name into the LinearLayout containing the Game Over message
-//        LinearLayout gameOverWinnerLL = findViewById(R.id.gameOverWinnerLLEndScreen);
-//        winnerTV.setLayoutParams(lp);
-//        gameOverWinnerLL.addView(winnerTV);
-    }
-
-    @Override
-    public void prepareHomeButton() {
-        endOfRoundOrGameButton.setText(R.string.home_button_text);
-        endOfRoundOrGameButton.setOnClickListener(v -> {
-            navigateToHome();
-        });
-    }
-
-    public void navigateToHome(){
+    public void navigateToHome() {
+        if (isOnline) {
+            netConnService.getWifiService().closeService();
+            stopService(new Intent(RoundnGameResults.this, WifiService.class));
+        }
         Intent MainIntent = new Intent(this, MainActivity.class);
         startActivity(MainIntent);
     }
@@ -258,103 +334,11 @@ public class RoundnGameResults extends AppCompatActivity
     }
 
     @Override
-    public void prepareContinueButton() {
-        endOfRoundOrGameButton.setText(R.string.next_button_text);
-        endOfRoundOrGameButton.setOnClickListener(v -> {
-            presenter.startGame(MainActivity.allGameInstances.get(gameIndexNumber));    // TODO: This is always item 0 in presenter gameinstances??
-        });
-    }
-
-    @Override
-    public void addTVtoResults(String result) {
-        TextView resultsTV = new TextView(this);
-        resultsTV.setText(result);
-        resultsTV.setLayoutParams(lp);
-        resultsLL.addView(resultsTV);
-    }
-
-    @Override
-    public void addResultHeading(String resultTitle) {
-        TextView resultTV = new TextView(this);
-        resultTV.setLayoutParams(lp);
-        resultTV.setText(resultTitle);
-        resultSectionEndScreenLL.addView(resultTV);
-    }
-
-    @Override
-    public void addResultValue(String resultContent) {
-        addResultValue(resultContent, null);
-    }
-
-    @Override
-    public void addResultValue(String resultContent, String description) {
-        TextView resultTV = new TextView(this);
-        resultTV.setLayoutParams(lp);
-        resultTV.setText(resultContent);
-        if (description != null) {
-            resultTV.setContentDescription(description);
-        }
-        wordsLL.addView(resultTV);
-    }
-
-    //  Margin of 50DP between each section
-    @Override
-    public void addResultSpacer() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, FoxUtils.dp2px(this, 50), 0, 0);
-        TextView spacerTV = new TextView(this);
-        spacerTV.setLayoutParams(params);
-        resultSectionEndScreenLL.addView(spacerTV);
-        // Cant add same view to two parents
-        spacerTV = new TextView(this);
-        spacerTV.setLayoutParams(params);
-        wordsLL.addView(spacerTV);
-    }
-
-    @Override
-    public void nextRound(int gameIndex) {
-        Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra(GameActivity.GAME_INDEX, gameIndexNumber);
-        startActivity(gameIntent);
-    }
-
-    @Override
-    public boolean playerSwitch() {
-        // TODO: next game will always be thisGameIndex + 1 ?? Why need to search? Check if 'current index' == 'player count' to end the game
-        for (int index = 0; index < MainActivity.allGameInstances.size(); index++) {
-            if (MainActivity.allGameInstances.get(index).isGameOngoing()) {
-                playerSwitch(index);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public void playerSwitch(int index) {
         Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
         gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);
     }
-
-    @Override
-    public void proceedToFinalResults(int gameIndex) {
-        Intent EndScreenIntent = new Intent(this, RoundnGameResults.class);
-        Bundle endScreenBundle = new Bundle();
-        endScreenBundle.putString("key", "game");
-        endScreenBundle.putInt("gameIndexNumber", gameIndex);
-        EndScreenIntent.putExtras(endScreenBundle);
-        startActivity(EndScreenIntent);
-    }
-
-//    @Override
-//    public String defaultP1Name() {
-//        if (p1Name.equals("")) {
-//            GameData fox = new GameData(this, GameData.DEFAULT_P1_ID);
-//            p1Name = fox.getUsername();
-//        }
-//        return p1Name;
-//    }
 
     @Override
     public GameData getPlayerData(UUID playerID) {
@@ -376,7 +360,6 @@ public class RoundnGameResults extends AppCompatActivity
             this.backButtonPressedOnce = true;
 
             new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
-
         }
     }
 
