@@ -1,17 +1,6 @@
 package com.example.seamus.wordfox.RoundResults;
 
-import android.util.Log;
-
-import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
-import com.example.seamus.wordfox.database.FoxSQLData;
-import com.example.seamus.wordfox.database.PlayerStatsTable;
-import com.example.seamus.wordfox.datamodels.GameItem;
-import com.example.seamus.wordfox.results_screen.ResultsContract;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Created by Gilroy
@@ -20,12 +9,17 @@ import java.util.UUID;
 public class RoundEndPresenter {
     private static final String TAG = "RoundEndPresenter";
     private RoundEndContract.View view;
+    private boolean isStarted = false;
 
     public RoundEndPresenter(RoundEndContract.View view) {
         this.view = view;
     }
 
     public void startGame(GameInstance gameInstance) {
+        if(isStarted){
+            return;
+        }
+        isStarted = true;
         gameInstance.incrementRound();
         // Start new round if the current round is not the last round
         if (gameInstance.getRound() < GameInstance.NUMBER_ROUNDS) {
