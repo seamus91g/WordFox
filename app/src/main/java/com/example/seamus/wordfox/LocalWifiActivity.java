@@ -68,12 +68,12 @@ public class LocalWifiActivity extends AppCompatActivity
     private com.example.seamus.wordfox.WifiBroadcastReceiver wifiReceiver;
     private WifiP2pManager.Channel channel;
     private WifiP2pManager manager;
-    IntentFilter activityIntentFilter = new IntentFilter();
-    IntentFilter wifiIntentFilter = new IntentFilter();
+    private IntentFilter activityIntentFilter = new IntentFilter();
+    private IntentFilter wifiIntentFilter = new IntentFilter();
     public static final String INTENT_LETTERS = "intent_letters_key";
     public static final String INTENT_GROUP_OWNER = "group_owner_key";
     private boolean isGroupOwner = false;
-    ArrayList<String> letters;
+    private ArrayList<String> letters;
 
     private WifiBroadcastReceiver activityReceiver;
 
@@ -197,14 +197,14 @@ public class LocalWifiActivity extends AppCompatActivity
             Log.d(MONITOR_TAG, "Starting game. As GO, sending lettersString " + jsonLetters.toString());
         }
 
-        MainActivity.allGameInstances.clear();
+        HomeScreen.allGameInstances.clear();
 
         PlayerIdentity playerOne = GameData.getPlayer1Identity(this);
         GameInstance playerOneGame = new GameInstance(playerOne.ID, playerOne.username, 0, true, isGroupOwner);
         playerOneGame.setLetters(letters.get(0));
         playerOneGame.setLetters(letters.get(1));
         playerOneGame.setLetters(letters.get(2));
-        MainActivity.allGameInstances.add(playerOneGame);
+        HomeScreen.allGameInstances.add(playerOneGame);
 
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(GameActivity.GAME_INDEX, 0);

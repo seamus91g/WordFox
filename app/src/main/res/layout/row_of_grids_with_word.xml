@@ -46,7 +46,7 @@
         android:layout_height="@dimen/grid_snapshot_size"
         android:src="@drawable/letter_grid_blank"
         android:tag="grid_1"
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/grid_row_grid2"
         app:layout_constraintTop_toBottomOf="@id/grid_row_bestword1" />

@@ -48,7 +48,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-5181377347442835~1259786879"
     }
   ],
   "configuration_version": "1"

@@ -1,9 +1,11 @@
 package com.example.seamus.wordfox.game_screen;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.data.Diction;
 import com.example.seamus.wordfox.database.FoxSQLData;
@@ -69,7 +71,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             gameInstance.setLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);
         } else if (gameInstance.getRoundLetters() == null) {
-            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+            GameInstance playerOneInstance = HomeScreen.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(gameInstance.getRound());
             ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(gameInstance.getRound());
             // TODO: Instead, Create a partial copy constructor to take in values
@@ -80,7 +82,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             givenLetters = getArrayFromLetters(givenLettersSTR);
 
         } else {      // If wifi multi player game
-//            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+//            GameInstance playerOneInstance = HomeScreen.allGameInstances.get(0);
             givenLettersSTR = gameInstance.getRoundLetters();
             givenLetters = getArrayFromLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);

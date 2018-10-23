@@ -26,6 +26,7 @@ import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GameTimer;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
@@ -77,7 +78,7 @@ public class GameActivity extends AppCompatActivity
 
         DictionaryApplication dictionary = (DictionaryApplication) getApplication();
         int gIndex = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
-        GameInstance game = MainActivity.allGameInstances.get(gIndex);
+        GameInstance game = HomeScreen.allGameInstances.get(gIndex);
 
 //        isOnline = game.isOnline();
 //        if (isOnline) {
@@ -353,7 +354,7 @@ public class GameActivity extends AppCompatActivity
         } else {
             // If pressed recently, proceed to home screen
             if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
                 startActivity(homeScreenIntent);
                 return;
             }

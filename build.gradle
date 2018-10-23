@@ -18,10 +18,10 @@ buildscript {
 }
 ext {
     novodaBintrayVersion = '0.8.0'
-    compileSdkVersion = 27
+    compileSdkVersion = 28
     minSdkVersion = 16
-    targetSdkVersion = 27
-    supportLibVersion = '27.1.1'
+    targetSdkVersion = 28
+    supportLibVersion = '28.0.0'
 }
 
 allprojects {

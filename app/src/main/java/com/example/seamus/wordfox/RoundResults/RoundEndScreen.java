@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.R;
@@ -72,7 +73,7 @@ public class RoundEndScreen extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.startGame(MainActivity.allGameInstances.get(gameIndexNumber));
+                presenter.startGame(HomeScreen.allGameInstances.get(gameIndexNumber));
             }
         });
 
@@ -85,19 +86,19 @@ public class RoundEndScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        populatePlayerDetails(MainActivity.allGameInstances.get(gameIndexNumber));
-        populatePossibleWords(MainActivity.allGameInstances.get(gameIndexNumber));
+        populatePlayerDetails(HomeScreen.allGameInstances.get(gameIndexNumber));
+        populatePossibleWords(HomeScreen.allGameInstances.get(gameIndexNumber));
 
         boolean isFinalRound;
-        isFinalRound = MainActivity.allGameInstances.get(0).getRound() == GameInstance.NUMBER_ROUNDS - 1;
-        isOnline = MainActivity.allGameInstances.get(0).isOnline();
+        isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == GameInstance.NUMBER_ROUNDS - 1;
+        isOnline = HomeScreen.allGameInstances.get(0).isOnline();
         if (isOnline && isFinalRound) {
             Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
             netConnService = new WifiServiceConnection();
             bindService();
             // Allow time for service to finish binding
             // TODO: Is service guaranteed to be bound in time for this??
-            new Handler().post(() -> broadcastMyResults(MainActivity.allGameInstances.get(0)));
+            new Handler().post(() -> broadcastMyResults(HomeScreen.allGameInstances.get(0)));
         }
     }
 
@@ -282,19 +283,8 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public void nextRound(int gameIndex) {
+    public void nextRound() {
         gameProceed(GameActivity.class, gameIndexNumber);
-    }
-
-    @Override
-    public void playerSwitch(int gameIndex) {
-        gameProceed(PlayerSwitchActivity.class, gameIndexNumber + 1);
-    }
-
-    private void gameProceed(Class nextActivity, int index) {
-        Intent gameIntent = new Intent(this, nextActivity);
-        gameIntent.putExtra(GameActivity.GAME_INDEX, index);
-        startActivity(gameIntent);
     }
 
     @Override
