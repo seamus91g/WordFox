@@ -83,11 +83,12 @@ public class GameData extends AppCompatActivity {
         editor = foxPreferences.edit();
         editor.apply();
 
+        // TODO: Get rid of default player names such as 'Player 2'. Not necessary.
+        // ToDo: These constructors are messy.
         if (name.equals("") && !doesPlayerExist(playerID, myContext)) {
             setDefaultUsername(getPlayerList(myContext));
             addPlayer(playerID, myContext);
-        }
-        if (name.equals(DEFAULT_NAME)) {
+        }else if(!doesPlayerExist(playerID, myContext)){
             setUsername(name);
             addPlayer(playerID, myContext);
         }
@@ -97,7 +98,7 @@ public class GameData extends AppCompatActivity {
         return playerID;
     }
 
-    private static boolean doesPlayerExist(UUID ID, Context context) {
+    public static boolean doesPlayerExist(UUID ID, Context context) {
         SharedPreferences foxPreferencesStatic = context.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         int namedPlayerCount = getNamedPlayerCount(context);
         for (int x = 0; x < namedPlayerCount; x++) {

@@ -14,9 +14,7 @@ public interface RoundEndContract {
 
         void displayTitle(String title);
 
-        void nextRound(int gameIndex);
-
-        void playerSwitch(int gameIndex);
+        void nextRound();
 
         boolean playerSwitch();
 

@@ -31,6 +31,7 @@ import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
@@ -289,13 +290,17 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public boolean playerSwitch() {
-        for (int index = 0; index < MainActivity.allGameInstances.size(); index++) {
-            if (MainActivity.allGameInstances.get(index).isGameOngoing()) {
-                playerSwitch(index);
-                return true;
-            }
+        if(HomeScreen.allGameInstances.size() < HomeScreen.allGameInstances.get(0).getNumberOfPlayers()){
+            gameProceed(SwapActivity.class, gameIndexNumber + 1);
+            return true;
         }
         return false;
+    }
+
+    private void gameProceed(Class nextActivity, int index) {
+        Intent gameIntent = new Intent(this, nextActivity);
+        gameIntent.putExtra(GameActivity.GAME_INDEX, index);
+        startActivity(gameIntent);
     }
 
     @Override

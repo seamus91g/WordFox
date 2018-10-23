@@ -27,10 +27,9 @@ public class RoundEndPresenter {
 
     public void startGame(GameInstance gameInstance) {
         gameInstance.incrementRound();
-        int index = gameInstance.getThisGameIndex();
         // Start new round if the current round is not the last round
         if (gameInstance.getRound() < GameInstance.NUMBER_ROUNDS) {
-            view.nextRound(index);
+            view.nextRound();
         } else {
             // If Last Round but there are still players to play -> launch the PlayerSwitchActivity
             gameInstance.gamestateFinished();

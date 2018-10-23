@@ -1,10 +1,6 @@
 package com.example.seamus.wordfox;
 
-import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.crash.FirebaseCrash;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +10,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Queue;
-
-import static com.example.seamus.wordfox.MainActivity.MONITOR_TAG;
 
 class ClientRunnable implements ChatServer {
 

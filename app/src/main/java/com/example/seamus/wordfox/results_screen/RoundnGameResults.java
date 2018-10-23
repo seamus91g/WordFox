@@ -37,6 +37,7 @@ import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiGameInstance;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
