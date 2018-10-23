@@ -80,6 +80,18 @@
         <activity
             android:name=".LocalWifiActivity"
             android:label="@string/title_activity_local_wifi"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PassAndPlay"
+            android:label="@string/title_activity_pass_and_play"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SwapActivity"
+            android:label="@string/title_activity_swap"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SwapChooseActivity"
+            android:label="@string/title_activity_swap_choose"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
