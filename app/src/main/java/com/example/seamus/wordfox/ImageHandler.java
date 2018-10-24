@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageHandler {
-
-    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     private Activity activity;
 

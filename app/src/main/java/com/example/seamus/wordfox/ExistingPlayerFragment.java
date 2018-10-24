@@ -2,6 +2,8 @@ package com.example.seamus.wordfox;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.UUID;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,10 +83,12 @@ public class ExistingPlayerFragment extends Fragment {
     private class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerViewHolder> {
         private ArrayList<PlayerIdentity> dataset;
         private PlayerChoiceListener mListener;
+        private ArrayList<Bitmap> profilePics;
+
         private AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if(BuildConfig.DEBUG && !(adapterView == null && view == null && l == 0)){
+                if (BuildConfig.DEBUG && !(adapterView == null && view == null && l == 0)) {
                     throw new AssertionError();
                 }
                 PlayerIdentity choosenPlayer = dataset.get(position);
@@ -97,17 +104,22 @@ public class ExistingPlayerFragment extends Fragment {
         public class PlayerViewHolder extends RecyclerView.ViewHolder {
             private final TextView playerNameTV;
             private final TextView playerRankTV;
+            private final CircleImageView playerImage;
 
             public PlayerViewHolder(@NonNull View itemView, AdapterView.OnItemClickListener listener) {
                 super(itemView);
                 playerNameTV = itemView.findViewById(R.id.data_player_name);
                 playerRankTV = itemView.findViewById(R.id.data_player_rank);
+                playerImage = itemView.findViewById(R.id.data_page_player_pic);
                 itemView.setOnClickListener(view -> listener.onItemClick(null, null, getAdapterPosition(), 0));
+                loadPlayerProfilePics();
             }
 
-            public void bindPlayer(PlayerIdentity player) {
+            public void bindPlayer(PlayerIdentity player, Bitmap image) {
                 playerNameTV.setText(player.username);
-                playerRankTV.setText(player.ID.toString());
+                playerRankTV.setText(player.rank.foxRank);
+                playerImage.setImageBitmap(image);
+                playerImage.setBorderWidth(2);
             }
         }
 
@@ -121,7 +133,28 @@ public class ExistingPlayerFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PlayerViewHolder viewHolder, int i) {
-            viewHolder.bindPlayer(dataset.get(i));
+            viewHolder.bindPlayer(dataset.get(i), profilePics.get(i));
+        }
+
+        private void loadPlayerProfilePics() {
+            profilePics = new ArrayList<>();
+            for (PlayerIdentity p : dataset) {
+                profilePics.add(getPlayerPic(p));
+            }
+        }
+
+        private Bitmap getPlayerPic(PlayerIdentity id) {
+            GameData plyrGd = new GameData(getContext(), id.ID);
+            String profPicStr = plyrGd.getProfilePicture();
+            Bitmap profPic;
+            if (!profPicStr.equals("")) {
+                ImageHandler imageHandler = new ImageHandler(getActivity());     // Handle this better
+                Uri myFileUri = Uri.parse(profPicStr);
+                profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
+            } else {
+                profPic = ImageHandler.getScaledBitmap(id.rank.imageResource, 120, getActivity().getResources());
+            }
+            return profPic;
         }
 
         @Override

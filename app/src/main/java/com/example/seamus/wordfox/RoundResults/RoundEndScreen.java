@@ -179,12 +179,12 @@ public class RoundEndScreen extends AppCompatActivity
 
         CircleImageView profilePicView = cl.findViewById(R.id.round_end_profile_pic);
         if (profPic == null) {
-            profilePicView.setVisibility(View.GONE);
-            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
-            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
-        } else {
-            profilePicView.setImageBitmap(profPic);
+            profPic = ImageHandler.getScaledBitmap(R.drawable.ppfox2_outline, 120, getResources());
+//            profilePicView.setVisibility(View.GONE);
+//            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
+//            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
         }
+        profilePicView.setImageBitmap(profPic);
     }
 
     public void populatePossibleWords(GameInstance gameInstance) {

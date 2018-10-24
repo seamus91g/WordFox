@@ -61,7 +61,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ResultsContract.View {
-    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     public static final String INTENT_GAME_RESULTS = "intent_game_results_key";
 
@@ -259,15 +258,14 @@ public class RoundnGameResults extends AppCompatActivity
         FoxRank foxRank = GameData.determineRankValue(playerScore);
         resultPlayerRankNameView.setText(foxRank.foxRank);
 
-
         CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
         if (profPic == null) {
-            profilePicView.setVisibility(View.GONE);
-            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
-            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
-        } else {
-            profilePicView.setImageBitmap(profPic);
+            profPic = ImageHandler.getScaledBitmap(R.drawable.ppfox2_outline, 120, getResources());
+//            profilePicView.setVisibility(View.GONE);
+//            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
+//            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
         }
+        profilePicView.setImageBitmap(profPic);
         profPic = null;
         Bitmap foxRankImage = ImageHandler.getScaledBitmap(foxRank.imageResource, 120, getResources());    // TODO: Adjust to screen size
 //        Bitmap foxRankImage = BitmapFactory.decodeResource(getResources(), foxRank.imageResource);      // TODO: Re-use fox pics if players get the same rank

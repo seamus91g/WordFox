@@ -51,7 +51,7 @@
         android:layout_height="60dp"
         android:paddingRight="6dp"
         android:src="@drawable/default_smiley"
-        app:civ_border_color="#FF000000"
+        app:civ_border_color="@color/game_font_color"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/round_end_result_grid"
         app:layout_constraintHorizontal_bias="0.14"
