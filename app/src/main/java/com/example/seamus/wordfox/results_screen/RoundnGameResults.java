@@ -256,9 +256,7 @@ public class RoundnGameResults extends AppCompatActivity
 
         ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
         TextView resultPlayerRankNameView = cl.findViewById(R.id.result_player_rank_name);
-        int rank = GameData.determineRankValue(playerScore);
-        plyrGd.setRank(rank);
-        FoxRank foxRank = GameData.determineRankClass(rank);
+        FoxRank foxRank = GameData.determineRankValue(playerScore);
         resultPlayerRankNameView.setText(foxRank.foxRank);
 
 

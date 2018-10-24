@@ -197,7 +197,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     public void displayRank() {
-        FoxRank foxRank = GameData.determineRankClass(myGameData.getRank());
+        FoxRank foxRank = myGameData.getHighRank();
         view.setRankText(foxRank.foxRank);
         view.setRankImage(ImageHandler.getScaledBitmap(foxRank.imageResource, 120, activity.getResources()));
     }
