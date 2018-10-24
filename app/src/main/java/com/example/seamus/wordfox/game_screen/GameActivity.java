@@ -36,6 +36,7 @@ import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,8 @@ public class GameActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Layout og the 3x3 grid of letters
         gridLayout = findViewById(R.id.guessGrid);
 
@@ -91,7 +94,8 @@ public class GameActivity extends AppCompatActivity
                 game,
                 dictionary.getDictionary(),
                 new FoxSQLData(this),
-                new GameData(this, game.getID())
+                new GameData(this, game.getID()),
+                firebaseAnalytics
         );
         presenter.setup();
 

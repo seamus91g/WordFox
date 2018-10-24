@@ -20,6 +20,9 @@ import android.widget.Button;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 
@@ -27,6 +30,7 @@ public class HomeScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
     public static final String MONITOR_TAG = "myTag";
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +64,12 @@ public class HomeScreen extends AppCompatActivity
         }).start();
 
         loadDictionary();
-
         setup();
+        MobileAds.initialize(this, "ca-app-pub-5181377347442835~1259786879");
 
+        mAdView = findViewById(R.id.adViewHomeScreen);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     public void loadDictionary() {
@@ -110,16 +117,20 @@ public class HomeScreen extends AppCompatActivity
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra(GameActivity.GAME_INDEX, 0);
 
+        waitForDictionaryToLoad();
+        this.startActivity(gameIntent);
+    }
+    
+    private void waitForDictionaryToLoad(){
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
             Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
             try {
-                Thread.sleep(100);      // Wait for dictionary to finish loading
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        this.startActivity(gameIntent);
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {

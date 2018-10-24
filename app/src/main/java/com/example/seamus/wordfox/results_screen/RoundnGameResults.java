@@ -46,6 +46,8 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +80,7 @@ public class RoundnGameResults extends AppCompatActivity
     private ResultsPresenter presenter;
     private LinearLayout resultContainer;
 
+    private AdView mAdView;
     private LayoutInflater resultInflater;
     private ResultBroadcastReceiver resultReceiver;
     private Queue<JSONObject> wifiGameResults;
@@ -123,7 +126,14 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ArrayList<GameInstance> instancesToDisplay = MainActivity.allGameInstances;
+        AdRequest adRequestTest = new AdRequest.Builder()
+                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
+                .build();
+//        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView = findViewById(R.id.adViewEndGame);
+        mAdView.loadAd(adRequestTest);
+
+        ArrayList<GameInstance> instancesToDisplay = HomeScreen.allGameInstances;
 
         isOnline = instancesToDisplay.get(0).isOnline();
         if (isOnline) {
