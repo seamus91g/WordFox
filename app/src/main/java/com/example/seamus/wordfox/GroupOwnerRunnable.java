@@ -11,8 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import static com.example.seamus.wordfox.MainActivity.MONITOR_TAG;
-
 class GroupOwnerRunnable implements MessageHandler, ChatServer {
     private final int port;
     private final MessageHandler messageHandler;
@@ -27,13 +25,13 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
 
     @Override
     public void run() {
-        Log.d(MainActivity.MONITOR_TAG, "Running GO runnable ");
+        Log.d(HomeScreen.MONITOR_TAG, "Running GO runnable ");
         try {
             server = new ServerSocket(port);
             while (isAlive) {
-                Log.d(MONITOR_TAG, "GO: Waiting for client to connect .. ");
+                Log.d(HomeScreen.MONITOR_TAG, "GO: Waiting for client to connect .. ");
                 Socket serverToClient = server.accept();
-                Log.d(MONITOR_TAG, "GO: Client connected!! There are " + clients.size() + " clients. ");
+                Log.d(HomeScreen.MONITOR_TAG, "GO: Client connected!! There are " + clients.size() + " clients. ");
                 ChatServer cr = new ClientRunnable(serverToClient, this);
                 synchronized (this) {
                     clients.add(cr);
@@ -41,10 +39,10 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
                 new Thread(cr).start();
             }
         } catch (IOException e) {
-            Log.d(MONITOR_TAG, "GO: Forcefully closed server socket");
+            Log.d(HomeScreen.MONITOR_TAG, "GO: Forcefully closed server socket");
             e.printStackTrace();
         } finally {
-            Log.d(MONITOR_TAG, "C : GO is finished");
+            Log.d(HomeScreen.MONITOR_TAG, "C : GO is finished");
             for (ChatServer c : clients) {
                 c.close();
             }
@@ -65,11 +63,11 @@ class GroupOwnerRunnable implements MessageHandler, ChatServer {
 
     // Synchronise because other thread may remove elements
     private synchronized void messageAllClients(String message, ChatServer originator) {
-        Log.d(MONITOR_TAG, "Messaging " + message + " to " + clients.size() + " clients");
+        Log.d(HomeScreen.MONITOR_TAG, "Messaging " + message + " to " + clients.size() + " clients");
         for (ChatServer client : clients) {
-            Log.d(MONITOR_TAG, "Sending " + message + " ... ");
+            Log.d(HomeScreen.MONITOR_TAG, "Sending " + message + " ... ");
             if (client.equals(originator)) {       // Don't send to message originator
-                Log.d(MONITOR_TAG, "******** Skipping originator client ... *********");
+                Log.d(HomeScreen.MONITOR_TAG, "******** Skipping originator client ... *********");
                 continue;
             }
             client.sendMessage(message);

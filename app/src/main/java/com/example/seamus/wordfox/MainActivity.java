@@ -1,3 +1,4 @@
+/*
 package com.example.seamus.wordfox;
 
 import android.app.ActivityManager;
@@ -283,3 +284,4 @@ public class MainActivity extends AppCompatActivity
 
 
 }
+*/

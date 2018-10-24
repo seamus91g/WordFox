@@ -35,7 +35,7 @@ public class WifiGameInstance implements GameDetails {
                 wordsFound.add(jArray.getString(i));
             }
         } catch (JSONException e) {
-            Log.d(MainActivity.MONITOR_TAG, "WifiGameInstance : Failed to parse json");
+            Log.d(HomeScreen.MONITOR_TAG, "WifiGameInstance : Failed to parse json");
             e.printStackTrace();
         }
     }

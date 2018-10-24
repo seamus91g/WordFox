@@ -73,6 +73,9 @@ public class SwapChooseActivity extends AppCompatActivity
     private View.OnClickListener startListener = view -> startGame();
 
     private void startGame() {
+        if(currentPlayer == null){
+            return;
+        }
         if(!GameData.doesPlayerExist(currentPlayer.ID, this)){
             new GameData(this, currentPlayer.ID, currentPlayer.username);
         }

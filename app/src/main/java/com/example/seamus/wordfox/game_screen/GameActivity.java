@@ -27,7 +27,6 @@ import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GameTimer;
 import com.example.seamus.wordfox.HomeScreen;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RoundResults.RoundEndScreen;

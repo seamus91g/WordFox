@@ -29,7 +29,6 @@ import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.ImageHandler;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiService;
@@ -147,7 +146,7 @@ public class RoundEndScreen extends AppCompatActivity
 //            int scale = ImageHandler.getScaleFactor(getResources(), )
         }
         // Race condition if player ends game really quickly. Longest possible words might not yet be calculated.
-        while (gameInstance.getLongestPossible() == null){
+        while (gameInstance.getLongestPossible() == null) {
             try {
                 wait(100);
             } catch (InterruptedException e) {
@@ -290,7 +289,7 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public boolean playerSwitch() {
-        if(HomeScreen.allGameInstances.size() < HomeScreen.allGameInstances.get(0).getNumberOfPlayers()){
+        if (HomeScreen.allGameInstances.size() < HomeScreen.allGameInstances.get(0).getNumberOfPlayers()) {
             gameProceed(SwapActivity.class, gameIndexNumber + 1);
             return true;
         }

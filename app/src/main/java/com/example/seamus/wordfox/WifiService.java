@@ -23,8 +23,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.example.seamus.wordfox.MainActivity.MONITOR_TAG;
-
 public class WifiService extends Service implements MessageHandler {
     public static final String ACTION_STRING_SERVICE = "ToService";
     public static final String ACTION_SEND_LETTERS = "action_send_letters";
@@ -39,7 +37,7 @@ public class WifiService extends Service implements MessageHandler {
     private ArrayList<String> pendingResults = new ArrayList<>();
 
     private void sendBroadcast(String message, String intentAction, String key) {
-        Log.d(MONITOR_TAG, "W: Broadcasting: " + intentAction);
+        Log.d(HomeScreen.MONITOR_TAG, "W: Broadcasting: " + intentAction);
         Intent intent = new Intent();
         intent.setAction(intentAction);
         intent.putExtra(key, message);
@@ -48,11 +46,11 @@ public class WifiService extends Service implements MessageHandler {
 
     public void connectedTo(WifiP2pInfo info) {
         if (chat != null) {
-            Log.d(MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
-            Log.d(MONITOR_TAG, "WS : Group owner? : " + info.isGroupOwner);
+            Log.d(HomeScreen.MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
+            Log.d(HomeScreen.MONITOR_TAG, "WS : Group owner? : " + info.isGroupOwner);
             return;
         }
-        Log.d(MONITOR_TAG, "~~~~~~~~ I'm group owner? ~~~~~~~~ : " + info.isGroupOwner);
+        Log.d(HomeScreen.MONITOR_TAG, "~~~~~~~~ I'm group owner? ~~~~~~~~ : " + info.isGroupOwner);
 
         if (info.isGroupOwner) {
             chat = new GroupOwnerRunnable(port, this);
@@ -64,18 +62,18 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+        Log.d(HomeScreen.MONITOR_TAG, msg);
     }
 
     public void sendData(String data) {
-        Log.d(MONITOR_TAG, "WS : Sending data " + data);
+        Log.d(HomeScreen.MONITOR_TAG, "WS : Sending data " + data);
         chat.sendMessage(data);
         assert chat != null;
     }
 
     @Override
     public void handleReceivedMessage(String message, ChatServer c) {
-        Log.d(MONITOR_TAG, "WS : Handling received message ... " + message);
+        Log.d(HomeScreen.MONITOR_TAG, "WS : Handling received message ... " + message);
         try {
             JSONObject jso = new JSONObject(message);
 
@@ -146,7 +144,7 @@ public class WifiService extends Service implements MessageHandler {
 //        Message msg = mServiceHandler.obtainMessage();
 //        msg.arg1 = startId;
 //        mServiceHandler.sendMessage(msg);
-        Log.d(MONITOR_TAG, "Finished binding ... ");
+        Log.d(HomeScreen.MONITOR_TAG, "Finished binding ... ");
 
         return START_NOT_STICKY;
     }
@@ -156,7 +154,7 @@ public class WifiService extends Service implements MessageHandler {
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
-        Log.d(MONITOR_TAG, "**************** Service is destroyed *********************");
+        Log.d(HomeScreen.MONITOR_TAG, "**************** Service is destroyed *********************");
         closeService();
     }
 

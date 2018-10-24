@@ -6,7 +6,6 @@ import android.widget.TextView;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.HomeScreen;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.data.Diction;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.RoundItem;
