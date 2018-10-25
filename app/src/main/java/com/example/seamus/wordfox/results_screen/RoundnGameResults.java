@@ -277,7 +277,7 @@ public class RoundnGameResults extends AppCompatActivity
 
         CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
         if (profPic == null) {
-            profPic = ImageHandler.getScaledBitmap(R.drawable.ppfox2_outline, 120, getResources());
+            profPic = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
 //            profilePicView.setVisibility(View.GONE);
 //            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
 //            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));

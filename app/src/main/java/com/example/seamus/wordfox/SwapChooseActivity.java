@@ -1,7 +1,10 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -18,15 +21,21 @@ import android.widget.TextView;
 
 import com.example.seamus.wordfox.game_screen.GameActivity;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 public class SwapChooseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        PlayerChoiceListener {
+        PlayerChoiceListener.FragmentView {
     public static final String NEW_PLAYER_TAG = "new_player";
+
+    private PlayersAdapter playersAdapter;
     public static final String EXISTING_PLAYER_TAG = "existing_player";
     private static final String MONITOR_TAG = "myTag";
     private String CURRENT_FRAGMENT = "";
     private TextView currentPlayerTV;
     private PlayerIdentity currentPlayer;
+    private boolean isAdapterLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,42 @@ public class SwapChooseActivity extends AppCompatActivity
         startButton.setOnClickListener(startListener);
 
         currentPlayerTV = findViewById(R.id.current_playing_as_choice);
+
+        new Thread(() -> {
+            Looper.prepare();
+            ArrayList<PlayerIdentity> players = GameData.getNamedPlayerList(SwapChooseActivity.this);
+            for(GameInstance g : HomeScreen.allGameInstances){
+                ListIterator<PlayerIdentity> iter = players.listIterator();
+                while (iter.hasNext()){
+                    if(iter.next().ID.equals(g.getID())){
+                        iter.remove();
+                    }
+                }
+            }
+            playersAdapter = new PlayersAdapter(players, loadPlayerProfilePics(players), SwapChooseActivity.this);
+            isAdapterLoaded = true;
+        }).start();
+    }
+
+    private ArrayList<Bitmap> loadPlayerProfilePics(ArrayList<PlayerIdentity> players) {
+        ArrayList<Bitmap> profilePics = new ArrayList<>();
+        Bitmap defaultPicture = null;
+        for (PlayerIdentity p : players) {
+            GameData plyrGd = new GameData(this, p.ID);
+            Bitmap profPic;
+            if (!plyrGd.getProfilePicture().equals("")) {
+                ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
+                Uri myFileUri = Uri.parse(plyrGd.getProfilePicture());
+                profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
+            } else {
+                if(defaultPicture == null){     // Only load if needed
+                    defaultPicture = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+                }
+                profPic = defaultPicture;
+            }
+            profilePics.add(profPic);
+        }
+        return profilePics;
     }
 
     @Override
@@ -67,6 +112,20 @@ public class SwapChooseActivity extends AppCompatActivity
         currentPlayer = choosenPlayer;
         String currentChoice = "Playing as " + choosenPlayer.username;
         currentPlayerTV.setText(currentChoice);
+    }
+
+    @Override
+    public PlayersAdapter getPlayersAdapter() {
+        // TODO: Add loading dialog while waiting.
+        while (!isAdapterLoaded){
+            Log.d(MONITOR_TAG, "Waiting for adapter to finish loading ...");
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return playersAdapter;
     }
 
     private View.OnClickListener newOrExistingListener = view -> decideFragment((String) view.getTag());

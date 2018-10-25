@@ -19,6 +19,7 @@ import java.util.UUID;
 // Class to store game data and statistics
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
+    public static final int PROFILE_DEFAULT_IMG = R.drawable.ppfox2_outline_small;
     //    public static final String DEFAULT_P1_ID = "Player 1";
     public static final String NONE_FOUND = "None Found!";
     public static final String NON_EXISTANT = "non_existant";

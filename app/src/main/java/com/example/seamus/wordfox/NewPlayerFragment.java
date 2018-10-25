@@ -1,7 +1,6 @@
 package com.example.seamus.wordfox;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,7 +20,7 @@ import java.util.UUID;
  * to handle interaction events.
  */
 public class NewPlayerFragment extends Fragment {
-    private PlayerChoiceListener mListener;
+    private PlayerChoiceListener.FragmentView mListener;
     private EditText newPlayerEditText;
 
     public NewPlayerFragment() {
@@ -62,8 +61,8 @@ public class NewPlayerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof PlayerChoiceListener) {
-            mListener = (PlayerChoiceListener) context;
+        if (context instanceof PlayerChoiceListener.FragmentView) {
+            mListener = (PlayerChoiceListener.FragmentView) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
