@@ -36,6 +36,8 @@ import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 public class ProfileActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -50,6 +52,8 @@ public class ProfileActivity extends AppCompatActivity
     private Button setProfileNameButton;
     Bitmap buttongGridImage = null;
 
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,10 @@ public class ProfileActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -90,6 +98,11 @@ public class ProfileActivity extends AppCompatActivity
 
     }
 
+    private void loadInterstitial(){
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
     @Override
     public void setRankImage(Bitmap rankImage){
         ImageView rankIV = findViewById(R.id.profile_rank_image);
@@ -154,6 +167,7 @@ public class ProfileActivity extends AppCompatActivity
     private View.OnClickListener usernameButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            loadInterstitial();
             String username_prof = nameEditText.getText().toString();
             presenter.updateProfileName(username_prof);
             clearViewFocus(nameEditText);

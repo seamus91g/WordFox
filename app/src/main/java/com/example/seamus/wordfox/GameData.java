@@ -24,6 +24,7 @@ public class GameData extends AppCompatActivity {
     public static final String NON_EXISTANT = "non_existant";
     public static final String ID_KEY_PREFIX = "ID_";
     private static final String DEFAULT_NAME = "Fox";
+    private static final String HIGHEST_SCORE_PREFIX = "highest_score_";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -73,7 +74,7 @@ public class GameData extends AppCompatActivity {
         SUBMITTED_INCORRECT_COUNT_KEY = "submitted_incorrect_count_" + playerID;
         COUNT_NONE_FOUND_KEY = "count_none_found_" + playerID;
         SHUFFLE_COUNT_KEY = "shuffle_count_" + playerID;
-        HIGHEST_SCORE_KEY = "highest_score_" + playerID;
+        HIGHEST_SCORE_KEY = HIGHEST_SCORE_PREFIX + playerID;
         RECENT_WORDS_KEY = "recent_words_" + playerID;
         RECENT_GAME_ID_KEY = "recent_game_id_" + playerID;
         BEST_WORDS_KEY = "best_words_" + playerID;
@@ -83,11 +84,12 @@ public class GameData extends AppCompatActivity {
         editor = foxPreferences.edit();
         editor.apply();
 
+        // TODO: Get rid of default player names such as 'Player 2'. Not necessary.
+        // ToDo: These constructors are messy.
         if (name.equals("") && !doesPlayerExist(playerID, myContext)) {
             setDefaultUsername(getPlayerList(myContext));
             addPlayer(playerID, myContext);
-        }
-        if (name.equals(DEFAULT_NAME)) {
+        } else if (!doesPlayerExist(playerID, myContext)) {
             setUsername(name);
             addPlayer(playerID, myContext);
         }
@@ -97,7 +99,7 @@ public class GameData extends AppCompatActivity {
         return playerID;
     }
 
-    private static boolean doesPlayerExist(UUID ID, Context context) {
+    public static boolean doesPlayerExist(UUID ID, Context context) {
         SharedPreferences foxPreferencesStatic = context.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         int namedPlayerCount = getNamedPlayerCount(context);
         for (int x = 0; x < namedPlayerCount; x++) {
@@ -158,28 +160,28 @@ public class GameData extends AppCompatActivity {
     }
 
     // Start the game with some generic identities
-    public static ArrayList<PlayerIdentity> fetchSomeIdentities(int amount, Context context) {
-        ArrayList<PlayerIdentity> identities = new ArrayList<>();
-        ArrayList<PlayerIdentity> existingPlayers = getPlayerList(context);
-        for (int i = 0; i < amount; ++i) {
-            String expectantName = "Player " + (i + 2);     // We start from player 2, player 1 is fox
-            PlayerIdentity expectantPlayer = null;
-            for (PlayerIdentity pi : existingPlayers) {
-                if (pi.username.equals(expectantName)) {
-                    expectantPlayer = pi;
-                    break;
-                }
-            }
-            // If player hasn't been found in existing players, create him.
-            if (expectantPlayer == null) {
-                GameData newPlayer = new GameData(context);
-                expectantPlayer = new PlayerIdentity(newPlayer.playerID, newPlayer.getUsername());
-            }
-            identities.add(expectantPlayer);
-        }
-
-        return identities;
-    }
+//    public static ArrayList<PlayerIdentity> fetchSomeIdentities(int amount, Context context) {
+//        ArrayList<PlayerIdentity> identities = new ArrayList<>();
+//        ArrayList<PlayerIdentity> existingPlayers = getPlayerList(context);
+//        for (int i = 0; i < amount; ++i) {
+//            String expectantName = "Player " + (i + 2);     // We start from player 2, player 1 is fox
+//            PlayerIdentity expectantPlayer = null;
+//            for (PlayerIdentity pi : existingPlayers) {
+//                if (pi.username.equals(expectantName)) {
+//                    expectantPlayer = pi;
+//                    break;
+//                }
+//            }
+//            // If player hasn't been found in existing players, create him.
+//            if (expectantPlayer == null) {
+//                GameData newPlayer = new GameData(context);
+//                expectantPlayer = new PlayerIdentity(newPlayer.playerID, newPlayer.getUsername());
+//            }
+//            identities.add(expectantPlayer);
+//        }
+//
+//        return identities;
+//    }
 
     public static ArrayList<PlayerIdentity> getPlayerList(Context myContext) {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
@@ -197,7 +199,9 @@ public class GameData extends AppCompatActivity {
             String PREF_FILE_NAME = PREF_FILE_PREFIX + stringID;
             SharedPreferences userFoxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
             String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
-            playerList.add(new PlayerIdentity(ID, name));
+            FoxRank rank = determineRankValue(userFoxPreferences.getInt(HIGHEST_SCORE_PREFIX + ID, 0));
+            Log.d(MONITOR_TAG, "********* Rank of " + name + " is : " + rank.foxRank + " ***********");
+            playerList.add(new PlayerIdentity(ID, name, rank));
         }
         if (playerList.size() == 0) {
             playerList.add(getPlayer1Identity(myContext));
@@ -205,6 +209,7 @@ public class GameData extends AppCompatActivity {
         return playerList;
     }
 
+    // TODO: This is unnecessary. No longer allow auto naming e.g Player 2, player 3, etc..
     public static ArrayList<PlayerIdentity> getNamedPlayerList(Context myContext) {
         ArrayList<PlayerIdentity> allPlayers = getPlayerList(myContext);
         ArrayList<PlayerIdentity> namedPlayers = new ArrayList<>();
@@ -370,7 +375,7 @@ public class GameData extends AppCompatActivity {
     }
 
     public void setHighestScore(int submittedScore) {
-        int highScore = foxPreferences.getInt(HIGHEST_SCORE_KEY, 0);
+        int highScore = getHighestTotalScore();
         if (submittedScore > highScore) {
             editor.putInt(HIGHEST_SCORE_KEY, submittedScore);
             editor.apply();
@@ -457,44 +462,47 @@ public class GameData extends AppCompatActivity {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
     }
 
-    public static FoxRank determineRankClass(int rankValue) {
-        switch (rankValue) {
-            case 3:
-                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
-            case 4:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
-            case 5:
-                return new FoxRank(R.drawable.onefox_silhouette, "Kit Fox");
-            case 6:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Gray Fox");
-            case 7:
-                return new FoxRank(R.drawable.onefox_silhouette, "Arctic Fox");
-            case 8:
-                return new FoxRank(R.drawable.arcticfox_silhouette, "Silver Fox");
-            case 9:
-                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-            default:
-                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
+//    public static FoxRank determineRankClass(int rankValue) {
+////        switch (rankValue) {
+////            case 3:
+////                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
+////            case 4:
+////                return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
+////            case 5:
+////                return new FoxRank(R.drawable.onefox_silhouette, "Kit Fox");
+////            case 6:
+////                return new FoxRank(R.drawable.arcticfox_silhouette, "Gray Fox");
+////            case 7:
+////                return new FoxRank(R.drawable.onefox_silhouette, "Arctic Fox");
+////            case 8:
+////                return new FoxRank(R.drawable.arcticfox_silhouette, "Silver Fox");
+////            case 9:
+////                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
+////            default:
+//                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
+////        }
+//    }
+
+    public static FoxRank determineRankValue(int score) {
+        if (score < 12) {
+            return new FoxRank(R.drawable.woodfox, "Wood Fox");
+        } else if (score < 15) {
+            return new FoxRank(R.drawable.palefoxsil, "Pale Fox");
+        } else if (score < 17) {
+            return new FoxRank(R.drawable.kitfoxsil, "Kit Fox");
+        } else if (score < 20) {
+            return new FoxRank(R.drawable.grayfoxsil, "Gray Fox");
+        } else if (score < 23) {
+            return new FoxRank(R.drawable.arcticfox, "Arctic Fox");
+        } else if (score < 24) {
+            return new FoxRank(R.drawable.silverfoxsil, "Silver Fox");
+        } else {
+            return new FoxRank(R.drawable.redfoxsil, "Red Fox");
         }
     }
 
-    public static int determineRankValue(int score) {
-        float avg = score / 3;
-        return Math.round(avg);
+    public FoxRank getHighRank() {
+        return determineRankValue(getHighestTotalScore());
     }
-
-    public void setRank(int rank) {
-        int existingRank = foxPreferences.getInt(FOX_RANK_KEY, 0);
-        if (existingRank >= rank) {
-            return;
-        }
-        editor.putInt(FOX_RANK_KEY, rank);
-        editor.apply();
-    }
-
-    public int getRank() {
-        return foxPreferences.getInt(FOX_RANK_KEY, 0);
-    }
-
 }
 

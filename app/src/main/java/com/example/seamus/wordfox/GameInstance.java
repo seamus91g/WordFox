@@ -24,6 +24,7 @@ public class GameInstance implements GameDetails {
     public static final String BEST_WORDS = "best_words_key";
     public static int NUMBER_ROUNDS = 3;
     public final String MONITOR_TAG = "myTag";
+    private int numberOfPlayers = 1; // Only different for a Pass & Play game
     private final boolean isOnline;
     private int totalScore;      // total Score tracks the accumulated score across rounds.
     private int score;   // score is just the score from the current round.
@@ -78,6 +79,10 @@ public class GameInstance implements GameDetails {
         myGameState = GameState.ONGOING;
     }
 
+    public GameInstance(UUID playerId, String nm, int thisGameIndex, int playerCount) {
+        this(playerId, nm, thisGameIndex);
+        numberOfPlayers = playerCount;
+    }
     public GameInstance(UUID playerId, String nm, int thisGameIndex) {
         this(playerId, nm, thisGameIndex, null, false, false);
     }
@@ -111,6 +116,10 @@ public class GameInstance implements GameDetails {
     @Override
     public UUID getID() {
         return player.ID;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 
     public PlayerIdentity getPlayer() {

@@ -79,7 +79,7 @@ public class Statistics extends AppCompatActivity
             }
             ArrayList<DataListItem> allCategories = new ArrayList<>();
             Bitmap profPic = loadPlayerBitmap(playerGameData.getProfilePicture());
-            FoxRank foxRank = GameData.determineRankClass(playerGameData.getRank());
+            FoxRank foxRank = playerGameData.getHighRank();
             DataListItem playerHeader = new TypePlayer(playerGameData.getUsername(), allCategories, profPic, foxRank.foxRank);
             gameData.add(playerHeader);
 

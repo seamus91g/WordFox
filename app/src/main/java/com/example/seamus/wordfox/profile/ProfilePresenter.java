@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.util.Log;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.ImageHandler;
+import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.GameItem;
 
@@ -24,7 +26,7 @@ import java.util.UUID;
  */
 
 public class ProfilePresenter implements ProfileContract.Listener {
-    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
+    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "profile_pic_default.png";
     private static final String MONITOR_TAG = "myTag";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
 
@@ -85,7 +87,9 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     private Bitmap defaultProfImg(ImageHandler imageHandler) {
-        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+//        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
+//        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_pic_default);
+        return ImageHandler.getScaledBitmap(R.drawable.profile_pic_default, ImageHandler.dp2px(activity, 270), activity.getResources());
     }
 
     // When user is finished choosing a picture from the image gallery
@@ -197,7 +201,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     public void displayRank() {
-        FoxRank foxRank = GameData.determineRankClass(myGameData.getRank());
+        FoxRank foxRank = myGameData.getHighRank();
         view.setRankText(foxRank.foxRank);
         view.setRankImage(ImageHandler.getScaledBitmap(foxRank.imageResource, 120, activity.getResources()));
     }

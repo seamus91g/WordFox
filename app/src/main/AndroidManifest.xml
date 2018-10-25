@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,10 +22,18 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5181377347442835~1259786879" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HomeScreen"
+            android:label="@string/title_activity_home_screen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,6 +84,18 @@
         <activity
             android:name=".LocalWifiActivity"
             android:label="@string/title_activity_local_wifi"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PassAndPlay"
+            android:label="@string/title_activity_pass_and_play"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SwapActivity"
+            android:label="@string/title_activity_swap"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SwapChooseActivity"
+            android:label="@string/title_activity_swap_choose"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

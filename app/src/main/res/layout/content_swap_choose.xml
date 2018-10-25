@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SwapChooseActivity"
+    tools:showIn="@layout/app_bar_swap_choose">
+
+    <Button
+        android:id="@+id/choice_new_player_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="new_player"
+        android:text="New Player"
+        app:layout_constraintBottom_toTopOf="@id/preFragmentGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/choice_existing_player_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/choice_existing_player_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="existing_player"
+        android:text="Existing Player"
+        app:layout_constraintBottom_toBottomOf="@id/choice_new_player_button"
+        app:layout_constraintLeft_toRightOf="@id/choice_new_player_button"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/choice_new_player_button" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/preFragmentGuideline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/postFragmentGuideline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <FrameLayout
+        android:id="@+id/player_select_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/postFragmentGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/preFragmentGuideline" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/current_playing_as_choice"
+        app:layout_constraintBottom_toBottomOf="@id/nextPlayerStart"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/nextPlayerStart" />
+
+    <Button
+        android:id="@+id/nextPlayerStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postFragmentGuideline" />
+
+</android.support.constraint.ConstraintLayout>

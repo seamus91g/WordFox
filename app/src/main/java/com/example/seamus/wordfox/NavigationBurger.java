@@ -19,7 +19,7 @@ public class NavigationBurger {
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent homeScreenIntent = new Intent(fromContext, MainActivity.class);
+            Intent homeScreenIntent = new Intent(fromContext, HomeScreen.class);
             fromContext.startActivity(homeScreenIntent);
         } else if (id == R.id.nav_data) {
             Intent dataScreenIntent = new Intent(fromContext, Statistics.class);

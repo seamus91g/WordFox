@@ -1,14 +1,16 @@
 package com.example.seamus.wordfox.game_screen;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
-import com.example.seamus.wordfox.MainActivity;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.data.Diction;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.datamodels.RoundItem;
 import com.example.seamus.wordfox.datamodels.WordItem;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     private final GamescreenContract.View view;
     private GameInstance gameInstance;
     private GameData gameData;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private FoxSQLData foxData;
     private Diction dictionary;
     private Map<String, Boolean> allWordsSubmitted = new HashMap<>();
@@ -36,14 +39,26 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     private ArrayList<SingleCell> listOfGridCells;
     private String onGoingAttempt = "";
 
-    GamescreenPresenter(GamescreenContract.View view, GameInstance gameInstance, Diction dictionary, FoxSQLData data, GameData gameData) {
+    GamescreenPresenter(GamescreenContract.View view, GameInstance gameInstance, Diction dictionary, FoxSQLData data, GameData gameData, FirebaseAnalytics mFirebaseAnalytics) {
         this.view = view;
         this.gameInstance = gameInstance;
         this.dictionary = dictionary;
         this.foxData = data;
         this.gameData = gameData;
+        this.mFirebaseAnalytics = mFirebaseAnalytics;
         foxData.open();
         listOfGridCells = createLetters();
+        logAnalytic("Started");
+    }
+
+    private void logAnalytic(String action){
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, gameInstance.getID().toString());
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, gameInstance.getName());
+        bundle.putString(FirebaseAnalytics.Param.LEVEL, action);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
     }
 
     public void setup() {
@@ -69,7 +84,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             gameInstance.setLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);
         } else if (gameInstance.getRoundLetters() == null) {
-            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+            GameInstance playerOneInstance = HomeScreen.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(gameInstance.getRound());
             ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(gameInstance.getRound());
             // TODO: Instead, Create a partial copy constructor to take in values
@@ -80,7 +95,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             givenLetters = getArrayFromLetters(givenLettersSTR);
 
         } else {      // If wifi multi player game
-//            GameInstance playerOneInstance = MainActivity.allGameInstances.get(0);
+//            GameInstance playerOneInstance = HomeScreen.allGameInstances.get(0);
             givenLettersSTR = gameInstance.getRoundLetters();
             givenLetters = getArrayFromLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);
@@ -307,6 +322,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     // Randomly shuffle the locations of the letters
     // TODO: .. can't we keep a reference to the grid of textviews and shuffle those ..?!
     public void shuffleGivenLetters() {
+        logAnalytic("Shuffle");
         gameData.shuffleCountUp();
         // Shuffle the list containing the grid cells
         Collections.shuffle(listOfGridCells);

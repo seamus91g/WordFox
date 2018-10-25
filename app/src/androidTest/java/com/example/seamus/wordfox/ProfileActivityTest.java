@@ -3,7 +3,6 @@ package com.example.seamus.wordfox;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.example.seamus.wordfox.test.ProfileRobot;
 

@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
-import com.example.seamus.wordfox.MainActivity;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.game_screen.GameActivity;
@@ -40,7 +40,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
     private NavigationBurger navBurger = new NavigationBurger();
     private final String MONITOR_TAG = "myTag";
     private PlayerSwitchPresenter presenter;
-    EditText createNewPlayer;
+    private EditText createNewPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
         Button setProfileName = (Button) findViewById(R.id.pswitch_create_player_button);
         setProfileName.setOnClickListener(usernameButtonListener);
 
-        presenter = new PlayerSwitchPresenter(this, gameIndexNumber, MainActivity.allGameInstances, GameData.getNamedPlayerList(this));
+        presenter = new PlayerSwitchPresenter(this, gameIndexNumber, HomeScreen.allGameInstances, GameData.getNamedPlayerList(this));
         presenter.setupMenu();
     }
     // After typing a username, the player can press 'Save' to keep the username
@@ -103,7 +103,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
                 startActivity(homeScreenIntent);
                 return;
             }

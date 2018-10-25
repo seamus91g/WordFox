@@ -32,10 +32,11 @@ import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameDetails;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
+import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.ImageHandler;
-import com.example.seamus.wordfox.MainActivity;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiGameInstance;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
@@ -44,6 +45,8 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +61,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ResultsContract.View {
-    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "default_profile_smiley.png";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     public static final String INTENT_GAME_RESULTS = "intent_game_results_key";
 
@@ -76,6 +78,7 @@ public class RoundnGameResults extends AppCompatActivity
     private ResultsPresenter presenter;
     private LinearLayout resultContainer;
 
+    private AdView mAdView;
     private LayoutInflater resultInflater;
     private ResultBroadcastReceiver resultReceiver;
     private Queue<JSONObject> wifiGameResults;
@@ -121,7 +124,14 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ArrayList<GameInstance> instancesToDisplay = MainActivity.allGameInstances;
+        AdRequest adRequestTest = new AdRequest.Builder()
+                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
+                .build();
+//        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView = findViewById(R.id.adViewEndGame);
+        mAdView.loadAd(adRequestTest);
+
+        ArrayList<GameInstance> instancesToDisplay = HomeScreen.allGameInstances;
 
         isOnline = instancesToDisplay.get(0).isOnline();
         if (isOnline) {
@@ -136,16 +146,16 @@ public class RoundnGameResults extends AppCompatActivity
             new Thread(wifiResultFeed).start();
         }
 
-        presenter = new ResultsPresenter(this, MainActivity.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
+        presenter = new ResultsPresenter(this, HomeScreen.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
         presenter.updateData();
 
         /////////
         resultContainer = findViewById(R.id.player_results_container);
         resultInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < MainActivity.allGameInstances.size(); ++i) {
-            addResultDetail(MainActivity.allGameInstances.get(i));
+        for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
+            addResultDetail(HomeScreen.allGameInstances.get(i));
         }
-        GameInstance gameInstance = MainActivity.allGameInstances.get(0);
+        GameInstance gameInstance = HomeScreen.allGameInstances.get(0);
         TextView best1 = findViewById(R.id.bestword_heading_1);
         TextView best2 = findViewById(R.id.bestword_heading_2);
         TextView best3 = findViewById(R.id.bestword_heading_3);
@@ -154,10 +164,10 @@ public class RoundnGameResults extends AppCompatActivity
         best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase());
         String winner = "";
         int highScore = -1;
-        for (int i = 0; i < MainActivity.allGameInstances.size(); ++i) {
-            if (MainActivity.allGameInstances.get(i).getTotalScore() > highScore) {
-                highScore = MainActivity.allGameInstances.get(i).getTotalScore();
-                winner = MainActivity.allGameInstances.get(i).getName();
+        for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
+            if (HomeScreen.allGameInstances.get(i).getTotalScore() > highScore) {
+                highScore = HomeScreen.allGameInstances.get(i).getTotalScore();
+                winner = HomeScreen.allGameInstances.get(i).getName();
             }
         }
         TextView winnerText = findViewById(R.id.winner_banner_text);
@@ -214,8 +224,8 @@ public class RoundnGameResults extends AppCompatActivity
                 gameResult = wifiGameResults.remove();
             }
             GameDetails game = new WifiGameInstance(gameResult,
-                    MainActivity.allGameInstances.get(0).getAllLongestPossible(),
-                    MainActivity.allGameInstances.get(0).getLetters());
+                    HomeScreen.allGameInstances.get(0).getAllLongestPossible(),
+                    HomeScreen.allGameInstances.get(0).getLetters());
             addResultDetail(game);
         }
     };
@@ -245,20 +255,17 @@ public class RoundnGameResults extends AppCompatActivity
 
         ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
         TextView resultPlayerRankNameView = cl.findViewById(R.id.result_player_rank_name);
-        int rank = GameData.determineRankValue(playerScore);
-        plyrGd.setRank(rank);
-        FoxRank foxRank = GameData.determineRankClass(rank);
+        FoxRank foxRank = GameData.determineRankValue(playerScore);
         resultPlayerRankNameView.setText(foxRank.foxRank);
-
 
         CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
         if (profPic == null) {
-            profilePicView.setVisibility(View.GONE);
-            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
-            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
-        } else {
-            profilePicView.setImageBitmap(profPic);
+            profPic = ImageHandler.getScaledBitmap(R.drawable.ppfox2_outline, 120, getResources());
+//            profilePicView.setVisibility(View.GONE);
+//            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
+//            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
         }
+        profilePicView.setImageBitmap(profPic);
         profPic = null;
         Bitmap foxRankImage = ImageHandler.getScaledBitmap(foxRank.imageResource, 120, getResources());    // TODO: Adjust to screen size
 //        Bitmap foxRankImage = BitmapFactory.decodeResource(getResources(), foxRank.imageResource);      // TODO: Re-use fox pics if players get the same rank
@@ -324,7 +331,7 @@ public class RoundnGameResults extends AppCompatActivity
             netConnService.getWifiService().closeService();
             stopService(new Intent(RoundnGameResults.this, WifiService.class));
         }
-        Intent MainIntent = new Intent(this, MainActivity.class);
+        Intent MainIntent = new Intent(this, HomeScreen.class);
         startActivity(MainIntent);
     }
 
@@ -335,7 +342,7 @@ public class RoundnGameResults extends AppCompatActivity
 
     @Override
     public void playerSwitch(int index) {
-        Intent gameIntent = new Intent(this, PlayerSwitchActivity.class);
+        Intent gameIntent = new Intent(this, SwapActivity.class);
         gameIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(gameIntent);
     }
@@ -352,7 +359,7 @@ public class RoundnGameResults extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, MainActivity.class);
+                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
                 startActivity(homeScreenIntent);
                 return;
             }
