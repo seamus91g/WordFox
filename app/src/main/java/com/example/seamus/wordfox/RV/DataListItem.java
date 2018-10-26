@@ -16,6 +16,8 @@ public interface DataListItem {
     int GAMES_DETAIL = 4;
     int WORDS_HEADER = 5;
     int WORDS_DETAIL = 6;
+    int ADVERT = 7;
+    int HEADING_IMAGE = 8;
 
     boolean isListExpanded();
 
