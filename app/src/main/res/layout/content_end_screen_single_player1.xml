@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@drawable/foxwithspeech_small2"
+        android:src="@drawable/gameendwithspeech"
         app:layout_constraintBottom_toTopOf="@+id/best_words_divider"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="Winner is Joey!"
         app:layout_constraintBottom_toBottomOf="@+id/winner_banner"
-        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintLeft_toLeftOf="@+id/winner_banner"
         app:layout_constraintRight_toRightOf="@+id/winner_banner"
         app:layout_constraintTop_toTopOf="@+id/winner_banner" />

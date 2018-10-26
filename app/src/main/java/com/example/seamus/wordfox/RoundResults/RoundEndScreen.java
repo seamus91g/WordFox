@@ -2,24 +2,25 @@ package com.example.seamus.wordfox.RoundResults;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,16 +34,10 @@ import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
-import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
-import com.example.seamus.wordfox.results_screen.ResultsContract;
-import com.example.seamus.wordfox.results_screen.ResultsPresenter;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -100,6 +95,17 @@ public class RoundEndScreen extends AppCompatActivity
             // TODO: Is service guaranteed to be bound in time for this??
             new Handler().post(() -> broadcastMyResults(HomeScreen.allGameInstances.get(0)));
         }
+
+
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        int width = size. x;
+        int height = size. y;
+
+        ImageView myIV = findViewById(R.id.round_end_banner);
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.5*width),getResources()));
+
     }
 
     @Override
@@ -157,18 +163,21 @@ public class RoundEndScreen extends AppCompatActivity
         int playerScore = gameInstance.getScore();
         int percentScore = (100 * playerScore) / (maxScore);
 
+        String playerPercent = "  (" + percentScore + "%)";
+
         TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
         String playerName = gameInstance.getName();
-        resultPlayerNameView.setText(playerName);
-        TextView roundEndPercent = cl.findViewById(R.id.round_end_result_percent);
-        String playerPercent = "  (" + percentScore + "%)";
-        roundEndPercent.setText(playerPercent);
-        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_player_score);
+        resultPlayerNameView.setText(playerName + playerPercent);
+
+        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
+        resultPlayerScoreView.setText(gameInstance.getLongestWord());
+
+
         String playerResult = playerScore + " out of " + maxScore;
-        resultPlayerScoreView.setText(playerResult);
         TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
-        String longestWordHeader = getResources().getString(R.string.your_longest_word_was) + " " + gameInstance.getLongestWord();
+        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult  ;
         longestWordView.setText(longestWordHeader);
+
 
         Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
         gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size

@@ -13,9 +13,6 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.NavigationView;
-import android.support.transition.ChangeBounds;
-import android.support.transition.Transition;
-import android.support.transition.TransitionManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,7 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +34,6 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,7 +45,8 @@ public class MainActivity extends AppCompatActivity
     private final static int maxPlayerCount = 6;
 
     private ConstraintLayout constraint;
-    private ConstraintSet constraintSet = new ConstraintSet();
+    private ConstraintSet constraintSet1 = new ConstraintSet();
+    private ConstraintSet constraintSet2 = new ConstraintSet();
 
     public static int getMaxPlayerCount() {
         return maxPlayerCount;
@@ -109,15 +106,45 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startAnimation() {
-        constraint = findViewById(R.id.contentMainxml);
-        constraintSet.clone(MainActivity.this, R.layout.content_main_detail);
 
-        Transition transition = new ChangeBounds();
-        transition.setInterpolator(new AccelerateDecelerateInterpolator());
-        transition.setDuration(1000);
+                constraintSet1.clone(MainActivity.this, R.layout.content_main);
+                constraintSet2.clone(MainActivity.this, R.layout.content_main);
 
-        TransitionManager.beginDelayedTransition(constraint,transition);
-        constraintSet.applyTo(constraint);
+        FrameLayout myFrameLayout = new FrameLayout(this.<T>findViewById(R.id.foxFrame));
+        myFrameLayout.setLayoutParams(cons);
+
+
+
+
+
+
+
+        val constraintSet1 = ConstraintSet()
+        constraintSet1.clone(constraintLayout)
+        val constraintSet2 = ConstraintSet()
+        constraintSet2.clone(constraintLayout)
+        constraintSet2.centerVertically(R.id.image, 0)
+
+        var changed = false
+        findViewById(R.id.button).setOnClickListener {
+            TransitionManager.beginDelayedTransition(constraintLayout)
+            val constraint = if (changed) constraintSet1 else constraintSet2
+            constraint.applyTo(constraintLayout)
+            changed = !changed
+
+
+
+
+
+//        constraint = findViewById(R.id.contentMainxml);
+//        constraintSet.clone(MainActivity.this, R.layout.content_main_detail);
+//
+//        Transition transition = new ChangeBounds();
+//        transition.setInterpolator(new AccelerateDecelerateInterpolator());
+//        transition.setDuration(1000);
+//
+//        TransitionManager.beginDelayedTransition(constraint,transition);
+//        constraintSet.applyTo(constraint);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

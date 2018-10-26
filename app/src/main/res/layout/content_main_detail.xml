@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:activity="com.example.seamus.wordfox.MainActivity"
-    tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
+    <!--tools:context=".MainActivity"-->
 
     <ImageButton
         android:id="@+id/fox2Button"
@@ -119,6 +119,7 @@
         android:gravity="center"
         android:onClick="startGameAct"
         android:text="start"
+        android:fontFamily="@font/arialroundedbold"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

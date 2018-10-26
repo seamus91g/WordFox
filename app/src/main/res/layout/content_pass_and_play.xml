@@ -91,6 +91,7 @@
     <Button
         android:id="@+id/bStartPAP"
         style="@style/RectangularButtons"
+        android:fontFamily="@font/arial_ff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

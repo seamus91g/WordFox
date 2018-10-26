@@ -3,25 +3,25 @@ package com.example.seamus.wordfox;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ public class HomeScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
     public static final String MONITOR_TAG = "myTag";
-    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +37,6 @@ public class HomeScreen extends AppCompatActivity
         setContentView(R.layout.activity_home_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,9 +57,63 @@ public class HomeScreen extends AppCompatActivity
         setup();
         MobileAds.initialize(this, "ca-app-pub-5181377347442835~1259786879");
 
-        mAdView = findViewById(R.id.adViewHomeScreen);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        int width = size. x;
+        int height = size. y;
+
+
+
+        ImageView myIV = findViewById(R.id.fox_instructions);
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcolouredwithspeech, (int) (0.5*width),getResources()));
+
+
+
+
+
+//
+//        myIV.requestLayout();
+//        myIV.getLayoutParams().height = (int) height/3 ;
+
+
+
+        TextView foxInstructionsTV = findViewById(R.id.fox_instructions_tv);
+        foxInstructionsTV.setText("Choose your game type from the 3 options");
+
+
+        TextView justMeTV = findViewById(R.id.just_me_text);
+        justMeTV.requestLayout();
+        justMeTV.getLayoutParams().width = (int) width/2 ;
+        TextView justMeExplanationTV = findViewById(R.id.just_me_explanation_text);
+        justMeExplanationTV.requestLayout();
+        justMeExplanationTV.getLayoutParams().width = (int) width/2 ;
+
+
+        TextView withFriendsTV = findViewById(R.id.with_friends_text);
+        withFriendsTV.requestLayout();
+        withFriendsTV.getLayoutParams().width = (int) width/2 ;
+        TextView withFriendsExplanationTV = findViewById(R.id.with_friends_explanation_text);
+        withFriendsExplanationTV.requestLayout();
+        withFriendsExplanationTV.getLayoutParams().width = (int) width/2 ;
+
+
+        TextView passPlayTV = findViewById(R.id.pass_and_play_text);
+        passPlayTV.requestLayout();
+        passPlayTV.getLayoutParams().width = (int) width/2 ;
+        TextView passPlayExplanationTV = findViewById(R.id.pass_and_play_explanation_text);
+        passPlayExplanationTV.requestLayout();
+        passPlayExplanationTV.getLayoutParams().width = (int) width/2 ;
+
+
+
+//
+//        myIV.requestLayout();
+//        myIV.getLayoutParams().height = (int) height/3 ;
+
+
+
     }
 
     public void loadDictionary() {

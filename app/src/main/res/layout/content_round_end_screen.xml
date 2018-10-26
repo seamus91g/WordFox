@@ -15,7 +15,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@drawable/foxwithspeech_small2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,9 +27,9 @@
         android:contentDescription="Player longest word"
         android:maxWidth="135dp"
         android:gravity="center"
-        android:text="@string/your_longest_word_was"
+        android:text="@string/you_scored"
         app:layout_constraintBottom_toBottomOf="@id/round_end_banner"
-        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintLeft_toLeftOf="@id/round_end_banner"
         app:layout_constraintRight_toRightOf="@id/round_end_banner"
         app:layout_constraintTop_toTopOf="@id/round_end_banner" />
@@ -47,17 +46,16 @@
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/round_end_profile_pic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:paddingRight="6dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/default_smiley"
         app:civ_border_color="@color/game_font_color"
         app:civ_border_width="2dp"
-        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_grid"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintTop_toBottomOf="@id/round_end_result_best_word"
+        app:layout_constraintBottom_toTopOf="@id/round_end_player_result_divider"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/round_end_result_grid" />
+        app:layout_constraintHorizontal_bias=".08"/>
 
     <TextView
         android:id="@+id/round_end_result_player_name"
@@ -65,30 +63,23 @@
         android:layout_height="wrap_content"
         android:text="Joey"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/round_end_result_player_score"
-        app:layout_constraintLeft_toRightOf="@+id/round_end_profile_pic"
-        app:layout_constraintTop_toTopOf="@+id/round_end_result_grid"
+        app:layout_constraintRight_toLeftOf="@id/round_end_result_grid"
+        app:layout_constraintLeft_toRightOf="@id/round_end_profile_pic"
+        app:layout_constraintBottom_toBottomOf="@id/round_end_profile_pic"
+        app:layout_constraintTop_toTopOf="@id/round_end_profile_pic"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/round_end_result_percent"
+        android:id="@+id/round_end_result_best_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  (54%)"
+        android:text="conumdrum"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_player_name"
-        app:layout_constraintLeft_toRightOf="@+id/round_end_result_player_name"
-        app:layout_constraintTop_toTopOf="@+id/round_end_result_player_name" />
-
-    <TextView
-        android:id="@+id/round_end_result_player_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="12 out of 22"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/round_end_result_grid"
-        app:layout_constraintLeft_toRightOf="@+id/round_end_profile_pic"
-        app:layout_constraintTop_toBottomOf="@+id/round_end_result_player_name"
+        app:layout_constraintTop_toBottomOf="@id/round_end_banner_divider"
+        app:layout_constraintBottom_toTopOf="@id/round_end_result_grid"
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintRight_toRightOf="@id/round_end_result_grid"
+        app:layout_constraintLeft_toLeftOf="@id/round_end_result_grid"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <ImageView
@@ -97,11 +88,11 @@
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/letter_grid_blank"
-        app:layout_constraintBottom_toTopOf="@+id/round_end_player_result_divider"
-        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintBottom_toTopOf="@id/round_end_player_result_divider"
+        app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/round_end_banner_divider" />
+        app:layout_constraintTop_toBottomOf="@id/round_end_result_best_word" />
 
     <TextView
         android:id="@+id/round_end_player_result_divider"
@@ -109,7 +100,8 @@
         android:layout_height="wrap_content"
         android:text="POSSIBLE WORDS"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@id/round_end_profile_pic"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/round_end_result_grid" />
 
 
@@ -122,7 +114,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/round_end_player_result_divider">
+        app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider">
 
         <LinearLayout
             android:id="@+id/suggestions_container"

@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:activity="com.example.seamus.wordfox.MainActivity"
-    tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
+    <!--tools:context=".MainActivity"-->
 
     <ImageButton
         android:id="@+id/fox2Button"
@@ -119,6 +119,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:onClick="startGameAct"
+        android:fontFamily="@font/arialroundedbold"
         android:text="start"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -9,44 +9,180 @@
     tools:context=".HomeScreen"
     tools:showIn="@layout/app_bar_home_screen">
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewHomeScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/test_banner_ad_unit_id"
-        ads:layout_constraintLeft_toLeftOf="parent"
-        ads:layout_constraintRight_toRightOf="parent"
-        ads:layout_constraintTop_toTopOf="parent" />
-
     <Button
+        android:background="@drawable/ic_play_circle"
         android:id="@+id/just_me_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/just_me"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:fontFamily="@font/arial_ff"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/with_friends_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adViewHomeScreen"
         />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/just_me_button"
+        app:layout_constraintTop_toTopOf="@id/just_me_button"
+        app:layout_constraintBottom_toBottomOf="@id/just_me_button"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/just_me_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/just_me"
+            style="?android:attr/listSeparatorTextViewStyle"/>
+
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/just_me_explanation_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/challenge_yourself"
+            app:layout_constraintHorizontal_bias="0"/>
+
+
+
+    </LinearLayout>
+
+
+
 
     <Button
         android:id="@+id/with_friends_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/with_friends"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:background="@drawable/ic_play_circle"
+        android:fontFamily="@font/arial_ff"
         app:layout_constraintBottom_toTopOf="@+id/pass_and_play_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintTop_toBottomOf="@id/just_me_button" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/with_friends_button"
+        app:layout_constraintTop_toTopOf="@id/with_friends_button"
+        app:layout_constraintBottom_toBottomOf="@id/with_friends_button"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/with_friends_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/with_friends"
+            style="?android:attr/listSeparatorTextViewStyle"/>
+
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/with_friends_explanation_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/with_friends_explanation_text"
+            app:layout_constraintHorizontal_bias="0"/>
+
+
+
+    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/pass_and_play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pass_and_play"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="@dimen/action_button_dimension"
+        android:layout_height="@dimen/action_button_dimension"
+        android:background="@drawable/ic_play_circle"
+        android:fontFamily="@font/arial_ff"
+        app:layout_constraintBottom_toTopOf="@id/fox_instructions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintTop_toBottomOf="@id/with_friends_button" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/pass_and_play_button"
+        app:layout_constraintTop_toTopOf="@id/pass_and_play_button"
+        app:layout_constraintBottom_toBottomOf="@id/pass_and_play_button"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/pass_and_play_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/with_friends"
+            style="?android:attr/listSeparatorTextViewStyle"/>
+
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/pass_and_play_explanation_text"
+            android:fontFamily="@font/arial_ff"
+            android:text="@string/pass_and_play_explanation_text"
+            app:layout_constraintHorizontal_bias="0"/>
+
+
+
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/fox_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="your_rank_fox_giving_instruction"
+        android:adjustViewBounds="true"
+        android:paddingTop="0dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fox_instructions_tv"
+        android:maxWidth="135dp"
+        android:gravity="center"
+        android:fontFamily="@font/arial_ff"
+        android:text="@string/you_scored"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fox_instructions"
+        app:layout_constraintBottom_toBottomOf="@id/fox_instructions"/>
+
+
 </android.support.constraint.ConstraintLayout>
+
+
+
+<!--<Button-->
+<!--android:id="@+id/pass_and_play_button"-->
+<!--android:layout_width="@dimen/action_button_dimension"-->
+<!--android:layout_height="@dimen/action_button_dimension"-->
+<!--android:background="@drawable/ic_play_circle"-->
+<!--android:fontFamily="@font/arial_ff"-->
+<!--android:textSize="35sp"-->
+<!--app:layout_constraintBottom_toTopOf="@id/fox_instructions"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintHorizontal_bias="0.1"-->
+<!--app:layout_constraintTop_toBottomOf="@id/with_friends_button" />-->

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +44,6 @@ import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.example.seamus.wordfox.player_switch.PlayerSwitchActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.google.android.gms.ads.AdRequest;
@@ -173,6 +174,22 @@ public class RoundnGameResults extends AppCompatActivity
         TextView winnerText = findViewById(R.id.winner_banner_text);
         winner = "Winner is " + winner + "!";
         winnerText.setText(winner);
+
+
+
+
+
+
+
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        int width = size. x;
+        int height = size. y;
+
+        ImageView myIV = findViewById(R.id.winner_banner);
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendwithspeech, (int) (0.5*width),getResources()));
+
     }
 
     private void unBindService() {
