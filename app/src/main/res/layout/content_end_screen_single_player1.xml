@@ -48,11 +48,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:gravity="center"
-        android:text="Longest Possible"
+        android:layout_marginLeft="5dp"
+        android:textStyle="italic"
+        android:text="@string/longest_words_minor_heading"
         app:layout_constraintBottom_toTopOf="@+id/bestword_heading_1"
         app:layout_constraintLeft_toLeftOf="parent"
-        ads:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/best_words_divider" />
 
     <TextView
@@ -108,27 +108,43 @@
         android:layout_height="0dp"
         android:fillViewport="false"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintBottom_toTopOf="@+id/advert_container_end_game"
+        ads:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/best_words_divider_2">
 
         <LinearLayout
-            android:id="@+id/player_results_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <LinearLayout
+                android:id="@+id/player_results_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
         </LinearLayout>
     </ScrollView>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewEndGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/advert_container_end_game"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintLeft_toLeftOf="parent"
         ads:layout_constraintRight_toRightOf="parent"
-        ads:layout_constraintBottom_toBottomOf="parent"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/test_banner_ad_unit_id" />
+        ads:layout_constraintTop_toBottomOf="@+id/results_scrollview">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adViewEndGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/test_banner_ad_unit_id" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

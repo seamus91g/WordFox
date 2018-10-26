@@ -128,5 +128,6 @@
     <string name="challenge_yourself">Challenge yourself against the best opponent - You!</string>
     <string name="with_friends_explanation_text">Play with your friends using wifi direct even without an internet connection</string>
     <string name="pass_and_play_explanation_text">Play with up to 5 friends all sharing this phone</string>
+    <string name="longest_words_minor_heading">Longest possible word from each round</string>
     <string name="choose_your_number_of_players_using_the_slider">Choose your number of players using the slider</string>
 </resources>

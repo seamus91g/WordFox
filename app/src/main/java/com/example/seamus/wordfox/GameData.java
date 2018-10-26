@@ -486,19 +486,19 @@ public class GameData extends AppCompatActivity {
 
     public static FoxRank determineRankValue(int score) {
         if (score < 12) {
-            return new FoxRank(R.drawable.woodfox, "Wood Fox");
+            return new FoxRank(R.drawable.woodfoxcoloured, "Wood Fox");
         } else if (score < 15) {
-            return new FoxRank(R.drawable.palefoxsil, "Pale Fox");
+            return new FoxRank(R.drawable.palefoxsicolouredl, "Pale Fox");
         } else if (score < 17) {
-            return new FoxRank(R.drawable.kitfoxsil, "Kit Fox");
+            return new FoxRank(R.drawable.kitfoxsilcoloured, "Kit Fox");
         } else if (score < 20) {
-            return new FoxRank(R.drawable.grayfoxsil, "Gray Fox");
+            return new FoxRank(R.drawable.gryfoxsilcoloured, "Gray Fox");
         } else if (score < 23) {
-            return new FoxRank(R.drawable.arcticfox, "Arctic Fox");
+            return new FoxRank(R.drawable.arcticfoxsilcoloured, "Arctic Fox");
         } else if (score < 24) {
-            return new FoxRank(R.drawable.silverfoxsil, "Silver Fox");
+            return new FoxRank(R.drawable.silverfoxsilcoloured, "Silver Fox");
         } else {
-            return new FoxRank(R.drawable.redfoxsil, "Red Fox");
+            return new FoxRank(R.drawable.redfoxsilcoloured, "Red Fox");
         }
     }
 
