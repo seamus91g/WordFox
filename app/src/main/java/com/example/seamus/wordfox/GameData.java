@@ -26,6 +26,7 @@ public class GameData extends AppCompatActivity {
     public static final String ID_KEY_PREFIX = "ID_";
     private static final String DEFAULT_NAME = "Fox";
     private static final String HIGHEST_SCORE_PREFIX = "highest_score_";
+    private static final String INTERSTITIAL_COUNT_KEY = "interstitial_count";
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -94,6 +95,19 @@ public class GameData extends AppCompatActivity {
             setUsername(name);
             addPlayer(playerID, myContext);
         }
+    }
+
+    public static boolean checkIfDisplayInterstitial(Context context){
+        SharedPreferences foxPreferencesStatic = context.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
+        SharedPreferences.Editor editor = foxPreferencesStatic.edit();
+        int count = foxPreferencesStatic.getInt(INTERSTITIAL_COUNT_KEY, 0);
+        ++count;
+        editor.putInt(INTERSTITIAL_COUNT_KEY, count);
+        editor.apply();
+        if(count % 3 == 0){
+            return true;
+        }
+        return false;
     }
 
     public UUID getPlayerID() {

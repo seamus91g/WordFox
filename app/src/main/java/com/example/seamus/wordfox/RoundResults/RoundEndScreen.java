@@ -36,6 +36,9 @@ import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.List;
 
@@ -50,7 +53,10 @@ public class RoundEndScreen extends AppCompatActivity
     private RoundEndPresenter presenter;
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
-    boolean isOnline;
+    private boolean isOnline;
+    private InterstitialAd mInterstitialAd;
+    private boolean displayInterstitial;
+    private boolean failedToLoadInterstitial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +70,12 @@ public class RoundEndScreen extends AppCompatActivity
         // TODO: Separate presenter for round and game end
         presenter = new RoundEndPresenter(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_round_end);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.startGame(HomeScreen.allGameInstances.get(gameIndexNumber));
+        FloatingActionButton fab = findViewById(R.id.fab_round_end);
+        fab.setOnClickListener(view -> {
+            if (displayInterstitial) {
+                displayInterstitial();
+            } else {
+                startGame();
             }
         });
 
@@ -95,17 +102,64 @@ public class RoundEndScreen extends AppCompatActivity
             // TODO: Is service guaranteed to be bound in time for this??
             new Handler().post(() -> broadcastMyResults(HomeScreen.allGameInstances.get(0)));
         }
+        if (isFinalRound) {
+            Log.d(MONITOR_TAG, "Its final round !!!!");
+            displayInterstitial = GameData.checkIfDisplayInterstitial(this);
+            if (displayInterstitial) {
+                loadInterstitial();
+                mInterstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        Log.d(MONITOR_TAG, "Will start game when ad closes ..");
+                        startGame();
+                    }
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        // Code to be executed when an ad request fails.
+                        Log.d(MONITOR_TAG, "Interstitial failed to load!!");
+                        failedToLoadInterstitial = true;
+                    }
+                });
+            }
+        }
 
-
-        Display display = getWindowManager(). getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display. getSize(size);
-        int width = size. x;
-        int height = size. y;
+        display.getSize(size);
+        int width = size.x;
 
         ImageView myIV = findViewById(R.id.round_end_banner);
         myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35*width),getResources()));
+    }
 
+    private void startGame() {
+        presenter.startGame(HomeScreen.allGameInstances.get(gameIndexNumber));
+    }
+
+    private void loadInterstitial() {
+        AdRequest adRequestTest = new AdRequest.Builder()
+                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
+                .build();
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(adRequestTest);
+    }
+
+    private void displayInterstitial() {
+        int waitmax = 30;
+        int wait = 0;
+        while (!mInterstitialAd.isLoaded()) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (failedToLoadInterstitial || ++wait > waitmax) {
+                startGame();
+                return;
+            }
+        }
+        mInterstitialAd.show();
     }
 
     @Override
@@ -175,7 +229,7 @@ public class RoundEndScreen extends AppCompatActivity
 
         String playerResult = playerScore + " out of " + maxScore;
         TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
-        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult  ;
+        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
         longestWordView.setText(longestWordHeader);
 
 
@@ -209,9 +263,6 @@ public class RoundEndScreen extends AppCompatActivity
                 String wordTag = "word_" + (j + 1);
                 String gridTag = "grid_" + (j + 1);
                 TextView wordTV = row.findViewWithTag(wordTag);
-
-
-
                 ImageView grid = row.findViewWithTag(gridTag);
                 if (count >= possibleWords.size()) {
                     wordTV.setVisibility(View.INVISIBLE);
