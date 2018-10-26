@@ -9,6 +9,19 @@
     tools:context=".HomeScreen"
     tools:showIn="@layout/app_bar_home_screen">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        app:fabCustomSize="@dimen/action_button_dimension"
+        android:scaleType="center"
+        android:elevation="880dp"
+        app:backgroundTint="@color/game_font_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_play_arrow_white_72dp"
+        android:tint="@android:color/white"
+        android:layout_margin="16dp" />
+
     <Button
         android:background="@drawable/ic_play_circle"
         android:id="@+id/just_me_button"
