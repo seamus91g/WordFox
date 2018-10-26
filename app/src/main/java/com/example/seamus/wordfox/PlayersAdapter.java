@@ -53,7 +53,6 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
             playerNameTV.setText(player.username);
             playerRankTV.setText(player.rank.foxRank);
             playerImage.setImageBitmap(image);
-            playerImage.setBorderWidth(2);
         }
     }
 

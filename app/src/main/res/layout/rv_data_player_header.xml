@@ -10,6 +10,8 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="12dp"
+        app:civ_border_color="@color/game_font_color"
+        app:civ_border_width="2dp"
         android:src="@drawable/ppfox1_outline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -52,6 +52,7 @@ public class Statistics extends AppCompatActivity
     protected RecyclerView mRecyclerView;
     private ArrayList<DataListItem> gameData = new ArrayList<>();
     private NavigationBurger navBurger = new NavigationBurger();
+    private Bitmap defaultPicture = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,8 @@ public class Statistics extends AppCompatActivity
     }
 
     private void headingAndBanner() {
-        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsil, 250, getResources());
+        int foxHeight = (getResources().getDisplayMetrics().heightPixels*20)/100;
+        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, foxHeight, getResources());
         DataListItem headingImage = new TypeHeadingImage(heading);
         gameData.add(headingImage);
 
@@ -212,7 +214,11 @@ public class Statistics extends AppCompatActivity
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
             profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
-//            int scale = ImageHandler.getScaleFactor(getResources(), )
+        }else{
+            if(defaultPicture == null){     // Only load if needed
+                defaultPicture = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+            }
+            profPic = defaultPicture;
         }
         return profPic;
     }
