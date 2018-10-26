@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -244,8 +245,8 @@ public class Statistics extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.statistics, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 

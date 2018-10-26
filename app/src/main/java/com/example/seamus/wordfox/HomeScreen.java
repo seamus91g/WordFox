@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
+import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
@@ -186,23 +189,24 @@ public class HomeScreen extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_screen, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Intent profileScreenIntent = new Intent(HomeScreen.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

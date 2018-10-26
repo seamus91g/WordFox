@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +23,15 @@ import android.widget.SeekBar;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 
 public class PassAndPlay extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static boolean firstTime = true;
     public static final String MONITOR_TAG = "myTag";
     private int numberOfPlayers = -1;
+    private NavigationBurger navBurger = new NavigationBurger();
     Bitmap myBitmap1;
     Bitmap myBitmap2;
     Bitmap myBitmap3;
@@ -285,47 +287,35 @@ public class PassAndPlay extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.pass_and_play, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Intent profileScreenIntent = new Intent(PassAndPlay.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        navBurger.navigateTo(item, PassAndPlay.this);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 }

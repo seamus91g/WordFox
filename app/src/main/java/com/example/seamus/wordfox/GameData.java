@@ -502,11 +502,11 @@ public class GameData extends AppCompatActivity {
         if (score < 12) {
             return new FoxRank(R.drawable.woodfoxcoloured, "Wood Fox");
         } else if (score < 15) {
-            return new FoxRank(R.drawable.palefoxsicolouredl, "Pale Fox");
+            return new FoxRank(R.drawable.palefoxsilcoloured, "Pale Fox");
         } else if (score < 17) {
             return new FoxRank(R.drawable.kitfoxsilcoloured, "Kit Fox");
         } else if (score < 20) {
-            return new FoxRank(R.drawable.gryfoxsilcoloured, "Gray Fox");
+            return new FoxRank(R.drawable.grayfoxsilcoloured, "Gray Fox");
         } else if (score < 23) {
             return new FoxRank(R.drawable.arcticfoxsilcoloured, "Arctic Fox");
         } else if (score < 24) {
