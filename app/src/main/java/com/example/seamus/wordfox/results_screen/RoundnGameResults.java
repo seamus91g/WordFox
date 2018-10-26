@@ -83,6 +83,7 @@ public class RoundnGameResults extends AppCompatActivity
     private LayoutInflater resultInflater;
     private ResultBroadcastReceiver resultReceiver;
     private Queue<JSONObject> wifiGameResults;
+    private Bitmap defaultProfilePic;
 
     class ResultBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -235,7 +236,7 @@ public class RoundnGameResults extends AppCompatActivity
             synchronized (RoundnGameResults.this) {
                 // If UI thread is slow runnable may have been triggered more times than there
                 // are elements, so check if empty
-                if(wifiGameResults.isEmpty()){
+                if (wifiGameResults.isEmpty()) {
                     return;
                 }
                 gameResult = wifiGameResults.remove();
@@ -277,10 +278,10 @@ public class RoundnGameResults extends AppCompatActivity
 
         CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
         if (profPic == null) {
-            profPic = ImageHandler.getScaledBitmap(R.drawable.ppfox2_outline, 120, getResources());
-//            profilePicView.setVisibility(View.GONE);
-//            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
-//            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
+            if(defaultProfilePic == null){
+                defaultProfilePic = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+            }
+            profPic = defaultProfilePic;
         }
         profilePicView.setImageBitmap(profPic);
         profPic = null;
@@ -308,9 +309,7 @@ public class RoundnGameResults extends AppCompatActivity
         if (word.equals(GameData.NONE_FOUND)) {
             return null;
         }
-        Bitmap buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
-        buttongGridImage = ImageHandler.getResizedBitmap(buttongGridImage, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
-
+        Bitmap buttongGridImage = ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, ImageHandler.dp2px(this, 100), getResources());
         GridImage grid = new GridImage(buttongGridImage, word, letters, getResources().getColor(R.color.game_font_color), getResources().getColor(R.color.colorLightAccent));
         return grid.getBmp();
     }
@@ -318,7 +317,7 @@ public class RoundnGameResults extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        if(isOnline){
+        if (isOnline) {
             bindService();
             new Handler().post(() -> netConnService.getWifiService().declareGameOver());
         }

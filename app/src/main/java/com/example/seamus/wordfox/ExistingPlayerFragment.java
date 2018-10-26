@@ -2,23 +2,13 @@ package com.example.seamus.wordfox;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +20,7 @@ public class ExistingPlayerFragment extends Fragment {
     private RecyclerView rv;
     private LinearLayoutManager lm;
     private RecyclerView.Adapter rvAdapter;
-    private PlayerChoiceListener mListener;
+    private PlayerChoiceListener.FragmentView mListener;
 
     public ExistingPlayerFragment() {
         // Required empty public constructor
@@ -52,20 +42,19 @@ public class ExistingPlayerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Activity activity = getActivity();
-        ArrayList<PlayerIdentity> players = GameData.getNamedPlayerList(activity);
         rv = activity.findViewById(R.id.listExistingPlayers);
         rv.setHasFixedSize(true);
         lm = new LinearLayoutManager(activity);
         rv.setLayoutManager(lm);
-        rvAdapter = new PlayersAdapter(players, mListener);
+        rvAdapter = mListener.getPlayersAdapter();
         rv.setAdapter(rvAdapter);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof PlayerChoiceListener) {
-            mListener = (PlayerChoiceListener) context;
+        if (context instanceof PlayerChoiceListener.FragmentView) {
+            mListener = (PlayerChoiceListener.FragmentView) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -80,9 +69,9 @@ public class ExistingPlayerFragment extends Fragment {
 
     ////////////////////////////////////////
 
-    private class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerViewHolder> {
+/*    private class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerViewHolder> {
         private ArrayList<PlayerIdentity> dataset;
-        private PlayerChoiceListener mListener;
+        private PlayerChoiceListener.View mListener;
         private ArrayList<Bitmap> profilePics;
 
         private AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
@@ -96,7 +85,7 @@ public class ExistingPlayerFragment extends Fragment {
             }
         };
 
-        PlayersAdapter(ArrayList<PlayerIdentity> dataset, PlayerChoiceListener mListener) {
+        PlayersAdapter(ArrayList<PlayerIdentity> dataset, PlayerChoiceListener.View mListener) {
             this.dataset = dataset;
             this.mListener = mListener;
         }
@@ -152,7 +141,7 @@ public class ExistingPlayerFragment extends Fragment {
                 Uri myFileUri = Uri.parse(profPicStr);
                 profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
             } else {
-                profPic = ImageHandler.getScaledBitmap(id.rank.imageResource, 120, getActivity().getResources());
+                profPic = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getActivity().getResources());
             }
             return profPic;
         }
@@ -161,5 +150,5 @@ public class ExistingPlayerFragment extends Fragment {
         public int getItemCount() {
             return dataset.size();
         }
-    }
+    }*/
 }

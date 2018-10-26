@@ -1,5 +1,6 @@
 package com.example.seamus.wordfox.statistics_screen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,8 +13,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.ImageHandler;
@@ -21,19 +24,23 @@ import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.DataListItem;
+import com.example.seamus.wordfox.RV.RVTypes.TypeAdvert;
 import com.example.seamus.wordfox.RV.RVTypes.TypeCategory;
 import com.example.seamus.wordfox.RV.RVTypes.TypeGamesDetail;
 import com.example.seamus.wordfox.RV.RVTypes.TypeGamesHeader;
+import com.example.seamus.wordfox.RV.RVTypes.TypeHeadingImage;
 import com.example.seamus.wordfox.RV.RVTypes.TypePlayer;
 import com.example.seamus.wordfox.RV.RVTypes.TypeStats;
 import com.example.seamus.wordfox.RV.RVTypes.TypeWordsHeader;
 import com.example.seamus.wordfox.RV.WFAdapter;
 import com.example.seamus.wordfox.WordLoader;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
-//import com.example.seamus.wordfox._junk.DataPageActivity;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +69,30 @@ public class Statistics extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        headingAndBanner();
         populateRecycler();
+    }
+
+    private void headingAndBanner() {
+        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsil, 250, getResources());
+        DataListItem headingImage = new TypeHeadingImage(heading);
+        gameData.add(headingImage);
+
+        DataListItem bannerAdvert = new TypeAdvert(loadAdBanner(this));
+        gameData.add(bannerAdvert);
+    }
+
+    private AdView loadAdBanner(Context context) {
+        AdView mAdView = new AdView(context);
+        mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
+        mAdView.setAdUnitId(context.getResources().getString(R.string.test_banner_ad_unit_id));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        mAdView.setLayoutParams(lp);
+        return mAdView;
     }
 
     private void populateRecycler() {
@@ -74,7 +104,7 @@ public class Statistics extends AppCompatActivity
         for (PlayerIdentity identity : allPlayers) {
             GameData playerGameData = new GameData(this, identity.ID);
             // Don't display players with no data, except player one
-            if(playerGameData.getGameCount() == 0 && !allPlayers.get(0).equals(identity)){
+            if (playerGameData.getGameCount() == 0 && !allPlayers.get(0).equals(identity)) {
                 continue;
             }
             ArrayList<DataListItem> allCategories = new ArrayList<>();
@@ -104,11 +134,11 @@ public class Statistics extends AppCompatActivity
 
     }
 
-    private ArrayList<DataListItem> createWordData(UUID playerID){
+    private ArrayList<DataListItem> createWordData(UUID playerID) {
 
         ArrayList<DataListItem> allWordHeaders = new ArrayList<>();
         ArrayList<WordDataHeader> pData = WordLoader.getValid(this, playerID); //TODO: Deprecate WordDataHeader/WordData, use only Type classes
-        if(pData.size() == 0){
+        if (pData.size() == 0) {
             allWordHeaders.add(new TypeStats<>("No words found yet!", ""));
         }
         for (WordDataHeader wdh : pData) {
@@ -118,7 +148,7 @@ public class Statistics extends AppCompatActivity
         return allWordHeaders;
     }
 
-    private ArrayList<DataListItem> createGameData(UUID ID, List<DataPerGame> allGameData){
+    private ArrayList<DataListItem> createGameData(UUID ID, List<DataPerGame> allGameData) {
         ArrayList<DataListItem> allGameHeaders = new ArrayList<>();
         for (DataPerGame game : allGameData) {
             if (!containsPlayer(game.players, ID)) {
@@ -128,7 +158,7 @@ public class Statistics extends AppCompatActivity
             DataListItem dliHeader = new TypeGamesHeader(game, dliGame);
             allGameHeaders.add(dliHeader);
         }
-        if(allGameHeaders.size() == 0){
+        if (allGameHeaders.size() == 0) {
             allGameHeaders.add(new TypeStats<>("No games played yet!", ""));
         }
         return allGameHeaders;
@@ -145,7 +175,7 @@ public class Statistics extends AppCompatActivity
 
     private ArrayList<DataListItem> createStats(GameData playerGameData) {
         ArrayList<DataListItem> allDataItems = new ArrayList<>();
-        if(playerGameData.getGameCount() == 0){
+        if (playerGameData.getGameCount() == 0) {
             allDataItems.add(new TypeStats<>("No games played yet!", ""));
             return allDataItems;
         }

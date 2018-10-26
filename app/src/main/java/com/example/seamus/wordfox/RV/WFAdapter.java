@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.seamus.wordfox.R;
+import com.example.seamus.wordfox.RV.viewholders.AdvertVH;
 import com.example.seamus.wordfox.RV.viewholders.CategoryHeadingVH;
 import com.example.seamus.wordfox.RV.viewholders.GameDetailsVH;
 import com.example.seamus.wordfox.RV.viewholders.GameHeadingVH;
+import com.example.seamus.wordfox.RV.viewholders.HeadingImageVH;
 import com.example.seamus.wordfox.RV.viewholders.PlayerHeadingVH;
 import com.example.seamus.wordfox.RV.viewholders.StatItemVH;
 import com.example.seamus.wordfox.RV.viewholders.WordDetailsVH;
 import com.example.seamus.wordfox.RV.viewholders.WordHeaderVH;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.List;
 
 public class WFAdapter extends RecyclerView.Adapter<BaseWFViewHolder> {
     private ArrayList<DataListItem> dataset;
+    private AdView mAdView;
 
     public interface OnItemClickListener {
         void onRecyclerItemSelected(int adapterPosition, android.view.View v);
@@ -124,6 +128,14 @@ public class WFAdapter extends RecyclerView.Adapter<BaseWFViewHolder> {
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.rv_data_word_details, parent, false);
                 return new WordDetailsVH(v);
+            case DataListItem.ADVERT:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.rv_data_advert, parent, false);
+                return new AdvertVH(v);
+            case DataListItem.HEADING_IMAGE:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.rv_heading_image, parent, false);
+                return new HeadingImageVH(v);
         }
         return null;
     }
