@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.seamus.wordfox.GameData;
@@ -38,6 +39,7 @@ import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -94,6 +96,13 @@ public class Statistics extends AppCompatActivity
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mAdView.setLayoutParams(lp);
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                findViewById(R.id.adViewLL).setVisibility(View.GONE);
+            }
+        });
         return mAdView;
     }
 

@@ -29,7 +29,6 @@ import java.util.List;
 
 public class WFAdapter extends RecyclerView.Adapter<BaseWFViewHolder> {
     private ArrayList<DataListItem> dataset;
-    private AdView mAdView;
 
     public interface OnItemClickListener {
         void onRecyclerItemSelected(int adapterPosition, android.view.View v);

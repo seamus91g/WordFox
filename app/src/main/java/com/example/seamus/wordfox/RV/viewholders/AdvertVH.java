@@ -19,6 +19,8 @@ public class AdvertVH extends BaseWFViewHolder {
     @Override
     public void bindType(DataListItem item) {
         TypeAdvert advert = (TypeAdvert) item;
-        fl.addView(advert.getAdView());
+        if(advert.getAdView().getParent() == null){
+            fl.addView(advert.getAdView());
+        }
     }
 }
