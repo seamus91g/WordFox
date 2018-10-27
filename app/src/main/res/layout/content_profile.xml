@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_layout_root"
@@ -221,7 +222,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
 
-
             <View
                 android:id="@+id/recent_game_divider"
                 android:layout_width="match_parent"
@@ -255,7 +255,6 @@
                 app:layout_constraintTop_toBottomOf="@id/recent_game_header" />
 
             <!---->
-
 
             <TextView
                 android:id="@+id/lastword1"
@@ -436,15 +435,41 @@
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="recent_game_winner,recentgame_you_1,recentgame_you_2,recentgame_you_3,recentgame_grid1,recentgame_grid2,recentgame_grid3" />
 
+            <!--<View-->
+            <!--android:id="@+id/best_game_divider"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@android:color/darker_gray"-->
+            <!--app:layout_constraintBottom_toTopOf="@id/best_game_header"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/profile_longest_word_speech" />-->
             <View
+                android:id="@+id/space_bottom_profile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/darker_gray"
                 android:contentDescription="Space at bottom"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/banner_ad_container_profile"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/lastgame_barrier" />
+
+            <FrameLayout
+                android:id="@+id/banner_ad_container_profile"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/space_bottom_profile">
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    ads:adSize="LARGE_BANNER"
+                    ads:adUnitId="@string/test_banner_ad_unit_id" />
+
+            </FrameLayout>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

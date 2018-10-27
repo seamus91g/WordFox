@@ -6,6 +6,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="nav_header_icon_size">80dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin_above_banner">56dp</dimen>
     <dimen name="big_TextView_height">56dp</dimen>
     <dimen name="small_TextView_height">56dp</dimen>
     <dimen name="big_text_size">48dp</dimen>

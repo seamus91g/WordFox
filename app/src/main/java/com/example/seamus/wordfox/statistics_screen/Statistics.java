@@ -15,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.seamus.wordfox.GameData;
@@ -38,6 +40,7 @@ import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.profile.FoxRank;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -52,6 +55,7 @@ public class Statistics extends AppCompatActivity
     protected RecyclerView mRecyclerView;
     private ArrayList<DataListItem> gameData = new ArrayList<>();
     private NavigationBurger navBurger = new NavigationBurger();
+    private Bitmap defaultPicture = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +78,8 @@ public class Statistics extends AppCompatActivity
     }
 
     private void headingAndBanner() {
-        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsil, 250, getResources());
+        int foxHeight = (getResources().getDisplayMetrics().heightPixels*20)/100;
+        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, foxHeight, getResources());
         DataListItem headingImage = new TypeHeadingImage(heading);
         gameData.add(headingImage);
 
@@ -92,6 +97,13 @@ public class Statistics extends AppCompatActivity
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mAdView.setLayoutParams(lp);
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                findViewById(R.id.adViewLL).setVisibility(View.GONE);
+            }
+        });
         return mAdView;
     }
 
@@ -212,7 +224,11 @@ public class Statistics extends AppCompatActivity
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
             profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
-//            int scale = ImageHandler.getScaleFactor(getResources(), )
+        }else{
+            if(defaultPicture == null){     // Only load if needed
+                defaultPicture = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+            }
+            profPic = defaultPicture;
         }
         return profPic;
     }
@@ -229,8 +245,8 @@ public class Statistics extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.statistics, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 

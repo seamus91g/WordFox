@@ -37,6 +37,8 @@ import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 public class ProfileActivity extends AppCompatActivity
@@ -50,9 +52,7 @@ public class ProfileActivity extends AppCompatActivity
     private ImageView profileIB;
     private EditText nameEditText;
     private Button setProfileNameButton;
-    Bitmap buttongGridImage = null;
-
-    private InterstitialAd mInterstitialAd;
+    private Bitmap buttongGridImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +66,6 @@ public class ProfileActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -96,13 +92,11 @@ public class ProfileActivity extends AppCompatActivity
         presenter.recentGameWords();
         presenter.displayRank();
 
+        AdView mAdView = findViewById(R.id.ad_view_profile);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
-    private void loadInterstitial(){
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
     @Override
     public void setRankImage(Bitmap rankImage){
         ImageView rankIV = findViewById(R.id.profile_rank_image);
@@ -167,7 +161,6 @@ public class ProfileActivity extends AppCompatActivity
     private View.OnClickListener usernameButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            loadInterstitial();
             String username_prof = nameEditText.getText().toString();
             presenter.updateProfileName(username_prof);
             clearViewFocus(nameEditText);

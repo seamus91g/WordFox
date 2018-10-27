@@ -1,6 +1,5 @@
 package com.example.seamus.wordfox;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,13 +12,13 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -39,6 +38,7 @@ import android.widget.Toast;
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
+import com.example.seamus.wordfox.profile.ProfileActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +74,7 @@ public class LocalWifiActivity extends AppCompatActivity
     public static final String INTENT_GROUP_OWNER = "group_owner_key";
     private boolean isGroupOwner = false;
     private ArrayList<String> letters;
+    private NavigationBurger navBurger = new NavigationBurger();
 
     private WifiBroadcastReceiver activityReceiver;
 
@@ -469,47 +470,34 @@ public class LocalWifiActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.local_wifi, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                // User chose the "Profile" item, jump to the profile page
+                Intent profileScreenIntent = new Intent(LocalWifiActivity.this, ProfileActivity.class);
+                startActivity(profileScreenIntent);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        navBurger.navigateTo(item, LocalWifiActivity.this);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
