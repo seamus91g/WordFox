@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-        android:drawable="@drawable/turquoise_background_rounded_border_inverted" /> <!-- pressed -->
-    <item android:state_focused="true"
-        android:drawable="@drawable/turquoise_background_rounded_border_inverted"/> <!-- focused -->
-    <item android:drawable="@drawable/turquoise_background_rounded_border_textview"/> <!-- default -->
+<item android:state_pressed="true"
+    android:drawable="@drawable/turquoise_background_rounded_border_inverted" /> <!-- pressed -->
+<item android:state_focused="true"
+    android:drawable="@drawable/turquoise_background_rounded_border_inverted"/> <!-- focused -->
+<item android:drawable="@drawable/turquoise_background_rounded_border_textview"/> <!-- default -->
 </selector>

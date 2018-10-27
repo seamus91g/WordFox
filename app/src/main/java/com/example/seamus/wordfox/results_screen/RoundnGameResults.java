@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -161,20 +160,63 @@ public class RoundnGameResults extends AppCompatActivity
         TextView best1 = findViewById(R.id.bestword_heading_1);
         TextView best2 = findViewById(R.id.bestword_heading_2);
         TextView best3 = findViewById(R.id.bestword_heading_3);
-        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase());
-        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase());
-        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase());
+        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "\n(" + gameInstance.getRoundLongestPossible(0).length() + ")" );
+        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase()+ "\n(" + gameInstance.getRoundLongestPossible(1).length() + ")" );
+        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase()+ "\n(" + gameInstance.getRoundLongestPossible(2).length() + ")" );
         String winner = "";
-        int highScore = -1;
-        for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
-            if (HomeScreen.allGameInstances.get(i).getTotalScore() > highScore) {
-                highScore = HomeScreen.allGameInstances.get(i).getTotalScore();
-                winner = HomeScreen.allGameInstances.get(i).getName();
+
+        if(HomeScreen.allGameInstances.size()>1) {
+            int highScore = -1;
+            for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
+                if (HomeScreen.allGameInstances.get(i).getTotalScore() > highScore) {
+                    highScore = HomeScreen.allGameInstances.get(i).getTotalScore();
+                    winner = HomeScreen.allGameInstances.get(i).getName();
+                }
             }
+            winner = "Winner is " + winner + "!" + "\n" + "You scored\n" + highScore + " out of " + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
+        } else{
+            winner = "GAME OVER!\n" + "You scored\n" + HomeScreen.allGameInstances.get(0).getTotalScore() + " out of " + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
         }
+
         TextView winnerText = findViewById(R.id.winner_banner_text);
-        winner = "Winner is " + winner + "!";
         winnerText.setText(winner);
+
+
+
+
+
+
+
+
+
+//        int maxScore = gameInstance.getLongestPossible().length();
+//        int playerScore = gameInstance.getScore();
+//        int percentScore = (100 * playerScore) / (maxScore);
+//
+//        String playerPercent = "  (" + percentScore + "%)";
+//
+//        TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
+//        String playerName = gameInstance.getName();
+//        resultPlayerNameView.setText(playerName + playerPercent);
+//
+//        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
+//        resultPlayerScoreView.setText(gameInstance.getLongestWord());
+//
+//
+//        String playerResult = playerScore + " out of " + maxScore;
+//        TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
+//        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult  ;
+//        longestWordView.setText(longestWordHeader);
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -189,7 +231,20 @@ public class RoundnGameResults extends AppCompatActivity
         int height = size. y;
 
         ImageView myIV = findViewById(R.id.winner_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendwithspeech, (int) (0.5*width),getResources()));
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendwithspeech, (int) (0.35*width),getResources()));
+
+
+
+        TextView word1TV = findViewById(R.id.bestword_heading_1);
+        TextView word2TV = findViewById(R.id.bestword_heading_2);
+        TextView word3TV = findViewById(R.id.bestword_heading_3);
+        word1TV.requestLayout();
+        word1TV.getLayoutParams().width = (int) width/4 ;
+        word2TV.requestLayout();
+        word2TV.getLayoutParams().width = (int) width/4 ;
+        word3TV.requestLayout();
+        word3TV.getLayoutParams().width = (int) width/4 ;
+
 
     }
 
@@ -268,8 +323,18 @@ public class RoundnGameResults extends AppCompatActivity
         String playerName = gameInstance.getName() + "  (" + percentScore + "%)";
         resultPlayerNameView.setText(playerName);
         TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
-        String playerResult = playerScore + " out of " + maxScore;
-        resultPlayerScoreView.setText(playerResult);
+
+        if(HomeScreen.allGameInstances.size()>1) {
+//
+            String playerResult = playerScore + " out of " + maxScore;
+            resultPlayerScoreView.setText(playerResult);
+        }else{
+
+            resultPlayerScoreView.setVisibility(View.GONE);
+        }
+
+
+
 
         ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
         TextView resultPlayerRankNameView = cl.findViewById(R.id.result_player_rank_name);
@@ -293,7 +358,7 @@ public class RoundnGameResults extends AppCompatActivity
             String gridTag = "player_grid" + (i + 1);
             String wordTag = "player_word" + (i + 1);
             ImageView gridImage = cl.getChildAt(0).findViewWithTag(gridTag);
-            String bestWord = gameInstance.getRoundWord(i);
+            String bestWord = gameInstance.getRoundWord(i) + " (" + gameInstance.getRoundWord(i).length() + ")";
             String letters = gameInstance.getLetters(i);
             TextView wordTV = cl.getChildAt(0).findViewWithTag(wordTag);
             wordTV.setText(bestWord);

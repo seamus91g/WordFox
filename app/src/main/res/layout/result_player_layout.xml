@@ -38,7 +38,7 @@
             android:id="@+id/result_player_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12 out of 22"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/result_player_fox_pic"
             app:layout_constraintLeft_toRightOf="@+id/results_screen_profile_pic"
             app:layout_constraintTop_toBottomOf="@+id/result_player_name" />

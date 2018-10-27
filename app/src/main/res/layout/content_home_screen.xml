@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,33 +8,18 @@
     tools:context=".HomeScreen"
     tools:showIn="@layout/app_bar_home_screen">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        app:fabCustomSize="@dimen/action_button_dimension"
-        android:scaleType="center"
-        android:elevation="880dp"
-        app:backgroundTint="@color/game_font_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:srcCompat="@drawable/ic_play_arrow_white_72dp"
-        android:tint="@android:color/white"
-        android:layout_margin="16dp" />
-
-    <Button
-        android:background="@drawable/ic_play_circle"
+    <ImageButton
         android:id="@+id/just_me_button"
-        android:layout_width="@dimen/action_button_dimension"
-        android:layout_height="@dimen/action_button_dimension"
-        android:fontFamily="@font/arial_ff"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/with_friends_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        style="@style/CircularButtons"/>
 
     <LinearLayout
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/just_me_button"
@@ -48,6 +32,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/just_me_text"
             android:fontFamily="@font/arial_ff"
+            android:textColor="@color/game_font_color"
+            android:textSize="18sp"
             android:text="@string/just_me"
             style="?android:attr/listSeparatorTextViewStyle"/>
 
@@ -67,19 +53,19 @@
 
 
 
-    <Button
+
+    <ImageButton
         android:id="@+id/with_friends_button"
-        android:layout_width="@dimen/action_button_dimension"
-        android:layout_height="@dimen/action_button_dimension"
-        android:background="@drawable/ic_play_circle"
-        android:fontFamily="@font/arial_ff"
         app:layout_constraintBottom_toTopOf="@+id/pass_and_play_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintTop_toBottomOf="@id/just_me_button" />
+        app:layout_constraintTop_toBottomOf="@id/just_me_button"
+        style="@style/CircularButtons"/>
 
     <LinearLayout
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/with_friends_button"
@@ -92,6 +78,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/with_friends_text"
             android:fontFamily="@font/arial_ff"
+            android:textColor="@color/game_font_color"
+            android:textSize="18sp"
             android:text="@string/with_friends"
             style="?android:attr/listSeparatorTextViewStyle"/>
 
@@ -110,19 +98,25 @@
 
 
 
-    <Button
+
+
+
+
+
+
+
+    <ImageButton
         android:id="@+id/pass_and_play_button"
-        android:layout_width="@dimen/action_button_dimension"
-        android:layout_height="@dimen/action_button_dimension"
-        android:background="@drawable/ic_play_circle"
-        android:fontFamily="@font/arial_ff"
         app:layout_constraintBottom_toTopOf="@id/fox_instructions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintTop_toBottomOf="@id/with_friends_button" />
+        app:layout_constraintTop_toBottomOf="@id/with_friends_button"
+        style="@style/CircularButtons"/>
 
     <LinearLayout
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/pass_and_play_button"
@@ -135,7 +129,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/pass_and_play_text"
             android:fontFamily="@font/arial_ff"
-            android:text="@string/with_friends"
+            android:textColor="@color/game_font_color"
+            android:textSize="18sp"
+            android:text="@string/pass_and_play"
             style="?android:attr/listSeparatorTextViewStyle"/>
 
 
@@ -175,7 +171,7 @@
         android:maxWidth="135dp"
         android:gravity="center"
         android:fontFamily="@font/arial_ff"
-        android:text="@string/you_scored"
+        android:text=""
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -186,16 +182,3 @@
 </android.support.constraint.ConstraintLayout>
 
 
-
-<!--<Button-->
-<!--android:id="@+id/pass_and_play_button"-->
-<!--android:layout_width="@dimen/action_button_dimension"-->
-<!--android:layout_height="@dimen/action_button_dimension"-->
-<!--android:background="@drawable/ic_play_circle"-->
-<!--android:fontFamily="@font/arial_ff"-->
-<!--android:textSize="35sp"-->
-<!--app:layout_constraintBottom_toTopOf="@id/fox_instructions"-->
-<!--app:layout_constraintEnd_toEndOf="parent"-->
-<!--app:layout_constraintStart_toStartOf="parent"-->
-<!--app:layout_constraintHorizontal_bias="0.1"-->
-<!--app:layout_constraintTop_toBottomOf="@id/with_friends_button" />-->

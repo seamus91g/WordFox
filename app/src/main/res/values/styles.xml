@@ -89,6 +89,40 @@
         </item>
     </style>
 
+
+
+
+
+
+
+
+
+
+
+    <!-- Style for CircularButtons throughout the non-game screens-->
+    <style name="CircularButtons">
+        <item name="android:layout_width">@dimen/action_button_dimension
+        </item>
+        <item name="android:layout_height">@dimen/action_button_dimension
+        </item>
+        <item name="android:src">@drawable/selector_ic_play_arrow
+        </item>
+        <item name="android:background">@drawable/selector_circular_button
+        </item>
+
+
+
+    </style>
+
+
+
+
+
+
+
+
+
+
     <!-- Style for the action buttons in the game; shuffle, submit, reset-->
     <style name="gameShuffleButton">
         <item name="android:gravity">center
