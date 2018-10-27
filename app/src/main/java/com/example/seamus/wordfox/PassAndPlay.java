@@ -1,6 +1,9 @@
 package com.example.seamus.wordfox;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,10 +12,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
@@ -21,8 +27,20 @@ import com.example.seamus.wordfox.game_screen.GameActivity;
 public class PassAndPlay extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static boolean firstTime = true;
     public static final String MONITOR_TAG = "myTag";
     private int numberOfPlayers = -1;
+    Bitmap myBitmap1;
+    Bitmap myBitmap2;
+    Bitmap myBitmap3;
+    Bitmap myBitmap33;
+    Bitmap myBitmap4;
+    Bitmap myBitmap44;
+    Bitmap myBitmap5;
+    Bitmap myBitmap55;
+    Bitmap myBitmap6;
+    Bitmap myBitmap66;
+
 //    public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
 
     @Override
@@ -41,6 +59,129 @@ public class PassAndPlay extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         setup();
+
+
+
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        int width = size. x;
+        int height = size. y;
+
+        SeekBar mySB = findViewById(R.id.seekBar);
+        mySB.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
+        numberOfPlayers = 2;
+        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+
+
+
+
+
+
+
+        mySB.requestLayout();
+        mySB.getLayoutParams().width = (int) width/2 ;
+
+
+        ImageView myIV = findViewById(R.id.fox_instructions_passandplay);
+        myIV.requestLayout();
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcolouredwithspeech, (int) (0.5*width),getResources()));
+
+
+
+        myBitmap1 = ImageHandler.getScaledBitmap(R.drawable.silverfoxsilcoloured, (int) (0.1*width),getResources());
+        myBitmap2 = ImageHandler.getScaledBitmap(R.drawable.arcticfoxsilcoloured, (int) (0.1*width),getResources());
+        myBitmap3 = ImageHandler.getScaledBitmap(R.drawable.gameend_outline, (int) (0.1*width),getResources());
+        myBitmap33 = ImageHandler.getScaledBitmap(R.drawable.gameendsilcoloured, (int) (0.1*width),getResources());
+        myBitmap4 = ImageHandler.getScaledBitmap(R.drawable.grayfox_outline, (int) (0.1*width),getResources());
+        myBitmap44 = ImageHandler.getScaledBitmap(R.drawable.grayfoxsilcoloured, (int) (0.1*width),getResources());
+        myBitmap5 = ImageHandler.getScaledBitmap(R.drawable.kitfox_outline, (int) (0.1*width),getResources());
+        myBitmap55 = ImageHandler.getScaledBitmap(R.drawable.kitfoxsilcoloured, (int) (0.1*width),getResources());
+        myBitmap6 = ImageHandler.getScaledBitmap(R.drawable.redfox_outline, (int) (0.1*width),getResources());
+        myBitmap66 = ImageHandler.getScaledBitmap(R.drawable.redfoxsilcoloured, (int) (0.1*width),getResources());
+
+
+        ImageView fox1IV = findViewById(R.id.foxes1);
+        ImageView fox2IV = findViewById(R.id.foxes2);
+        ImageView fox3IV = findViewById(R.id.foxes3);
+        ImageView fox4IV = findViewById(R.id.foxes4);
+        ImageView fox5IV = findViewById(R.id.foxes5);
+        ImageView fox6IV = findViewById(R.id.foxes6);
+
+        fox1IV.setImageBitmap(myBitmap1);
+        fox2IV.setImageBitmap(myBitmap2);
+        fox3IV.setImageBitmap(myBitmap3);
+        fox4IV.setImageBitmap(myBitmap4);
+        fox5IV.setImageBitmap(myBitmap5);
+        fox6IV.setImageBitmap(myBitmap6);
+
+
+        mySB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                switch (progress){
+
+                    case 0:
+                        numberOfPlayers = 2;
+                        fox3IV.setImageBitmap(myBitmap3);
+                        fox4IV.setImageBitmap(myBitmap4);
+                        fox5IV.setImageBitmap(myBitmap5);
+                        fox6IV.setImageBitmap(myBitmap6);
+                        break;
+                    case 1:
+                        numberOfPlayers = 3;
+                        fox3IV.setImageBitmap(myBitmap33);
+                        fox4IV.setImageBitmap(myBitmap4);
+                        fox5IV.setImageBitmap(myBitmap5);
+                        fox6IV.setImageBitmap(myBitmap6);
+                        break;
+                    case 2:
+                        numberOfPlayers = 4;
+                        fox3IV.setImageBitmap(myBitmap33);
+                        fox4IV.setImageBitmap(myBitmap44);
+                        fox5IV.setImageBitmap(myBitmap5);
+                        fox6IV.setImageBitmap(myBitmap6);
+                        break;
+                    case 3:
+                        numberOfPlayers = 5;
+                        fox3IV.setImageBitmap(myBitmap33);
+                        fox4IV.setImageBitmap(myBitmap44);
+                        fox5IV.setImageBitmap(myBitmap55);
+                        fox6IV.setImageBitmap(myBitmap6);
+                        break;
+                    case 4:
+                        numberOfPlayers = 6;
+                        fox3IV.setImageBitmap(myBitmap33);
+                        fox4IV.setImageBitmap(myBitmap44);
+                        fox5IV.setImageBitmap(myBitmap55);
+                        fox6IV.setImageBitmap(myBitmap66);
+                        break;
+                }
+
+                Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+                HomeScreen.allGameInstances.clear();
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+
+        });
+
     }
 
     private void setup() {
@@ -118,7 +259,6 @@ public class PassAndPlay extends AppCompatActivity
         }
 
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
-        HomeScreen.allGameInstances.clear();
     }
 
     private void changeTextTV() {   // TODO: Implement speech

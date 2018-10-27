@@ -104,7 +104,7 @@ public class RoundEndScreen extends AppCompatActivity
         int height = size. y;
 
         ImageView myIV = findViewById(R.id.round_end_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.5*width),getResources()));
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35*width),getResources()));
 
     }
 
@@ -209,13 +209,16 @@ public class RoundEndScreen extends AppCompatActivity
                 String wordTag = "word_" + (j + 1);
                 String gridTag = "grid_" + (j + 1);
                 TextView wordTV = row.findViewWithTag(wordTag);
+
+
+
                 ImageView grid = row.findViewWithTag(gridTag);
                 if (count >= possibleWords.size()) {
                     wordTV.setVisibility(View.INVISIBLE);
                     grid.setVisibility(View.INVISIBLE);
                     continue;
                 }
-                String word = possibleWords.get(count).toUpperCase();
+                String word = possibleWords.get(count).toUpperCase() + " (" + possibleWords.get(count).length() + ")";
                 wordTV.setText(word);
                 GridImage gridWithText = new GridImage(gridBmp, word, gameInstance.getRoundLetters(), getResources().getColor(R.color.game_font_color), getResources().getColor(R.color.colorLightAccent));
                 grid.setImageBitmap(gridWithText.getBmp());

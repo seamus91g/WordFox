@@ -16,13 +16,12 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
@@ -72,15 +71,6 @@ public class HomeScreen extends AppCompatActivity
         myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcolouredwithspeech, (int) (0.5*width),getResources()));
 
 
-
-
-
-//
-//        myIV.requestLayout();
-//        myIV.getLayoutParams().height = (int) height/3 ;
-
-
-
         TextView foxInstructionsTV = findViewById(R.id.fox_instructions_tv);
         foxInstructionsTV.setText("Choose your game type from the 3 options");
 
@@ -110,11 +100,6 @@ public class HomeScreen extends AppCompatActivity
 
 
 
-//
-//        myIV.requestLayout();
-//        myIV.getLayoutParams().height = (int) height/3 ;
-
-
 
     }
 
@@ -126,9 +111,9 @@ public class HomeScreen extends AppCompatActivity
         thread.start();
     }
     private void setup() {
-        Button justMeButton = findViewById(R.id.just_me_button);
-        Button withFriendsButton = findViewById(R.id.with_friends_button);
-        Button passPlayButton = findViewById(R.id.pass_and_play_button);
+        ImageButton justMeButton = findViewById(R.id.just_me_button);
+        ImageButton withFriendsButton = findViewById(R.id.with_friends_button);
+        ImageButton passPlayButton = findViewById(R.id.pass_and_play_button);
 
         justMeButton.setOnClickListener(justMeListener);
         withFriendsButton.setOnClickListener(withFriendsListener);

@@ -34,4 +34,20 @@
         <item name="android:background">@drawable/selector_rectangularbutton
         </item>
     </style>
+
+    <style name="CircularButtons">
+        <item name="android:layout_width">@dimen/action_button_dimension
+        </item>
+        <item name="android:layout_height">@dimen/action_button_dimension
+        </item>
+        <item name="android:src">@drawable/selector_ic_play_arrow
+        </item>
+        <item name="android:background">@drawable/selector_circular_button
+        </item>
+        <item name="android:elevation">16dp
+        </item>
+
+
+    </style>
+
 </resources>
