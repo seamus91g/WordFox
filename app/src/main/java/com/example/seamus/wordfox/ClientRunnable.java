@@ -65,7 +65,6 @@ class ClientRunnable implements ChatServer {
 
         messageHandler.log("Running Client runnable : " + myIndex);
         messageHandler.log("************* CR thread : " + Thread.currentThread().getPriority());
-        Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
         messageHandler.log("************* CR thread : " + Thread.currentThread().getPriority());
         try {
             if (socket == null) {
@@ -94,7 +93,6 @@ class ClientRunnable implements ChatServer {
             e.printStackTrace();
         } finally {
             messageHandler.log("C : Client is finished");
-            Log.d(HomeScreen.MONITOR_TAG, "CR: Output stream dead.");
             messageHandler.handleChatClosed(this);
             if (socket != null) {
                 try {
@@ -137,7 +135,6 @@ class ClientRunnable implements ChatServer {
                 messageHandler.logCrash(e);
                 e.printStackTrace();
             } finally {
-                Log.d(HomeScreen.MONITOR_TAG, "CR: Input stream dead.");
                 isAlive = false;    // TODO: Will be false already in all cases??
                 try {
                     inputStream.close();

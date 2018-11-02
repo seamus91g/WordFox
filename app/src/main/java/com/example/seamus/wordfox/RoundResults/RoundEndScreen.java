@@ -194,6 +194,22 @@ public class RoundEndScreen extends AppCompatActivity
         Log.d(MONITOR_TAG, "Json results: " + myGameInstance.resultAsJson().toString());
         WifiService ws = netConnService.getWifiService();
         String jsString = myGameInstance.resultAsJson().toString();
+        Log.d(MONITOR_TAG, "Is WifiServe null? , bound? " + (ws == null) + ", " + netConnService.isBound);
+        int count = 0;
+        while (ws == null){
+            Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
+            Log.d(MONITOR_TAG, "| Waiting for service to bind |");
+            Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(++count > 5){
+                break;
+            }
+            ws = netConnService.getWifiService();
+        }
         ws.sendData(jsString);
     }
 
