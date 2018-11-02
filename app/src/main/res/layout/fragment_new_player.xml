@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NewPlayerFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
         android:id="@+id/newPlayerET"
-        android:layout_width="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/newPlayerSave"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:hint="Enter Name" />
-
-    <Button
-        android:id="@+id/newPlayerSave"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPlayerET"
+        android:hint="Enter Name"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <ImageButton
+        android:id="@+id/newPlayerSave"
+        style="@style/EditTextSubmitButton"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/newPlayerET"
+        app:layout_constraintLeft_toRightOf="@+id/newPlayerET"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/newPlayerET" />
 
 </android.support.constraint.ConstraintLayout>

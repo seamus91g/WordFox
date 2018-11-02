@@ -19,7 +19,7 @@ import java.util.UUID;
 // Class to store game data and statistics
 public class GameData extends AppCompatActivity {
     public static final String MONITOR_TAG = "myTag";
-    public static final int PROFILE_DEFAULT_IMG = R.drawable.ppfox2_outline_small;
+    public static final int PROFILE_DEFAULT_IMG = R.drawable.ppfox2_outline_small_noalpha;
     //    public static final String DEFAULT_P1_ID = "Player 1";
     public static final String NONE_FOUND = "None Found!";
     public static final String NON_EXISTANT = "non_existant";
@@ -476,27 +476,6 @@ public class GameData extends AppCompatActivity {
     public int findOccurence(int requestLength) {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
     }
-
-//    public static FoxRank determineRankClass(int rankValue) {
-////        switch (rankValue) {
-////            case 3:
-////                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
-////            case 4:
-////                return new FoxRank(R.drawable.arcticfox_silhouette, "Pale Fox");
-////            case 5:
-////                return new FoxRank(R.drawable.onefox_silhouette, "Kit Fox");
-////            case 6:
-////                return new FoxRank(R.drawable.arcticfox_silhouette, "Gray Fox");
-////            case 7:
-////                return new FoxRank(R.drawable.onefox_silhouette, "Arctic Fox");
-////            case 8:
-////                return new FoxRank(R.drawable.arcticfox_silhouette, "Silver Fox");
-////            case 9:
-////                return new FoxRank(R.drawable.onefox_silhouette, "Red Fox");
-////            default:
-//                return new FoxRank(R.drawable.onefox_silhouette, "Wood Fox");
-////        }
-//    }
 
     public static FoxRank determineRankValue(int score) {
         if (score < 12) {

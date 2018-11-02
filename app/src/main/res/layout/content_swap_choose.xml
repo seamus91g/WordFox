@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,27 +9,156 @@
     tools:context=".SwapChooseActivity"
     tools:showIn="@layout/app_bar_swap_choose">
 
-    <Button
-        android:id="@+id/choice_new_player_button"
+    <TextView
+        android:id="@+id/swap_choose_page_header_text"
+        style="@style/BasicTextBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tag="new_player"
-        android:text="New Player"
-        app:layout_constraintBottom_toTopOf="@id/preFragmentGuideline"
+        android:padding="6dp"
+        android:text="Are you a new or existing player?"
+        app:layout_constraintBottom_toTopOf="@id/fragment_select_cardview_new_player"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/choice_existing_player_button"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/choice_existing_player_button"
+    <android.support.v7.widget.CardView
+        android:id="@+id/fragment_select_cardview_new_player"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="new_player"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toTopOf="@id/preFragmentGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/vertical_half_screen_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/swap_choose_page_header_text"
+        card_view:cardCornerRadius="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/new_player_cardview_fox_image"
+                android:layout_width="70dp"
+                android:layout_height="0dp"
+                android:src="@drawable/grayfox_outline_bggamecolor"
+                app:layout_constraintBottom_toTopOf="@+id/new_player_cardview_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/new_player_cardview_plus_image"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/new_player_cardview_plus_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/plus_icon_hd"
+                app:layout_constraintBottom_toTopOf="@+id/new_player_cardview_text"
+                app:layout_constraintLeft_toRightOf="@+id/new_player_cardview_fox_image"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/new_player_cardview_text"
+                style="@style/BasicTextBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Player "
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/fragment_select_cardview_existing_player"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="existing_player"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toTopOf="@id/preFragmentGuideline"
+        app:layout_constraintLeft_toRightOf="@id/vertical_half_screen_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swap_choose_page_header_text"
+        card_view:cardCornerRadius="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp">
+
+            <LinearLayout
+                android:id="@+id/existing_player_cardview_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/existing_player_cardview_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/existing_player_cardview_fox1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:padding="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/arcticfoxsilcoloured" />
+
+                <ImageView
+                    android:id="@+id/existing_player_cardview_fox2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:padding="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/kitfoxsilcoloured" />
+
+                <ImageView
+                    android:id="@+id/existing_player_cardview_fox3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:padding="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/roundendsilcoloured" />
+
+                <ImageView
+                    android:id="@+id/existing_player_cardview_fox4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:padding="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/silverfoxsilcoloured" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/existing_player_cardview_text"
+                style="@style/BasicTextBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Existing Player "
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_half_screen_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tag="existing_player"
-        android:text="Existing Player"
-        app:layout_constraintBottom_toBottomOf="@id/choice_new_player_button"
-        app:layout_constraintLeft_toRightOf="@id/choice_new_player_button"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/choice_new_player_button" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
         android:id="@+id/preFragmentGuideline"
@@ -54,10 +184,10 @@
         app:layout_constraintTop_toBottomOf="@id/preFragmentGuideline" />
 
     <TextView
+        android:id="@+id/current_playing_as_choice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/current_playing_as_choice"
         app:layout_constraintBottom_toBottomOf="@id/nextPlayerStart"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintLeft_toLeftOf="parent"

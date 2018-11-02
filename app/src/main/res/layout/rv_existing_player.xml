@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="0dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        card_view:cardCornerRadius="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            style="@style/BasicTextBoldLightDarkBG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/existing_player_fragment_player_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:src="@drawable/ppfox1_outline"
+                app:civ_border_color="@color/colorTextHeadingBG"
+                app:civ_border_width="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/existing_player_fragment_player_name"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/existing_player_fragment_player_name"
+                style="@style/BasicTextBoldLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="player name"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/existing_player_fragment_player_rank"
+                app:layout_constraintLeft_toRightOf="@id/existing_player_fragment_player_pic"
+                app:layout_constraintTop_toTopOf="@id/existing_player_fragment_player_pic" />
+
+            <TextView
+                android:id="@+id/existing_player_fragment_player_rank"
+                style="@style/BasicTextLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="player rank"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/existing_player_fragment_player_pic"
+                app:layout_constraintLeft_toRightOf="@id/existing_player_fragment_player_pic"
+                app:layout_constraintTop_toBottomOf="@id/existing_player_fragment_player_name" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

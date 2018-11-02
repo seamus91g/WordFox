@@ -170,7 +170,9 @@ public class ImageHandler {
 //        return BitmapFactory.decodeResource(resources, drawResource, bmpopt);
 //    }
     public static Bitmap getScaledBitmap(int drawResource, int scaleToDimension, Resources resources){
-
+        if(scaleToDimension <= 0){
+            return null;
+        }
         BitmapFactory.Options bmpopt = new BitmapFactory.Options();
         bmpopt.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(resources, drawResource, bmpopt);
