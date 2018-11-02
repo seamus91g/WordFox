@@ -40,14 +40,61 @@
         </item>
         <item name="android:layout_height">@dimen/action_button_dimension
         </item>
-        <item name="android:src">@drawable/selector_ic_play_arrow
-        </item>
+        <item name="android:src">@drawable/selector_ic_play_arrow</item>
         <item name="android:background">@drawable/selector_circular_button
         </item>
         <item name="android:elevation">16dp
         </item>
+    </style>
 
 
+
+    <!-- Style for the reset action button in the game  -->
+    <style name="gameResetButton">
+        <item name="android:gravity">center
+        </item>
+        <item name="android:drawableTop">@drawable/selector_game_reset_button
+        </item>
+        <item name="android:layout_width">58dp
+        </item>
+        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        </item>
+        <item name="android:background">@drawable/selector_game_action_buttons_background
+        </item>
+        <item name="android:fontFamily">@font/arial_ff
+        </item>
+    </style>
+
+    <!-- Style for the submit action button in the game-->
+    <style name="gameSubmitButton">
+        <item name="android:gravity">center
+        </item>
+        <item name="android:drawableTop">@drawable/selector_game_submit_button
+        </item>
+        <item name="android:layout_width">58dp
+        </item>
+        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        </item>
+        <item name="android:background">@drawable/selector_game_action_buttons_background
+        </item>
+        <item name="android:fontFamily">@font/arial_ff
+        </item>
+    </style>
+
+    <!-- Style for the shuffle action button in the game-->
+    <style name="gameShuffleButton">
+        <item name="android:gravity">center
+        </item>
+        <item name="android:drawableTop">@drawable/selector_game_shuffle_button_png
+        </item>
+        <item name="android:textColor">@drawable/selector_game_action_button_text_color
+        </item>
+        <item name="android:layout_width">58dp
+        </item>
+        <item name="android:background">@drawable/selector_game_action_buttons_background
+        </item>
+        <item name="android:fontFamily">@font/arial_ff
+        </item>
     </style>
 
 </resources>
