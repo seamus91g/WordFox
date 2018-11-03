@@ -168,6 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fox_instructions_tv"
+        style="@style/foxSpeechBubblesTextStyle"
         android:maxWidth="135dp"
         android:gravity="center"
         android:fontFamily="@font/arial_ff"

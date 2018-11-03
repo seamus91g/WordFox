@@ -29,7 +29,7 @@
         </item>
         <item name="android:fontFamily">monospace
         </item>
-        <item name="android:drawableLeft">@drawable/selector_play_pic_icon
+        <item name="android:drawableLeft">@drawable/selector_ic_play_arrow
         </item>
         <item name="android:background">@drawable/selector_rectangularbutton
         </item>

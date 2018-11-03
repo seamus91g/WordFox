@@ -130,4 +130,5 @@
     <string name="pass_and_play_explanation_text">Play with up to 5 friends all sharing this phone</string>
     <string name="longest_words_minor_heading">Longest possible word from each round</string>
     <string name="choose_your_number_of_players_using_the_slider">Choose your number of players using the slider</string>
+    <string name="content_swap_fox_instructions">Pass the game to the next player</string>
 </resources>

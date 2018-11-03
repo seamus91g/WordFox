@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -224,11 +225,11 @@ public class RoundnGameResults extends AppCompatActivity
 
 
 
-        Display display = getWindowManager(). getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display. getSize(size);
-        int width = size. x;
-        int height = size. y;
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
 
         ImageView myIV = findViewById(R.id.winner_banner);
         myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendwithspeech, (int) (0.35*width),getResources()));
@@ -239,13 +240,20 @@ public class RoundnGameResults extends AppCompatActivity
         TextView word2TV = findViewById(R.id.bestword_heading_2);
         TextView word3TV = findViewById(R.id.bestword_heading_3);
         word1TV.requestLayout();
-        word1TV.getLayoutParams().width = (int) width/4 ;
+        word1TV.getLayoutParams().width = (int) width/3;
         word2TV.requestLayout();
-        word2TV.getLayoutParams().width = (int) width/4 ;
+        word2TV.getLayoutParams().width = (int) width/3;
         word3TV.requestLayout();
-        word3TV.getLayoutParams().width = (int) width/4 ;
+        word3TV.getLayoutParams().width = (int) width/3;
 
 
+    }
+
+    public static int dpToPx(float dp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+    public static int dpToSp(float dp, Context context) {
+        return (int) (dpToPx(dp, context) / context.getResources().getDisplayMetrics().scaledDensity);
     }
 
     private void unBindService() {

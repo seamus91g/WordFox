@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -74,17 +76,17 @@ public class PassAndPlay extends AppCompatActivity
         SeekBar mySB = findViewById(R.id.seekBar);
         mySB.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
-        numberOfPlayers = 2;
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
 
-
-
-
-
-
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mySB.setThumb(ContextCompat.getDrawable(this, R.mipmap.ic_person_pin_circle_png));
+        }
 
         mySB.requestLayout();
         mySB.getLayoutParams().width = (int) width/2 ;
+
+        numberOfPlayers = 2;
+        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+
 
 
         ImageView myIV = findViewById(R.id.fox_instructions_passandplay);
