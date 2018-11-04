@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Winner is Joey!"
-        android:gravity="center"
+        style="@style/foxSpeechBubblesTextStyle"
         app:layout_constraintBottom_toBottomOf="@+id/winner_banner"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintLeft_toLeftOf="@+id/winner_banner"
@@ -57,7 +57,7 @@
 
     <TextView
         android:id="@+id/bestword_heading_1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="BEST 1"
         android:gravity="center"
@@ -69,7 +69,7 @@
 
     <TextView
         android:id="@+id/bestword_heading_2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="BEST 2"
         android:gravity="center"
@@ -81,7 +81,7 @@
 
     <TextView
         android:id="@+id/bestword_heading_3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="BEST 3"
         android:gravity="center"

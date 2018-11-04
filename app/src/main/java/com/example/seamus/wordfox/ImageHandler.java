@@ -62,7 +62,7 @@ public class ImageHandler {
         if (!(maxHeight > 0 && maxWidth > 0)) {
             return image;
         }
-        // get the width and the height of the image to be resized
+        // get the screenWidth and the screenHeight of the image to be resized
         int width = image.getWidth();
         int height = image.getHeight();
         // get the ratio of the image dimensions to screen dimensions

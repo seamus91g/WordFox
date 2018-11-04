@@ -134,6 +134,43 @@ public class RoundEndScreen extends AppCompatActivity
 
         ImageView myIV = findViewById(R.id.round_end_banner);
         myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35*width),getResources()));
+
+//
+//        BitmapFactory.Options o = new BitmapFactory.Options();
+//        o.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.roundendwithspeech, o);
+//        int w = bmp.getWidth();
+//        int h = bmp.getHeight();
+//        Log.d("Warning", "onCreate: w: " + w);
+//        Log.d("Warning", "onCreate: h: " + h);
+//
+//
+//        TextView myTV = findViewById(R.id.round_end_longest_word);
+//        myTV.measure(0, 0);
+//        float halfTVWidth = myTV.getMeasuredWidth() / 2;
+//
+//        final int[] finalWidth = new int[1];
+//
+//        final ImageView iv = findViewById(R.id.round_end_banner);
+//        ViewTreeObserver vto = iv.getViewTreeObserver();
+//        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            public boolean onPreDraw() {
+//                iv.getViewTreeObserver().removeOnPreDrawListener(this);
+//                finalWidth[0] = iv.getMeasuredWidth();
+//
+//                float extraWidth = halfTVWidth/finalWidth[0];
+//
+//
+//                ConstraintSet set = new ConstraintSet();
+//                ConstraintLayout constraintLayout = findViewById(R.id.round_end_root_layout);
+//                set.clone(constraintLayout);
+//                set.setHorizontalBias(R.id.round_end_longest_word,(float) (0.7413 - extraWidth));
+//                set.applyTo(constraintLayout);
+//
+//                return true;
+//            }
+//        });
+
     }
 
     private void startGame() {
@@ -241,10 +278,10 @@ public class RoundEndScreen extends AppCompatActivity
 
         TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
         String playerName = gameInstance.getName();
-        resultPlayerNameView.setText(playerName + playerPercent);
+        resultPlayerNameView.setText(playerName + "\n" + playerPercent);
 
         TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
-        resultPlayerScoreView.setText(gameInstance.getLongestWord());
+        resultPlayerScoreView.setText(gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")");
 
 
         String playerResult = playerScore + " out of " + maxScore;
