@@ -30,7 +30,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String wifiAction = intent.getAction();
-        Log.d(HomeScreen.MONITOR_TAG, "&&&&&&&&&&&& Received wifi intent: " + wifiAction + " &&&&&&&&&&&&");
+        Log.d(WordfoxConstants.MONITOR_TAG, "&&&&&&&&&&&& Received wifi intent: " + wifiAction + " &&&&&&&&&&&&");
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(wifiAction)) {
             // Check if wifi is enabled or disabled
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
@@ -40,7 +40,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                 wifiActivity.setIsWifiP2pEnabled(false);
                 wifiActivity.resetData();
             }
-            Log.d(HomeScreen.MONITOR_TAG, "Wifi enabled? : " + (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED));
+            Log.d(WordfoxConstants.MONITOR_TAG, "Wifi enabled? : " + (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED));
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(wifiAction)) {
             // Asynchronously request peers from manager. Notified by PeerListListener.onPeersAvailable
             if (manager == null) {
@@ -54,14 +54,14 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
             }
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
             if (networkInfo.isConnected()) {
-                Log.d(HomeScreen.MONITOR_TAG, "******** Requesting connection info *************");
+                Log.d(WordfoxConstants.MONITOR_TAG, "******** Requesting connection info *************");
                 manager.requestConnectionInfo(channel, connectionInfoListener);
             }else{
                 wifiActivity.resetData();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(wifiAction)) {
             // Check what the status of my own device is
-            Log.d(HomeScreen.MONITOR_TAG, "******** My device changed action *************");
+            Log.d(WordfoxConstants.MONITOR_TAG, "******** My device changed action *************");
             WifiP2pDevice myDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             wifiActivity.updateThisDevice(myDevice);
         }

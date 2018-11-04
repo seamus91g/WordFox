@@ -47,9 +47,8 @@ public class WifiService extends Service implements MessageHandler {
     private DeviceActionListener deviceActionListener;
     private HandlerThread chatThread;
 
-
     private void sendBroadcast(String message, String intentAction, String key) {
-        Log.d(HomeScreen.MONITOR_TAG, "W: Broadcasting: " + intentAction);
+        Log.d(WordfoxConstants.MONITOR_TAG, "W: Broadcasting: " + intentAction);
         Intent intent = new Intent();
         intent.setAction(intentAction);
         intent.putExtra(key, message);
@@ -58,8 +57,8 @@ public class WifiService extends Service implements MessageHandler {
 
     public void connectedTo(WifiP2pInfo info) {
         if (chat != null) {
-            Log.d(HomeScreen.MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
-            Log.d(HomeScreen.MONITOR_TAG, "WS : Group owner? : " + ((GroupOwnerRunnable.class.equals(chat.getClass()))));
+            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
+            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Group owner? : " + ((GroupOwnerRunnable.class.equals(chat.getClass()))));
             return;
         }
         new Thread(() -> createChat(info)).start();
@@ -102,9 +101,9 @@ public class WifiService extends Service implements MessageHandler {
 //        chatThread.setPriority(Thread.MAX_PRIORITY);
 //        chatThread.start();
         while (!greetingQueue.isEmpty()) {
-            Log.d(HomeScreen.MONITOR_TAG, "WS : Is chat null? " + (chat == null));
-            Log.d(HomeScreen.MONITOR_TAG, "WS : greetingQueue null?" + (greetingQueue == null));
-            Log.d(HomeScreen.MONITOR_TAG, "WS : greetingQueue size: " + greetingQueue.size());
+            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Is chat null? " + (chat == null));
+            Log.d(WordfoxConstants.MONITOR_TAG, "WS : greetingQueue null?" + (greetingQueue == null));
+            Log.d(WordfoxConstants.MONITOR_TAG, "WS : greetingQueue size: " + greetingQueue.size());
             chat.sendGreeting(greetingQueue.remove());
         }
     }
@@ -146,7 +145,7 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void log(String msg) {
-        Log.d(HomeScreen.MONITOR_TAG, msg);
+        Log.d(WordfoxConstants.MONITOR_TAG, msg);
     }
 
     @Override
@@ -155,7 +154,7 @@ public class WifiService extends Service implements MessageHandler {
     }
 
     public void sendData(String data) {
-        Log.d(HomeScreen.MONITOR_TAG, "WS : Sending data " + data);
+        Log.d(WordfoxConstants.MONITOR_TAG, "WS : Sending data " + data);
         chat.sendMessage(data);
         assert chat != null;
     }
@@ -171,7 +170,7 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void handleReceivedMessage(String message, ChatServer c) {
-        Log.d(HomeScreen.MONITOR_TAG, "WS : Handling received message ... " + message);
+        Log.d(WordfoxConstants.MONITOR_TAG, "WS : Handling received message ... " + message);
         try {
             JSONObject jso = new JSONObject(message);
 
@@ -260,7 +259,7 @@ public class WifiService extends Service implements MessageHandler {
 //        Message msg = mServiceHandler.obtainMessage();
 //        msg.arg1 = startId;
 //        mServiceHandler.sendMessage(msg);
-        Log.d(HomeScreen.MONITOR_TAG, "Finished binding ... ");
+        Log.d(WordfoxConstants.MONITOR_TAG, "Finished binding ... ");
 
         return START_NOT_STICKY;
     }
@@ -273,10 +272,10 @@ public class WifiService extends Service implements MessageHandler {
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
-        Log.d(HomeScreen.MONITOR_TAG, "**************** Service is destroyed *********************");
+        Log.d(WordfoxConstants.MONITOR_TAG, "**************** Service is destroyed *********************");
         closeService();
         if(deviceActionListener != null){
-            Log.d(HomeScreen.MONITOR_TAG, "Disconnecting the Wifi Action Listener");
+            Log.d(WordfoxConstants.MONITOR_TAG, "Disconnecting the Wifi Action Listener");
             deviceActionListener.disconnect();
         }
     }

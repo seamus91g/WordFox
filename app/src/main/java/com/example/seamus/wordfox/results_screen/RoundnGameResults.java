@@ -42,6 +42,7 @@ import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiGameInstance;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
+import com.example.seamus.wordfox.WordfoxConstants;
 import com.example.seamus.wordfox.database.FoxSQLData;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.FoxRank;
@@ -362,7 +363,7 @@ public class RoundnGameResults extends AppCompatActivity
 //        Bitmap foxRankImage = BitmapFactory.decodeResource(getResources(), foxRank.imageResource);      // TODO: Re-use fox pics if players get the same rank
 //        foxRankImage = ImageHandler.getResizedBitmap(foxRankImage, ImageHandler.dp2px(this, 60), ImageHandler.dp2px(this, 60));
         resultPlayerFoxPicView.setImageBitmap(foxRankImage);
-        for (int i = 0; i < GameInstance.NUMBER_ROUNDS; ++i) {
+        for (int i = 0; i < WordfoxConstants.NUMBER_ROUNDS; ++i) {
             String gridTag = "player_grid" + (i + 1);
             String wordTag = "player_word" + (i + 1);
             ImageView gridImage = cl.getChildAt(0).findViewWithTag(gridTag);
