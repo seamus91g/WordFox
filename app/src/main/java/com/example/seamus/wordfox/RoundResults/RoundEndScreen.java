@@ -3,7 +3,6 @@ package com.example.seamus.wordfox.RoundResults;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import android.widget.TextView;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
-import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
@@ -36,14 +34,13 @@ import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.SwapActivity;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
+import com.example.seamus.wordfox.WordfoxConstants;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,7 +57,10 @@ public class RoundEndScreen extends AppCompatActivity
     private InterstitialAd mInterstitialAd;
     private boolean displayInterstitial;
     private boolean failedToLoadInterstitial = false;
+    private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
+    private Point screenSize;
+    private ConstraintLayout cl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +71,16 @@ public class RoundEndScreen extends AppCompatActivity
 
         gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
 
+        int colorPrimary = getResources().getColor(R.color.game_font_color);
+        int colorSecondary = getResources().getColor(R.color.colorLightAccent);
         // TODO: Separate presenter for round and game end
-        presenter = new RoundEndPresenter(this);
+        screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        presenter = new RoundEndPresenter(this,
+                screenSize.x,
+                HomeScreen.allGameInstances.get(gameIndexNumber),
+                colorPrimary,
+                colorSecondary);
 
         FloatingActionButton fab = findViewById(R.id.fab_round_end);
         fab.setOnClickListener(view -> {
@@ -92,11 +100,13 @@ public class RoundEndScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        populatePlayerDetails(HomeScreen.allGameInstances.get(gameIndexNumber));
-        populatePossibleWords(HomeScreen.allGameInstances.get(gameIndexNumber));
+
+        cl = findViewById(R.id.round_end_root_layout);
+        presenter.populatePlayerDetails();
+        presenter.populatePossibleWords();
 
         boolean isFinalRound;
-        isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == GameInstance.NUMBER_ROUNDS - 1;
+        isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == WordfoxConstants.NUMBER_ROUNDS - 1;
         isOnline = HomeScreen.allGameInstances.get(0).isOnline();
         if (isOnline && isFinalRound) {
             Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
@@ -117,6 +127,7 @@ public class RoundEndScreen extends AppCompatActivity
                         Log.d(MONITOR_TAG, "Will start game when ad closes ..");
                         startGame();
                     }
+
                     @Override
                     public void onAdFailedToLoad(int errorCode) {
                         // Code to be executed when an ad request fails.
@@ -127,54 +138,15 @@ public class RoundEndScreen extends AppCompatActivity
             }
         }
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
+        int width = screenSize.x;
 
         ImageView myIV = findViewById(R.id.round_end_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35*width),getResources()));
-
-//
-//        BitmapFactory.Options o = new BitmapFactory.Options();
-//        o.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.roundendwithspeech, o);
-//        int w = bmp.getWidth();
-//        int h = bmp.getHeight();
-//        Log.d("Warning", "onCreate: w: " + w);
-//        Log.d("Warning", "onCreate: h: " + h);
-//
-//
-//        TextView myTV = findViewById(R.id.round_end_longest_word);
-//        myTV.measure(0, 0);
-//        float halfTVWidth = myTV.getMeasuredWidth() / 2;
-//
-//        final int[] finalWidth = new int[1];
-//
-//        final ImageView iv = findViewById(R.id.round_end_banner);
-//        ViewTreeObserver vto = iv.getViewTreeObserver();
-//        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            public boolean onPreDraw() {
-//                iv.getViewTreeObserver().removeOnPreDrawListener(this);
-//                finalWidth[0] = iv.getMeasuredWidth();
-//
-//                float extraWidth = halfTVWidth/finalWidth[0];
-//
-//
-//                ConstraintSet set = new ConstraintSet();
-//                ConstraintLayout constraintLayout = findViewById(R.id.round_end_root_layout);
-//                set.clone(constraintLayout);
-//                set.setHorizontalBias(R.id.round_end_longest_word,(float) (0.7413 - extraWidth));
-//                set.applyTo(constraintLayout);
-//
-//                return true;
-//            }
-//        });
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35 * width), getResources()));
 
     }
 
     private void startGame() {
-        presenter.startGame(HomeScreen.allGameInstances.get(gameIndexNumber));
+        presenter.startGame();
     }
 
     private void loadInterstitial() {
@@ -216,7 +188,6 @@ public class RoundEndScreen extends AppCompatActivity
         Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
         unbindService(netConnService);
         netConnService.isBound = false;
-
     }
 
     private void bindService() {
@@ -233,7 +204,7 @@ public class RoundEndScreen extends AppCompatActivity
         String jsString = myGameInstance.resultAsJson().toString();
         Log.d(MONITOR_TAG, "Is WifiServe null? , bound? " + (ws == null) + ", " + netConnService.isBound);
         int count = 0;
-        while (ws == null){
+        while (ws == null) {
             Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
             Log.d(MONITOR_TAG, "| Waiting for service to bind |");
             Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
@@ -242,97 +213,12 @@ public class RoundEndScreen extends AppCompatActivity
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(++count > 5){
+            if (++count > 5) {
                 break;
             }
             ws = netConnService.getWifiService();
         }
         ws.sendData(jsString);
-    }
-
-    public void populatePlayerDetails(GameInstance gameInstance) {       // TODO:  Tidy this. Use MVP
-        ConstraintLayout cl = findViewById(R.id.round_end_root_layout);
-        GameData plyrGd = new GameData(this, gameInstance.getID());
-
-        String profPicStr = plyrGd.getProfilePicture();
-        Bitmap profPic = null;
-        ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-        if (!profPicStr.equals("")) {
-            Uri myFileUri = Uri.parse(profPicStr);
-            profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
-//            int scale = ImageHandler.getScaleFactor(getResources(), )
-        }
-        // Race condition if player ends game really quickly. Longest possible words might not yet be calculated.
-        while (gameInstance.getLongestPossible() == null) {
-            try {
-                wait(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        int maxScore = gameInstance.getLongestPossible().length();
-        int playerScore = gameInstance.getScore();
-        int percentScore = (100 * playerScore) / (maxScore);
-
-        String playerPercent = "  (" + percentScore + "%)";
-
-        TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
-        String playerName = gameInstance.getName();
-        resultPlayerNameView.setText(playerName + "\n" + playerPercent);
-
-        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
-        resultPlayerScoreView.setText(gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")");
-
-
-        String playerResult = playerScore + " out of " + maxScore;
-        TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
-        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
-        longestWordView.setText(longestWordHeader);
-
-
-        Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
-        gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
-
-        GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), getResources().getColor(R.color.game_font_color), getResources().getColor(R.color.colorLightAccent));
-        ImageView roundEndGridBest = cl.findViewById(R.id.round_end_result_grid);
-        roundEndGridBest.setImageBitmap(gridWithText.getBmp());
-
-        CircleImageView profilePicView = cl.findViewById(R.id.round_end_profile_pic);
-        if (profPic == null) {
-            profPic = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
-//            profilePicView.setVisibility(View.GONE);
-//            resultPlayerNameView.setPadding(ImageHandler.dp2px(this, 20), ImageHandler.dp2px(this, 10), 10, 10);
-//            resultPlayerScoreView.setPadding(ImageHandler.dp2px(this, 20), 10, 10, ImageHandler.dp2px(this, 10));
-        }
-        profilePicView.setImageBitmap(profPic);
-    }
-
-    public void populatePossibleWords(GameInstance gameInstance) {
-        List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
-        LinearLayout container = findViewById(R.id.suggestions_container);
-        Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
-        gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
-
-        int count = 0;
-        for (int i = 0; i < container.getChildCount(); ++i) {
-            View row = container.getChildAt(i);
-            for (int j = 0; j < GameInstance.NUMBER_ROUNDS; ++j) {
-                String wordTag = "word_" + (j + 1);
-                String gridTag = "grid_" + (j + 1);
-                TextView wordTV = row.findViewWithTag(wordTag);
-                ImageView grid = row.findViewWithTag(gridTag);
-                if (count >= possibleWords.size()) {
-                    wordTV.setVisibility(View.INVISIBLE);
-                    grid.setVisibility(View.INVISIBLE);
-                    continue;
-                }
-                String word = possibleWords.get(count).toUpperCase() + " (" + possibleWords.get(count).length() + ")";
-                wordTV.setText(word);
-                GridImage gridWithText = new GridImage(gridBmp, word, gameInstance.getRoundLetters(), getResources().getColor(R.color.game_font_color), getResources().getColor(R.color.colorLightAccent));
-                grid.setImageBitmap(gridWithText.getBmp());
-                ++count;
-            }
-        }
     }
 
     @Override
@@ -412,5 +298,90 @@ public class RoundEndScreen extends AppCompatActivity
     public void proceedToFinalResults() {
         Intent endScreenIntent = new Intent(this, RoundnGameResults.class);
         startActivity(endScreenIntent);
+    }
+
+    @Override
+    public Bitmap getBlankScaledGrid(int shortestSide) {
+        return ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, shortestSide, getResources());
+
+    }
+
+    @Override
+    public void addRowPossibleWords() {
+        if (container == null) {
+            container = findViewById(R.id.suggestions_container);
+        }
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View childLayout = inflater.inflate(R.layout.row_of_grids_with_word, null);
+        container.addView(childLayout);
+    }
+
+    @Override
+    public void addPossibleWord(Bitmap gridBmp, String word, int count) {
+        int tagSuffix = (count % 3) + 1;
+        ConstraintLayout ll = (ConstraintLayout) container.getChildAt(container.getChildCount() - 1);
+
+        ImageView grid = ll.findViewWithTag(WordfoxConstants.GRID_TAG_PREFIX + tagSuffix);
+        grid.setImageBitmap(gridBmp);
+        grid.setVisibility(View.VISIBLE);
+
+        TextView wordTV = ll.findViewWithTag(WordfoxConstants.WORD_TAG_PREFIX + tagSuffix);
+        wordTV.setText(word);
+    }
+
+    @Override
+    public void hideResultGrid(int count, int width) {
+        int tagSuffix = (count % 3) + 1;
+        ConstraintLayout ll = (ConstraintLayout) container.getChildAt(container.getChildCount() - 1);
+        ImageView grid = ll.findViewWithTag(WordfoxConstants.GRID_TAG_PREFIX + tagSuffix);
+        Log.d(MONITOR_TAG, "Width is : " + width);
+        grid.getLayoutParams().width = width;
+    }
+
+    @Override
+    public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
+        String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
+        if (profPicStr.equals("")) {
+            return ImageHandler.getScaledBitmap(
+                    GameData.PROFILE_DEFAULT_IMG,
+                    profilePicScreenWidth,          // TODO: Will be shortest side, not necessarily width
+                    getResources());
+        } else {
+            Uri myFileUri = Uri.parse(profPicStr);
+            ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
+            return imageHandler.getBitmapFromUri(myFileUri, profilePicScreenWidth);      // TODO: Why not static method?
+        }
+    }
+
+    @Override
+    public void setPlayerNameWithPercent(String nameAndPercent) {
+        TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
+        resultPlayerNameView.setText(nameAndPercent);
+    }
+
+    @Override
+    public void setPlayerScoreText(String scoreText) {
+        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
+        resultPlayerScoreView.setText(scoreText);
+    }
+
+    @Override
+    public void setSpeechBubbleText(String playerBubbleText) {
+        TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
+        longestWordView.setText(playerBubbleText);
+    }
+
+    @Override
+    public void setMyGridResult(Bitmap bmp) {
+        ImageView roundEndGridBest = cl.findViewById(R.id.round_end_result_grid);
+        roundEndGridBest.setImageBitmap(bmp);
+    }
+
+    @Override
+    public void setPlayerProfilePic(Bitmap profPic) {
+        CircleImageView profilePicView = cl.findViewById(R.id.round_end_profile_pic);
+        if (profPic != null) {
+            profilePicView.setImageBitmap(profPic);
+        }
     }
 }
