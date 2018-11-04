@@ -83,7 +83,33 @@
         </item>
         <item name="android:fontFamily">monospace
         </item>
-        <item name="android:drawableLeft">@drawable/selector_play_pic_icon
+        <item name="android:drawableLeft">@drawable/selector_ic_play_arrow_png
+        </item>
+        <item name="android:background">@drawable/selector_rectangularbutton
+        </item>
+    </style>
+
+    <!-- Style for non play rectangular buttons -->
+    <style name="DifferentDrawableButton">
+        <item name="android:textColor">@drawable/selector_rectangularbutton_color
+        </item>
+        <item name="android:textSize">35sp
+        </item>
+        <item name="android:gravity">center
+        </item>
+        <item name="android:layout_margin">6dp
+        </item>
+        <item name="android:textStyle">bold
+        </item>
+        <item name="android:paddingTop">2dp
+        </item>
+        <item name="android:paddingBottom">2dp
+        </item>
+        <item name="android:paddingLeft">8dp
+        </item>
+        <item name="android:paddingRight">8dp
+        </item>
+        <item name="android:fontFamily">@font/arialroundedbold
         </item>
         <item name="android:background">@drawable/selector_rectangularbutton
         </item>
@@ -105,13 +131,9 @@
         </item>
         <item name="android:layout_height">@dimen/action_button_dimension
         </item>
-        <item name="android:src">@drawable/selector_ic_play_arrow
-        </item>
+        <item name="android:src">@drawable/selector_ic_play_arrow_png</item>
         <item name="android:background">@drawable/selector_circular_button
         </item>
-
-
-
     </style>
 
 
@@ -123,11 +145,11 @@
 
 
 
-    <!-- Style for the action buttons in the game; shuffle, submit, reset-->
+    <!-- Style for the shuffle action button in the game-->
     <style name="gameShuffleButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_game_shuffle_button
+        <item name="android:drawableTop">@drawable/selector_game_shuffle_button_png
         </item>
         <item name="android:textColor">@drawable/selector_game_action_button_text_color
         </item>
@@ -139,11 +161,11 @@
         </item>
     </style>
 
-    <!-- Style for the action buttons in the game; shuffle, submit, reset-->
+    <!-- Style for the reset action button in the game-->
     <style name="gameResetButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_game_reset_button
+        <item name="android:drawableTop">@drawable/selector_game_reset_button_png
         </item>
         <item name="android:layout_width">58dp
         </item>
@@ -155,12 +177,11 @@
         </item>
     </style>
 
-    <!-- Style for the action buttons in the game; shuffle, submit, reset-->
+    <!-- Style for the submit action button in the game-->
     <style name="gameSubmitButton">
         <item name="android:gravity">center
         </item>
-        <item name="android:drawableTop">@drawable/selector_game_submit_button
-        </item>
+        <item name="android:drawableTop">@drawable/selector_game_submit_button_png</item>
         <item name="android:layout_width">58dp
         </item>
         <item name="android:textColor">@drawable/selector_game_action_button_text_color
@@ -170,6 +191,12 @@
         <item name="android:fontFamily">@font/arial_ff
         </item>
     </style>
+
+
+
+
+
+
 
     <!-- Style for the fox buttons on the home screen for choosing number of players-->
     <style name="homeNumPLayersButtons">
@@ -186,6 +213,17 @@
         <!--<item name="android:background">@drawable/turquoise_border_white_background-->
         <!--</item>-->
     </style>
+
+
+
+    <!-- Style for the fox speech bubbles-->
+    <style name="foxSpeechBubblesTextStyle">
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
