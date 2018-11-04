@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -60,10 +61,12 @@ public class SwapChooseActivity extends AppCompatActivity
     }
 
     private void setup() {
-        Button npButton = findViewById(R.id.choice_new_player_button);
-        Button epButton = findViewById(R.id.choice_existing_player_button);
-        npButton.setOnClickListener(newOrExistingListener);
-        epButton.setOnClickListener(newOrExistingListener);
+        CardView npCardView = findViewById(R.id.fragment_select_cardview_new_player);
+        CardView epCardView = findViewById(R.id.fragment_select_cardview_existing_player);
+//        Button npButton = findViewById(R.id.choice_new_player_button);
+//        Button epButton = findViewById(R.id.choice_existing_player_button);
+        npCardView.setOnClickListener(newOrExistingListener);
+        epCardView.setOnClickListener(newOrExistingListener);
 
         Button startButton = findViewById(R.id.nextPlayerStart);
         startButton.setOnClickListener(startListener);

@@ -1,0 +1,96 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="true"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="false">
+
+        <android.support.constraint.ConstraintLayout
+            style="@style/BasicTextBoldLightDarkBG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/player_name_wifi_list_item"
+                style="@style/BasicTextBoldLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:text="Unknown"
+                android:textSize="@dimen/heading_2_text_size"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/device_name_wifi_list_item"
+                style="@style/BasicTextBoldLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:text="[Phone] Malaxy B7"
+                android:textSize="@dimen/heading_2_text_size"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/connection_state_wifi_list_item"
+                style="@style/BasicTextLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingBottom="20dp"
+                android:text="Available"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/device_name_wifi_list_item" />
+
+            <TextView
+                android:id="@+id/connection_description_wifi_list_item"
+                style="@style/BasicTextLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:text="Jay's Group"
+                app:layout_constraintBottom_toBottomOf="@id/connection_state_wifi_list_item"
+                app:layout_constraintHorizontal_bias="0.35"
+                app:layout_constraintLeft_toRightOf="@id/connection_state_wifi_list_item"
+                app:layout_constraintRight_toLeftOf="@id/player_count_wifi_list_item"
+                app:layout_constraintTop_toTopOf="@id/connection_state_wifi_list_item" />
+
+            <TextView
+                android:id="@+id/player_count_wifi_list_item"
+                style="@style/BasicTextBoldLightDarkBG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="15dp"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="@id/player_count_image_wifi_list_item"
+                app:layout_constraintRight_toLeftOf="@id/player_count_image_wifi_list_item"
+                app:layout_constraintTop_toTopOf="@id/player_count_image_wifi_list_item" />
+
+            <ImageView
+                android:id="@+id/player_count_image_wifi_list_item"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp"
+                android:src="@drawable/ppfox2_outline_tiny"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/player_name_wifi_list_item" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

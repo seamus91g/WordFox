@@ -2,7 +2,6 @@ package com.example.seamus.wordfox;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Binder;
 import android.os.Handler;
@@ -15,19 +14,28 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class WifiService extends Service implements MessageHandler {
     public static final String ACTION_STRING_SERVICE = "ToService";
     public static final String ACTION_SEND_LETTERS = "action_send_letters";
     public static final String ACTION_GAME_RESULTS = "action_game_results";
+    public static final String ACTION_PLAYER_ADDED = "action_player_added";
+    public static final String ACTION_PLAYER_REMOVED = "action_player_removed";
+    //    public static final String ACTION_PLAYER_COUNT = "action_player_count";
     public static final String ACTION_DECLARE_GROUP_OWNER = "declare_group_owner_key";
+    private static final String CHAT_THREAD_NAME = "chat_thread_name";
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private final IBinder wifiBinder = new WifiBinder();
@@ -35,6 +43,10 @@ public class WifiService extends Service implements MessageHandler {
     private ChatServer chat;
     private boolean isGameOver = false;     // Send result broadcasts when true
     private ArrayList<String> pendingResults = new ArrayList<>();
+    private Queue<String> greetingQueue = new ArrayDeque<>();
+    private DeviceActionListener deviceActionListener;
+    private HandlerThread chatThread;
+
 
     private void sendBroadcast(String message, String intentAction, String key) {
         Log.d(HomeScreen.MONITOR_TAG, "W: Broadcasting: " + intentAction);
@@ -47,17 +59,89 @@ public class WifiService extends Service implements MessageHandler {
     public void connectedTo(WifiP2pInfo info) {
         if (chat != null) {
             Log.d(HomeScreen.MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
-            Log.d(HomeScreen.MONITOR_TAG, "WS : Group owner? : " + info.isGroupOwner);
+            Log.d(HomeScreen.MONITOR_TAG, "WS : Group owner? : " + ((GroupOwnerRunnable.class.equals(chat.getClass()))));
             return;
         }
-        Log.d(HomeScreen.MONITOR_TAG, "~~~~~~~~ I'm group owner? ~~~~~~~~ : " + info.isGroupOwner);
+        new Thread(() -> createChat(info)).start();
 
-        if (info.isGroupOwner) {
-            chat = new GroupOwnerRunnable(port, this);
-        } else {
-            chat = new ClientRunnable(info.groupOwnerAddress, port, this);
+        log("$$$$$$ WS : GO address is:  (str, inet) - " + info.groupOwnerAddress.getHostAddress() + ", " + info.groupOwnerAddress);
+    }
+
+    private void createChat(WifiP2pInfo info) {
+//        boolean retried = false;
+        try {
+            assignChatServer(info);
+        } catch (IOException e) {
+            log("######## Connecting to group failed : threw exception #########");
+            try {
+                Thread.sleep(1000);     // Try again after some time
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
         }
-        new Thread(chat).start();
+        if (chat == null) {
+            log("######## Connecting to group second attempt #########");
+            // Trying again after 1 second delay
+            try {
+                assignChatServer(info);
+            } catch (IOException e) {
+                log("######## Connecting to group failed again : threw exception #########");
+                e.printStackTrace();
+                // TODO: Disconnect wifi - direct and alert user to try again.
+            }
+        }
+
+//        Thread chatThread = new Thread(chat);       // TODO: Could just chat.run() instead since already on thread
+        chatThread = new HandlerThread(CHAT_THREAD_NAME);
+
+        chatThread.start();
+        Handler h = new Handler(chatThread.getLooper());
+        h.post(chat);
+
+//        chatThread.setPriority(Thread.MAX_PRIORITY);
+//        chatThread.start();
+        while (!greetingQueue.isEmpty()) {
+            Log.d(HomeScreen.MONITOR_TAG, "WS : Is chat null? " + (chat == null));
+            Log.d(HomeScreen.MONITOR_TAG, "WS : greetingQueue null?" + (greetingQueue == null));
+            Log.d(HomeScreen.MONITOR_TAG, "WS : greetingQueue size: " + greetingQueue.size());
+            chat.sendGreeting(greetingQueue.remove());
+        }
+    }
+
+    private void assignChatServer(WifiP2pInfo info) throws IOException {
+        if (info.isGroupOwner) {
+            log("#### #### Connecting as group owner ##### ####");
+            log("######## Port " + port + " is available? " + (available(port)));
+            chat = new GroupOwnerRunnable(new ServerSocket(port), WifiService.this);
+        } else {
+            log("######## Connecting as not group owner #########");
+            chat = new ClientRunnable(new Socket(info.groupOwnerAddress, port), this);
+        }
+    }
+
+    private boolean available(int port) {
+        log("--------------Testing port " + port);
+        Socket s = null;
+        try {
+            s = new Socket("localhost", port);
+
+            // If the code makes it this far without an exception it means
+            // something is using the port and has responded.
+            log("--------------Port " + port + " is not available");
+            return false;
+        } catch (IOException e) {
+            log("--------------Port " + port + " is available");
+            return true;
+        } finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("You should handle this error.", e);
+                }
+            }
+        }
     }
 
     @Override
@@ -65,10 +149,24 @@ public class WifiService extends Service implements MessageHandler {
         Log.d(HomeScreen.MONITOR_TAG, msg);
     }
 
+    @Override
+    public void logCrash(IOException e) {
+        Crashlytics.logException(e);
+    }
+
     public void sendData(String data) {
         Log.d(HomeScreen.MONITOR_TAG, "WS : Sending data " + data);
         chat.sendMessage(data);
         assert chat != null;
+    }
+
+    public void greetClient(String msg) {
+        log("WS : Sending greet - " + msg);
+        if (chat == null) {
+            greetingQueue.add(msg);
+        } else {
+            chat.sendGreeting(msg);
+        }
     }
 
     @Override
@@ -86,6 +184,12 @@ public class WifiService extends Service implements MessageHandler {
             } else if (jso.has(LocalWifiActivity.JSON_LETTERS)) {
 
                 sendBroadcast(message, ACTION_SEND_LETTERS, LocalWifiActivity.INTENT_LETTERS);
+            } else if (jso.has(LocalWifiActivity.JSON_NEW_PLAYER)) {
+                sendBroadcast(message, ACTION_PLAYER_ADDED, LocalWifiActivity.INTENT_NEW_PLAYER);
+                log("WS : received message is Add player!");
+            } else if (jso.has(LocalWifiActivity.JSON_REMOVE_PLAYER)) {
+                log("WS : received message is remove player!");
+                sendBroadcast(message, ACTION_PLAYER_REMOVED, LocalWifiActivity.INTENT_REMOVE_PLAYER);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -98,8 +202,15 @@ public class WifiService extends Service implements MessageHandler {
     }
 
     public void closeService() {
+        log("$$$$$$$$ Closing chat from WifiService ...");
+        log("$$$$$$$$ $$$$$$$$ $$$$$$$$ $$$$$$$$");
         if (chat != null) {
             chat.close();
+            chat = null;
+        }
+        if(chatThread != null){
+            chatThread.quitSafely();
+            chatThread = null;
         }
     }
 
@@ -112,8 +223,11 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void handleChatClosed(ChatServer chatServer) {
-        chat = null;
+        closeService();
+//        chat.close();
+//        chat = null;
     }
+
 
     private final class ServiceHandler extends Handler {        // TODO: not used
         public ServiceHandler(Looper looper) {
@@ -130,10 +244,12 @@ public class WifiService extends Service implements MessageHandler {
     @Override
     public void onCreate() {
         super.onCreate();
+        log("************* WS thread pre : " + Thread.currentThread().getPriority());
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
-                Process.THREAD_PRIORITY_BACKGROUND);
+                Process.THREAD_PRIORITY_AUDIO);
         thread.start();
 
+        log("************* WS thread post : " + Thread.currentThread().getPriority());
         // Get the HandlerThread's Looper and use it for our Handler
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
@@ -149,6 +265,9 @@ public class WifiService extends Service implements MessageHandler {
         return START_NOT_STICKY;
     }
 
+    public void setActionListener(DeviceActionListener deviceActionListener){
+        this.deviceActionListener = deviceActionListener;
+    }
 
     @Override
     public void onDestroy() {
@@ -156,6 +275,10 @@ public class WifiService extends Service implements MessageHandler {
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
         Log.d(HomeScreen.MONITOR_TAG, "**************** Service is destroyed *********************");
         closeService();
+        if(deviceActionListener != null){
+            Log.d(HomeScreen.MONITOR_TAG, "Disconnecting the Wifi Action Listener");
+            deviceActionListener.disconnect();
+        }
     }
 
     @Nullable

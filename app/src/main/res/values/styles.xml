@@ -36,6 +36,39 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
+    <style name="BasicText">
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:fontFamily">@font/unicode_arialr</item>
+    </style>
+
+    <style name="BasicTextBold">
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+    </style>
+    <!--android:background="@color/light"-->
+    <style name="BasicTextBoldLightDarkBG">
+        <item name="android:textColor">@color/colorTextHeading</item>
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+        <item name="android:background">@color/game_font_color</item>
+    </style>
+
+    <style name="BasicTextLightDarkBG">
+        <item name="android:textColor">@color/colorTextHeading</item>
+        <item name="android:fontFamily">@font/unicode_arialr</item>
+        <item name="android:background">@color/game_font_color</item>
+    </style>
+
+    <style name="wifiButtonsStyle">
+        <item name="android:textColor">@drawable/selector_rectangularbutton_color</item>
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:background">@drawable/wifi_buttons_selector</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+    </style>
 
     <!-- Style for the TextView displaying the letters to be chosen during the game-->
     <style name="TextViewButtons">
@@ -116,15 +149,6 @@
     </style>
 
 
-
-
-
-
-
-
-
-
-
     <!-- Style for CircularButtons throughout the non-game screens-->
     <style name="CircularButtons">
         <item name="android:layout_width">@dimen/action_button_dimension
@@ -136,14 +160,15 @@
         </item>
     </style>
 
-
-
-
-
-
-
-
-
+    <style name="EditTextSubmitButton">
+        <item name="android:layout_width">50dp
+        </item>
+        <item name="android:layout_height">50dp
+        </item>
+        <item name="android:src">@drawable/selector_submit_edittext
+        </item>
+        <item name="android:background">@null</item>
+    </style>
 
     <!-- Style for the shuffle action button in the game-->
     <style name="gameShuffleButton">

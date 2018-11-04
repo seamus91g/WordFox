@@ -61,6 +61,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(wifiAction)) {
             // Check what the status of my own device is
+            Log.d(HomeScreen.MONITOR_TAG, "******** My device changed action *************");
             WifiP2pDevice myDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             wifiActivity.updateThisDevice(myDevice);
         }

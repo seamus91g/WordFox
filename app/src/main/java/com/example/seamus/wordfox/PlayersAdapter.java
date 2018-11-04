@@ -43,9 +43,9 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
 
         public PlayerViewHolder(@NonNull View itemView, AdapterView.OnItemClickListener listener) {
             super(itemView);
-            playerNameTV = itemView.findViewById(R.id.data_player_name);
-            playerRankTV = itemView.findViewById(R.id.data_player_rank);
-            playerImage = itemView.findViewById(R.id.data_page_player_pic);
+            playerNameTV = itemView.findViewById(R.id.existing_player_fragment_player_name);
+            playerRankTV = itemView.findViewById(R.id.existing_player_fragment_player_rank);
+            playerImage = itemView.findViewById(R.id.existing_player_fragment_player_pic);
             itemView.setOnClickListener(view -> listener.onItemClick(null, null, getAdapterPosition(), 0));
         }
 
@@ -60,7 +60,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
     @Override
     public PlayersAdapter.PlayerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.rv_data_player_header, viewGroup, false);
+                .inflate(R.layout.rv_existing_player, viewGroup, false);
         return new PlayersAdapter.PlayerViewHolder(v, listener);
     }
 

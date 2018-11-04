@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class NewPlayerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button save = getActivity().findViewById(R.id.newPlayerSave);
+        ImageButton save = getActivity().findViewById(R.id.newPlayerSave);
         save.setOnClickListener(saveListener);
         newPlayerEditText = getActivity().findViewById(R.id.newPlayerET);
     }
