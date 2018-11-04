@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
 /**
- * Created by Gilroy on 4/14/2018.
+ * Created by Gilroy
  */
 
 public abstract class ScreenRobot<T extends ScreenRobot> {

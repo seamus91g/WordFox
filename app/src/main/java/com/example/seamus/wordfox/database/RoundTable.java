@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.database;
 
 /**
- * Created by Gilroy on 11/23/2017.
+ * Created by Gilroy
  */
 
 public class RoundTable {

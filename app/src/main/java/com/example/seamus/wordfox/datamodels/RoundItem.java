@@ -8,7 +8,7 @@ import com.example.seamus.wordfox.database.WordTable;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 11/23/2017.
+ * Created by Gilroy
  */
 
 public class RoundItem {

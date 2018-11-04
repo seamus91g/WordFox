@@ -3,7 +3,7 @@ package com.example.seamus.wordfox.player_switch;
 import java.util.ArrayList;
 
 /**
- * Created by Gilroy on 4/25/2018.
+ * Created by Gilroy
  */
 
 public interface PlayerSwitchContract {

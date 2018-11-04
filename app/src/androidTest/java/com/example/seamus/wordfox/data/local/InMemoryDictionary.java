@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Gilroy on 4/13/2018.
+ * Created by Gilroy
  */
 
 public class InMemoryDictionary implements Diction {

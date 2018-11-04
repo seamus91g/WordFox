@@ -5,7 +5,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by Gilroy on 4/17/2018.
+ * Created by Gilroy
  */
 
 public interface GamescreenContract {

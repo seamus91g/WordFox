@@ -23,7 +23,7 @@ import java.util.UUID;
 import static com.example.seamus.wordfox.game_screen.GameActivity.GAME_TIME_SECONDS;
 
 /**
- * Created by Gilroy.
+ * Created by Gilroy
  */
 
 public class GamescreenPresenter implements GamescreenContract.Listener {

@@ -9,7 +9,7 @@ import org.junit.Rule;
 import static org.junit.Assert.*;
 
 /**
- * Created by Gilroy on 4/26/2018.
+ * Created by Gilroy
  */
 public class PlayerSwitchActivityTest {
     @Rule

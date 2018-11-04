@@ -9,7 +9,7 @@ import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.example.seamus.wordfox.statistics_screen.Statistics;
 
 /**
- * Created by Seamus on 06/07/2017.
+ * Created by Seamus
  */
 
 public class NavigationBurger {

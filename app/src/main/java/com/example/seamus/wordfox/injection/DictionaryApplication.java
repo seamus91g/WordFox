@@ -6,7 +6,7 @@ import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.data.Diction;
 
 /**
- * Created by Gilroy on 4/13/2018.
+ * Created by Gilroy
  */
 
 public class DictionaryApplication extends Application {

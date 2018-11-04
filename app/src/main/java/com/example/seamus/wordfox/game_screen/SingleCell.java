@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.game_screen;
 
 /**
- * Created by Gilroy on 4/30/2018.
+ * Created by Gilroy
  */
 class SingleCell {
     String tag;

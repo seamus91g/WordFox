@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnitRunner;
 import com.example.seamus.wordfox.injection.TestDictionaryApplication;
 
 /**
- * Created by Gilroy on 4/13/2018.
+ * Created by Gilroy
  */
 
 public class CustomTestRunner extends AndroidJUnitRunner {

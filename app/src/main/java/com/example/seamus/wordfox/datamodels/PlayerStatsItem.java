@@ -7,7 +7,7 @@ import com.example.seamus.wordfox.database.PlayerStatsTable;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 2/10/2018.
+ * Created by Gilroy
  */
 
 public class PlayerStatsItem {

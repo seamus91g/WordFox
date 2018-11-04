@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by spgilroy on 11/20/2017.
+ * Created by spgilroy
  */
 
 public class GameItem {

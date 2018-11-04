@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import static java.util.Collections.shuffle;
 
 /**
- * Created by Seamus on 05/07/2017.
+ * Created by Seamus
  */
 
 public class FoxDictionary implements Diction {

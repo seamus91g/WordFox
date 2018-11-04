@@ -9,7 +9,7 @@ import com.example.seamus.wordfox.HomeScreen;
 import com.example.seamus.wordfox.WordfoxConstants;
 
 /**
- * Created by spgilroy on 11/20/2017.
+ * Created by spgilroy
  */
 
 public class DBHelper extends SQLiteOpenHelper {

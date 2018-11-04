@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.database;
 
 /**
- * Created by Gilroy on 2/10/2018.
+ * Created by Gilroy
  */
 
 public class OpponentTable {

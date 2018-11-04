@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by Desmond on 05/07/2017.
+ * Created by Desmond
  */
 
 public class GameInstance implements GameDetails {

@@ -4,7 +4,7 @@ import com.example.seamus.wordfox.data.Diction;
 import com.example.seamus.wordfox.data.local.InMemoryDictionary;
 
 /**
- * Created by Gilroy on 4/13/2018.
+ * Created by Gilroy
  */
 
 public class TestDictionaryApplication extends DictionaryApplication{

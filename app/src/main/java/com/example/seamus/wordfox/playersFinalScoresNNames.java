@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox;
 
 /**
- * Created by Desmond on 03/11/2017.
+ * Created by Desmond
  * A class to be used at the end of a multiplayer game to store the player's name and game ending score
  */
 

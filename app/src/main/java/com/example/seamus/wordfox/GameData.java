@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by Seamus on 05/07/2017.
+ * Created by Seamus
  */
 
 // Class to store game data and statistics

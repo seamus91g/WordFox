@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 4/26/2018.
+ * Created by Gilroy
  */
 public class PlayerSwitchPresenterTest {
     private PlayerSwitchContract.View view;

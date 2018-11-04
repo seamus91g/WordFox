@@ -7,7 +7,7 @@ import com.example.seamus.wordfox.database.OpponentTable;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 2/10/2018.
+ * Created by Gilroy
  */
 
 public class OpponentItem {

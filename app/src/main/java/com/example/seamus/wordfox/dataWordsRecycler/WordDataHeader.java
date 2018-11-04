@@ -3,7 +3,7 @@ package com.example.seamus.wordfox.dataWordsRecycler;
 import java.util.List;
 
 /**
- * Created by Gilroy on 2/20/2018.
+ * Created by Gilroy
  */
 
 public class WordDataHeader{

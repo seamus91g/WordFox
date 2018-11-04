@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.database;
 
 /**
- * Created by spgilroy on 11/20/2017.
+ * Created by spgilroy
  */
 
 public class GameTable {

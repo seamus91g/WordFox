@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 /**
- * Created by Gilroy on 4/11/2018.
+ * Created by Gilroy
  */
 public class FoxDictionaryTest {
     Context context = InstrumentationRegistry.getTargetContext();
