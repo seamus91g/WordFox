@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,15 +93,6 @@ public class RoundEndScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
-
-
-        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
-
         populatePlayerDetails(HomeScreen.allGameInstances.get(gameIndexNumber));
         populatePossibleWords(HomeScreen.allGameInstances.get(gameIndexNumber));
 
@@ -139,51 +128,8 @@ public class RoundEndScreen extends AppCompatActivity
             }
         }
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-
-
-//
-//        BitmapFactory.Options o = new BitmapFactory.Options();
-//        o.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.roundendwithspeech, o);
-//        int w = bmp.getWidth();
-//        int h = bmp.getHeight();
-//        Log.d("Warning", "onCreate: w: " + w);
-//        Log.d("Warning", "onCreate: h: " + h);
-//
-//
-//        TextView myTV = findViewById(R.id.round_end_longest_word);
-//        myTV.measure(0, 0);
-//        float halfTVWidth = myTV.getMeasuredWidth() / 2;
-//
-//        final int[] finalWidth = new int[1];
-//
-//        final ImageView iv = findViewById(R.id.round_end_banner);
-//        ViewTreeObserver vto = iv.getViewTreeObserver();
-//        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            public boolean onPreDraw() {
-//                iv.getViewTreeObserver().removeOnPreDrawListener(this);
-//                finalWidth[0] = iv.getMeasuredWidth();
-//
-//                float extraWidth = halfTVWidth/finalWidth[0];
-//
-//
-//                ConstraintSet set = new ConstraintSet();
-//                ConstraintLayout constraintLayout = findViewById(R.id.round_end_root_layout);
-//                set.clone(constraintLayout);
-//                set.setHorizontalBias(R.id.round_end_longest_word,(float) (0.7413 - extraWidth));
-//                set.applyTo(constraintLayout);
-//
-//                return true;
-//            }
-//        });
-
+        setUpRoundEndFox();
     }
-
     private void startGame() {
         presenter.startGame(HomeScreen.allGameInstances.get(gameIndexNumber));
     }
@@ -263,7 +209,6 @@ public class RoundEndScreen extends AppCompatActivity
 
     public void populatePlayerDetails(GameInstance gameInstance) {       // TODO:  Tidy this. Use MVP
         ConstraintLayout cl = findViewById(R.id.round_end_root_layout);
-        ConstraintLayout winnerBannerCL = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
         GameData plyrGd = new GameData(this, gameInstance.getID());
 
         String profPicStr = plyrGd.getProfilePicture();
@@ -298,11 +243,7 @@ public class RoundEndScreen extends AppCompatActivity
 
         String playerResult = playerScore + " out of " + maxScore;
         String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
-
-        TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
-                instructionFoxTV,0.8, longestWordHeader);
-
+        adjustSpeechBubble(longestWordHeader);
 
         Bitmap gridBmp = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
         gridBmp = ImageHandler.getResizedBitmap(gridBmp, ImageHandler.dp2px(this, 100), ImageHandler.dp2px(this, 100));  // TODO: Adjust to screen size
@@ -320,6 +261,7 @@ public class RoundEndScreen extends AppCompatActivity
         }
         profilePicView.setImageBitmap(profPic);
     }
+
 
     public void populatePossibleWords(GameInstance gameInstance) {
         List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
@@ -379,6 +321,32 @@ public class RoundEndScreen extends AppCompatActivity
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void setUpRoundEndFox(){
+
+        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
+                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
+
+
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
+                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+
+    }
+
+    private void adjustSpeechBubble(String playerResult){
+
+        ConstraintLayout winnerBannerCL = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
+        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
+
+        TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
+        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
+                instructionFoxTV,0.8, longestWordHeader);
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
