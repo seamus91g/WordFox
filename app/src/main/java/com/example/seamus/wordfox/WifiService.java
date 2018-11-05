@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -208,7 +209,11 @@ public class WifiService extends Service implements MessageHandler {
             chat = null;
         }
         if(chatThread != null){
-            chatThread.quitSafely();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                chatThread.quitSafely();
+            }else {
+                chatThread.quit();
+            }
             chatThread = null;
         }
     }

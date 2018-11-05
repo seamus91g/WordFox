@@ -2,11 +2,12 @@ package com.example.seamus.wordfox.RoundResults;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,21 +33,22 @@ import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.SwapActivity;
+import com.example.seamus.wordfox.WifiActivityContract;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
 import com.example.seamus.wordfox.WordfoxConstants;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.example.seamus.wordfox.results_screen.RoundnGameResults;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class RoundEndScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        WifiActivityContract,
         RoundEndContract.View {
 
     public static final String MONITOR_TAG = "myTag";
@@ -54,43 +56,45 @@ public class RoundEndScreen extends AppCompatActivity
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
     private boolean isOnline;
-    private InterstitialAd mInterstitialAd;
-    private boolean displayInterstitial;
-    private boolean failedToLoadInterstitial = false;
     private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
-    private Point screenSize;
     private ConstraintLayout cl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_end_screen);
+
+        ///////////////////////  Initialisations
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        boolean isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == WordfoxConstants.NUMBER_ROUNDS - 1;
+        gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
+        cl = findViewById(R.id.round_end_root_layout);
+        isOnline = HomeScreen.allGameInstances.get(0).isOnline();
+
+        ///////////////////////  Prepare the presenter
+        setUpPresenter(screenSize.x, isFinalRound);
+
+        ///////////////////////  Navigation items
+        setUpNavigationItems();
+
+        ///////////////////////  Broadcast Wifi-Direct game results if applicable
+        if (isOnline && isFinalRound) {
+            bindWifiService();
+        }
+    }
+
+    private void bindWifiService() {
+        Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+        netConnService = new WifiServiceConnection(this);
+        bindService();
+    }
+
+    private void setUpNavigationItems() {
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
-
-        int colorPrimary = getResources().getColor(R.color.game_font_color);
-        int colorSecondary = getResources().getColor(R.color.colorLightAccent);
-        // TODO: Separate presenter for round and game end
-        screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
-        presenter = new RoundEndPresenter(this,
-                screenSize.x,
-                HomeScreen.allGameInstances.get(gameIndexNumber),
-                colorPrimary,
-                colorSecondary);
-
-        FloatingActionButton fab = findViewById(R.id.fab_round_end);
-        fab.setOnClickListener(view -> {
-            if (displayInterstitial) {
-                displayInterstitial();
-            } else {
-                startGame();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -100,79 +104,40 @@ public class RoundEndScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Set up 'next' button
+        FloatingActionButton fab = findViewById(R.id.fab_round_end);
+        fab.setOnClickListener(view -> {
+            startGame();
+        });
+    }
 
-        cl = findViewById(R.id.round_end_root_layout);
+    public void displaySpeechBubble(int width) {
+        ImageView myIV = findViewById(R.id.round_end_banner);
+        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, width, getResources()));
+    }
+
+    @Override
+    public InterstitialAd getInterstitial() {
+        return new InterstitialAd(this);
+    }
+
+    private void setUpPresenter(int screenWidth, boolean isFinalRound) {
+        boolean displayInterstitial = (isFinalRound && GameData.checkIfDisplayInterstitial(this));
+        presenter = new RoundEndPresenter(this,
+                screenWidth,
+                HomeScreen.allGameInstances.get(gameIndexNumber),
+                getResources().getColor(R.color.game_font_color),
+                getResources().getColor(R.color.colorLightAccent),
+                displayInterstitial,
+                FirebaseAnalytics.getInstance(this));
+        presenter.prepareInterstitialAdvert();
         presenter.populatePlayerDetails();
         presenter.populatePossibleWords();
-
-        boolean isFinalRound;
-        isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == WordfoxConstants.NUMBER_ROUNDS - 1;
-        isOnline = HomeScreen.allGameInstances.get(0).isOnline();
-        if (isOnline && isFinalRound) {
-            Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
-            netConnService = new WifiServiceConnection();
-            bindService();
-            // Allow time for service to finish binding
-            // TODO: Is service guaranteed to be bound in time for this??
-            new Handler().post(() -> broadcastMyResults(HomeScreen.allGameInstances.get(0)));
-        }
-        if (isFinalRound) {
-            Log.d(MONITOR_TAG, "Its final round !!!!");
-            displayInterstitial = GameData.checkIfDisplayInterstitial(this);
-            if (displayInterstitial) {
-                loadInterstitial();
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        Log.d(MONITOR_TAG, "Will start game when ad closes ..");
-                        startGame();
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(int errorCode) {
-                        // Code to be executed when an ad request fails.
-                        Log.d(MONITOR_TAG, "Interstitial failed to load!!");
-                        failedToLoadInterstitial = true;
-                    }
-                });
-            }
-        }
-
-        int width = screenSize.x;
-
-        ImageView myIV = findViewById(R.id.round_end_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, (int) (0.35 * width), getResources()));
-
+        presenter.displayWelcomeFox();
     }
 
     private void startGame() {
         presenter.startGame();
-    }
-
-    private void loadInterstitial() {
-        AdRequest adRequestTest = new AdRequest.Builder()
-                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
-                .build();
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        mInterstitialAd.loadAd(adRequestTest);
-    }
-
-    private void displayInterstitial() {
-        int waitmax = 30;
-        int wait = 0;
-        while (!mInterstitialAd.isLoaded()) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (failedToLoadInterstitial || ++wait > waitmax) {
-                startGame();
-                return;
-            }
-        }
-        mInterstitialAd.show();
     }
 
     @Override
@@ -198,25 +163,17 @@ public class RoundEndScreen extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onServiceBound() {
+        broadcastMyResults(HomeScreen.allGameInstances.get(0));
+    }
+
     private void broadcastMyResults(GameInstance myGameInstance) {
-        Log.d(MONITOR_TAG, "Json results: " + myGameInstance.resultAsJson().toString());
         WifiService ws = netConnService.getWifiService();
         String jsString = myGameInstance.resultAsJson().toString();
-        Log.d(MONITOR_TAG, "Is WifiServe null? , bound? " + (ws == null) + ", " + netConnService.isBound);
-        int count = 0;
-        while (ws == null) {
-            Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
-            Log.d(MONITOR_TAG, "| Waiting for service to bind |");
-            Log.d(MONITOR_TAG, "|||||||||||||||||||||||||||||||");
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (++count > 5) {
-                break;
-            }
-            ws = netConnService.getWifiService();
+        if (ws == null) {
+            // Should not be possible, can only be called after service bound.
+            throw new IllegalStateException();
         }
         ws.sendData(jsString);
     }
@@ -334,7 +291,6 @@ public class RoundEndScreen extends AppCompatActivity
         int tagSuffix = (count % 3) + 1;
         ConstraintLayout ll = (ConstraintLayout) container.getChildAt(container.getChildCount() - 1);
         ImageView grid = ll.findViewWithTag(WordfoxConstants.GRID_TAG_PREFIX + tagSuffix);
-        Log.d(MONITOR_TAG, "Width is : " + width);
         grid.getLayoutParams().width = width;
     }
 
@@ -342,15 +298,23 @@ public class RoundEndScreen extends AppCompatActivity
     public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
         String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
         if (profPicStr.equals("")) {
-            return ImageHandler.getScaledBitmap(
-                    GameData.PROFILE_DEFAULT_IMG,
-                    profilePicScreenWidth,          // TODO: Will be shortest side, not necessarily width
-                    getResources());
+            return loadDefaultProfilePic(profilePicScreenWidth);
         } else {
             Uri myFileUri = Uri.parse(profPicStr);
             ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-            return imageHandler.getBitmapFromUri(myFileUri, profilePicScreenWidth);      // TODO: Why not static method?
+            Bitmap profPic = imageHandler.getBitmapFromUri(myFileUri, profilePicScreenWidth); // TODO: Why not static method?
+            if (profPic == null) {
+                return loadDefaultProfilePic(profilePicScreenWidth);
+            }
+            return profPic;
         }
+    }
+
+    private Bitmap loadDefaultProfilePic(int size) {
+        return ImageHandler.getScaledBitmap(
+                GameData.PROFILE_DEFAULT_IMG,
+                size,          // TODO: Will be shortest side, not necessarily width
+                getResources());
     }
 
     @Override
@@ -384,4 +348,5 @@ public class RoundEndScreen extends AppCompatActivity
             profilePicView.setImageBitmap(profPic);
         }
     }
+
 }

@@ -23,7 +23,7 @@ public class WifiServiceConnection implements ServiceConnection {
         wifiService = binder.getService();
         isBound = true;
         if (wifiActivityContract != null) {
-            wifiActivityContract.setServiceListener();
+            wifiActivityContract.onServiceBound();
         }
     }
 

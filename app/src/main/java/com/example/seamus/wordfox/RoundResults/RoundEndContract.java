@@ -2,6 +2,8 @@ package com.example.seamus.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
 
+import com.google.android.gms.ads.InterstitialAd;
+
 /**
  * Created by Gilroy
  */
@@ -38,6 +40,10 @@ public interface RoundEndContract {
         void setMyGridResult(Bitmap bmp);
 
         void setPlayerProfilePic(Bitmap profPic);
+
+        void displaySpeechBubble(int speechBubbleWidth);
+
+        InterstitialAd getInterstitial();
     }
 
     interface Listener {
