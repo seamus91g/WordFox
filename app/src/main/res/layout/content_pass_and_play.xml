@@ -111,38 +111,108 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraint_layoutPAP"
-        app:layout_constraintBottom_toTopOf="@id/fox_instructions_passandplay"/>
+        app:layout_constraintBottom_toTopOf="@id/content_pass_and_play_foxWithSpeechCL"/>
 
 
 
 
 
-    <ImageView
-        android:id="@+id/fox_instructions_passandplay"
+
+
+
+
+
+
+
+
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/content_pass_and_play_foxWithSpeechCL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="your_rank_fox_giving_instruction_passandplay"
-        android:adjustViewBounds="true"
-        android:paddingTop="0dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        >
+
+
+        <ImageView
+            android:id="@+id/content_pass_and_play_instructionFoxIV"
+            android:contentDescription="fox_giving_instruction_pass_and_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/content_pass_and_play_instructionFoxSpeechBubbleIV"
+            android:contentDescription="fox_giving_instruction_speech_bubble_pass_and_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/content_pass_and_play_instructionFoxIV"
+            />
+
+        <TextView
+            android:id="@+id/content_pass_and_play_instructionFoxTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/foxSpeechBubblesTextStyle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fox_instructions_tv_passandplay"
-        android:maxWidth="135dp"
-        style="@style/foxSpeechBubblesTextStyle"
-        android:text="@string/choose_your_number_of_players_using_the_slider"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/fox_instructions_passandplay"
-        app:layout_constraintBottom_toBottomOf="@id/fox_instructions_passandplay"/>
+
+
+
 
 </android.support.constraint.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<ImageView-->
+<!--android:id="@+id/fox_instructions_passandplay"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:contentDescription="your_rank_fox_giving_instruction_passandplay"-->
+<!--android:adjustViewBounds="true"-->
+<!--android:paddingTop="0dp"-->
+<!--android:paddingLeft="6dp"-->
+<!--android:paddingRight="6dp"-->
+<!--app:layout_constraintLeft_toLeftOf="parent"-->
+<!--app:layout_constraintRight_toRightOf="parent"-->
+<!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:id="@+id/fox_instructions_tv_passandplay"-->
+<!--android:maxWidth="135dp"-->
+<!--style="@style/foxSpeechBubblesTextStyle"-->
+<!--android:text="@string/choose_your_number_of_players_using_the_slider"-->
+<!--app:layout_constraintHorizontal_bias="0.85"-->
+<!--app:layout_constraintLeft_toLeftOf="parent"-->
+<!--app:layout_constraintRight_toRightOf="parent"-->
+<!--app:layout_constraintTop_toTopOf="@id/fox_instructions_passandplay"-->
+<!--app:layout_constraintBottom_toBottomOf="@id/fox_instructions_passandplay"/>-->
