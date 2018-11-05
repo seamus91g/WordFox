@@ -75,46 +75,14 @@ public class SwapActivity extends AppCompatActivity
 
         ImageView instructionFoxIV = findViewById(R.id.content_swap_instructionFoxIV);
         instructionFoxIV.requestLayout();
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, (int) (0.3*screenWidth),getResources()));
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, (int) (0.5*screenWidth),getResources()));
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_swap_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.requestLayout();
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendspeech, (int) (0.3*screenWidth),getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleleft, (int) (0.3*screenWidth),getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_swap_instructionFoxTV);
-        placeViewProportionally(instructionFoxIV, instructionFoxSpeechBubbleIV, instructionFoxTV);
-
-    }
-
-    private void placeViewProportionally(ImageView instructionFoxIV, ImageView instructionFoxSpeechBubbleIV, TextView instructionFoxTV) {
-        int[] xy1 = new int[3];
-        int[] xy2 = new int[3];
-        int[] xy3 = new int[3];
-
-        Rect myRect = new Rect();
-
-        instructionFoxIV.post(new Runnable() {
-            @Override
-            public void run() {
-
-                instructionFoxSpeechBubbleIV.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        instructionFoxSpeechBubbleIV.getGlobalVisibleRect(myRect);
-                        xy1[0] = myRect.left;
-                        xy1[1] = myRect.right;
-                        xy1[2] = myRect.width();
-                        int actualSpeechBubbleRight = (int) (xy1[1] - (xy1[2]*0.2));
-                        int speechBubbleMidpoint = (actualSpeechBubbleRight - xy1[0]) / 2;
-
-                        instructionFoxTV.setText(R.string.content_swap_fox_instructions);
-                        instructionFoxTV.requestLayout();
-                        instructionFoxTV.setWidth((int) (xy1[2] *  0.8));
-                    }
-                });
-
-            }
-        });
+        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV, instructionFoxTV, 0.8, R.string.content_swap_fox_instructions);
 
     }
 
