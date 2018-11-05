@@ -18,12 +18,12 @@ public class WifiServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        Log.d(HomeScreen.MONITOR_TAG, "|||||||||| Service starting ... |||||||||| ");
+        Log.d(WordfoxConstants.MONITOR_TAG, "|||||||||| Service starting ... |||||||||| ");
         WifiService.WifiBinder binder = (WifiService.WifiBinder) service;
         wifiService = binder.getService();
         isBound = true;
         if (wifiActivityContract != null) {
-            wifiActivityContract.setServiceListener();
+            wifiActivityContract.onServiceBound();
         }
     }
 
@@ -34,7 +34,7 @@ public class WifiServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        Log.d(HomeScreen.MONITOR_TAG, "|||||||||| Disconnecting service ||||||||||");
+        Log.d(WordfoxConstants.MONITOR_TAG, "|||||||||| Disconnecting service ||||||||||");
         isBound = false;
     }
 }

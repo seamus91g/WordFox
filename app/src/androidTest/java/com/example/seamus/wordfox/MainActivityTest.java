@@ -5,7 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 import org.junit.Rule;
 
 /**
- * Created by Gilroy on 4/12/2018.
+ * Created by Gilroy
  */
 public class MainActivityTest {
     @Rule

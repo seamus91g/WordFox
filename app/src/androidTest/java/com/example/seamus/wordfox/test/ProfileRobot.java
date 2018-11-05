@@ -2,7 +2,7 @@ package com.example.seamus.wordfox.test;
 
 import com.example.seamus.wordfox.R;
 /**
- * Created by Gilroy on 4/21/2018.
+ * Created by Gilroy
  */
 
 public class ProfileRobot extends ScreenRobot<ProfileRobot> {

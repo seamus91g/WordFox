@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.seamus.wordfox.HomeScreen;
+import com.example.seamus.wordfox.WordfoxConstants;
 
 /**
- * Created by spgilroy on 11/20/2017.
+ * Created by spgilroy
  */
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -22,18 +23,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(HomeScreen.MONITOR_TAG, "onCreate wf DBHelper!!, END");
+        Log.d(WordfoxConstants.MONITOR_TAG, "onCreate wf DBHelper!!, END");
         sqLiteDatabase.execSQL(GameTable.SQL_CREATE);
         sqLiteDatabase.execSQL(WordTable.SQL_CREATE);
         sqLiteDatabase.execSQL(RoundTable.SQL_CREATE);
         sqLiteDatabase.execSQL(OpponentTable.SQL_CREATE);
         sqLiteDatabase.execSQL(PlayerStatsTable.SQL_CREATE);
-        Log.d(HomeScreen.MONITOR_TAG, "Finished onCreate wf DBHelper!!, END");
+        Log.d(WordfoxConstants.MONITOR_TAG, "Finished onCreate wf DBHelper!!, END");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVer, int newVer) {
-        Log.d(HomeScreen.MONITOR_TAG, "onUpgrade DBHelper!!, END");
+        Log.d(WordfoxConstants.MONITOR_TAG, "onUpgrade DBHelper!!, END");
         sqLiteDatabase.execSQL(GameTable.SQL_DELETE);
         sqLiteDatabase.execSQL(WordTable.SQL_DELETE);
         sqLiteDatabase.execSQL(RoundTable.SQL_DELETE);

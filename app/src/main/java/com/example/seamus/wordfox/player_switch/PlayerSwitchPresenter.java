@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 4/25/2018.
+ * Created by Gilroy
  */
 
 public class PlayerSwitchPresenter implements PlayerSwitchContract.Listener {

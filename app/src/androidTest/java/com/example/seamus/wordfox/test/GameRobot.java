@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.test;
 
 /**
- * Created by Gilroy on 4/14/2018.
+ * Created by Gilroy
  */
 
 import com.example.seamus.wordfox.R;

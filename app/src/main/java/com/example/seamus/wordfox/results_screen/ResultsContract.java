@@ -5,7 +5,7 @@ import com.example.seamus.wordfox.GameData;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 5/10/2018.
+ * Created by Gilroy
  */
 
 public interface ResultsContract {

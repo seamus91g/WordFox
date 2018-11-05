@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by Desmond on 05/07/2017.
+ * Created by Desmond
  */
 
 public class GameInstance implements GameDetails {
@@ -22,7 +22,6 @@ public class GameInstance implements GameDetails {
     public static final String PLAYER_NAME = "player_name_key";
     public static final String PLAYER_ID = "player_id_key";
     public static final String BEST_WORDS = "best_words_key";
-    public static int NUMBER_ROUNDS = 3;
     public final String MONITOR_TAG = "myTag";
     private int numberOfPlayers = 1; // Only different for a Pass & Play game
     private final boolean isOnline;
@@ -33,7 +32,7 @@ public class GameInstance implements GameDetails {
     private String longestWord;     // TODO: .. Changes every round. Does it belong in this class??
     private ArrayList<String> letters = new ArrayList<>();
     private ArrayList<ArrayList<String>> wordForEachLengthPerRound = new ArrayList<>();
-    private String[] bestWordFoundEachRound = new String[NUMBER_ROUNDS];
+    private String[] bestWordFoundEachRound = new String[WordfoxConstants.NUMBER_ROUNDS];
     private int highestPossibleScore = 0;
     private final int thisGameIndex;
     private PlayerIdentity player;
@@ -42,7 +41,7 @@ public class GameInstance implements GameDetails {
     private boolean isGroupOwner;       // TODO: Not required to store this????
 
     public static int getNumberRounds() {
-        return NUMBER_ROUNDS;
+        return WordfoxConstants.NUMBER_ROUNDS;
     }
 
     public boolean isOnline() {
@@ -98,7 +97,7 @@ public class GameInstance implements GameDetails {
     public GameInstance(UUID playerId, String playerName, int thisGameIndex, ArrayList<UUID> roundIDs, boolean isOnline, boolean isGO) {
         this.isGroupOwner = isGO;
         if (roundIDs == null) {
-            for (int i = 0; i < NUMBER_ROUNDS; i++) {
+            for (int i = 0; i < WordfoxConstants.NUMBER_ROUNDS; i++) {
                 this.roundIDs.add(UUID.randomUUID());
             }
         } else {                              // Defensive copying
@@ -107,10 +106,6 @@ public class GameInstance implements GameDetails {
         this.isOnline = isOnline;
         player = new PlayerIdentity(playerId, playerName);
         this.thisGameIndex = thisGameIndex;
-    }
-
-    public void setMaxNumberOfRounds(int maxNumberOfRounds) {
-        NUMBER_ROUNDS = maxNumberOfRounds;
     }
 
     @Override

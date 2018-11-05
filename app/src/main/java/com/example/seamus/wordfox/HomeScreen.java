@@ -33,7 +33,6 @@ import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPer
 public class HomeScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
-    public static final String MONITOR_TAG = "myTag";
     private NavigationBurger navBurger = new NavigationBurger();
 
     @Override
@@ -163,7 +162,7 @@ public class HomeScreen extends AppCompatActivity
     private void waitForDictionaryToLoad(){
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+            Log.d(WordfoxConstants.MONITOR_TAG, "Dictionary word list is not finished loading!");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

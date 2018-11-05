@@ -14,7 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * Created by Gilroy on 4/12/2018.
+ * Created by Gilroy
  */
 public class GameActivityTest {
     @Rule

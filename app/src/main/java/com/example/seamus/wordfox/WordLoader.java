@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by Gilroy on 2/20/2018.
+ * Created by Gilroy
  */
 
 public class WordLoader {

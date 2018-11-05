@@ -271,7 +271,7 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     @Override
-    public void setServiceListener() {
+    public void onServiceBound() {
         pLog("Setting action listener on wifiservice");
         netConnService.getWifiService().setActionListener(LocalWifiActivity.this);
     }
@@ -281,8 +281,8 @@ public class LocalWifiActivity extends AppCompatActivity
 
         helperFox.post(() -> {
             int height = helperFox.getHeight();
-            // TODO: .. why 9/10???
-            helperFox.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured_facingright, height*9/10, getResources()));
+            // TODO: .. why 7/10???
+            helperFox.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured_facingright, height*7/10, getResources()));
         });
 
         ImageView helperFoxSpeechBubble = findViewById(R.id.fox_wifi_helper_speech_bubble);

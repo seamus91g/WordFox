@@ -7,7 +7,7 @@ import com.example.seamus.wordfox.database.WordTable;
 import java.util.UUID;
 
 /**
- * Created by spgilroy on 11/20/2017.
+ * Created by spgilroy
  */
 
 public class WordItem {

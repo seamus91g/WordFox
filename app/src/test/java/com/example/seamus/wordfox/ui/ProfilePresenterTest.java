@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import static org.junit.Assert.*;
 
 /**
- * Created by Gilroy on 4/22/2018.
+ * Created by Gilroy
  */
 public class ProfilePresenterTest {
     private GameData myGameData;

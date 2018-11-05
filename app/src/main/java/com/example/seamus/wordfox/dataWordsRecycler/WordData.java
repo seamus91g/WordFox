@@ -1,7 +1,7 @@
 package com.example.seamus.wordfox.dataWordsRecycler;
 
 /**
- * Created by Gilroy on 2/20/2018.
+ * Created by Gilroy
  */
 
 public class WordData {

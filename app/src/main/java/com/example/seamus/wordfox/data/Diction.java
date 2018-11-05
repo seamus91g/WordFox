@@ -3,7 +3,7 @@ package com.example.seamus.wordfox.data;
 import java.util.ArrayList;
 
 /**
- * Created by Gilroy on 4/13/2018.
+ * Created by Gilroy
  */
 
 public interface Diction {
