@@ -10,29 +10,49 @@
     tools:showIn="@layout/app_bar_round_end_screen">
 
 
-    <ImageView
-        android:id="@+id/round_end_banner"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/content_round_end_screen_foxWithSpeechCL"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.7" />
+        >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/round_end_longest_word"
-        android:contentDescription="Player longest word"
-        android:maxWidth="135dp"
-        style="@style/foxSpeechBubblesTextStyle"
-        android:text="@string/you_scored"
-        app:layout_constraintBottom_toBottomOf="@id/round_end_banner"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintLeft_toLeftOf="@id/round_end_banner"
-        app:layout_constraintRight_toRightOf="@id/round_end_banner"
-        app:layout_constraintTop_toTopOf="@id/round_end_banner" />
+
+        <ImageView
+            android:id="@+id/content_round_end_screen_instructionFoxIV"
+            android:contentDescription="fox_giving_instruction_round_end_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/content_round_end_screen_instructionFoxSpeechBubbleIV"
+            android:contentDescription="fox_giving_instruction_speech_bubble_round_end_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/content_round_end_screen_instructionFoxIV"
+            />
+
+        <TextView
+            android:id="@+id/content_round_end_screen_instructionFoxTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/foxSpeechBubblesTextStyle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
 
     <View
         android:id="@+id/round_end_banner_divider"
@@ -41,7 +61,8 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/round_end_banner" />
+        app:layout_constraintTop_toBottomOf="@id/content_round_end_screen_foxWithSpeechCL"
+        />
 
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"

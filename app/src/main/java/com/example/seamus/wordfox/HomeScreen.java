@@ -24,10 +24,11 @@ import android.widget.TextView;
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
+
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 public class HomeScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,13 +71,17 @@ public class HomeScreen extends AppCompatActivity
 
 
 
-        ImageView myIV = findViewById(R.id.fox_instructions);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcolouredwithspeech, (int) (0.5*width),getResources()));
+        ImageView instructionFoxIV = findViewById(R.id.content_home_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcoloured,
+                getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured),getResources()));
 
 
-        TextView foxInstructionsTV = findViewById(R.id.fox_instructions_tv);
-        foxInstructionsTV.setText("Choose your game type from the 3 options");
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_home_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
+                getImageScaleToScreenWidthPercent(this, 0.6, R.drawable.speechbubbleright), getResources()));
 
+        TextView instructionFoxTV = findViewById(R.id.content_home_screen_instructionFoxTV);
+        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.content_home_screen_fox_instructions1);
 
         TextView justMeTV = findViewById(R.id.just_me_text);
         justMeTV.requestLayout();

@@ -94,22 +94,12 @@ public class PassAndPlay extends AppCompatActivity
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
 
 
-
-
-
-
-
-
-
-
         ImageView instructionFoxIV = findViewById(R.id.content_pass_and_play_instructionFoxIV);
-        instructionFoxIV.requestLayout();
         instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcoloured,
                             getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured),getResources()));
 
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_pass_and_play_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.requestLayout();
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
                 getImageScaleToScreenWidthPercent(this, 0.6, R.drawable.speechbubbleright), getResources()));
 
