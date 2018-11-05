@@ -143,6 +143,10 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_home_screen_foxWithSpeechCL"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

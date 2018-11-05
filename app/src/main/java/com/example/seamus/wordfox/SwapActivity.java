@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
+
 public class SwapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,13 +75,14 @@ public class SwapActivity extends AppCompatActivity
 
         calculateDist(throwingFoxIV,catchingFoxIV,phoneIV);
 
+
         ImageView instructionFoxIV = findViewById(R.id.content_swap_instructionFoxIV);
-        instructionFoxIV.requestLayout();
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, (int) (0.5*screenWidth),getResources()));
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured,
+                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.datafoxsilcoloured),getResources()));
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_swap_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.requestLayout();
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleleft, (int) (0.3*screenWidth),getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleleft,
+                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleleft), getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_swap_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV, instructionFoxTV, 0.8, R.string.content_swap_fox_instructions);

@@ -97,12 +97,12 @@ public class RoundEndScreen extends AppCompatActivity
 
         ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
         instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.woodfoxcoloured),getResources()));
+                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
 
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.65, R.drawable.speechbubbleright), getResources()));
+                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
 
         populatePlayerDetails(HomeScreen.allGameInstances.get(gameIndexNumber));
         populatePossibleWords(HomeScreen.allGameInstances.get(gameIndexNumber));
