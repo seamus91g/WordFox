@@ -101,7 +101,7 @@ public class PassAndPlay extends AppCompatActivity
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_pass_and_play_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.6, R.drawable.speechbubbleright), getResources()));
+                getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleright), getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_pass_and_play_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.choose_your_number_of_players_using_the_slider);
