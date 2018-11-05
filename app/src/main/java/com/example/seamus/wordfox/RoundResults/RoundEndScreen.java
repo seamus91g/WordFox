@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.HomeScreen;
+import com.example.seamus.wordfox.IVmethods;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
@@ -44,6 +46,8 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 
 public class RoundEndScreen extends AppCompatActivity
@@ -83,6 +87,18 @@ public class RoundEndScreen extends AppCompatActivity
         if (isOnline && isFinalRound) {
             bindWifiService();
         }
+        setUpRoundEndFox();
+
+        GameInstance gameInstance = HomeScreen.allGameInstances.get(gameIndexNumber);
+//        GameData plyrGd = new GameData(this, gameInstance.getID());
+     	int maxScore = gameInstance.getLongestPossible().length();
+        int playerScore = gameInstance.getScore();
+//        int percentScore = (100 * playerScore) / (maxScore);
+
+        String playerResult = playerScore + " out of " + maxScore;
+//        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
+        adjustSpeechBubble(playerResult);
+
     }
 
     private void bindWifiService() {
@@ -111,10 +127,10 @@ public class RoundEndScreen extends AppCompatActivity
         });
     }
 
-    public void displaySpeechBubble(int width) {
-        ImageView myIV = findViewById(R.id.round_end_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, width, getResources()));
-    }
+//    public void displaySpeechBubble(int width) {
+//        ImageView myIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
+//        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, width, getResources()));
+//    }
 
     @Override
     public InterstitialAd getInterstitial() {
@@ -133,9 +149,9 @@ public class RoundEndScreen extends AppCompatActivity
         presenter.prepareInterstitialAdvert();
         presenter.populatePlayerDetails();
         presenter.populatePossibleWords();
-        presenter.displayWelcomeFox();
-    }
+//        presenter.displayWelcomeFox();
 
+    }
     private void startGame() {
         presenter.startGame();
     }
@@ -208,6 +224,32 @@ public class RoundEndScreen extends AppCompatActivity
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void setUpRoundEndFox(){
+
+        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
+                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
+
+
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
+                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+
+    }
+
+    private void adjustSpeechBubble(String playerResult){
+
+        ConstraintLayout winnerBannerCL = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
+        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
+
+        TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
+        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
+                instructionFoxTV,0.8, longestWordHeader);
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -329,11 +371,11 @@ public class RoundEndScreen extends AppCompatActivity
         resultPlayerScoreView.setText(scoreText);
     }
 
-    @Override
-    public void setSpeechBubbleText(String playerBubbleText) {
-        TextView longestWordView = cl.findViewById(R.id.round_end_longest_word);
-        longestWordView.setText(playerBubbleText);
-    }
+//    @Override
+//    public void setSpeechBubbleText(String playerBubbleText) {
+//        TextView longestWordView = cl.findViewById(R.id.content_round_end_screen_instructionFoxTV);
+//        longestWordView.setText(playerBubbleText);
+//    }
 
     @Override
     public void setMyGridResult(Bitmap bmp) {

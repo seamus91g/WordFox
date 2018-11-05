@@ -22,10 +22,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 
 public class PassAndPlay extends AppCompatActivity
@@ -45,8 +48,9 @@ public class PassAndPlay extends AppCompatActivity
     Bitmap myBitmap6;
     Bitmap myBitmap66;
 
-//    public static ArrayList<GameInstance> allGameInstances = new ArrayList<>();
 
+    int screenWidth;
+    int screenHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +74,8 @@ public class PassAndPlay extends AppCompatActivity
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display. getSize(size);
-        int width = size. x;
-        int height = size. y;
+        screenWidth = size. x;
+        screenHeight = size. y;
 
         SeekBar mySB = findViewById(R.id.seekBar);
         mySB.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
@@ -82,29 +86,37 @@ public class PassAndPlay extends AppCompatActivity
         }
 
         mySB.requestLayout();
-        mySB.getLayoutParams().width = (int) width/2 ;
+        mySB.getLayoutParams().width = (int) screenWidth/2 ;
+
+
 
         numberOfPlayers = 2;
         Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
 
 
-
-        ImageView myIV = findViewById(R.id.fox_instructions_passandplay);
-        myIV.requestLayout();
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcolouredwithspeech, (int) (0.5*width),getResources()));
-
+        ImageView instructionFoxIV = findViewById(R.id.content_pass_and_play_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcoloured,
+                            getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured),getResources()));
 
 
-        myBitmap1 = ImageHandler.getScaledBitmap(R.drawable.silverfoxsilcoloured, (int) (0.1*width),getResources());
-        myBitmap2 = ImageHandler.getScaledBitmap(R.drawable.arcticfoxsilcoloured, (int) (0.1*width),getResources());
-        myBitmap3 = ImageHandler.getScaledBitmap(R.drawable.gameend_outline, (int) (0.1*width),getResources());
-        myBitmap33 = ImageHandler.getScaledBitmap(R.drawable.gameendsilcoloured, (int) (0.1*width),getResources());
-        myBitmap4 = ImageHandler.getScaledBitmap(R.drawable.grayfox_outline, (int) (0.1*width),getResources());
-        myBitmap44 = ImageHandler.getScaledBitmap(R.drawable.grayfoxsilcoloured, (int) (0.1*width),getResources());
-        myBitmap5 = ImageHandler.getScaledBitmap(R.drawable.kitfox_outline, (int) (0.1*width),getResources());
-        myBitmap55 = ImageHandler.getScaledBitmap(R.drawable.kitfoxsilcoloured, (int) (0.1*width),getResources());
-        myBitmap6 = ImageHandler.getScaledBitmap(R.drawable.redfox_outline, (int) (0.1*width),getResources());
-        myBitmap66 = ImageHandler.getScaledBitmap(R.drawable.redfoxsilcoloured, (int) (0.1*width),getResources());
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_pass_and_play_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
+                getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleright), getResources()));
+
+        TextView instructionFoxTV = findViewById(R.id.content_pass_and_play_instructionFoxTV);
+        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.choose_your_number_of_players_using_the_slider);
+
+
+        myBitmap1 = ImageHandler.getScaledBitmap(R.drawable.silverfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap2 = ImageHandler.getScaledBitmap(R.drawable.arcticfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap3 = ImageHandler.getScaledBitmap(R.drawable.gameend_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap33 = ImageHandler.getScaledBitmap(R.drawable.gameendsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap4 = ImageHandler.getScaledBitmap(R.drawable.grayfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap44 = ImageHandler.getScaledBitmap(R.drawable.grayfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap5 = ImageHandler.getScaledBitmap(R.drawable.kitfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap55 = ImageHandler.getScaledBitmap(R.drawable.kitfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap6 = ImageHandler.getScaledBitmap(R.drawable.redfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap66 = ImageHandler.getScaledBitmap(R.drawable.redfoxsilcoloured, (int) (0.1*screenWidth),getResources());
 
 
         ImageView fox1IV = findViewById(R.id.foxes1);
@@ -187,6 +199,8 @@ public class PassAndPlay extends AppCompatActivity
         });
 
     }
+
+
 
     private void setup() {
         Button startButton = findViewById(R.id.bStartPAP);

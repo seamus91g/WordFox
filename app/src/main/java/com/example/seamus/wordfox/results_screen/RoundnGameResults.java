@@ -35,6 +35,7 @@ import com.example.seamus.wordfox.GameDetails;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
 import com.example.seamus.wordfox.HomeScreen;
+import com.example.seamus.wordfox.IVmethods;
 import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
@@ -59,6 +60,8 @@ import java.util.Queue;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -167,6 +170,17 @@ public class RoundnGameResults extends AppCompatActivity
         best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase()+ "\n(" + gameInstance.getRoundLongestPossible(2).length() + ")" );
         String winner = "";
 
+
+        ImageView instructionFoxIV = findViewById(R.id.content_game_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendsilcoloured,
+                getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.gameendsilcoloured),getResources()));
+
+
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleleft,
+                getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleleft), getResources()));
+
+
         if(HomeScreen.allGameInstances.size()>1) {
             int highScore = -1;
             for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
@@ -180,15 +194,9 @@ public class RoundnGameResults extends AppCompatActivity
             winner = "GAME OVER!\n" + "You scored\n" + HomeScreen.allGameInstances.get(0).getTotalScore() + " out of " + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
         }
 
-        TextView winnerText = findViewById(R.id.winner_banner_text);
-        winnerText.setText(winner);
-
-
-
-
-
-
-
+        TextView instructionFoxTV = findViewById(R.id.content_game_end_screen_instructionFoxTV);
+        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV),
+                instructionFoxTV,0.8, winner);
 
 
 //        int maxScore = gameInstance.getLongestPossible().length();
@@ -212,29 +220,11 @@ public class RoundnGameResults extends AppCompatActivity
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-
-        ImageView myIV = findViewById(R.id.winner_banner);
-        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.gameendwithspeech, (int) (0.35*width),getResources()));
-
 
 
         TextView word1TV = findViewById(R.id.bestword_heading_1);

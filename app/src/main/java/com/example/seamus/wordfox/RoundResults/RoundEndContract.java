@@ -35,13 +35,13 @@ public interface RoundEndContract {
 
         void setPlayerScoreText(String scoreText);
 
-        void setSpeechBubbleText(String playerBubbleText);
+//        void setSpeechBubbleText(String playerBubbleText);
 
         void setMyGridResult(Bitmap bmp);
 
         void setPlayerProfilePic(Bitmap profPic);
 
-        void displaySpeechBubble(int speechBubbleWidth);
+//        void displaySpeechBubble(int speechBubbleWidth);
 
         InterstitialAd getInterstitial();
     }

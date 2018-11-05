@@ -290,7 +290,7 @@ public class LocalWifiActivity extends AppCompatActivity
             @Override
             public void run() {
                 int height = helperFoxSpeechBubble.getHeight();
-                helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendspeech, height*9/10, getResources()));
+                helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright, height*9/10, getResources()));
             }
         });
     }

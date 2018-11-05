@@ -124,8 +124,8 @@ public class RoundEndPresenter {
         String scoreText = gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")";
         view.setPlayerScoreText(scoreText);
 
-        String playerBubbleText = "You scored " + playerScore + " out of " + maxScore;
-        view.setSpeechBubbleText(playerBubbleText);
+//        String playerBubbleText = "You scored " + playerScore + " out of " + maxScore;
+//        view.setSpeechBubbleText(playerBubbleText);
 
         Bitmap gridBmp = view.getBlankScaledGrid(resultGridWidth);
         GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
@@ -199,7 +199,7 @@ public class RoundEndPresenter {
         mInterstitialAd.show();
     }
 
-    public void displayWelcomeFox() {
-        view.displaySpeechBubble(speechBubbleWidth);
-    }
+//    public void displayWelcomeFox() {
+//        view.displaySpeechBubble(speechBubbleWidth);
+//    }
 }
