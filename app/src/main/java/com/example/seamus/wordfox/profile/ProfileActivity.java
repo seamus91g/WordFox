@@ -6,8 +6,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Group;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,13 +36,14 @@ import android.widget.Toast;
 
 import com.example.seamus.wordfox.FoxUtils;
 import com.example.seamus.wordfox.GameData;
+import com.example.seamus.wordfox.IVmethods;
+import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
-import com.example.seamus.wordfox.PlayerIdentity;
 import com.example.seamus.wordfox.R;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+
+import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 public class ProfileActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -54,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity
     private Button setProfileNameButton;
     private Bitmap buttongGridImage = null;
 
+    int screenWidth;
+    int screenHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,12 +79,22 @@ public class ProfileActivity extends AppCompatActivity
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        screenWidth = size. x;
+        screenHeight = size. y;
+
         // User can click the profile picture to allow them to change the picture
-        profileIB = findViewById(R.id.profileImageButton);
+        profileIB = findViewById(R.id.content_profile_profileImageButton);
         profileIB.setOnClickListener(profileImageListener);
         // User can type in a new user name
-        nameEditText = findViewById(R.id.profile_username);
+        nameEditText = findViewById(R.id.profile_usernameET);
         nameEditText.setOnFocusChangeListener(edittextFocusChange);
+        nameEditText.setWidth( (int) (screenWidth/3));
+
         // Button to save user name to GameData class.
         setProfileNameButton = findViewById(R.id.profile_save_name);
         setProfileNameButton.setOnClickListener(usernameButtonListener);
@@ -91,21 +107,38 @@ public class ProfileActivity extends AppCompatActivity
         presenter.bestGameWords();
         presenter.recentGameWords();
         presenter.displayRank();
+        presenter.getFoxRank();
+
 
         AdView mAdView = findViewById(R.id.ad_view_profile);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        setUpTalkingFox();
+
+
+    }
+
+
+
+    private void setUpTalkingFox(){
+
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
+                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+
     }
 
     @Override
     public void setRankImage(Bitmap rankImage){
-        ImageView rankIV = findViewById(R.id.profile_rank_image);
-        rankIV.setImageBitmap(rankImage);
+        ImageView rankIV = findViewById(R.id.content_profile_instructionFoxIV);
+        rankIV.setImageBitmap(ImageHandler.getScaledBitmap(presenter.getFoxRank(),
+                getImageScaleToScreenWidthPercent(this, 0.35, presenter.getFoxRank()),getResources()));
     }
     @Override
     public void setRankText(String rank){
-        TextView rankTV = findViewById(R.id.highest_rank_text);
-        rankTV.setText(rank);
+        TextView rankTV = findViewById(R.id.highest_rank_header);
+        rankTV.setText("Highest rank: " + rank);
     }
 
     // When no stats are available, can not show recent game
@@ -244,12 +277,15 @@ public class ProfileActivity extends AppCompatActivity
         // Display longest word
         String longestWordSpeechBubble;
         if (longestWord.equals(GameData.NON_EXISTANT)) {
-            longestWordSpeechBubble = "You haven't played any games yet!";
+            longestWordSpeechBubble = "You haven't completed any games yet!";
         }else{
-            longestWordSpeechBubble = "Your longest word ever was " + longestWord + "!";
+            longestWordSpeechBubble = "Your longest word ever was " + "\"" + longestWord + "\"" + "!";
         }
-        TextView longestWordProfilePage = findViewById(R.id.profile_longest_word);
-        longestWordProfilePage.setText(longestWordSpeechBubble);
+            ConstraintLayout talkingFoxCL = findViewById(R.id.content_profile_foxWithSpeechCL);
+            TextView instructionFoxTV = talkingFoxCL.findViewById(R.id.content_profile_instructionFoxTV);
+
+            IVmethods.setTVwidthPercentOfIV(talkingFoxCL.findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV),
+                    instructionFoxTV,0.8, longestWordSpeechBubble);
     }
 
     @Override

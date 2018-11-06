@@ -2,12 +2,9 @@ package com.example.seamus.wordfox.RoundResults;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -126,11 +123,6 @@ public class RoundEndScreen extends AppCompatActivity
             startGame();
         });
     }
-
-//    public void displaySpeechBubble(int width) {
-//        ImageView myIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
-//        myIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendwithspeech, width, getResources()));
-//    }
 
     @Override
     public InterstitialAd getInterstitial() {

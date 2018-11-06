@@ -29,20 +29,26 @@
 
         <TextView
             android:id="@+id/just_me_text"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
             android:text="@string/just_me"
-            android:textColor="@color/game_font_color"
-            android:textSize="18sp" />
+            android:gravity="left"
+            style="@style/headingTextStyle"
+            android:textSize="20sp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
 
         <TextView
             android:id="@+id/just_me_explanation_text"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
+            style="@style/explanationTextStyle"
             android:text="@string/challenge_yourself"
             app:layout_constraintHorizontal_bias="0" />
 
@@ -71,20 +77,26 @@
 
         <TextView
             android:id="@+id/with_friends_text"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
             android:text="@string/with_friends"
-            android:textColor="@color/game_font_color"
-            android:textSize="18sp" />
+            android:gravity="left"
+            style="@style/headingTextStyle"
+            android:textSize="20sp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
 
         <TextView
+            style="@style/explanationTextStyle"
             android:id="@+id/with_friends_explanation_text"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
             android:text="@string/with_friends_explanation_text"
             app:layout_constraintHorizontal_bias="0" />
 
@@ -113,20 +125,26 @@
 
         <TextView
             android:id="@+id/pass_and_play_text"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
             android:text="@string/pass_and_play"
-            android:textColor="@color/game_font_color"
-            android:textSize="18sp" />
+            android:gravity="left"
+            style="@style/headingTextStyle"
+            android:textSize="20sp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
 
         <TextView
+            style="@style/explanationTextStyle"
             android:id="@+id/pass_and_play_explanation_text"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_ff"
             android:text="@string/pass_and_play_explanation_text"
             app:layout_constraintHorizontal_bias="0" />
 

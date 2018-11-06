@@ -165,9 +165,9 @@ public class RoundnGameResults extends AppCompatActivity
         TextView best1 = findViewById(R.id.bestword_heading_1);
         TextView best2 = findViewById(R.id.bestword_heading_2);
         TextView best3 = findViewById(R.id.bestword_heading_3);
-        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "\n(" + gameInstance.getRoundLongestPossible(0).length() + ")" );
-        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase()+ "\n(" + gameInstance.getRoundLongestPossible(1).length() + ")" );
-        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase()+ "\n(" + gameInstance.getRoundLongestPossible(2).length() + ")" );
+        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(0).length() + ")" );
+        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase()+ "(" + gameInstance.getRoundLongestPossible(1).length() + ")" );
+        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase()+ "(" + gameInstance.getRoundLongestPossible(2).length() + ")" );
         String winner = "";
 
 

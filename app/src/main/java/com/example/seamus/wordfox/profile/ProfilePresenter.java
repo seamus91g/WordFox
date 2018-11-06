@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -89,7 +88,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
     private Bitmap defaultProfImg(ImageHandler imageHandler) {
 //        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
 //        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_pic_default);
-        return ImageHandler.getScaledBitmap(R.drawable.profile_pic_default, ImageHandler.dp2px(activity, 270), activity.getResources());
+        return ImageHandler.getScaledBitmap(R.drawable.chooseprofilepicwhite, ImageHandler.dp2px(activity, 270), activity.getResources());
     }
 
     // When user is finished choosing a picture from the image gallery
@@ -147,7 +146,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         if (winners.contains(myGameData.getPlayerID())) {
             // Hide 'you' section
             // Create message: 'You won'
-            winnerMsg = "You won!";
+            winnerMsg = (recentGame.getPlayerCount() == 1)? "Just me!" :  "You won!";
             view.setRecentGameYourWordsInvisible();
             winnerWords = yourWords;
         } else {
@@ -167,7 +166,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         int winnerScore = 0;
         for (int i = 0; i < winnerWords.size(); ++i) {
             Bitmap bmp = pressedKey(recentLetters.get(i), words.get(0).get(i));
-            view.setRecentWord(bmp, i, words.get(0).get(i));
+            view.setRecentWord(bmp, i, words.get(0).get(i) + " (" + words.get(0).get(i).length() + ")");
             winnerScore += words.get(0).get(i).length();
         }
         winnerMsg = winnerMsg + " (" + winnerScore + ")";
@@ -184,7 +183,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
         for (int i = 0; i < bestWords.size(); ++i) {
             Bitmap bmp = pressedKey(bestLetters.get(i), bestWords.get(i));
-            view.setBestWord(bmp, i, bestWords.get(i));
+            view.setBestWord(bmp, i, bestWords.get(i) + " (" + bestWords.get(i).length() + ")" );
         }
     }
 
@@ -204,5 +203,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
         FoxRank foxRank = myGameData.getHighRank();
         view.setRankText(foxRank.foxRank);
         view.setRankImage(ImageHandler.getScaledBitmap(foxRank.imageResource, 120, activity.getResources()));
+    }
+
+    public int getFoxRank(){
+        FoxRank foxRank = myGameData.getHighRank();
+        return foxRank.imageResource;
     }
 }

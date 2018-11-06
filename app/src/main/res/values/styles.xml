@@ -234,26 +234,70 @@
         </item>
         <item name="android:layout_width">58dp
         </item>
-        <!--<item name="android:textColor">@android:color/primary_text_dark-->
-        <!--</item>-->
         <item name="android:textColor">@color/game_font_color
         </item>
         <item name="android:background">@drawable/selector_foxbuttons
         </item>
-        <!--<item name="android:background">@drawable/turquoise_border_white_background-->
-        <!--</item>-->
     </style>
 
 
 
-    <!-- Style for the fox speech bubbles-->
+    <!-- Text style for the fox speech bubbles-->
     <style name="foxSpeechBubblesTextStyle">
 
-        <item name="android:padding">2dp</item>
+        <item name="android:padding">8dp</item>
         <item name="android:fontFamily">@font/arialroundedbold</item>
         <item name="android:textColor">@color/game_font_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/heading_fontsize</item>
+    </style>
+
+
+
+    <!-- Text style for found words throughout all screens-->
+    <style name="foundWordTextStyle">
+
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/unicode_arialr</item>
+        <item name="android:textColor">@color/game_font_color</item>
+    </style>
+
+
+    <!-- Text style for explanation text -->
+    <style name="explanationTextStyle">
+        <item name="android:fontFamily">@font/unicode_arialr</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
+
+
+    <!-- Text style for non headings text -->
+    <style name="notHeadingTextStyle">
+
+        <item name="android:fontFamily">@font/unicode_arialr</item>
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
+
+    <!-- Text style for headings -->
+    <style name="headingTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:textSize">@dimen/heading_fontsize</item>
+    </style>
+
+
+
+    <!-- Text style for very large headings  in the game-->
+    <style name="largeHeadingTextStyle">
+
+        <item name="android:fontFamily">@font/arialroundedbold</item>
+        <item name="android:textColor">@color/game_font_color</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:gravity">center</item>
     </style>
 
 

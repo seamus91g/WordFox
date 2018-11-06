@@ -72,7 +72,7 @@
         android:layout_marginLeft="5dp"
         android:padding="2dp"
         android:text="@string/longest_words_minor_heading"
-        android:textStyle="italic"
+        style="@style/explanationTextStyle"
         app:layout_constraintBottom_toTopOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/best_words_divider" />
@@ -81,9 +81,8 @@
         android:id="@+id/bestword_heading_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        style="@style/headingTextStyle"
         android:text="BEST 1"
-        android:textSize="@dimen/results_bestwordheader_fontsize"
         app:layout_constraintBottom_toTopOf="@id/best_words_divider_2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bestword_heading_2"
@@ -94,9 +93,8 @@
         android:id="@+id/bestword_heading_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        style="@style/headingTextStyle"
         android:text="BEST 2"
-        android:textSize="@dimen/results_bestwordheader_fontsize"
         app:layout_constraintBottom_toBottomOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toRightOf="@id/bestword_heading_1"
         app:layout_constraintRight_toLeftOf="@id/bestword_heading_3"
@@ -106,9 +104,8 @@
         android:id="@+id/bestword_heading_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        style="@style/headingTextStyle"
         android:text="BEST 3"
-        android:textSize="@dimen/results_bestwordheader_fontsize"
         app:layout_constraintBottom_toBottomOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toRightOf="@id/bestword_heading_2"
         app:layout_constraintRight_toRightOf="parent"
@@ -146,7 +143,9 @@
                 android:id="@+id/player_results_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical">
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
