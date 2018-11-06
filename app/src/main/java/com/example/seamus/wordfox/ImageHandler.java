@@ -26,6 +26,10 @@ import java.io.InputStream;
 public class ImageHandler {
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     private Activity activity;
+    private final static int SCALE_BY_HEIGHT = 0;
+    private final static int SCALE_BY_WIDTH = 1;
+    private final static int SCALE_BY_LONGEST = 2;
+    private final static int SCALE_BY_SHORTEST = 3;
 
     public ImageHandler(Activity activity) {
         this.activity = activity;
@@ -123,23 +127,33 @@ public class ImageHandler {
 
     // Load bitmap from its location on the device. Resize it if it exceeds screen dimensions.
     // Rotate the image if it was not taken in portrait view.
+    @Deprecated
     public Bitmap getBitmapFromUri(Uri imgUri) {
         return getBitmapFromUri(imgUri, 0);
     }
 
+    @Deprecated
+    public Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, SCALE_BY_HEIGHT);
+    }
+
     public Bitmap getBitmapFromUriScaleWidth(Uri imgUri, int scaleToDimension) {
-        return getBitmapFromUri(imgUri, scaleToDimension, false);
+        return getBitmapFromUri(imgUri, scaleToDimension, SCALE_BY_WIDTH);
     }
 
     public Bitmap getBitmapFromUriScaleHeight(Uri imgUri, int scaleToDimension) {
-        return getBitmapFromUri(imgUri, scaleToDimension, true);
+        return getBitmapFromUri(imgUri, scaleToDimension, SCALE_BY_HEIGHT);
     }
 
-    public Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension) {
-        return getBitmapFromUri(imgUri, scaleToDimension, true);
+    public Bitmap getBitmapFromUriScaleLongestSide(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, SCALE_BY_LONGEST);
     }
 
-    private Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension, boolean scaleByHeight) {
+    public Bitmap getBitmapFromUriScaleShortestSide(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, SCALE_BY_SHORTEST);
+    }
+    
+    private Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension, int scaleType) {
         if (!isStoragePermissionGranted()) {
             return null;
         }
@@ -170,10 +184,16 @@ public class ImageHandler {
                     fis = new FileInputStream(filePath);
                     myBitmap = BitmapFactory.decodeStream(fis, null, o2);
                     fis.close();
-                    if (scaleByHeight) {
+                    if (scaleType == SCALE_BY_HEIGHT) {
                         myBitmap = scaleHeightDownTo(myBitmap, scaleToDimension);
-                    } else {
+                    } else if (scaleType == SCALE_BY_WIDTH) {
                         myBitmap = scaleWidthDownTo(myBitmap, scaleToDimension);
+                    } else if (scaleType == SCALE_BY_LONGEST) {
+                        myBitmap = scaleLongestDownTo(myBitmap, scaleToDimension);
+                    } else if (scaleType == SCALE_BY_SHORTEST) {
+                        myBitmap = scaleShortestDownTo(myBitmap, scaleToDimension);
+                    } else {
+                        return null;
                     }
                 } else {
                     myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
