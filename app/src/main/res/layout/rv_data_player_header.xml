@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -13,15 +12,14 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/data_page_player_pic"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:src="@drawable/ppfox1_outline"
+            android:src="@drawable/ppfox2_outline_tiny"
             app:civ_border_color="@color/game_font_color"
             app:civ_border_width="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/data_player_name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -49,16 +47,6 @@
             app:layout_constraintLeft_toRightOf="@id/data_page_player_pic"
             app:layout_constraintTop_toBottomOf="@id/data_player_name" />
 
-        <ImageView
-            android:id="@+id/player_header_drop_down_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="24dp"
-            android:tag="drop_down_arrow"
-            app:layout_constraintBottom_toBottomOf="@id/data_page_player_pic"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/data_page_player_pic" />
-
         <!--<View-->
         <!--android:layout_width="0dp"-->
         <!--android:layout_height="1dp"-->
@@ -75,8 +63,8 @@
         android:layout_height="1dp"
         android:layout_gravity="top"
         android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_percent="0.9" />
 </android.support.constraint.ConstraintLayout>

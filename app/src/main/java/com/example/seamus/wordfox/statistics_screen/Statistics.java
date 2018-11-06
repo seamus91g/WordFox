@@ -2,6 +2,7 @@ package com.example.seamus.wordfox.statistics_screen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +53,8 @@ import java.util.UUID;
 public class Statistics extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static int PROFILE_PIC_SCREEN_WIDTH_PERCENT = 20;
+    private static int DATA_FOX_SCREEN_WIDTH_PERCENT = 30;
     protected RecyclerView mRecyclerView;
     private ArrayList<DataListItem> gameData = new ArrayList<>();
     private NavigationBurger navBurger = new NavigationBurger();
@@ -78,9 +81,11 @@ public class Statistics extends AppCompatActivity
     }
 
     private void headingAndBanner() {
-        int foxHeight = (getResources().getDisplayMetrics().heightPixels*20)/100;
-        Bitmap heading = ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsilcoloured, foxHeight, getResources());
-        DataListItem headingImage = new TypeHeadingImage(heading);
+        int foxWidth = (getResources().getDisplayMetrics().widthPixels * DATA_FOX_SCREEN_WIDTH_PERCENT) / 100;
+        int speechWidth = foxWidth*2;
+        Bitmap heading = ImageHandler.getScaledBitmapByWidth(R.drawable.datafoxsilcoloured, foxWidth, getResources());
+        Bitmap speechBubble = ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleleft, speechWidth, getResources());
+        DataListItem headingImage = new TypeHeadingImage(heading, speechBubble);
         gameData.add(headingImage);
 
         DataListItem bannerAdvert = new TypeAdvert(loadAdBanner(this));
@@ -97,7 +102,7 @@ public class Statistics extends AppCompatActivity
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         mAdView.setLayoutParams(lp);
-        mAdView.setAdListener(new AdListener(){
+        mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // Code to be executed when an ad request fails.
@@ -219,18 +224,18 @@ public class Statistics extends AppCompatActivity
     }
 
     private Bitmap loadPlayerBitmap(String profPicStr) {
-        Bitmap profPic = null;
-        ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int profilePicHeight = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            profPic = imageHandler.getBitmapFromUri(myFileUri, 120);    // TODO: Set as percent
-        }else{
-            if(defaultPicture == null){     // Only load if needed
-                defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+            ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
+            return imageHandler.getBitmapFromUri(myFileUri, profilePicHeight);    // TODO: Set as percent
+        } else {
+            if (defaultPicture == null) {     // Only load if needed
+                defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, profilePicHeight, getResources());
             }
-            profPic = defaultPicture;
+            return defaultPicture;
         }
-        return profPic;
     }
 
     @Override

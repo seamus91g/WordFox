@@ -11,16 +11,20 @@ import java.util.UUID;
 public class TypeHeadingImage implements DataListItem {
     private UUID ID;
     private Bitmap headingImage;
+    private Bitmap speechBubble;
 
-    public TypeHeadingImage(Bitmap headingImage) {
-        ID = UUID.randomUUID();
-        Log.d("myTag", " Creating TypeHeadingImage. ");
+    public TypeHeadingImage(Bitmap headingImage, Bitmap speechBubble) {
+        this.speechBubble = speechBubble;
         this.headingImage = headingImage;
-        Log.d("myTag", "@ Height: " + headingImage.getHeight());
+        ID = UUID.randomUUID();
     }
 
     public Bitmap getHeadingImage() {
         return headingImage;
+    }
+
+    public Bitmap getSpeechBubble() {
+        return speechBubble;
     }
 
     @Override
@@ -52,4 +56,5 @@ public class TypeHeadingImage implements DataListItem {
     public UUID getID() {
         return ID;
     }
+
 }
