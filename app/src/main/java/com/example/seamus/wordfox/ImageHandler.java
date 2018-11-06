@@ -1,8 +1,10 @@
 package com.example.seamus.wordfox;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -10,8 +12,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -100,6 +105,21 @@ public class ImageHandler {
         return resizedBitmap;
     }
 
+    private boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else {
+            //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
 
     // Load bitmap from its location on the device. Resize it if it exceeds screen dimensions.
     // Rotate the image if it was not taken in portrait view.
@@ -107,7 +127,11 @@ public class ImageHandler {
         return getBitmapFromUri(imgUri, 0);
     }
 
+    // TODO: Scales shortest side down to provided dimension. Should be longest??
     public Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension) {
+        if (!isStoragePermissionGranted()) {
+            return null;
+        }
         Bitmap myBitmap = null;
         ContentResolver cr = activity.getContentResolver();
         String[] projection = {MediaStore.MediaColumns.DATA};
@@ -123,7 +147,7 @@ public class ImageHandler {
             }
             // Attempt to load bitmap from file path
             try {
-                if (scaleToDimension > 0) {
+                if (scaleToDimension > 0) {         // TODO: Refactor, code is duplicate of below
                     BitmapFactory.Options o = new BitmapFactory.Options();
                     o.inJustDecodeBounds = true;
                     FileInputStream fis = new FileInputStream(filePath);
@@ -135,7 +159,7 @@ public class ImageHandler {
                     fis = new FileInputStream(filePath);
                     myBitmap = BitmapFactory.decodeStream(fis, null, o2);
                     fis.close();
-                    myBitmap = scaleDownTo(myBitmap, scaleToDimension);
+                    myBitmap = scaleShortestDownTo(myBitmap, scaleToDimension);
                 } else {
                     myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
                 }
@@ -156,51 +180,91 @@ public class ImageHandler {
         return myBitmap;
     }
 
-//    public static Bitmap getScaledBitmap(int drawResource, int scaleFactor, Resources resources) {
-//        float SCREEN_DENSITY = resources.getDisplayMetrics().density;
-//        BitmapFactory.Options bmpopt = new BitmapFactory.Options();
-//        bmpopt.inJustDecodeBounds = true;
-//        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-//        int srcWidth = bmpopt.outWidth;
-//        bmpopt.inJustDecodeBounds = false;
-//        bmpopt.inSampleSize = 8;
-//        bmpopt.inScaled = true;
-//        bmpopt.inDensity = srcWidth;
-//        bmpopt.inTargetDensity = (int) ((45 * SCREEN_DENSITY) * (bmpopt.inSampleSize));
-//        return BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-//    }
-    public static Bitmap getScaledBitmap(int drawResource, int scaleToDimension, Resources resources){
-        if(scaleToDimension <= 0){
+    private static BitmapFactory.Options getBounds(int drawResource, int scaleToDimension, Resources resources) {
+        if (scaleToDimension <= 0) {
             return null;
         }
         BitmapFactory.Options bmpopt = new BitmapFactory.Options();
         bmpopt.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+
         int scale = scaleFromOptions(bmpopt, scaleToDimension);
         bmpopt.inJustDecodeBounds = false;
         bmpopt.inSampleSize = scale;
         BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-        return scaleDownTo(BitmapFactory.decodeResource(resources, drawResource, bmpopt), scaleToDimension);
+        return bmpopt;
     }
-    public static Bitmap scaleDownTo(Bitmap bmp, int scaleToDimension){
-        if(bmp.getWidth() > bmp.getHeight()){
-            float aspect = (float) bmp.getWidth()/bmp.getHeight();
-            return getResizedBitmap(bmp, scaleToDimension*aspect, scaleToDimension);
-        }else{
-            float aspect = (float) bmp.getHeight()/bmp.getWidth();
-            return getResizedBitmap(bmp, scaleToDimension, scaleToDimension*aspect);
+
+    @Deprecated
+    public static Bitmap getScaledBitmap(int drawResource, int scaleToDimension, Resources resources) {
+        return getScaledBitmapByShortestSide(drawResource, scaleToDimension, resources);
+    }
+
+    public static Bitmap getScaledBitmapByShortestSide(int drawResource, int scaleToDimension, Resources resources) {
+        if (scaleToDimension <= 0) {
+            return null;
+        }
+        BitmapFactory.Options bmpopt = getBounds(drawResource, scaleToDimension, resources);
+        Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+        return scaleShortestDownTo(bm, scaleToDimension);
+    }
+
+    public static Bitmap getScaledBitmapByLongestSide(int drawResource, int scaleToDimension, Resources resources) {
+        if (scaleToDimension <= 0) {
+            return null;
+        }
+        BitmapFactory.Options bmpopt = getBounds(drawResource, scaleToDimension, resources);
+        Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+        return scaleLongestDownTo(bm, scaleToDimension);
+    }
+
+    public static Bitmap getScaledBitmapByWidth(int drawResource, int widthMax, Resources resources) {
+        if (widthMax <= 0) {
+            return null;
+        }
+        BitmapFactory.Options bmpopt = getBounds(drawResource, widthMax, resources);
+        Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+        return scaleWidthDownTo(bm, widthMax);
+
+    }
+
+    public static Bitmap getScaledBitmapByHeight(int drawResource, int heightMax, Resources resources) {
+        if (heightMax <= 0) {
+            return null;
+        }
+        BitmapFactory.Options bmpopt = getBounds(drawResource, heightMax, resources);
+        Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+        return scaleHeightDownTo(bm, heightMax);
+    }
+
+    private static Bitmap scaleHeightDownTo(Bitmap bitmap, int height) {
+        float aspect = (((float) height) / bitmap.getHeight());
+        return getResizedBitmap(bitmap, bitmap.getWidth() * aspect, height);
+    }
+
+    private static Bitmap scaleWidthDownTo(Bitmap bitmap, int width) {
+        float aspect = (((float) width) / bitmap.getWidth());
+        return getResizedBitmap(bitmap, width, bitmap.getHeight() * aspect);
+    }
+
+    private static Bitmap scaleLongestDownTo(Bitmap bmp, int scaleToDimension) {
+        if (bmp.getWidth() < bmp.getHeight()) {
+            return scaleHeightDownTo(bmp, scaleToDimension);
+        } else {
+            return scaleWidthDownTo(bmp, scaleToDimension);
         }
     }
 
-    // Read resource file and find what factor we should scale down by
-    public static int getScaleFactor(Resources resources, int drawResource, int minDimension) {
-        BitmapFactory.Options bmpopt = new BitmapFactory.Options();
-        bmpopt.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
-        return scaleFromOptions(bmpopt, minDimension);
+    private static Bitmap scaleShortestDownTo(Bitmap bmp, int scaleToDimension) {
+        if (bmp.getWidth() > bmp.getHeight()) {
+            return scaleHeightDownTo(bmp, scaleToDimension);
+        } else {
+            return scaleWidthDownTo(bmp, scaleToDimension);
+        }
     }
+
     // Calculate factor by which we should scale the image down by
-    public static int scaleFromOptions(BitmapFactory.Options bmpopt, int minDimension){
+    private static int scaleFromOptions(BitmapFactory.Options bmpopt, int minDimension) {
         int scaleFactor = 0;
         if (bmpopt.outHeight < minDimension || bmpopt.outWidth < minDimension) {
             return scaleFactor;
@@ -209,10 +273,11 @@ public class ImageHandler {
         scaleFactor = smallerSide / minDimension;
         return lowerPowerOfTwo(scaleFactor);
     }
+
     // Round down to closest power of 2
-    public static int lowerPowerOfTwo(int value){
+    private static int lowerPowerOfTwo(int value) {
         int count = 0;
-        while (value > 1){
+        while (value > 1) {
             value = value >> 1;
             ++count;
         }
