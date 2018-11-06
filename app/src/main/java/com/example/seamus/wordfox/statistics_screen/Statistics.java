@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +38,7 @@ import com.example.seamus.wordfox.RV.RVTypes.TypeStats;
 import com.example.seamus.wordfox.RV.RVTypes.TypeWordsHeader;
 import com.example.seamus.wordfox.RV.WFAdapter;
 import com.example.seamus.wordfox.WordLoader;
+import com.example.seamus.wordfox.WordfoxConstants;
 import com.example.seamus.wordfox.dataWordsRecycler.WordDataHeader;
 import com.example.seamus.wordfox.database.DataPerGame;
 import com.example.seamus.wordfox.profile.FoxRank;
@@ -59,6 +61,7 @@ public class Statistics extends AppCompatActivity
     private ArrayList<DataListItem> gameData = new ArrayList<>();
     private NavigationBurger navBurger = new NavigationBurger();
     private Bitmap defaultPicture = null;
+    int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +84,8 @@ public class Statistics extends AppCompatActivity
     }
 
     private void headingAndBanner() {
-        int foxWidth = (getResources().getDisplayMetrics().widthPixels * DATA_FOX_SCREEN_WIDTH_PERCENT) / 100;
-        int speechWidth = foxWidth*2;
+        int foxWidth = (screenWidth * DATA_FOX_SCREEN_WIDTH_PERCENT) / 100;
+        int speechWidth = foxWidth * 2;
         Bitmap heading = ImageHandler.getScaledBitmapByWidth(R.drawable.datafoxsilcoloured, foxWidth, getResources());
         Bitmap speechBubble = ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleleft, speechWidth, getResources());
         DataListItem headingImage = new TypeHeadingImage(heading, speechBubble);
@@ -201,7 +204,8 @@ public class Statistics extends AppCompatActivity
         // Played X round
         allDataItems.add(new TypeStats<>("Rounds played: ", playerGameData.getRoundCount()));
         // Longest word
-        allDataItems.add(new TypeStats<>("Longest word: ", playerGameData.findLongest()));
+        String longestWord = playerGameData.findLongest() + " (" + playerGameData.findLongest().length() + ")";
+        allDataItems.add(new TypeStats<>("Longest word: ", longestWord));
         // Average word length
         allDataItems.add(new TypeStats<>("Average word length: ", playerGameData.getAverageWordLength()));
         // Rounds where no word found
@@ -224,15 +228,14 @@ public class Statistics extends AppCompatActivity
     }
 
     private Bitmap loadPlayerBitmap(String profPicStr) {
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        int profilePicHeight = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
+        int profPicWidth = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
             ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-            return imageHandler.getBitmapFromUri(myFileUri, profilePicHeight);    // TODO: Set as percent
+            return imageHandler.getBitmapFromUriScaleWidth(myFileUri, profPicWidth);    // TODO: Set as percent
         } else {
             if (defaultPicture == null) {     // Only load if needed
-                defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, profilePicHeight, getResources());
+                defaultPicture = ImageHandler.getScaledBitmapByWidth(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
             }
             return defaultPicture;
         }

@@ -127,8 +127,19 @@ public class ImageHandler {
         return getBitmapFromUri(imgUri, 0);
     }
 
-    // TODO: Scales shortest side down to provided dimension. Should be longest??
+    public Bitmap getBitmapFromUriScaleWidth(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, false);
+    }
+
+    public Bitmap getBitmapFromUriScaleHeight(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, true);
+    }
+
     public Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension) {
+        return getBitmapFromUri(imgUri, scaleToDimension, true);
+    }
+
+    private Bitmap getBitmapFromUri(Uri imgUri, int scaleToDimension, boolean scaleByHeight) {
         if (!isStoragePermissionGranted()) {
             return null;
         }
@@ -159,7 +170,11 @@ public class ImageHandler {
                     fis = new FileInputStream(filePath);
                     myBitmap = BitmapFactory.decodeStream(fis, null, o2);
                     fis.close();
-                    myBitmap = scaleShortestDownTo(myBitmap, scaleToDimension);
+                    if (scaleByHeight) {
+                        myBitmap = scaleHeightDownTo(myBitmap, scaleToDimension);
+                    } else {
+                        myBitmap = scaleWidthDownTo(myBitmap, scaleToDimension);
+                    }
                 } else {
                     myBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imgUri);
                 }
