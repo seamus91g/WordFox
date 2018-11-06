@@ -11,7 +11,7 @@ public class ProfileRobot extends ScreenRobot<ProfileRobot> {
 //        return checkViewHasText(com.example.seamus.wordfox.R.id.currentAttempt, word);
 //    }
     public ProfileRobot enterUsername(String name){
-        replaceEditText(R.id.profile_username, name);
+        replaceEditText(R.id.profile_usernameET, name);
         return this;
     }
 
@@ -26,6 +26,6 @@ public class ProfileRobot extends ScreenRobot<ProfileRobot> {
     }
 
     public ProfileRobot checkName(String name) {
-        return checkViewHasText(R.id.profile_username, name);
+        return checkViewHasText(R.id.profile_usernameET, name);
     }
 }

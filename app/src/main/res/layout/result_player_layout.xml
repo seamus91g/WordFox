@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -22,55 +23,65 @@
             android:paddingRight="6dp"
             app:civ_border_color="@color/game_font_color"
             app:civ_border_width="2dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/grid_row_grid1"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/result_player_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/headingTextStyle"
             android:text="Joey  (54%)"
-            app:layout_constraintBottom_toTopOf="@+id/result_player_score"
-            app:layout_constraintLeft_toRightOf="@+id/results_screen_profile_pic"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/results_screen_profile_pic"
+            app:layout_constraintBottom_toBottomOf="@id/results_screen_profile_pic"
+            app:layout_constraintLeft_toRightOf="@id/results_screen_profile_pic"
+            />
 
         <TextView
             android:id="@+id/result_player_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/headingTextStyle"
             android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/result_player_fox_pic"
-            app:layout_constraintLeft_toRightOf="@+id/results_screen_profile_pic"
-            app:layout_constraintTop_toBottomOf="@+id/result_player_name" />
+            app:layout_constraintBottom_toBottomOf="@id/result_player_fox_pic"
+            app:layout_constraintLeft_toRightOf="@id/results_screen_profile_pic"
+            app:layout_constraintTop_toBottomOf="@id/result_player_name" />
+
+        <TextView
+            android:id="@+id/result_player_rank_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headingTextStyle"
+            android:text="Rank"
+            app:layout_constraintBottom_toTopOf="@id/result_player_rank_name"
+            app:layout_constraintLeft_toLeftOf="@id/result_player_rank_name"
+            app:layout_constraintRight_toRightOf="@id/result_player_rank_name"
+            app:layout_constraintTop_toTopOf="@id/result_player_fox_pic"
+            />
+
+        <TextView
+            android:id="@+id/result_player_rank_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headingTextStyle"
+            android:text="Silver Fox"
+            app:layout_constraintBottom_toBottomOf="@id/result_player_fox_pic"
+            app:layout_constraintRight_toLeftOf="@id/result_player_fox_pic"
+            app:layout_constraintTop_toBottomOf="@id/result_player_rank_heading"
+            />
+
+
 
         <ImageView
             android:id="@+id/result_player_fox_pic"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:paddingLeft="6dp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@id/grid_row_grid3"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/result_player_rank_heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rank"
-            app:layout_constraintBottom_toTopOf="@+id/result_player_rank_name"
-            app:layout_constraintLeft_toLeftOf="@+id/result_player_rank_name"
-            app:layout_constraintRight_toRightOf="@+id/result_player_rank_name"
-            app:layout_constraintTop_toTopOf="@+id/result_player_fox_pic" />
-
-        <TextView
-            android:id="@+id/result_player_rank_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Silver Fox"
-            app:layout_constraintBottom_toBottomOf="@+id/result_player_fox_pic"
-            app:layout_constraintRight_toLeftOf="@+id/result_player_fox_pic"
-            app:layout_constraintTop_toBottomOf="@+id/result_player_rank_heading" />
-
         <!-- -->
+
         <android.support.constraint.Barrier
             android:id="@+id/result_player_section_barrier"
             android:layout_width="wrap_content"
@@ -82,35 +93,35 @@
             android:id="@+id/grid_row_bestword1"
             android:layout_width="@dimen/grid_snapshot_size"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            style="@style/foundWordTextStyle"
             android:tag="player_word1"
             android:text="Word 1"
+            app:layout_constraintTop_toBottomOf="@id/result_player_fox_pic"
+            app:layout_constraintLeft_toLeftOf="@id/grid_row_grid1"
             app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword2"
-            app:layout_constraintTop_toTopOf="@id/result_player_section_barrier" />
+            />
 
         <TextView
             android:id="@+id/grid_row_bestword2"
             android:layout_width="@dimen/grid_snapshot_size"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            style="@style/foundWordTextStyle"
             android:tag="player_word2"
             android:text="Word 2"
             app:layout_constraintBottom_toBottomOf="@id/grid_row_bestword1"
-            app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword1"
-            app:layout_constraintRight_toLeftOf="@+id/grid_row_bestword3"
+            app:layout_constraintLeft_toRightOf="@id/grid_row_bestword1"
+            app:layout_constraintRight_toLeftOf="@id/grid_row_bestword3"
             app:layout_constraintTop_toTopOf="@id/grid_row_bestword1" />
 
         <TextView
             android:id="@+id/grid_row_bestword3"
             android:layout_width="@dimen/grid_snapshot_size"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            style="@style/foundWordTextStyle"
             android:tag="player_word3"
             android:text="Word 3"
             app:layout_constraintBottom_toBottomOf="@id/grid_row_bestword1"
-            app:layout_constraintLeft_toRightOf="@+id/grid_row_bestword2"
+            app:layout_constraintLeft_toRightOf="@id/grid_row_bestword2"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/grid_row_bestword1" />
 
@@ -121,9 +132,9 @@
             android:layout_height="@dimen/grid_snapshot_size"
             android:src="@drawable/letter_grid_blank"
             android:tag="player_grid1"
-            app:layout_constraintBottom_toTopOf="@+id/result_player_divider"
+            app:layout_constraintBottom_toTopOf="@id/result_player_divider"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/grid_row_grid2"
+            app:layout_constraintRight_toLeftOf="@id/grid_row_grid2"
             app:layout_constraintTop_toBottomOf="@id/grid_row_bestword1" />
 
         <ImageView
@@ -132,9 +143,9 @@
             android:layout_height="@dimen/grid_snapshot_size"
             android:src="@drawable/letter_grid_blank"
             android:tag="player_grid2"
-            app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
-            app:layout_constraintLeft_toRightOf="@+id/grid_row_grid1"
-            app:layout_constraintRight_toLeftOf="@+id/grid_row_grid3"
+            app:layout_constraintBottom_toBottomOf="@id/grid_row_grid1"
+            app:layout_constraintLeft_toRightOf="@id/grid_row_grid1"
+            app:layout_constraintRight_toLeftOf="@id/grid_row_grid3"
             app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
 
         <ImageView
@@ -143,8 +154,8 @@
             android:layout_height="@dimen/grid_snapshot_size"
             android:src="@drawable/letter_grid_blank"
             android:tag="player_grid3"
-            app:layout_constraintBottom_toBottomOf="@+id/grid_row_grid1"
-            app:layout_constraintLeft_toRightOf="@+id/grid_row_grid2"
+            app:layout_constraintBottom_toBottomOf="@id/grid_row_grid1"
+            app:layout_constraintLeft_toRightOf="@id/grid_row_grid2"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/grid_row_grid1" />
 
@@ -155,7 +166,7 @@
             android:layout_marginTop="4dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/grid_row_grid1" />
+            app:layout_constraintTop_toBottomOf="@id/grid_row_grid1" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

@@ -2,6 +2,6 @@
 <resources>
     <dimen name="results_scrolling_screen_height">500dp</dimen>
     <dimen name="grid_snapshot_size">100dp</dimen>
-    <dimen name="results_bestwordheader_fontsize">18sp</dimen>
+    <dimen name="heading_fontsize">18sp</dimen>
 
 </resources>

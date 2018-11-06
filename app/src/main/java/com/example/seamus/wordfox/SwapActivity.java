@@ -65,8 +65,6 @@ public class SwapActivity extends AppCompatActivity
 
         ImageView throwingFoxIV = findViewById(R.id.content_swap_throwingFoxIV);
         throwingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox1silcoloured, (int) (0.15* screenHeight),getResources()));
-        int i = throwingFoxIV.getWidth();
-        Log.d("tag", "onCreate: i " + i);
 
         ImageView catchingFoxIV = findViewById(R.id.content_swap_catchingFoxIV);
         catchingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox2silcoloured, (int) (0.15* screenHeight),getResources()));

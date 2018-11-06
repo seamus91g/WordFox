@@ -131,6 +131,6 @@
     <string name="longest_words_minor_heading">Longest possible word from each round</string>
     <string name="choose_your_number_of_players_using_the_slider">Choose your number of players using the slider</string>
     <string name="wifi_nearby_players_list_heading">Nearby list of players ...</string>
-    <string name="content_swap_fox_instructions">Pass the game to the next player</string>
+    <string name="content_swap_fox_instructions">Pass the game \n to the \n next player</string>
     <string name="content_home_screen_fox_instructions1">Choose your game type from the 3 options</string>
 </resources>
