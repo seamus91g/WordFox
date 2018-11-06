@@ -133,4 +133,5 @@
     <string name="wifi_nearby_players_list_heading">Nearby list of players ...</string>
     <string name="content_swap_fox_instructions">Pass the game \n to the \n next player</string>
     <string name="content_home_screen_fox_instructions1">Choose your game type from the 3 options</string>
+    <string name="data_fox_speech">Choose any player below to see their game data! You can see every game you played and word you found!</string>
 </resources>

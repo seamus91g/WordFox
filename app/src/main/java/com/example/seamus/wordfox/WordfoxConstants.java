@@ -5,6 +5,7 @@ public class WordfoxConstants {
     public static final int NUMBER_ROUNDS = 3;
     public static final int RESULT_GRIDS_PER_ROW = NUMBER_ROUNDS;
     public static final int RESULT_GRID_SCREEN_WIDTH_PERCENT = 25;
+    public static final int MAX_PLAYER_NAME_LENGTH = 12;
     public static final String WORD_TAG_PREFIX = "word_";
     public static final String GRID_TAG_PREFIX = "grid_";
     public static final String TEST_AD_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712";

@@ -20,6 +20,8 @@ import com.example.seamus.wordfox.datamodels.GameItem;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static com.example.seamus.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
+
 /**
  * Created by Gilroy
  */
@@ -46,6 +48,13 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
     // Save username to preference file. Update the displayed profile name.
     public void updateProfileName(String name) {
+        if (name.length() == 0) {
+            displayProfileName();
+            return;
+        }
+        if (name.length() > MAX_PLAYER_NAME_LENGTH) {
+            name = name.substring(0, MAX_PLAYER_NAME_LENGTH);
+        }
         myGameData.setUsername(name);
         displayProfileName();
     }

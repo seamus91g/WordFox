@@ -12,18 +12,19 @@ import com.example.seamus.wordfox.RV.RVTypes.TypeWordsDetail;
 
 public class HeadingImageVH extends BaseWFViewHolder {
     private final ImageView headingImageIV;
+    private final ImageView speechBubbleImageIV;
 
     public HeadingImageVH(View v) {
         super(v);
         Log.d("myTag", "Creating HeadingImageVH ");
         headingImageIV = v.findViewById(R.id.datafox_stats_heading_image);
+        speechBubbleImageIV = v.findViewById(R.id.data_heading_image_speech_bubble);
     }
 
     @Override
     public void bindType(DataListItem item) {
-        Log.d("myTag", "Binding HeadingImageVH ");
         TypeHeadingImage headingImage = (TypeHeadingImage) item;
         headingImageIV.setImageBitmap(headingImage.getHeadingImage());
-        Log.d("myTag", "Finished Binding HeadingImageVH ");
+        speechBubbleImageIV.setImageBitmap(headingImage.getSpeechBubble());
     }
 }

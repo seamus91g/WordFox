@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity
     private ProfilePresenter presenter;
     private ImageView profileIB;
     private EditText nameEditText;
-    private Button setProfileNameButton;
+    private ImageButton setProfileNameButton;
     private Bitmap buttongGridImage = null;
 
     int screenWidth;
@@ -93,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity
         // User can type in a new user name
         nameEditText = findViewById(R.id.profile_usernameET);
         nameEditText.setOnFocusChangeListener(edittextFocusChange);
-        nameEditText.setWidth( (int) (screenWidth/3));
+        nameEditText.setWidth( (int) (screenWidth/2));
 
         // Button to save user name to GameData class.
         setProfileNameButton = findViewById(R.id.profile_save_name);

@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 
 import java.util.UUID;
 
+import static com.example.seamus.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -52,7 +54,13 @@ public class NewPlayerFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String name = newPlayerEditText.getText().toString();
-            if(mListener != null){
+            if (name.length() == 0) {
+                return;
+            }
+            if (name.length() > MAX_PLAYER_NAME_LENGTH) {
+                name = name.substring(0, MAX_PLAYER_NAME_LENGTH);
+            }
+            if (mListener != null) {
                 PlayerIdentity newPlayer = new PlayerIdentity(UUID.randomUUID(), name);
                 mListener.setChoice(newPlayer);
             }
