@@ -126,15 +126,15 @@ public class Statistics extends AppCompatActivity
             gameData.add(playerHeader);
 
             ///////// Get stats
-            DataListItem statsCategory = new TypeCategory("Stats", createStats(playerGameData));
+            DataListItem statsCategory = new TypeCategory("STATS", createStats(playerGameData));
             allCategories.add(statsCategory);
 
             ///////// Get games
-            DataListItem gamesCategory = new TypeCategory("Games", createGameData(identity.ID, allGameData));
+            DataListItem gamesCategory = new TypeCategory("GAMES", createGameData(identity.ID, allGameData));
             allCategories.add(gamesCategory);
 
             ///////// Get words
-            DataListItem wordsCategory = new TypeCategory("Words", createWordData(identity.ID));
+            DataListItem wordsCategory = new TypeCategory("WORDS", createWordData(identity.ID));
             allCategories.add(wordsCategory);
 
         }
@@ -143,7 +143,6 @@ public class Statistics extends AppCompatActivity
         mRecyclerView.setLayoutManager(mLayoutManager);
         WFAdapter mAdapter = new WFAdapter(gameData);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
     private ArrayList<DataListItem> createWordData(UUID playerID) {
@@ -166,8 +165,9 @@ public class Statistics extends AppCompatActivity
             if (!containsPlayer(game.players, ID)) {
                 continue;
             }
+            boolean isJustMe = (game.players.size() == 1);
             DataListItem dliGame = new TypeGamesDetail(game);  // get an ID for each view we will require
-            DataListItem dliHeader = new TypeGamesHeader(game, dliGame);
+            DataListItem dliHeader = new TypeGamesHeader(game, dliGame, isJustMe);
             allGameHeaders.add(dliHeader);
         }
         if (allGameHeaders.size() == 0) {

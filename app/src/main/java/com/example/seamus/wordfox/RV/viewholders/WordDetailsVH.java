@@ -7,7 +7,6 @@ import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RV.BaseWFViewHolder;
 import com.example.seamus.wordfox.RV.DataListItem;
 import com.example.seamus.wordfox.RV.RVTypes.TypeWordsDetail;
-import com.example.seamus.wordfox.RV.WFAdapter;
 
 public class WordDetailsVH extends BaseWFViewHolder {
     private final TextView lettersGivenTV;
@@ -23,6 +22,7 @@ public class WordDetailsVH extends BaseWFViewHolder {
     public void bindType(DataListItem item) {
         TypeWordsDetail wordDetail = (TypeWordsDetail) item;
         lettersGivenTV.setText(wordDetail.getLetters());
-        longestPossibleTV.setText(wordDetail.getLongestPossible());
+        String longestPossible = wordDetail.getLongestPossible() + " (" + wordDetail.getLongestPossible().length() + ")";
+        longestPossibleTV.setText(longestPossible);
     }
 }
