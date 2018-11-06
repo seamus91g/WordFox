@@ -43,7 +43,7 @@
         <activity
             android:name=".statistics_screen.Statistics"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DataPage" />
         <activity
             android:name=".settings.Settings"
             android:label="@string/title_activity_settings"

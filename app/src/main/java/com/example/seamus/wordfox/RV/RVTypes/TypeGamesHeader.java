@@ -12,17 +12,21 @@ import java.util.UUID;
 public class TypeGamesHeader implements DataListItem {
     private final UUID ID;
     private final ArrayList<PlayerIdentity> gameWinner;
-
-
+    private final DataListItem gameDetails;
     private final int winnerScore;
-    DataListItem gameDetails;
+    private final boolean isJustMe;
     private boolean isExpanded = false;
 
-    public TypeGamesHeader(DataPerGame gameHeader, DataListItem gameDetails) {
+    public TypeGamesHeader(DataPerGame gameHeader, DataListItem gameDetails, boolean isJustMe) {
         this.gameWinner = gameHeader.winners;
         this.gameDetails = gameDetails;
         this.winnerScore = gameHeader.scoreWinner;
+        this.isJustMe = isJustMe;
         ID = UUID.randomUUID();
+    }
+
+    public boolean isJustMe() {
+        return isJustMe;
     }
 
     public ArrayList<PlayerIdentity> getGameWinner() {

@@ -23,7 +23,9 @@ public class WordHeaderVH extends BaseWFViewHolder {
     public void bindType(DataListItem item) {
         super.setSelected(item.isListExpanded());
         TypeWordsHeader wordHeader = (TypeWordsHeader) item;
-        wordTV.setText(wordHeader.getWord());
-        timesFoundTV.setText(String.valueOf(wordHeader.getTimesFound()));
+        String word = wordHeader.getWord() + " (" + wordHeader.getWord().length() + ")";
+        wordTV.setText(word);
+        String timesFound = "x " + wordHeader.getTimesFound();
+        timesFoundTV.setText(timesFound);
     }
 }

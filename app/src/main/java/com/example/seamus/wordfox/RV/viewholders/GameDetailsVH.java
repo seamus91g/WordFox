@@ -40,12 +40,12 @@ public class GameDetailsVH extends BaseWFViewHolder {
     public void bindType(DataListItem item) {
         TypeGamesDetail gameDetail = (TypeGamesDetail) item;    // TODO: Shouldn't need to cast if correctly using generics
         wordsPerPlayer = gameDetail.getPlayerWords();
-        letters1TV.setText(gameDetail.getLetters(0));
-        letters2TV.setText(gameDetail.getLetters(1));
-        letters3TV.setText(gameDetail.getLetters(2));
-        bestPossible1.setText(gameDetail.getBestPossible(0));
-        bestPossible2.setText(gameDetail.getBestPossible(1));
-        bestPossible3.setText(gameDetail.getBestPossible(2));
+        letters1TV.setText(gameDetail.getLetters(0).toLowerCase());
+        letters2TV.setText(gameDetail.getLetters(1).toLowerCase());
+        letters3TV.setText(gameDetail.getLetters(2).toLowerCase());
+        bestPossible1.setText(gameDetail.getBestPossible(0).toLowerCase());
+        bestPossible2.setText(gameDetail.getBestPossible(1).toLowerCase());
+        bestPossible3.setText(gameDetail.getBestPossible(2).toLowerCase());
         displayPlayerDetails(gameDetail.getPlayers());
     }
 

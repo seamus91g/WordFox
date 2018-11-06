@@ -1,160 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root_layout_game_details"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#CBCBCB"
-    android:padding="4dp">
+    android:layout_height="wrap_content">
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.9"
-        app:layout_constraintLeft_toRightOf="@id/game_details_letters_row"
-        app:layout_constraintRight_toLeftOf="@id/data_round_1"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_layout_game_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTextHeading"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/game_details_letters_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Letters"
+            android:textStyle="italic"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
+
+        <TextView
+            android:id="@+id/game_details_best_possible_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Longest"
+            android:textStyle="italic"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.22" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.48" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/barrier3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.74" />
+
+        <TextView
+            android:id="@+id/data_round_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            android:textStyle="italic"
+            app:layout_constraintLeft_toRightOf="@+id/barrier"
+            app:layout_constraintRight_toLeftOf="@+id/barrier2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/data_round_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            android:textStyle="italic"
+            app:layout_constraintLeft_toRightOf="@+id/barrier2"
+            app:layout_constraintRight_toLeftOf="@+id/barrier3" />
+
+        <TextView
+            android:id="@+id/data_round_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            android:textStyle="italic"
+            app:layout_constraintLeft_toRightOf="@+id/barrier3"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/data_letters_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Letters 1"
+            app:layout_constraintLeft_toRightOf="@+id/barrier"
+            app:layout_constraintRight_toLeftOf="@+id/barrier2"
+            app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
+
+        <TextView
+            android:id="@+id/data_letters_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Letters 2"
+            app:layout_constraintLeft_toRightOf="@+id/barrier2"
+            app:layout_constraintRight_toLeftOf="@+id/barrier3"
+            app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
+
+        <TextView
+            android:id="@+id/data_letters_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Letters 3"
+            app:layout_constraintLeft_toRightOf="@+id/barrier3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
+
+        <TextView
+            android:id="@+id/best_possible_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 1"
+            app:layout_constraintLeft_toRightOf="@+id/barrier"
+            app:layout_constraintRight_toLeftOf="@+id/barrier2"
+            app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
+
+        <TextView
+            android:id="@+id/best_possible_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 2"
+            app:layout_constraintLeft_toRightOf="@+id/barrier2"
+            app:layout_constraintRight_toLeftOf="@+id/barrier3"
+            app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
+
+        <TextView
+            android:id="@+id/best_possible_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round 3"
+            app:layout_constraintLeft_toRightOf="@+id/barrier3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
+
+        <include
+            android:id="@+id/player_details_table"
+            layout="@layout/rv_data_game_details_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/best_possible_1" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
+        android:layout_gravity="top"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@id/player_details_table"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/game_details_best_possible_row"
-        app:layout_constraintWidth_percent="0.95" />
-
-    <TextView
-        android:id="@+id/game_details_letters_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LETTERS"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
-
-    <TextView
-        android:id="@+id/game_details_best_possible_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longest"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.22" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/barrier2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.48" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/barrier3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.74" />
-
-    <TextView
-        android:id="@+id/data_round_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 1"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/barrier"
-        app:layout_constraintRight_toLeftOf="@+id/barrier2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/data_round_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 2"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/barrier2"
-        app:layout_constraintRight_toLeftOf="@+id/barrier3" />
-
-    <TextView
-        android:id="@+id/data_round_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 3"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/barrier3"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/data_letters_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Letters 1"
-        app:layout_constraintLeft_toRightOf="@+id/barrier"
-        app:layout_constraintRight_toLeftOf="@+id/barrier2"
-        app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
-
-    <TextView
-        android:id="@+id/data_letters_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Letters 2"
-        app:layout_constraintLeft_toRightOf="@+id/barrier2"
-        app:layout_constraintRight_toLeftOf="@+id/barrier3"
-        app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
-
-    <TextView
-        android:id="@+id/data_letters_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Letters 3"
-        app:layout_constraintLeft_toRightOf="@+id/barrier3"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/data_round_1" />
-
-    <TextView
-        android:id="@+id/best_possible_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 1"
-        app:layout_constraintLeft_toRightOf="@+id/barrier"
-        app:layout_constraintRight_toLeftOf="@+id/barrier2"
-        app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
-
-    <TextView
-        android:id="@+id/best_possible_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 2"
-        app:layout_constraintLeft_toRightOf="@+id/barrier2"
-        app:layout_constraintRight_toLeftOf="@+id/barrier3"
-        app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
-
-    <TextView
-        android:id="@+id/best_possible_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Round 3"
-        app:layout_constraintLeft_toRightOf="@+id/barrier3"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/data_letters_1" />
-
-    <include
-        android:id="@+id/player_details_table"
-        layout="@layout/rv_data_game_details_table"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/best_possible_1" />
+        app:layout_constraintWidth_percent="0.7" />
 
 </android.support.constraint.ConstraintLayout>

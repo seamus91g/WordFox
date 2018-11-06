@@ -12,6 +12,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.DataPage">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColor">@color/game_font_color</item>
+    </style>
 
     <style name="dataTextHeadingStyle">
         <item name="android:fontFamily">sans-serif</item>

@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_1_name"
         android:text="Player 1"
-        android:textStyle="bold"
+        android:textStyle="italic"
         android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one" />
@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_2_name"
         android:text="Player 2"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one"
         app:layout_constraintTop_toBottomOf="@+id/game_details_player_1_name" />
@@ -164,7 +164,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_3_name"
         android:text="Player 3"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one"
         app:layout_constraintTop_toBottomOf="@+id/game_details_player_2_name" />
@@ -206,7 +206,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_4_name"
         android:text="Player 4"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one"
         app:layout_constraintTop_toBottomOf="@+id/game_details_player_3_name" />
@@ -248,7 +248,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_5_name"
         android:text="Player 5"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one"
         app:layout_constraintTop_toBottomOf="@+id/game_details_player_4_name" />
@@ -290,7 +290,7 @@
         android:layout_height="wrap_content"
         android:tag="game_details_player_6_name"
         android:text="Player 6"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline_game_details_one"
         app:layout_constraintTop_toBottomOf="@+id/game_details_player_5_name" />

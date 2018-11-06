@@ -11,5 +11,9 @@
     <color name="colorTextDataBGAlt">#D9EDFD</color>
     <color name="divider_color">#676767</color>
     <color name="game_font_color">#01848f</color>
+    <color name="game_font_color_light_1">#1a909a</color>
+    <color name="game_font_color_light_2">#339ca5</color>
+    <color name="game_font_color_light_3">#4da8b0</color>
+    <color name="game_font_color_light_4">#66b5bb</color>
     <color name="colorLightAccent">#b388ff</color>
 </resources>
