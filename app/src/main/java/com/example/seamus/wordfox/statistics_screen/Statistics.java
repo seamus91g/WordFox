@@ -79,7 +79,7 @@ public class Statistics extends AppCompatActivity
 
     private void headingAndBanner() {
         int foxHeight = (getResources().getDisplayMetrics().heightPixels*20)/100;
-        Bitmap heading = ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured, foxHeight, getResources());
+        Bitmap heading = ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsilcoloured, foxHeight, getResources());
         DataListItem headingImage = new TypeHeadingImage(heading);
         gameData.add(headingImage);
 
@@ -223,10 +223,10 @@ public class Statistics extends AppCompatActivity
         ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
+            profPic = imageHandler.getBitmapFromUri(myFileUri, 120);    // TODO: Set as percent
         }else{
             if(defaultPicture == null){     // Only load if needed
-                defaultPicture = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+                defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
             }
             profPic = defaultPicture;
         }

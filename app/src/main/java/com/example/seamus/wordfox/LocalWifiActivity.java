@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -215,25 +216,25 @@ public class LocalWifiActivity extends AppCompatActivity
         // TODO: Async Task
         int maxHeight = findViewById(R.id.peerListView_container).getHeight();
         int maxWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-
-        ImageView fox = findViewById(R.id.fox_holding_wifi_phone);
         int foxHeight = maxHeight / 2;
-        Bitmap foxBmp = ImageHandler.getScaledBitmap(R.drawable.ppfox1silcoloured, foxHeight, getResources());
 
-        // Set margin left to 1/4 screen
-        // Set fox height as half listview height but max 400px;
+        Bitmap foxBmp = ImageHandler.getScaledBitmapByHeight(R.drawable.ppfox1silcoloured, foxHeight, getResources());
+        if (foxBmp == null) {
+            return;
+        }
 
         // Set phone height as 1/3 of fox
         ArrayList<Bitmap> wifiPhones;
         wifiPhones = new ArrayList<>();
-        wifiPhones.add(ImageHandler.getScaledBitmap(R.drawable.phone_wifi_two_bars, foxHeight / 3, getResources()));
-        wifiPhones.add(ImageHandler.getScaledBitmap(R.drawable.phone_wifi_no_bar, foxHeight / 3, getResources()));
-        wifiPhones.add(ImageHandler.getScaledBitmap(R.drawable.phone_wifi_one_bar, foxHeight / 3, getResources()));
+        wifiPhones.add(ImageHandler.getScaledBitmapByHeight(R.drawable.phone_wifi_two_bars, foxHeight / 3, getResources()));
+        wifiPhones.add(ImageHandler.getScaledBitmapByHeight(R.drawable.phone_wifi_no_bar, foxHeight / 3, getResources()));
+        wifiPhones.add(ImageHandler.getScaledBitmapByHeight(R.drawable.phone_wifi_one_bar, foxHeight / 3, getResources()));
         ImageView phone = findViewById(R.id.with_friends_wifi_phone);
 
         int leftMargin = -(foxBmp.getWidth() * 7) / 100;
         int topMargin = (foxBmp.getHeight() * 25) / 100;
 
+        ImageView fox = findViewById(R.id.fox_holding_wifi_phone);
         runOnUiThread(() -> {
             fox.setImageBitmap(foxBmp);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) fox.getLayoutParams();
@@ -282,7 +283,7 @@ public class LocalWifiActivity extends AppCompatActivity
         helperFox.post(() -> {
             int height = helperFox.getHeight();
             // TODO: .. why 7/10???
-            helperFox.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured_facingright, height*7/10, getResources()));
+            helperFox.setImageBitmap(ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsilcoloured_facingright, height * 7 / 10, getResources()));
         });
 
         ImageView helperFoxSpeechBubble = findViewById(R.id.fox_wifi_helper_speech_bubble);
@@ -290,7 +291,7 @@ public class LocalWifiActivity extends AppCompatActivity
             @Override
             public void run() {
                 int height = helperFoxSpeechBubble.getHeight();
-                helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright, height*9/10, getResources()));
+                helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmapByHeight(R.drawable.speechbubbleright, height * 9 / 10, getResources()));
             }
         });
     }

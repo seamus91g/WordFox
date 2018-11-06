@@ -195,7 +195,7 @@ public class ImageHandler {
         return bmpopt;
     }
 
-    @Deprecated
+    @Deprecated     // Use 'getScaledBitmapByShortestSide' instead
     public static Bitmap getScaledBitmap(int drawResource, int scaleToDimension, Resources resources) {
         return getScaledBitmapByShortestSide(drawResource, scaleToDimension, resources);
     }

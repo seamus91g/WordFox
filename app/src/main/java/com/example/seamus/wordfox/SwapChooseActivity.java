@@ -101,7 +101,7 @@ public class SwapChooseActivity extends AppCompatActivity
                 profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
             } else {
                 if(defaultPicture == null){     // Only load if needed
-                    defaultPicture = ImageHandler.getScaledBitmap(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+                    defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
                 }
                 profPic = defaultPicture;
             }
