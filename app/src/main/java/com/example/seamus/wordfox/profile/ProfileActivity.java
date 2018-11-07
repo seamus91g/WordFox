@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,8 +41,6 @@ import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
 
 public class ProfileActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -94,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity
         // User can type in a new user name
         nameEditText = findViewById(R.id.profile_usernameET);
         nameEditText.setOnFocusChangeListener(edittextFocusChange);
-        nameEditText.setWidth( (int) (screenWidth/2));
+        nameEditText.setWidth(screenWidth/2);
 
         // Button to save user name to GameData class.
         setProfileNameButton = findViewById(R.id.profile_save_name);
@@ -125,16 +121,14 @@ public class ProfileActivity extends AppCompatActivity
     private void setUpTalkingFox(){
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) 0.64*screenWidth, getResources()));
 
     }
 
     @Override
     public void setRankImage(Bitmap rankImage){
         ImageView rankIV = findViewById(R.id.content_profile_instructionFoxIV);
-        rankIV.setImageBitmap(ImageHandler.getScaledBitmap(presenter.getFoxRank(),
-                getImageScaleToScreenWidthPercent(this, 0.35, presenter.getFoxRank()),getResources()));
+        rankIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(presenter.getFoxRank(), (int) (0.35*screenWidth),getResources()));
     }
     @Override
     public void setRankText(String rank){
@@ -280,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity
         if (longestWord.equals(GameData.NON_EXISTANT)) {
             longestWordSpeechBubble = "You haven't completed any games yet!";
         }else{
-            longestWordSpeechBubble = "Your longest word ever was " + "\"" + longestWord + "\"" + "!";
+            longestWordSpeechBubble = "Your longest word\n ever was \n" + "\"" + longestWord + "\"" + "!";
         }
             ConstraintLayout talkingFoxCL = findViewById(R.id.content_profile_foxWithSpeechCL);
             TextView instructionFoxTV = talkingFoxCL.findViewById(R.id.content_profile_instructionFoxTV);
@@ -301,8 +295,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public Bitmap getButtonGridImage() {
         if (buttongGridImage == null) {
-            buttongGridImage = BitmapFactory.decodeResource(getResources(), R.drawable.letter_grid_blank);
-            buttongGridImage = getResizedBitmap(buttongGridImage, dp2px(100), dp2px(100));  // TODO: Adjust to screen size
+            buttongGridImage = ImageHandler.getScaledBitmapByWidth(R.drawable.letter_grid_blank,screenWidth/4, getResources()); // TODO: Adjust to screen size
         }
         return buttongGridImage;
     }

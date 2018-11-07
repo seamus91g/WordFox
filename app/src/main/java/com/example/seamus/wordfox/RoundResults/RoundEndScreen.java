@@ -15,11 +15,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,8 +46,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
-
 
 public class RoundEndScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -60,6 +60,7 @@ public class RoundEndScreen extends AppCompatActivity
     private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
     private ConstraintLayout cl;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +88,30 @@ public class RoundEndScreen extends AppCompatActivity
         setUpRoundEndFox();
 
         GameInstance gameInstance = HomeScreen.allGameInstances.get(gameIndexNumber);
-//        GameData plyrGd = new GameData(this, gameInstance.getID());
      	int maxScore = gameInstance.getLongestPossible().length();
         int playerScore = gameInstance.getScore();
-//        int percentScore = (100 * playerScore) / (maxScore);
 
-        String playerResult = playerScore + " out of " + maxScore;
-//        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
+        String playerResult = playerScore + "/" + maxScore;
         adjustSpeechBubble(playerResult);
 
+
+//        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+//        Display display = myWindowManager.getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        screenWidth = size.x;
+
+        calculateScreenWidth();
+    }
+
+    private void calculateScreenWidth() {
+        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = myWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        Log.d("roundendscreen", "1: expected screenwidth: " + 1440);
+        Log.d("roundendscreen", "1: screenwidth: " + screenWidth);
     }
 
     private void bindWifiService() {
@@ -221,14 +237,32 @@ public class RoundEndScreen extends AppCompatActivity
 
     private void setUpRoundEndFox(){
 
-        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
 
+        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = myWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+
+        Log.d("roundendscreen", "2: expected screenwidth: " + 1440);
+        Log.d("roundendscreen", "2: screenwidth: " + screenWidth);
+
+        int foxPercent = (int) (0.35 * screenWidth);
+        int foxSpeechPercent = (int) (0.64 * screenWidth);
+        Log.d("roundendscreen", "3: expected foxPercent: " + 504);
+        Log.d("roundendscreen", "3: foxPercent: " + foxPercent);
+        Log.d("roundendscreen", "4: expected foxSpeechPercent: " + 921);
+        Log.d("roundendscreen", "4: foxSpeechPercent: " + foxSpeechPercent);
+
+        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent,getResources()));
+        Log.d("roundendscreen", "5: expected foxPercent: " + 504);
+        Log.d("roundendscreen", "5: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent,getResources()).getWidth());
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()));
+        Log.d("roundendscreen", "52: expected foxPercent: " + 921);
+        Log.d("roundendscreen", "52: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent,getResources()).getWidth());
 
     }
 
@@ -240,6 +274,10 @@ public class RoundEndScreen extends AppCompatActivity
         TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
                 instructionFoxTV,0.8, longestWordHeader);
+        Log.d("roundendscreen", "6: expected instructionFoxTV: " + 0.8*ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.64 * screenWidth),getResources()).getWidth());
+        Log.d("roundendscreen", "6: instructionFoxTV: " + findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV).getWidth());
+
+
 
 
     }
@@ -293,7 +331,7 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public Bitmap getBlankScaledGrid(int shortestSide) {
-        return ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, shortestSide, getResources());
+        return ImageHandler.getScaledBitmapByLongestSide(R.drawable.letter_grid_blank, shortestSide, getResources());
 
     }
 
@@ -332,12 +370,19 @@ public class RoundEndScreen extends AppCompatActivity
     public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
         String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
         if (profPicStr.equals("")) {
+            Log.d("roundendscreen", "7: expected profPic: " + profilePicScreenWidth);
+            Log.d("roundendscreen", "7: expected profPic: w_h " + loadDefaultProfilePic(profilePicScreenWidth).getWidth() + " __ " + loadDefaultProfilePic(profilePicScreenWidth).getHeight());
             return loadDefaultProfilePic(profilePicScreenWidth);
         } else {
             Uri myFileUri = Uri.parse(profPicStr);
             ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-            Bitmap profPic = imageHandler.getBitmapFromUri(myFileUri, profilePicScreenWidth); // TODO: Why not static method?
+            Bitmap profPic = imageHandler.getBitmapFromUriScaleLongestSide(myFileUri, profilePicScreenWidth); // TODO: Why not static method?
+            Log.d("roundendscreen", "8: expected profPic: " + profilePicScreenWidth);
+            Log.d("roundendscreen", "8: expected profPic: w_h " + profPic.getWidth() + " __ " + profPic.getHeight());
+
             if (profPic == null) {
+                Log.d("roundendscreen", "9: expected size: " + 288);
+                Log.d("roundendscreen", "9: actual size: " + profilePicScreenWidth);
                 return loadDefaultProfilePic(profilePicScreenWidth);
             }
             return profPic;
@@ -345,10 +390,12 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     private Bitmap loadDefaultProfilePic(int size) {
-        return ImageHandler.getScaledBitmap(
+
+        return ImageHandler.getScaledBitmapByLongestSide(
                 GameData.PROFILE_DEFAULT_IMG,
                 size,          // TODO: Will be shortest side, not necessarily width
                 getResources());
+
     }
 
     @Override

@@ -2,22 +2,24 @@ package com.example.seamus.wordfox;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.util.Log;
-import android.view.MenuInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -40,6 +42,10 @@ public class SwapChooseActivity extends AppCompatActivity
     private PlayerIdentity currentPlayer;
     private boolean isAdapterLoaded = false;
     private NavigationBurger navBurger = new NavigationBurger();
+    private int screenWidth;
+    private int screenHeight;
+    private int profPicWidth;
+    private int buttonGridImageWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,21 @@ public class SwapChooseActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+
+        calculateScreenDimensions();
+        profPicWidth = (screenWidth/10);
+        buttonGridImageWidth = (screenWidth/4);
+
         setup();
+    }
+
+    private void calculateScreenDimensions() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
     }
 
     private void setup() {
@@ -98,10 +118,10 @@ public class SwapChooseActivity extends AppCompatActivity
             if (!plyrGd.getProfilePicture().equals("")) {
                 ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
                 Uri myFileUri = Uri.parse(plyrGd.getProfilePicture());
-                profPic = imageHandler.getBitmapFromUri(myFileUri, 120);
+                profPic = imageHandler.getBitmapFromUriScaleLongestSide(myFileUri, profPicWidth);
             } else {
                 if(defaultPicture == null){     // Only load if needed
-                    defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
+                    defaultPicture = ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
                 }
                 profPic = defaultPicture;
             }

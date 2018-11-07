@@ -224,9 +224,10 @@ public class ImageHandler {
         BitmapFactory.decodeResource(resources, drawResource, bmpopt);
 
         int scale = scaleFromOptions(bmpopt, scaleToDimension);
+        Log.d("imagehandler", "getBounds scale: " + scale);
         bmpopt.inJustDecodeBounds = false;
         bmpopt.inSampleSize = scale;
-        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
+//        BitmapFactory.decodeResource(resources, drawResource, bmpopt);
         return bmpopt;
     }
 
@@ -240,6 +241,7 @@ public class ImageHandler {
             return null;
         }
         BitmapFactory.Options bmpopt = getBounds(drawResource, scaleToDimension, resources);
+        bmpopt.inJustDecodeBounds = false;
         Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
         return scaleShortestDownTo(bm, scaleToDimension);
     }
@@ -249,6 +251,7 @@ public class ImageHandler {
             return null;
         }
         BitmapFactory.Options bmpopt = getBounds(drawResource, scaleToDimension, resources);
+        bmpopt.inJustDecodeBounds = false;
         Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
         return scaleLongestDownTo(bm, scaleToDimension);
     }
@@ -258,6 +261,11 @@ public class ImageHandler {
             return null;
         }
         BitmapFactory.Options bmpopt = getBounds(drawResource, widthMax, resources);
+        bmpopt.inJustDecodeBounds = false;
+        Log.d("imagehandler", "getScaledBitmapByWidth: bmpopt.inSampleSize " + bmpopt.inSampleSize);
+        Log.d("imagehandler", "getScaledBitmapByWidth: bmpopt.outHeight " + bmpopt.outHeight);
+        Log.d("imagehandler", "getScaledBitmapByWidth: bmpopt.outWidth " + bmpopt.outWidth);
+        Log.d("imagehandler", "getScaledBitmapByWidth: widthMax " + widthMax);
         Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
         return scaleWidthDownTo(bm, widthMax);
 
@@ -268,6 +276,7 @@ public class ImageHandler {
             return null;
         }
         BitmapFactory.Options bmpopt = getBounds(drawResource, heightMax, resources);
+        bmpopt.inJustDecodeBounds = false;
         Bitmap bm = BitmapFactory.decodeResource(resources, drawResource, bmpopt);
         return scaleHeightDownTo(bm, heightMax);
     }
@@ -301,11 +310,12 @@ public class ImageHandler {
     // Calculate factor by which we should scale the image down by
     private static int scaleFromOptions(BitmapFactory.Options bmpopt, int minDimension) {
         int scaleFactor = 0;
-        if (bmpopt.outHeight < minDimension || bmpopt.outWidth < minDimension) {
+        if (bmpopt.outHeight < minDimension && bmpopt.outWidth < minDimension) {
             return scaleFactor;
         }
-        int smallerSide = (bmpopt.outHeight < bmpopt.outWidth) ? bmpopt.outHeight : bmpopt.outWidth;
-        scaleFactor = smallerSide / minDimension;
+        int lSide = (bmpopt.outHeight > bmpopt.outWidth) ? bmpopt.outHeight : bmpopt.outWidth;
+        scaleFactor = lSide / minDimension;
+        Log.d("imagehandle",  "SF: " + scaleFactor);
         return lowerPowerOfTwo(scaleFactor);
     }
 
