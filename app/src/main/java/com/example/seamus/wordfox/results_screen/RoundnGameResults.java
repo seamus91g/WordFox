@@ -126,6 +126,7 @@ public class RoundnGameResults extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 navigateToHome();
+                finish();
             }
         });
 
@@ -423,6 +424,7 @@ public class RoundnGameResults extends AppCompatActivity
             if (this.backButtonPressedOnce) {
                 Intent homeScreenIntent = new Intent(this, HomeScreen.class);
                 startActivity(homeScreenIntent);
+                finish();
                 return;
             }
             Toast.makeText(this, "Double tap BACK to exit!", Toast.LENGTH_SHORT).show();

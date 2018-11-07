@@ -360,6 +360,7 @@ public class GameActivity extends AppCompatActivity
         if (this.backButtonPressedOnce) {
             Intent homeScreenIntent = new Intent(this, HomeScreen.class);
             startActivity(homeScreenIntent);
+            finish();
             return;
         }
         // Pressed once. Inform user a second click will exit the game.
