@@ -356,24 +356,19 @@ public class GameActivity extends AppCompatActivity
     // Must press back button twice in quick succession to exit the game
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            // If pressed recently, proceed to home screen
-            if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
-                startActivity(homeScreenIntent);
-                return;
-            }
-            // Pressed once. Inform user a second click will exit the game.
-            this.backButtonPressedOnce = true;
-            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
-            toastMessage.setGravity(Gravity.TOP, 0, 40);
-            toastMessage.show();
-            // Listen for another click for a brief amount of time. If none, reset the flag
-            new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
+        // If pressed recently, proceed to home screen
+        if (this.backButtonPressedOnce) {
+            Intent homeScreenIntent = new Intent(this, HomeScreen.class);
+            startActivity(homeScreenIntent);
+            return;
         }
+        // Pressed once. Inform user a second click will exit the game.
+        this.backButtonPressedOnce = true;
+        Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+        toastMessage.setGravity(Gravity.TOP, 0, 40);
+        toastMessage.show();
+        // Listen for another click for a brief amount of time. If none, reset the flag
+        new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

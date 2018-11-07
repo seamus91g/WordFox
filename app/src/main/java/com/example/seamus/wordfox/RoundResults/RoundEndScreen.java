@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
@@ -59,6 +62,7 @@ public class RoundEndScreen extends AppCompatActivity
     private boolean isOnline;
     private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
+    private boolean backButtonPressedOnce = false;
     private ConstraintLayout cl;
     private int screenWidth;
 
@@ -201,14 +205,26 @@ public class RoundEndScreen extends AppCompatActivity
         }
         ws.sendData(jsString);
     }
-
+    // Must press back button twice in quick succession to return to home
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            // If pressed recently, proceed to home screen
+            if (this.backButtonPressedOnce) {
+                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
+                startActivity(homeScreenIntent);
+                return;
+            }
+            // Pressed once. Inform user a second click will exit the game.
+            this.backButtonPressedOnce = true;
+            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+            toastMessage.setGravity(Gravity.TOP, 0, 40);
+            toastMessage.show();
+            // Listen for another click for a brief amount of time. If none, reset the flag
+            new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
         }
     }
 
