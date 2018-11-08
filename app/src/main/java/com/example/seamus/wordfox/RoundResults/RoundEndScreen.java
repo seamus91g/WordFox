@@ -394,11 +394,8 @@ public class RoundEndScreen extends AppCompatActivity
             return loadDefaultProfilePic(profilePicScreenWidth);
         } else {
             Uri myFileUri = Uri.parse(profPicStr);
-            ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-            Bitmap profPic = imageHandler.getBitmapFromUriScaleLongestSide(myFileUri, profilePicScreenWidth); // TODO: Why not static method?
-            Log.d("roundendscreen", "8: expected profPic: " + profilePicScreenWidth);
-            Log.d("roundendscreen", "8: expected profPic: w_h " + profPic.getWidth() + " __ " + profPic.getHeight());
 
+            Bitmap profPic = ImageHandler.getBitmapFromUriScaleWidth(this, myFileUri, profilePicScreenWidth); // TODO: Why not static method?
             if (profPic == null) {
                 Log.d("roundendscreen", "9: expected size: " + 288);
                 Log.d("roundendscreen", "9: actual size: " + profilePicScreenWidth);

@@ -294,10 +294,9 @@ public class RoundnGameResults extends AppCompatActivity
 
         String profPicStr = plyrGd.getProfilePicture();
         Bitmap profPic = null;
-        ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            profPic = imageHandler.getBitmapFromUriScaleLongestSide(myFileUri, profPicWidth);
+            profPic = ImageHandler.getBitmapFromUri(this, myFileUri, ImageHandler.dp2px(this, 60));
         }
         int maxScore = gameInstance.getHighestPossibleScore();
         int playerScore = gameInstance.getTotalScore();
@@ -314,8 +313,6 @@ public class RoundnGameResults extends AppCompatActivity
         }else{
             resultPlayerScoreView.setText( "(" + percentScore + "%)" );
         }
-
-
 
 
         ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
