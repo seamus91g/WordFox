@@ -24,7 +24,6 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_margin="12dp"
-                android:src="@drawable/ppfox1_outline"
                 app:civ_border_color="@color/colorTextHeadingBG"
                 app:civ_border_width="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
