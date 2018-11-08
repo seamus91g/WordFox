@@ -44,7 +44,6 @@
                 android:id="@+id/new_player_cardview_fox_image"
                 android:layout_width="70dp"
                 android:layout_height="0dp"
-                android:src="@drawable/grayfox_outline_bggamecolor"
                 app:layout_constraintBottom_toTopOf="@+id/new_player_cardview_text"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/new_player_cardview_plus_image"
@@ -55,7 +54,6 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/plus_icon_hd"
                 app:layout_constraintBottom_toTopOf="@+id/new_player_cardview_text"
                 app:layout_constraintLeft_toRightOf="@+id/new_player_cardview_fox_image"
                 app:layout_constraintRight_toRightOf="parent"
@@ -98,6 +96,7 @@
                 android:id="@+id/existing_player_cardview_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 app:layout_constraintBottom_toTopOf="@id/existing_player_cardview_text"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -105,39 +104,31 @@
 
                 <ImageView
                     android:id="@+id/existing_player_cardview_fox1"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
                     android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/arcticfoxsilcoloured" />
+                    android:scaleType="fitCenter" />
 
                 <ImageView
                     android:id="@+id/existing_player_cardview_fox2"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
                     android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/kitfoxsilcoloured" />
+                    android:scaleType="fitCenter" />
 
                 <ImageView
                     android:id="@+id/existing_player_cardview_fox3"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
                     android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/roundendsilcoloured" />
+                    android:scaleType="fitCenter" />
 
                 <ImageView
                     android:id="@+id/existing_player_cardview_fox4"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
                     android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/silverfoxsilcoloured" />
+                    android:scaleType="fitCenter" />
 
             </LinearLayout>
 

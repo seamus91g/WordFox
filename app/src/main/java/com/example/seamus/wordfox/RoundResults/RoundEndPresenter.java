@@ -134,7 +134,7 @@ public class RoundEndPresenter {
     private void allowWordSearchToFinish() {
         while (gameInstance.getLongestPossible() == null) {     // TODO: Infinite wait? Refactor -> Exit game
             try {
-                wait(100);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
