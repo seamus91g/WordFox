@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.seamus.wordfox.game_screen.GameActivity;
@@ -58,6 +62,45 @@ public class SwapChooseActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setup();
+
+        LinearLayout foxContainer = findViewById(R.id.existing_player_cardview_images);
+        foxContainer.post(() -> displayCardviewFoxes(foxContainer));
+    }
+
+    private void displayCardviewFoxes(LinearLayout foxContainer) {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+
+        Bitmap newPlayerOutlineBMP = ImageHandler.getScaledBitmapByWidth(R.drawable.grayfox_outline_bggamecolor, metrics.widthPixels / 5, getResources());
+        ImageView newPlayerOutline = findViewById(R.id.new_player_cardview_fox_image);
+        newPlayerOutline.setImageBitmap(newPlayerOutlineBMP);
+
+        Bitmap newPlayerPlusBMP = ImageHandler.getScaledBitmapByWidth(R.drawable.plus_icon_hd, metrics.widthPixels / 7, getResources());
+        ImageView newPlayerPlusIV = findViewById(R.id.new_player_cardview_plus_image);
+        newPlayerPlusIV.setImageBitmap(newPlayerPlusBMP);
+
+        // give each fox slightly less than a quarter of the space
+        int spacePerFox = (foxContainer.getWidth() * 20) / 100;
+
+        Bitmap fox1 = ImageHandler.getScaledBitmapByWidth(R.drawable.arcticfoxsilcoloured, spacePerFox, getResources());
+        Bitmap fox2 = ImageHandler.getScaledBitmapByWidth(R.drawable.kitfoxsilcoloured, spacePerFox, getResources());
+        Bitmap fox3 = ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, spacePerFox, getResources());
+        Bitmap fox4 = ImageHandler.getScaledBitmapByWidth(R.drawable.silverfoxsilcoloured, spacePerFox, getResources());
+
+        Log.d(MONITOR_TAG, "container count: " + foxContainer.getChildCount());
+        Log.d(MONITOR_TAG, "container width: " + foxContainer.getWidth());
+        Log.d(MONITOR_TAG, "container space per fox: " + spacePerFox);
+
+        ImageView fox1IV = foxContainer.findViewById(R.id.existing_player_cardview_fox1);
+        fox1IV.setImageBitmap(fox1);
+        ImageView fox2IV = foxContainer.findViewById(R.id.existing_player_cardview_fox2);
+        fox2IV.setImageBitmap(fox2);
+        ImageView fox3IV = foxContainer.findViewById(R.id.existing_player_cardview_fox3);
+        fox3IV.setImageBitmap(fox3);
+        ImageView fox4IV = foxContainer.findViewById(R.id.existing_player_cardview_fox4);
+        fox4IV.setImageBitmap(fox4);
+
     }
 
     private void setup() {
@@ -76,10 +119,10 @@ public class SwapChooseActivity extends AppCompatActivity
         new Thread(() -> {
             Looper.prepare();
             ArrayList<PlayerIdentity> players = GameData.getNamedPlayerList(SwapChooseActivity.this);
-            for(GameInstance g : HomeScreen.allGameInstances){
+            for (GameInstance g : HomeScreen.allGameInstances) {
                 ListIterator<PlayerIdentity> iter = players.listIterator();
-                while (iter.hasNext()){
-                    if(iter.next().ID.equals(g.getID())){
+                while (iter.hasNext()) {
+                    if (iter.next().ID.equals(g.getID())) {
                         iter.remove();
                     }
                 }
@@ -99,7 +142,7 @@ public class SwapChooseActivity extends AppCompatActivity
                 Uri myFileUri = Uri.parse(plyrGd.getProfilePicture());
                 profPic = ImageHandler.getBitmapFromUri(this, myFileUri, 120);
             } else {
-                if(defaultPicture == null){     // Only load if needed
+                if (defaultPicture == null) {     // Only load if needed
                     defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
                 }
                 profPic = defaultPicture;
@@ -111,7 +154,7 @@ public class SwapChooseActivity extends AppCompatActivity
 
     @Override
     public void setChoice(PlayerIdentity choosenPlayer) {
-        if(currentPlayerTV == null){
+        if (currentPlayerTV == null) {
             return;
         }
         currentPlayer = choosenPlayer;
@@ -122,7 +165,7 @@ public class SwapChooseActivity extends AppCompatActivity
     @Override
     public PlayersAdapter getPlayersAdapter() {
         // TODO: Add loading dialog while waiting.
-        while (!isAdapterLoaded){
+        while (!isAdapterLoaded) {
             Log.d(MONITOR_TAG, "Waiting for adapter to finish loading ...");
             try {
                 Thread.sleep(50);
@@ -137,14 +180,14 @@ public class SwapChooseActivity extends AppCompatActivity
     private View.OnClickListener startListener = view -> startGame();
 
     private void startGame() {
-        if(currentPlayer == null){
+        if (currentPlayer == null) {
             return;
         }
-        if(!GameData.doesPlayerExist(currentPlayer.ID, this)){
+        if (!GameData.doesPlayerExist(currentPlayer.ID, this)) {
             new GameData(this, currentPlayer.ID, currentPlayer.username);
         }
         int currentIndex = HomeScreen.allGameInstances
-                .get(HomeScreen.allGameInstances.size()-1)
+                .get(HomeScreen.allGameInstances.size() - 1)
                 .getThisGameIndex();
         HomeScreen.allGameInstances.add(new GameInstance(
                 currentPlayer.ID,
