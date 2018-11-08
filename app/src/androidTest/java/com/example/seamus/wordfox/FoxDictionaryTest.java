@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class FoxDictionaryTest {
     Context context = InstrumentationRegistry.getTargetContext();
-    FoxDictionary dictionary = new FoxDictionary("validWords_alph.txt", "letterFrequency.txt", context.getAssets());
+    FoxDictionary dictionary = new FoxDictionary("word_list_with_alphagram.txt", "letterFrequency.txt", context.getAssets());
 
     @Test
     public void wordExists() {

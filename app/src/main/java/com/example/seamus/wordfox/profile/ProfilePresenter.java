@@ -71,7 +71,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         if (isStoragePermissionGranted()) {
             bitmap = permissionGrantedDisplayImage();
         } else {
-            bitmap = defaultProfImg(new ImageHandler(activity));
+            bitmap = defaultProfImg();
         }
         view.setProfileImage(bitmap);
     }
@@ -80,21 +80,20 @@ public class ProfilePresenter implements ProfileContract.Listener {
     public Bitmap permissionGrantedDisplayImage() {
         String profPicStr = myGameData.getProfilePicture();
         Bitmap bitmap = null;
-        ImageHandler imageHandler = new ImageHandler(activity);
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            bitmap = imageHandler.getBitmapFromUri(myFileUri);
+            bitmap = ImageHandler.getBitmapFromUri(activity, myFileUri);
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
             view.setAdjustViewBounds(true);     // TODO: ... this should work even for default
         } else {
-            bitmap = defaultProfImg(imageHandler);
+            bitmap = defaultProfImg();
         }
         return bitmap;
     }
 
-    private Bitmap defaultProfImg(ImageHandler imageHandler) {
+    private Bitmap defaultProfImg() {
 //        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
 //        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_pic_default);
         return ImageHandler.getScaledBitmap(R.drawable.chooseprofilepicwhite, ImageHandler.dp2px(activity, 270), activity.getResources());

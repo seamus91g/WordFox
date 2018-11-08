@@ -114,7 +114,7 @@ public class HomeScreen extends AppCompatActivity
         if (FoxDictionary.isWordListLoaded) {
             return;
         }
-        Thread thread = new Thread(() -> FoxDictionary.loadWords("validWords_alph.txt", "letterFrequency.txt", getAssets()));
+        Thread thread = new Thread(() -> FoxDictionary.loadWords("word_list_with_alphagram.txt", "letterFrequency.txt", getAssets()));
         thread.start();
     }
     private void setup() {
