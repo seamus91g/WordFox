@@ -231,8 +231,7 @@ public class Statistics extends AppCompatActivity
         int profPicWidth = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
-            return imageHandler.getBitmapFromUriScaleWidth(myFileUri, profPicWidth);    // TODO: Set as percent
+            return ImageHandler.getBitmapFromUriScaleWidth(this, myFileUri, profPicWidth);    // TODO: Set as percent
         } else {
             if (defaultPicture == null) {     // Only load if needed
                 defaultPicture = ImageHandler.getScaledBitmapByWidth(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());

@@ -309,10 +309,9 @@ public class RoundnGameResults extends AppCompatActivity
 
         String profPicStr = plyrGd.getProfilePicture();
         Bitmap profPic = null;
-        ImageHandler imageHandler = new ImageHandler(this);     // Handle this better
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            profPic = imageHandler.getBitmapFromUri(myFileUri, ImageHandler.dp2px(this, 60));
+            profPic = ImageHandler.getBitmapFromUri(this, myFileUri, ImageHandler.dp2px(this, 60));
         }
         int maxScore = gameInstance.getHighestPossibleScore();
         int playerScore = gameInstance.getTotalScore();
@@ -323,11 +322,11 @@ public class RoundnGameResults extends AppCompatActivity
         resultPlayerNameView.setText(playerName);
         TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
 
-        if(HomeScreen.allGameInstances.size()>1) {
+        if (HomeScreen.allGameInstances.size() > 1) {
 //
             String playerResult = playerScore + " out of " + maxScore;
             resultPlayerScoreView.setText(playerResult);
-        }else{
+        } else {
 
             resultPlayerScoreView.setVisibility(View.GONE);
         }
