@@ -57,6 +57,7 @@ public class ProfileActivity extends AppCompatActivity
 
     int screenWidth;
     int screenHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +78,11 @@ public class ProfileActivity extends AppCompatActivity
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display. getSize(size);
-        screenWidth = size. x;
-        screenHeight = size. y;
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
 
         // User can click the profile picture to allow them to change the picture
         profileIB = findViewById(R.id.content_profile_profileImageButton);
@@ -90,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity
         // User can type in a new user name
         nameEditText = findViewById(R.id.profile_usernameET);
         nameEditText.setOnFocusChangeListener(edittextFocusChange);
-        nameEditText.setWidth(screenWidth/2);
+        nameEditText.setWidth(screenWidth / 2);
 
         // Button to save user name to GameData class.
         setProfileNameButton = findViewById(R.id.profile_save_name);
@@ -117,21 +117,21 @@ public class ProfileActivity extends AppCompatActivity
     }
 
 
-
-    private void setUpTalkingFox(){
+    private void setUpTalkingFox() {
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) 0.64*screenWidth, getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.64 * ((float) screenWidth)), getResources()));
 
     }
 
     @Override
-    public void setRankImage(Bitmap rankImage){
+    public void setRankImage(Bitmap rankImage) {
         ImageView rankIV = findViewById(R.id.content_profile_instructionFoxIV);
-        rankIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(presenter.getFoxRank(), (int) (0.35*screenWidth),getResources()));
+        rankIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(presenter.getFoxRank(), (int) (0.35 * ((float) screenWidth)), getResources()));
     }
+
     @Override
-    public void setRankText(String rank){
+    public void setRankText(String rank) {
         TextView rankTV = findViewById(R.id.highest_rank_header);
         rankTV.setText("Highest rank: " + rank);
     }
@@ -273,14 +273,14 @@ public class ProfileActivity extends AppCompatActivity
         String longestWordSpeechBubble;
         if (longestWord.equals(GameData.NON_EXISTANT)) {
             longestWordSpeechBubble = "You haven't completed any games yet!";
-        }else{
+        } else {
             longestWordSpeechBubble = "Your longest word\n ever was \n" + "\"" + longestWord + "\"" + "!";
         }
-            ConstraintLayout talkingFoxCL = findViewById(R.id.content_profile_foxWithSpeechCL);
-            TextView instructionFoxTV = talkingFoxCL.findViewById(R.id.content_profile_instructionFoxTV);
+        ConstraintLayout talkingFoxCL = findViewById(R.id.content_profile_foxWithSpeechCL);
+        TextView instructionFoxTV = talkingFoxCL.findViewById(R.id.content_profile_instructionFoxTV);
 
-            IVmethods.setTVwidthPercentOfIV(talkingFoxCL.findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV),
-                    instructionFoxTV,0.8, longestWordSpeechBubble);
+        IVmethods.setTVwidthPercentOfIV(talkingFoxCL.findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV),
+                instructionFoxTV, 0.8, longestWordSpeechBubble);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public Bitmap getButtonGridImage() {
         if (buttongGridImage == null) {
-            buttongGridImage = ImageHandler.getScaledBitmapByWidth(R.drawable.letter_grid_blank,screenWidth/4, getResources()); // TODO: Adjust to screen size
+            buttongGridImage = ImageHandler.getScaledBitmapByWidth(R.drawable.letter_grid_blank, screenWidth / 4, getResources()); // TODO: Adjust to screen size
         }
         return buttongGridImage;
     }

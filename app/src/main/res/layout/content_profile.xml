@@ -122,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="2dp"
                 android:paddingLeft="2dp"
+                ads:layout_constraintBottom_toTopOf="@+id/best_game_divider"
                 android:paddingEnd="2dp"
                 android:paddingRight="2dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -134,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="fox_giving_instruction_profile"
+                    ads:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
