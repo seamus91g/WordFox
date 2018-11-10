@@ -80,7 +80,7 @@ public class HomeScreen extends AppCompatActivity
                 getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleright), getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_home_screen_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.content_home_screen_fox_instructions1);
+        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.content_home_screen_fox_instructions);
 
         TextView justMeTV = findViewById(R.id.just_me_text);
         justMeTV.requestLayout();

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,14 +16,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
@@ -44,8 +49,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
-
 
 public class RoundEndScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -59,7 +62,9 @@ public class RoundEndScreen extends AppCompatActivity
     private boolean isOnline;
     private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
+    private boolean backButtonPressedOnce = false;
     private ConstraintLayout cl;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +92,30 @@ public class RoundEndScreen extends AppCompatActivity
         setUpRoundEndFox();
 
         GameInstance gameInstance = HomeScreen.allGameInstances.get(gameIndexNumber);
-//        GameData plyrGd = new GameData(this, gameInstance.getID());
      	int maxScore = gameInstance.getLongestPossible().length();
         int playerScore = gameInstance.getScore();
-//        int percentScore = (100 * playerScore) / (maxScore);
 
-        String playerResult = playerScore + " out of " + maxScore;
-//        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
+        String playerResult = playerScore + "/" + maxScore;
         adjustSpeechBubble(playerResult);
 
+
+//        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+//        Display display = myWindowManager.getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        screenWidth = size.x;
+
+        calculateScreenWidth();
+    }
+
+    private void calculateScreenWidth() {
+        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = myWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        Log.d("roundendscreen", "1: expected screenwidth: " + 1440);
+        Log.d("roundendscreen", "1: screenwidth: " + screenWidth);
     }
 
     private void bindWifiService() {
@@ -121,6 +141,7 @@ public class RoundEndScreen extends AppCompatActivity
         FloatingActionButton fab = findViewById(R.id.fab_round_end);
         fab.setOnClickListener(view -> {
             startGame();
+            finish();
         });
     }
 
@@ -185,14 +206,28 @@ public class RoundEndScreen extends AppCompatActivity
         }
         ws.sendData(jsString);
     }
-
+    // Must press back button twice in quick succession to return to home
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            // If pressed recently, proceed to home screen
+            if (this.backButtonPressedOnce) {
+                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
+                startActivity(homeScreenIntent);
+
+                finish();
+                return;
+            }
+            // Pressed once. Inform user a second click will exit the game.
+            this.backButtonPressedOnce = true;
+            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+            toastMessage.setGravity(Gravity.TOP, 0, 40);
+            toastMessage.show();
+            // Listen for another click for a brief amount of time. If none, reset the flag
+            new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
         }
     }
 
@@ -221,14 +256,32 @@ public class RoundEndScreen extends AppCompatActivity
 
     private void setUpRoundEndFox(){
 
-        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.roundendsilcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.roundendsilcoloured),getResources()));
 
+        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = myWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+
+        Log.d("roundendscreen", "2: expected screenwidth: " + 1440);
+        Log.d("roundendscreen", "2: screenwidth: " + screenWidth);
+
+        int foxPercent = (int) (0.35 * screenWidth);
+        int foxSpeechPercent = (int) (0.64 * screenWidth);
+        Log.d("roundendscreen", "3: expected foxPercent: " + 504);
+        Log.d("roundendscreen", "3: foxPercent: " + foxPercent);
+        Log.d("roundendscreen", "4: expected foxSpeechPercent: " + 921);
+        Log.d("roundendscreen", "4: foxSpeechPercent: " + foxSpeechPercent);
+
+        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent,getResources()));
+        Log.d("roundendscreen", "5: expected foxPercent: " + 504);
+        Log.d("roundendscreen", "5: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent,getResources()).getWidth());
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleright), getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()));
+        Log.d("roundendscreen", "52: expected foxPercent: " + 921);
+        Log.d("roundendscreen", "52: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent,getResources()).getWidth());
 
     }
 
@@ -240,6 +293,10 @@ public class RoundEndScreen extends AppCompatActivity
         TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
                 instructionFoxTV,0.8, longestWordHeader);
+        Log.d("roundendscreen", "6: expected instructionFoxTV: " + 0.8*ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.64 * screenWidth),getResources()).getWidth());
+        Log.d("roundendscreen", "6: instructionFoxTV: " + findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV).getWidth());
+
+
 
 
     }
@@ -293,7 +350,7 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public Bitmap getBlankScaledGrid(int shortestSide) {
-        return ImageHandler.getScaledBitmap(R.drawable.letter_grid_blank, shortestSide, getResources());
+        return ImageHandler.getScaledBitmapByLongestSide(R.drawable.letter_grid_blank, shortestSide, getResources());
 
     }
 
@@ -332,11 +389,16 @@ public class RoundEndScreen extends AppCompatActivity
     public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
         String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
         if (profPicStr.equals("")) {
+            Log.d("roundendscreen", "7: expected profPic: " + profilePicScreenWidth);
+            Log.d("roundendscreen", "7: expected profPic: w_h " + loadDefaultProfilePic(profilePicScreenWidth).getWidth() + " __ " + loadDefaultProfilePic(profilePicScreenWidth).getHeight());
             return loadDefaultProfilePic(profilePicScreenWidth);
         } else {
             Uri myFileUri = Uri.parse(profPicStr);
+
             Bitmap profPic = ImageHandler.getBitmapFromUriScaleWidth(this, myFileUri, profilePicScreenWidth); // TODO: Why not static method?
             if (profPic == null) {
+                Log.d("roundendscreen", "9: expected size: " + 288);
+                Log.d("roundendscreen", "9: actual size: " + profilePicScreenWidth);
                 return loadDefaultProfilePic(profilePicScreenWidth);
             }
             return profPic;
@@ -344,10 +406,12 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     private Bitmap loadDefaultProfilePic(int size) {
-        return ImageHandler.getScaledBitmap(
+
+        return ImageHandler.getScaledBitmapByLongestSide(
                 GameData.PROFILE_DEFAULT_IMG,
                 size,          // TODO: Will be shortest side, not necessarily width
                 getResources());
+
     }
 
     @Override

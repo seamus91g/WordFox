@@ -273,12 +273,10 @@
 
     <!-- Text style for non headings text -->
     <style name="notHeadingTextStyle">
-
         <item name="android:fontFamily">@font/unicode_arialr</item>
         <item name="android:textColor">@color/game_font_color</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/non_heading_fontsize</item>
     </style>
-
 
 
     <!-- Text style for headings -->
@@ -293,10 +291,9 @@
 
     <!-- Text style for very large headings  in the game-->
     <style name="largeHeadingTextStyle">
-
         <item name="android:fontFamily">@font/arialroundedbold</item>
         <item name="android:textColor">@color/game_font_color</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">@dimen/large_heading_fontsize</item>
         <item name="android:gravity">center</item>
     </style>
 

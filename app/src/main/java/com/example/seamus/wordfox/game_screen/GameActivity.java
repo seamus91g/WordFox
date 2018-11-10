@@ -7,9 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,19 +53,28 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.content_game);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        // Left side navigation drawer
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
 
-        // Left side navigation drawer
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+// Remember that you should never show the action bar if the
+// status bar is hidden, so hide that too if necessary.
+//        ActionBar actionBar = getActionBar();
+//        actionBar.hide();
 
         FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Layout og the 3x3 grid of letters
@@ -349,24 +356,20 @@ public class GameActivity extends AppCompatActivity
     // Must press back button twice in quick succession to exit the game
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            // If pressed recently, proceed to home screen
-            if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
-                startActivity(homeScreenIntent);
-                return;
-            }
-            // Pressed once. Inform user a second click will exit the game.
-            this.backButtonPressedOnce = true;
-            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
-            toastMessage.setGravity(Gravity.TOP, 0, 40);
-            toastMessage.show();
-            // Listen for another click for a brief amount of time. If none, reset the flag
-            new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
+        // If pressed recently, proceed to home screen
+        if (this.backButtonPressedOnce) {
+            Intent homeScreenIntent = new Intent(this, HomeScreen.class);
+            startActivity(homeScreenIntent);
+            finish();
+            return;
         }
+        // Pressed once. Inform user a second click will exit the game.
+        this.backButtonPressedOnce = true;
+        Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+        toastMessage.setGravity(Gravity.TOP, 0, 40);
+        toastMessage.show();
+        // Listen for another click for a brief amount of time. If none, reset the flag
+        new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

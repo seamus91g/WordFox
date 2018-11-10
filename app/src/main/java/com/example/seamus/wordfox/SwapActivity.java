@@ -153,7 +153,7 @@ public class SwapActivity extends AppCompatActivity
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = ((Float) (animation.getAnimatedValue())) .floatValue();
                 // Set translation of your view here. Position can be calculated
-                // out of value. This code should move the view in a half circle.
+                // relative to value.
 
                 phoneIV.setPivotX(phoneIV.getWidth()/2);
                 phoneIV.setPivotY(phoneIV.getHeight()/2);

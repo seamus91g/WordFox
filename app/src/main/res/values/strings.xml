@@ -93,7 +93,7 @@
     <string name="DataScreenActivityLabel">Profile Data</string>
     <string name="SettingsActivityLabel">Settings</string>
     <string name="title_activity_player_switch">PlayerSwitchActivity</string>
-    <string name="title_activity_end_screen_single_player1">EndScreenSinglePlayer1</string>
+    <string name="title_activity_end_screen_single_player1">Final Results</string>
     <string name="title_activity_data">DataActivity</string>
     <string name="title_activity_data_page">DataPageActivity</string>
     <string name="home_button_text">Home</string>
@@ -108,7 +108,7 @@
     <string name="Tag3player">3players</string>
     <string name="Tag1player">1players</string>
     <string name="Tag2player">2players</string>
-    <string name="title_activity_round_end_screen">RoundEndScreen</string>
+    <string name="title_activity_round_end_screen">Results</string>
     <string name="you_scored">You scored</string>
     <string name="no_games_played_profile">No games played!</string>
     <string name="title_activity_local_wifi">Local Wifi</string>
@@ -119,9 +119,9 @@
     <string name="just_me">Just Me</string>
     <string name="with_friends">With Friends</string>
     <string name="pass_and_play"><![CDATA[Pass & Play]]></string>
-    <string name="title_activity_pass_and_play">PassAndPlay</string>
-    <string name="title_activity_swap">SwapActivity</string>
-    <string name="title_activity_swap_choose">SwapChooseActivity</string>
+    <string name="title_activity_pass_and_play">Pass and Play</string>
+    <string name="title_activity_swap">Pass and Play</string>
+    <string name="title_activity_swap_choose">Pass and Play</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -129,9 +129,11 @@
     <string name="with_friends_explanation_text">Play with your friends using wifi direct even without an internet connection</string>
     <string name="pass_and_play_explanation_text">Play with up to 5 friends all sharing this phone</string>
     <string name="longest_words_minor_heading">Longest possible word from each round</string>
-    <string name="choose_your_number_of_players_using_the_slider">Choose your number of players using the slider</string>
+    <string name="choose_your_number_of_players_using_the_slider">Choose your \nnumber of players \nusing the slider</string>
     <string name="wifi_nearby_players_list_heading">Nearby list of players ...</string>
     <string name="content_swap_fox_instructions">Pass the game \n to the \n next player</string>
-    <string name="content_home_screen_fox_instructions1">Choose your game type from the 3 options</string>
     <string name="data_fox_speech">Choose any player below to see their game data! You can see every game you played and word you found!</string>
+    <string name="content_home_screen_fox_instructions">Choose your game\n type from the\n 3 options</string>
+    <string name="game_rank">Game Rank:</string>
+    <string name="data">Data</string>
 </resources>

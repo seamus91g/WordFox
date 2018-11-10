@@ -20,7 +20,7 @@ import java.util.List;
 
 public class RoundEndPresenter {
     private static final String TAG = "RoundEndPresenter";
-    private static int PROFILE_PIC_SCREEN_WIDTH_PERCENT = 30;
+    private static int PROFILE_PIC_SCREEN_WIDTH_PERCENT = 20;
     private static int PLAYER_RESULT_GRID_SCREEN_WIDTH_PERCENT = 30;
     private static int SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT = 35;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -123,9 +123,6 @@ public class RoundEndPresenter {
 
         String scoreText = gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")";
         view.setPlayerScoreText(scoreText);
-
-//        String playerBubbleText = "You scored " + playerScore + " out of " + maxScore;
-//        view.setSpeechBubbleText(playerBubbleText);
 
         Bitmap gridBmp = view.getBlankScaledGrid(resultGridWidth);
         GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
