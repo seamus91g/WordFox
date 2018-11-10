@@ -47,6 +47,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Made by two lads in Ireland." />
+        android:text="Checkout your profile and your data." />
 
 </LinearLayout>
