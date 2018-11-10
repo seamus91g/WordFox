@@ -6,8 +6,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Queue;
+@Deprecated
 public class GridImage {
 
     private Bitmap gridImage;
@@ -120,6 +123,25 @@ public class GridImage {
     }
 
     private ArrayList<Integer> findClickIndices(String word, String letters) {
+
+        ArrayList<Integer> clickedIndices = new ArrayList<>();
+        String[] bestWord = word.split("");
+        String[] bestLetter = letters.split("");
+        for (int j = 1; j < bestWord.length; ++j) {
+            for (int k = 1; k < bestLetter.length; ++k) {
+                if (bestWord[j].equals(bestLetter[k])) {
+                    clickedIndices.add(k);
+                    bestLetter[k] = "0";
+                    break;
+                }
+            }
+        }
+        return clickedIndices;
+    }
+
+    private ArrayList<Integer> findClickIndices(String word, String letters, boolean ghjk) {
+        Queue<String> letterQueue = new ArrayDeque<>(Arrays.asList(letters));
+        // TODO: unfinished
 
         ArrayList<Integer> clickedIndices = new ArrayList<>();
         String[] bestWord = word.split("");
