@@ -141,7 +141,7 @@ public class RoundnGameResults extends AppCompatActivity
         mAdView.loadAd(adRequestTest);
 
         calculateScreenDimensions();
-        profPicWidth = (int) (screenWidth/10);
+        profPicWidth = (int) (screenWidth/6);
         buttonGridImageWidth = (int) (screenWidth/4);
 
         ArrayList<GameInstance> instancesToDisplay = HomeScreen.allGameInstances;

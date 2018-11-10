@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,9 +121,9 @@ public class GameGridAdapter extends RecyclerView.Adapter<GameGridAdapter.GridVi
             this.notPressed = notPressed;
             this.pressed = pressed;
             this.wordHeader = itemView.findViewWithTag(GRID_HEADER_TAG);
-            textSize = (pressed.getHeight() * 20) / 100;
+            textSize = (pressed.getHeight() * 40) / 100;
             textSizeGrid = (textSize*3)/2;
-            wordHeader.setTextSize(textSize);
+            wordHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             initialiseLetters(itemView, letters);
             initialiseGrids(itemView, letters);
         }
@@ -151,7 +152,7 @@ public class GameGridAdapter extends RecyclerView.Adapter<GameGridAdapter.GridVi
             for (int i = 0; i < letters.length; ++i) {
                 String letterTag = LETTER_TAG_PREFIX + (i + 1);
                 TextView letterTv = view.findViewWithTag(letterTag);
-                letterTv.setTextSize(textSizeGrid);
+                letterTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeGrid);
                 letterTv.setText(letters[i]);
             }
         }
