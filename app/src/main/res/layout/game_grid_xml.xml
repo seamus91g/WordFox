@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/game_grid_word_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="game_grid_word_header"
+        android:text="Word"
+        android:textColor="@color/game_font_color" />
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/grid_layout_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="grid_layout_container">
+
+        <ImageView
+            android:id="@+id/game_grid_cell_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_1"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_1"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_1"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_1"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <ImageView
+            android:id="@+id/game_grid_cell_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_2"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_2"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_2"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_2"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_2" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_3"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_3"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_3"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_3"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_3" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_4"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_4"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_4"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_4"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_4" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_5"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_5"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_5"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_5"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_5" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_6"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_6"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_6"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_6"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_6" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_7"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_7"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_7"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_7"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_7" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_8"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_8"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_8"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_8"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_8" />
+
+
+        <ImageView
+            android:id="@+id/game_grid_cell_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/single_grid_cell_green"
+            android:tag="game_grid_cell_9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="game_grid_letter_9"
+            android:text="W"
+            android:textColor="@color/game_grid_font_color"
+            app:layout_constraintBottom_toBottomOf="@+id/game_grid_cell_9"
+            app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_9"
+            app:layout_constraintRight_toRightOf="@+id/game_grid_cell_9"
+            app:layout_constraintTop_toTopOf="@+id/game_grid_cell_9" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>
