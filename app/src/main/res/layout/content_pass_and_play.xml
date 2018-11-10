@@ -13,151 +13,149 @@
         android:id="@+id/constraint_layoutPAP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bStartPAP"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
             android:id="@+id/foxes1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/foxes2"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/foxes2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toLeftOf="@id/seekBar"
             app:layout_constraintRight_toLeftOf="@id/seekBar"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/foxes3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toRightOf="@id/foxes2"
             app:layout_constraintRight_toLeftOf="@id/foxes4"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/foxes4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toRightOf="@id/foxes3"
             app:layout_constraintRight_toLeftOf="@id/foxes5"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
             android:id="@+id/foxes5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toRightOf="@id/seekBar"
             app:layout_constraintRight_toRightOf="@id/seekBar"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/foxes6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/seekBar"
             app:layout_constraintLeft_toRightOf="@id/foxes5"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:tickMark="@drawable/ic_fiber_manual_record"
-            android:thumb="@drawable/ic_radio_button_checked"
             android:hapticFeedbackEnabled="true"
             android:max="4"
+            android:thumb="@drawable/ic_radio_button_checked"
+            android:tickMark="@drawable/ic_fiber_manual_record"
+            app:layout_constraintBottom_toTopOf="@id/content_pass_and_play_chosenNoOfPlayersTV"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foxes4"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/foxes4" />
 
-
+        <TextView
+            android:id="@+id/content_pass_and_play_chosenNoOfPlayersTV"
+            style="@style/explanationTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="2 Player Game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/seekBar"
+            app:layout_constraintRight_toRightOf="@id/seekBar"
+            app:layout_constraintTop_toBottomOf="@id/seekBar" />
 
 
     </android.support.constraint.ConstraintLayout>
 
 
-
     <Button
         android:id="@+id/bStartPAP"
         style="@style/RectangularButtons"
-        android:fontFamily="@font/arial_ff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/arial_ff"
         android:gravity="center"
         android:text="start"
         android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@id/content_pass_and_play_foxWithSpeechCL"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraint_layoutPAP"
-        app:layout_constraintBottom_toTopOf="@id/content_pass_and_play_foxWithSpeechCL"/>
+        app:layout_constraintTop_toBottomOf="@id/constraint_layoutPAP" />
 
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_pass_and_play_foxWithSpeechCL"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
+        android:paddingEnd="2dp"
+        android:paddingRight="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        >
+        app:layout_constraintRight_toRightOf="parent">
 
 
         <ImageView
             android:id="@+id/content_pass_and_play_instructionFoxIV"
-            android:contentDescription="fox_giving_instruction_pass_and_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="fox_giving_instruction_pass_and_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            />
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <ImageView
             android:id="@+id/content_pass_and_play_instructionFoxSpeechBubbleIV"
-            android:contentDescription="fox_giving_instruction_speech_bubble_pass_and_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="fox_giving_instruction_speech_bubble_pass_and_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/content_pass_and_play_instructionFoxIV"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/content_pass_and_play_instructionFoxTV"
+            style="@style/foxSpeechBubblesTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/foxSpeechBubblesTextStyle"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

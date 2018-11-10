@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.example.seamus.wordfox.GameData;
@@ -20,6 +22,7 @@ import com.example.seamus.wordfox.datamodels.GameItem;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static com.example.seamus.wordfox.ImageHandler.resize;
 import static com.example.seamus.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
 
 /**
@@ -66,45 +69,43 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     // Attempt to load and display the profile image.
-    public void displayProfileImage() {
+    public void displayProfileImage(int screenHeight, Resources myResources) {
         Bitmap bitmap;
         if (isStoragePermissionGranted()) {
-            bitmap = permissionGrantedDisplayImage();
+            bitmap = permissionGrantedDisplayImage(screenHeight, myResources);
         } else {
-            bitmap = defaultProfImg();
-        }
+            bitmap = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, myResources);
+    }
         view.setProfileImage(bitmap);
     }
 
     // permission granted so get the image
-    public Bitmap permissionGrantedDisplayImage() {
+    public Bitmap permissionGrantedDisplayImage(int screenHeight, Resources myResources) {
         String profPicStr = myGameData.getProfilePicture();
         Bitmap bitmap = null;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            bitmap = ImageHandler.getBitmapFromUri(activity, myFileUri);
+            DisplayMetrics metrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            metrics.heightPixels = (screenHeight/4);
+            bitmap = resize(ImageHandler.getBitmapFromUri(activity, myFileUri), metrics);
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
             view.setAdjustViewBounds(true);     // TODO: ... this should work even for default
         } else {
-            bitmap = defaultProfImg();
+            bitmap = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, myResources);
         }
         return bitmap;
     }
 
-    private Bitmap defaultProfImg() {
-//        return imageHandler.loadAssetImage(DEFAULT_PROFILE_IMAGE_ASSET);
-//        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_pic_default);
-        return ImageHandler.getScaledBitmap(R.drawable.chooseprofilepicwhite, ImageHandler.dp2px(activity, 270), activity.getResources());
-    }
 
     // When user is finished choosing a picture from the image gallery
-    public void activityResult(Intent data) {
+    public void activityResult(Intent data, int screenHeight) {
         Uri selectedImage = data.getData();
         assert selectedImage != null;
         myGameData.setProfilePicture(selectedImage.toString());     // Save path to chosen pic for future loading
-        displayProfileImage();
+        displayProfileImage(screenHeight, activity.getResources());
     }
 
     // Allow user to choose image from their phone when the profile image is clicked
