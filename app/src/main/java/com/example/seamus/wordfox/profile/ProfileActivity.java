@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -51,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity
     private NavigationBurger navBurger = new NavigationBurger();
     private ProfilePresenter presenter;
     private ImageView profileIB;
+    private FrameLayout profileChooseImageFL;
     private EditText nameEditText;
     private ImageButton setProfileNameButton;
     private Bitmap buttongGridImage = null;
@@ -84,9 +86,18 @@ public class ProfileActivity extends AppCompatActivity
         screenWidth = size.x;
         screenHeight = size.y;
 
+        // Set the height of the frame layout surrounding the profile image
+        profileChooseImageFL = findViewById(R.id.profile_choose_imageFL);
+//        profileChooseImageFL.setMinimumHeight(screenHeight/4);
+        profileChooseImageFL.setLayoutParams(new ConstraintLayout.LayoutParams(screenWidth, screenHeight/4));
+
         // User can click the profile picture to allow them to change the picture
         profileIB = findViewById(R.id.content_profile_profileImageButton);
+        Bitmap defaultProfileImage = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, getResources());
+        setProfileImage(defaultProfileImage);
+
         profileIB.setOnClickListener(profileImageListener);
+
         // User can type in a new user name
         nameEditText = findViewById(R.id.profile_usernameET);
         nameEditText.setOnFocusChangeListener(edittextFocusChange);
@@ -100,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity
         presenter = new ProfilePresenter(this, new GameData(this, GameData.getPlayer1Identity(this).ID));
         presenter.displayLongestWord();
         presenter.displayProfileName();
-        presenter.displayProfileImage();
+        presenter.displayProfileImage(screenHeight, getResources());
         presenter.bestGameWords();
         presenter.recentGameWords();
         presenter.displayRank();
@@ -201,7 +212,7 @@ public class ProfileActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // if permission has been granted resume tasks needing this permission
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            presenter.permissionGrantedDisplayImage();
+            presenter.permissionGrantedDisplayImage(screenHeight, getResources());
         } else {
             // permission not granted so can't do anything with the image
             Toast.makeText(this, "Default profile icon will remain", Toast.LENGTH_SHORT).show();
@@ -213,7 +224,7 @@ public class ProfileActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
-            presenter.activityResult(data);
+            presenter.activityResult(data, screenHeight);
         }
     }
 

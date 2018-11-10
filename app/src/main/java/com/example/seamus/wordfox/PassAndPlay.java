@@ -133,6 +133,7 @@ public class PassAndPlay extends AppCompatActivity
         fox5IV.setImageBitmap(myBitmap5);
         fox6IV.setImageBitmap(myBitmap6);
 
+        TextView chosenNoOfPlayers = findViewById(R.id.content_pass_and_play_chosenNoOfPlayersTV);
 
         mySB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -144,6 +145,7 @@ public class PassAndPlay extends AppCompatActivity
 
                     case 0:
                         numberOfPlayers = 2;
+                        chosenNoOfPlayers.setText("2 Player Game");
                         fox3IV.setImageBitmap(myBitmap3);
                         fox4IV.setImageBitmap(myBitmap4);
                         fox5IV.setImageBitmap(myBitmap5);
@@ -151,6 +153,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                     case 1:
                         numberOfPlayers = 3;
+                        chosenNoOfPlayers.setText("3 Player Game");
                         fox3IV.setImageBitmap(myBitmap33);
                         fox4IV.setImageBitmap(myBitmap4);
                         fox5IV.setImageBitmap(myBitmap5);
@@ -158,6 +161,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                     case 2:
                         numberOfPlayers = 4;
+                        chosenNoOfPlayers.setText("4 Player Game");
                         fox3IV.setImageBitmap(myBitmap33);
                         fox4IV.setImageBitmap(myBitmap44);
                         fox5IV.setImageBitmap(myBitmap5);
@@ -165,6 +169,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                     case 3:
                         numberOfPlayers = 5;
+                        chosenNoOfPlayers.setText("5 Player Game");
                         fox3IV.setImageBitmap(myBitmap33);
                         fox4IV.setImageBitmap(myBitmap44);
                         fox5IV.setImageBitmap(myBitmap55);
@@ -172,6 +177,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                     case 4:
                         numberOfPlayers = 6;
+                        chosenNoOfPlayers.setText("6 Player Game");
                         fox3IV.setImageBitmap(myBitmap33);
                         fox4IV.setImageBitmap(myBitmap44);
                         fox5IV.setImageBitmap(myBitmap55);

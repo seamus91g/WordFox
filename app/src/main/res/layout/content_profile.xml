@@ -31,14 +31,15 @@
             <FrameLayout
                 android:id="@+id/profile_choose_imageFL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:background="@color/game_font_color"
                 app:layout_constraintTop_toTopOf="parent">
 
 
                 <ImageView
+                    android:layout_gravity="center"
                     android:id="@+id/content_profile_profileImageButton"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
             </FrameLayout>
