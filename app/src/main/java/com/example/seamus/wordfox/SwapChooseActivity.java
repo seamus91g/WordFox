@@ -167,8 +167,8 @@ public class SwapChooseActivity extends AppCompatActivity
                 Uri myFileUri = Uri.parse(plyrGd.getProfilePicture());
                 profPic = ImageHandler.getBitmapFromUri(this, myFileUri, 120);
             } else {
-                if(defaultPicture == null){     // Only load if needed
-                    defaultPicture = ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
+                if (defaultPicture == null) {     // Only load if needed
+                    defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
 
                 }
                 profPic = defaultPicture;
