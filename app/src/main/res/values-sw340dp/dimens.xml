@@ -10,7 +10,7 @@
     <dimen name="screen_margin">8dp</dimen>
     <dimen name="big_TextView_height">49dp</dimen>
     <dimen name="big_text_size">42dp</dimen>
-    <dimen name="small_TextView_height">49dp</dimen>
+    <dimen name="small_TextView_height">41dp</dimen>
     <dimen name="small_text_size">21dp</dimen>
     <dimen name="grid_height">275dp</dimen>
     <dimen name="timer_width">16dp</dimen>

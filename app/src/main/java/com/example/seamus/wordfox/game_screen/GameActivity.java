@@ -1,18 +1,26 @@
 package com.example.seamus.wordfox.game_screen;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +30,7 @@ import com.example.seamus.wordfox.GameData;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GameTimer;
 import com.example.seamus.wordfox.HomeScreen;
+import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.RoundResults.RoundEndScreen;
@@ -31,12 +40,18 @@ import com.example.seamus.wordfox.profile.ProfileActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GamescreenContract.View {
     public static final String GAME_INDEX = "game_index";
     public static int GAME_TIME_SECONDS = 30;
     public static final String MONITOR_TAG = "myTag";
+    private static final float BG_FOX_HEIGHT_PERCENT = 7;
     private NavigationBurger navBurger = new NavigationBurger();
     private GameTimer myGameTimerInstance;
     private GamescreenPresenter presenter;
@@ -47,34 +62,21 @@ public class GameActivity extends AppCompatActivity
     private boolean resetButtonPressedOnce = false;
     private boolean gameInFocus = true;
     private boolean timeUp = false;
-//    private WifiServiceConnection netConnService;
-//    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_game);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        // Left side navigation drawer
-//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
 
         View decorView = getWindow().getDecorView();
-// Hide the status bar.
+        // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-// Remember that you should never show the action bar if the
-// status bar is hidden, so hide that too if necessary.
-//        ActionBar actionBar = getActionBar();
-//        actionBar.hide();
+
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        new Thread(() -> createBackground(size.y)).start();
 
         FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Layout og the 3x3 grid of letters
@@ -83,11 +85,6 @@ public class GameActivity extends AppCompatActivity
         DictionaryApplication dictionary = (DictionaryApplication) getApplication();
         int gIndex = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
         GameInstance game = HomeScreen.allGameInstances.get(gIndex);
-
-//        isOnline = game.isOnline();
-//        if (isOnline) {
-//            netConnService = new WifiServiceConnection();
-//        }
 
         // Presenter handles all non-view related logic
         presenter = new GamescreenPresenter(
@@ -103,10 +100,53 @@ public class GameActivity extends AppCompatActivity
         displayTitle();
         timeBlock = findViewById(R.id.timeBlock);
         populateTimeBlock();
-
-
-
     }
+
+    private void createBackground(int screenHeight) {
+
+        int foxHeight = (int) ((screenHeight * BG_FOX_HEIGHT_PERCENT) / 100);
+        String tagPrefix = "background_fox_";
+
+        ConstraintLayout backgroundContainer = findViewById(R.id.background_foxes_root_container);
+        List<ImageView> viewIDs = new ArrayList<>();
+        for (int i = 1; i < 18; ++i) {
+            ImageView ivFox = backgroundContainer.findViewWithTag(tagPrefix + i);
+            viewIDs.add(ivFox);
+        }
+
+        final List<Bitmap> allBGFoxes = getBGFoxesScaled(foxHeight);
+
+        List<Bitmap> BGFoxesCopy = new ArrayList<>(allBGFoxes);
+        Collections.shuffle(BGFoxesCopy);
+
+        // Randomly add foxes to the background.
+        for (ImageView iv : viewIDs) {
+            Log.d(MONITOR_TAG, "size ~ bg, copy : " + allBGFoxes.size() + ", " + BGFoxesCopy.size());
+            iv.setImageBitmap(BGFoxesCopy.remove(BGFoxesCopy.size() - 1));
+            if (BGFoxesCopy.size() == 0) {
+                BGFoxesCopy.addAll(allBGFoxes);
+                Collections.shuffle(BGFoxesCopy);
+            }
+        }
+    }
+
+    private List<Bitmap> getBGFoxesScaled(int foxHeight) {
+        final List<Bitmap> bgFoxes = new ArrayList<>();
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.arcticfoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.gameendsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.gryfoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.kitfoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.palefoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.ppfox1sil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.ppfox2sil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.redfoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.roundendsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.silverfoxsil_background, foxHeight, getResources()));
+        bgFoxes.add(ImageHandler.getScaledBitmapByHeight(R.drawable.woodfox_background, foxHeight, getResources()));
+        return bgFoxes;
+    }
+
 
     // Randomly shuffle locations of the letters in the grid
     public void shuffleGivenLetters(View v) {
