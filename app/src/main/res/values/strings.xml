@@ -125,7 +125,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="challenge_yourself">Challenge yourself against the best opponent - You!</string>
+    <string name="justme_explanation_text">Race against the clock to find the longest word</string>
     <string name="with_friends_explanation_text">Play with your friends using wifi direct even without an internet connection</string>
     <string name="pass_and_play_explanation_text">Play with up to 5 friends all sharing this phone</string>
     <string name="longest_words_minor_heading">Longest possible word from each round</string>
@@ -136,4 +136,5 @@
     <string name="content_home_screen_fox_instructions">Choose your game\n type from the\n 3 options</string>
     <string name="game_rank">Game Rank:</string>
     <string name="data">Data</string>
+    <string name="no_existing_players">There are no existing players to choose from.</string>
 </resources>

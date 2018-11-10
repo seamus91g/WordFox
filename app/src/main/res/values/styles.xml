@@ -12,6 +12,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.DataPage">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -223,11 +224,6 @@
     </style>
 
 
-
-
-
-
-
     <!-- Style for the fox buttons on the home screen for choosing number of players-->
     <style name="homeNumPLayersButtons">
         <item name="android:gravity">center
@@ -241,7 +237,6 @@
     </style>
 
 
-
     <!-- Text style for the fox speech bubbles-->
     <style name="foxSpeechBubblesTextStyle">
 
@@ -251,7 +246,6 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/heading_fontsize</item>
     </style>
-
 
 
     <!-- Text style for found words throughout all screens-->
@@ -286,7 +280,6 @@
         <item name="android:textColor">@color/game_font_color</item>
         <item name="android:textSize">@dimen/heading_fontsize</item>
     </style>
-
 
 
     <!-- Text style for very large headings  in the game-->

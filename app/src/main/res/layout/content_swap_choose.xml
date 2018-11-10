@@ -176,6 +176,7 @@
 
     <TextView
         android:id="@+id/current_playing_as_choice"
+        style="@style/headingTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
@@ -190,6 +191,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Game"
+        style="@style/wifiButtonsStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintLeft_toLeftOf="parent"

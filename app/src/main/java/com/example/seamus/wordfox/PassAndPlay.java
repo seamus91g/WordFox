@@ -81,7 +81,7 @@ public class PassAndPlay extends AppCompatActivity
         mySB.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             mySB.setThumb(ContextCompat.getDrawable(this, R.mipmap.ic_person_pin_circle_png));
         }
 

@@ -48,6 +48,9 @@
             android:id="@+id/secondsRemaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="2dp"
+            android:textColor="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:text="30" />
@@ -179,6 +182,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/gameButtons"
+        android:padding="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
