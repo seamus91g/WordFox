@@ -12,48 +12,47 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_round_end_screen_foxWithSpeechCL"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
+        android:paddingEnd="2dp"
+        android:paddingRight="2dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
             android:id="@+id/content_round_end_screen_instructionFoxIV"
-            android:contentDescription="fox_giving_instruction_round_end_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="fox_giving_instruction_round_end_screen"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
-            />
+            app:layout_constraintRight_toLeftOf="@id/content_round_end_screen_instructionFoxSpeechBubbleIV" />
 
         <ImageView
             android:id="@+id/content_round_end_screen_instructionFoxSpeechBubbleIV"
-            android:contentDescription="fox_giving_instruction_speech_bubble_round_end_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="fox_giving_instruction_speech_bubble_round_end_screen"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/content_round_end_screen_instructionFoxIV"
-            />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/content_round_end_screen_instructionFoxTV"
+            style="@style/foxSpeechBubblesTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/foxSpeechBubblesTextStyle"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -64,89 +63,98 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/content_round_end_screen_foxWithSpeechCL"
-        />
+        app:layout_constraintTop_toBottomOf="@id/content_round_end_screen_foxWithSpeechCL" />
 
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/round_end_profile_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:civ_border_color="@color/game_font_color"
         app:civ_border_width="2dp"
-        app:layout_constraintBottom_toBottomOf="@id/round_end_result_grid"
+        app:layout_constraintBottom_toBottomOf="@id/round_end_result_grid_container"
         app:layout_constraintHorizontal_bias=".08"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/round_end_result_grid" />
+        app:layout_constraintTop_toTopOf="@id/round_end_result_grid_container" />
 
     <TextView
         android:id="@+id/round_end_result_player_name"
+        style="@style/headingTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:text="Joey"
-        style="@style/headingTextStyle"
         app:layout_constraintBottom_toBottomOf="@id/round_end_profile_pic"
         app:layout_constraintLeft_toRightOf="@id/round_end_profile_pic"
-        app:layout_constraintRight_toLeftOf="@id/round_end_result_grid"
+        app:layout_constraintRight_toLeftOf="@id/round_end_result_grid_container"
         app:layout_constraintTop_toTopOf="@id/round_end_profile_pic"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <TextView
-        android:id="@+id/round_end_result_best_word"
-        android:layout_width="@dimen/grid_snapshot_size"
-        android:layout_height="wrap_content"
-        style="@style/foundWordTextStyle"
-        android:text="conundrum"
-        app:layout_constraintBottom_toTopOf="@id/round_end_result_grid"
-        app:layout_constraintLeft_toLeftOf="@id/round_end_result_grid"
-        app:layout_constraintRight_toRightOf="@id/round_end_result_grid"
-        app:layout_constraintTop_toBottomOf="@id/round_end_banner_divider"
-        app:layout_constraintVertical_bias="1"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <ImageView
-        android:id="@+id/round_end_result_grid"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/round_end_result_grid_container"
         app:layout_constraintBottom_toTopOf="@id/round_end_player_result_divider"
         app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/round_end_result_best_word" />
+        app:layout_constraintTop_toBottomOf="@id/round_end_banner_divider"
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
+    <!--<ImageView-->
+        <!--android:id="@+id/round_end_result_grid"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/round_end_player_result_divider"-->
+        <!--app:layout_constraintHorizontal_bias="0.92"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/round_end_result_best_word" />-->
 
     <TextView
         android:id="@+id/round_end_player_result_divider"
+        style="@style/headingTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="POSSIBLE WORDS"
-        style="@style/headingTextStyle"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/round_end_result_grid" />
+        app:layout_constraintTop_toBottomOf="@id/round_end_result_grid_container" />
 
 
-    <ScrollView
-        android:id="@+id/results_scrollview"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/results_scrollview_grids"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:fillViewport="false"
-        android:orientation="vertical"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider">
+        app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider" />
 
-        <LinearLayout
-            android:id="@+id/suggestions_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-        </LinearLayout>
-    </ScrollView>
+    <!--<ScrollView-->
+        <!--android:id="@+id/results_scrollview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:fillViewport="false"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider">-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/suggestions_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+
+    <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
 </android.support.constraint.ConstraintLayout>

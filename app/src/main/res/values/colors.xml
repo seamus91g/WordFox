@@ -15,5 +15,6 @@
     <color name="game_font_color_light_2">#339ca5</color>
     <color name="game_font_color_light_3">#4da8b0</color>
     <color name="game_font_color_light_4">#66b5bb</color>
+    <color name="game_grid_font_color">#FFFFFF</color>
     <color name="colorLightAccent">#b388ff</color>
 </resources>

@@ -2,10 +2,16 @@ package com.example.seamus.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.seamus.wordfox.GameGridAdapter;
 import com.example.seamus.wordfox.GameInstance;
 import com.example.seamus.wordfox.GridImage;
+import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.WordfoxConstants;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -50,7 +56,7 @@ public class RoundEndPresenter {
         this.colorPrimary = colorPrimary;
         this.colorSecondary = colorSecondary;
         this.displayInterstitial = displayInterstitial;
-        Log.d(WordfoxConstants.MONITOR_TAG, ":::: Screen width, grid width, result width : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth);
+        Log.d(WordfoxConstants.MONITOR_TAG, ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
     }
 
     public void startGame() {
@@ -83,30 +89,30 @@ public class RoundEndPresenter {
         }
     }
 
-    public void populatePossibleWords() {
-        List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
-        if (possibleWords.size() <= 0) {
-            return;
-        }
-        Bitmap gridBmp = view.getBlankScaledGrid(gridWidth);  // TODO: is 1/4 the appropriate amount?
-
-        int count = 0;
-        int requiredRows = ((possibleWords.size() - 1) / 3) + 1;
-        for (int i = 0; i < requiredRows; ++i) {
-            view.addRowPossibleWords();         // TODO: Model should add the row itself
-            for (int j = 0; j < WordfoxConstants.RESULT_GRIDS_PER_ROW; ++j) {
-                if (count >= possibleWords.size()) {
-                    view.hideResultGrid(count, gridBmp.getWidth());
-                    ++count;
-                    continue;
-                }
-                String word = possibleWords.get(count).toUpperCase() + " (" + possibleWords.get(count).length() + ")";
-                GridImage gridWithText = new GridImage(gridBmp, word, gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
-                view.addPossibleWord(gridWithText.getBmp(), word, count);
-                ++count;
-            }
-        }
-    }
+//    public void populatePossibleWords() {
+//        List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
+//        if (possibleWords.size() <= 0) {
+//            return;
+//        }
+//        Bitmap gridBmp = view.getBlankScaledGrid(gridWidth);  // TODO: is 1/4 the appropriate amount?
+//
+//        int count = 0;
+//        int requiredRows = ((possibleWords.size() - 1) / 3) + 1;
+//        for (int i = 0; i < requiredRows; ++i) {
+//            view.addRowPossibleWords();         // TODO: Model should add the row itself
+//            for (int j = 0; j < WordfoxConstants.RESULT_GRIDS_PER_ROW; ++j) {
+//                if (count >= possibleWords.size()) {
+//                    view.hideResultGrid(count, gridBmp.getWidth());
+//                    ++count;
+//                    continue;
+//                }
+//                String word = possibleWords.get(count).toUpperCase() + " (" + possibleWords.get(count).length() + ")";
+//                GridImage gridWithText = new GridImage(gridBmp, word, gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
+//                view.addPossibleWord(gridWithText.getBmp(), word, count);
+//                ++count;
+//            }
+//        }
+//    }
 
     public void populatePlayerDetails() {       // TODO:  Tidy this. Use MVP
         Bitmap profPic = view.getPlayerProfPic(profilePicScreenWidth);
@@ -121,14 +127,14 @@ public class RoundEndPresenter {
         String nameAndPercent = gameInstance.getName() + "\n (" + percentScore + "%)";
         view.setPlayerNameWithPercent(nameAndPercent);
 
-        String scoreText = gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")";
-        view.setPlayerScoreText(scoreText);
+//        String scoreText = gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")";
+//        view.setPlayerScoreText(scoreText);
 
-        Bitmap gridBmp = view.getBlankScaledGrid(resultGridWidth);
-        GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
-
-        view.setMyGridResult(gridWithText.getBmp());
+//        Bitmap gridBmp = view.getBlankScaledGrid(resultGridWidth);
+//        GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
+//        view.setMyGridResult(gridWithText.getBmp());
     }
+
 
     // Race condition: if user ends game really quickly, longest possible words might not yet be calculated.
     private void allowWordSearchToFinish() {
