@@ -12,6 +12,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.DataPage">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -70,9 +71,16 @@
         <item name="android:paddingBottom">2dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textSize">12dp</item>
-        <item name="android:background">@drawable/wifi_buttons_selector</item>
         <item name="android:paddingLeft">6dp</item>
         <item name="android:paddingRight">6dp</item>
+    </style>
+
+    <style name="wifiButtonsStyleActive" parent="wifiButtonsStyle">
+        <item name="android:background">@drawable/wifi_buttons_selector</item>
+    </style>
+
+    <style name="wifiButtonDisabledStyle" parent="wifiButtonsStyle">
+        <item name="android:background">@color/common_google_signin_btn_text_light_disabled</item>
     </style>
 
     <!-- Style for the TextView displaying the letters to be chosen during the game-->
@@ -223,11 +231,6 @@
     </style>
 
 
-
-
-
-
-
     <!-- Style for the fox buttons on the home screen for choosing number of players-->
     <style name="homeNumPLayersButtons">
         <item name="android:gravity">center
@@ -241,7 +244,6 @@
     </style>
 
 
-
     <!-- Text style for the fox speech bubbles-->
     <style name="foxSpeechBubblesTextStyle">
 
@@ -251,7 +253,6 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/heading_fontsize</item>
     </style>
-
 
 
     <!-- Text style for found words throughout all screens-->
@@ -286,7 +287,6 @@
         <item name="android:textColor">@color/game_font_color</item>
         <item name="android:textSize">@dimen/heading_fontsize</item>
     </style>
-
 
 
     <!-- Text style for very large headings  in the game-->

@@ -6,7 +6,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -16,10 +18,15 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.Guideline;
 import android.support.v4.app.ActivityCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -35,6 +42,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -68,10 +76,9 @@ public class LocalWifiActivity extends AppCompatActivity
     public static final String JSON_NEW_PLAYER = "json_new_player";
     public static final String JSON_REMOVE_PLAYER = "json_remove_player";
     private static final String UNKNOWN_USER = "Unknown User";
+    private static final int WIFI_REQUEST_CODE = 101;
     private final WifiServiceConnection netConnService = new WifiServiceConnection(this);
-
     private WifiPeersAdapter peersAdapter;
-
     private List<WifiP2pDevice> wifiDirectPeers = new ArrayList<>();
     private boolean isWifiP2pEnabled;
     private WifiP2pDevice myDevice;
@@ -93,7 +100,8 @@ public class LocalWifiActivity extends AppCompatActivity
     private WifiBroadcastReceiver activityReceiver;
     private String myPlayerName;
     private boolean isAnimationAlive;
-
+    private FrameLayout startGameButtonContainer;
+    int maxButtonWidth;
 
     class WifiBroadcastReceiver extends android.content.BroadcastReceiver {
         @Override
@@ -107,6 +115,7 @@ public class LocalWifiActivity extends AppCompatActivity
                     for (int i = 0; i < jArray.length(); ++i) {
                         letters.add(jArray.getString(i));
                     }
+                    activateStartButton();
                     Log.d(MONITOR_TAG, "Received jArray: " + jArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -125,7 +134,7 @@ public class LocalWifiActivity extends AppCompatActivity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                makeToast(newPlayerString);
+//                makeToast(newPlayerString);
                 Log.d(MONITOR_TAG, "Found new player : " + newPlayerString + ", count is now " + connectedPlayers.size());
             } else if (intent.getAction().equals(WifiService.ACTION_PLAYER_REMOVED)) {
                 pLog("Action player removed detected. : " + intent.getAction());
@@ -146,23 +155,37 @@ public class LocalWifiActivity extends AppCompatActivity
         }
     }
 
+    // if host, can startGameButtonContainer
+    // if client && letters set, can startGameButtonContainer
+
+    private void activateStartButton() {
+        int gameReadyStyle = R.style.wifiButtonsStyleActive;
+        Button newStartButton = new Button(new ContextThemeWrapper(this, gameReadyStyle), null, gameReadyStyle);
+        newStartButton.setWidth(maxButtonWidth);
+        newStartButton.setText("Start");
+        newStartButton.setOnClickListener(v -> startWifiGame());
+        newStartButton.setAllCaps(true);
+        newStartButton.setGravity(Gravity.CENTER);
+        Button searchButton = ((Button) findViewById(R.id.wifiSearchButton));
+        Button startButton = ((Button) findViewById(R.id.bStartWifiGame));
+        int sHeight = searchButton.getHeight();
+        int startHeight = newStartButton.getHeight();
+        int textHeight = (int) searchButton.getTextSize();
+        int padHeight = sHeight - textHeight;
+
+        pLog("search, new start, diff, padH : " + sHeight + ", " + startHeight + ", " + (sHeight - startHeight) + ", " + padHeight);
+        newStartButton.setLayoutParams(startButton.getLayoutParams());
+        pLog("Padding: " + searchButton.getPaddingLeft() + "," + searchButton.getPaddingTop() + "," + searchButton.getPaddingRight() + "," + searchButton.getPaddingBottom());
+        newStartButton.setPadding(searchButton.getPaddingLeft() * 4, (padHeight / 2) - 4, searchButton.getPaddingRight() * 4, (padHeight / 2) - 4);
+        startGameButtonContainer.removeAllViews();
+        startGameButtonContainer.addView(newStartButton);
+        logToast("Activated start");
+    }
 
     private void showConnectedPlayerCount(int count) {
         TextView pCount = findViewById(R.id.my_device_player_count);
         pCount.setText(String.valueOf(count));
     }
-
-//    private <T> void safeRemove(ArrayList<T> array, T item) {
-//        ListIterator<T> iter = array.listIterator();
-//        while (iter.hasNext()) {
-//            if (item.equals(iter.next())) {
-//                iter.remove();
-//                logToast("=============== Success removed player ===============");
-//                return;
-//            }
-//        }
-//        logToast("=============== Failed to remove player ===============");
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,32 +206,32 @@ public class LocalWifiActivity extends AppCompatActivity
         if (!isStoragePermissionGranted(android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
             makeToast("Permission not granted. Can not use Wifi-Direct.");
         }
+        ensureWifiIsTurnedOn();
         pLog("************* LoWA thread : " + Thread.currentThread().getPriority());
 
+        startGameButtonContainer = findViewById(R.id.bStartWifiGame_container);
         findViewById(R.id.wifiSearchButton).setOnClickListener(view -> discoverPeers());
         connectedPlayers = new WifiConnectedPlayers(this);
         setup();
         setupHelperFox();
         new Handler().post(() -> sizeButtons());
         new Handler().post(() -> new Thread(() -> setupWifiPhone()).start());
-//        setupWifiPhone();
     }
 
     private void sizeButtons() {
         ArrayList<Button> buttons = new ArrayList<>();
-        Button start = findViewById(R.id.bStartWifiGame);
-        buttons.add(start);
+        buttons.add((Button) findViewById(R.id.bStartWifiGame));
         buttons.add((Button) findViewById(R.id.bDisconnect));
         buttons.add((Button) findViewById(R.id.wifiSearchButton));
 
-        int maxWidth = 0;
+        maxButtonWidth = 0;
         for (Button b : buttons) {
-            if (b.getWidth() > maxWidth) {
-                maxWidth = b.getWidth();
+            if (b.getWidth() > maxButtonWidth) {
+                maxButtonWidth = b.getWidth();
             }
         }
         for (Button b : buttons) {
-            b.setWidth(maxWidth);
+            b.setWidth(maxButtonWidth);
         }
     }
 
@@ -238,7 +261,7 @@ public class LocalWifiActivity extends AppCompatActivity
         runOnUiThread(() -> {
             fox.setImageBitmap(foxBmp);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) fox.getLayoutParams();
-            lp.setMargins(maxWidth / 5, 0, 0, 0);
+            lp.setMargins((maxWidth * 3 / 10), 0, 0, 0);
             fox.setLayoutParams(lp);
 
             lp = (RelativeLayout.LayoutParams) phone.getLayoutParams();
@@ -279,20 +302,19 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private void setupHelperFox() {
         ImageView helperFox = findViewById(R.id.fox_wifi_helper);
+        FrameLayout helperFoxContainer = findViewById(R.id.fox_wifi_helper_container);
 
-        helperFox.post(() -> {
-            int height = helperFox.getHeight();
-            // TODO: .. why 7/10???
-            helperFox.setImageBitmap(ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsilcoloured_facingright, height * 7 / 10, getResources()));
+        helperFoxContainer.post(() -> {
+            int containerHeight = helperFoxContainer.getHeight();
+            int expectHeight = ((containerHeight) * 9) / 10;
+            Bitmap fooox = ImageHandler.getScaledBitmapByHeight(R.drawable.datafoxsilcoloured_facingright, expectHeight, getResources());
+            helperFox.setImageBitmap(fooox);
         });
 
         ImageView helperFoxSpeechBubble = findViewById(R.id.fox_wifi_helper_speech_bubble);
-        helperFoxSpeechBubble.post(new Runnable() {
-            @Override
-            public void run() {
-                int height = helperFoxSpeechBubble.getHeight();
-                helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmapByHeight(R.drawable.speechbubbleright, height * 9 / 10, getResources()));
-            }
+        helperFoxSpeechBubble.post(() -> {
+            int height = helperFoxSpeechBubble.getHeight();
+            helperFoxSpeechBubble.setImageBitmap(ImageHandler.getScaledBitmapByHeight(R.drawable.speechbubbleright, height * 9 / 10, getResources()));
         });
     }
 
@@ -319,8 +341,8 @@ public class LocalWifiActivity extends AppCompatActivity
         peerLV.setAdapter(peersAdapter);
         peerLV.setOnItemClickListener(listener);
 
-        findViewById(R.id.bDisconnect).setOnClickListener(v -> disconnect());
         findViewById(R.id.bStartWifiGame).setOnClickListener(v -> startWifiGame());
+        findViewById(R.id.bDisconnect).setOnClickListener(v -> disconnect());
 
         activityReceiver = new WifiBroadcastReceiver();
 
@@ -344,6 +366,27 @@ public class LocalWifiActivity extends AppCompatActivity
         }
     }
 
+    private void ensureWifiIsTurnedOn() {
+        ConnectivityManager connectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiCheck = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()) {
+            Intent turnWifiOn = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            startActivityForResult(turnWifiOn, WIFI_REQUEST_CODE);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WIFI_REQUEST_CODE) {
+            ConnectivityManager connectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo wifiCheck = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (!wifiCheck.isConnected()) {
+                startActivity(new Intent(this, HomeScreen.class));
+            }
+        }
+    }
+
     private String arrayToLetters(ArrayList<String> letterArray) {
         StringBuilder gameLetters = new StringBuilder();
         for (int i = 0; i < letterArray.size(); i++) {
@@ -355,7 +398,7 @@ public class LocalWifiActivity extends AppCompatActivity
     private void startWifiGame() {
         if (letters == null) {
             Log.d(MONITOR_TAG, "Letters not set ... ");
-            makeToast("Letters not set!");
+            makeToast("Game host must start first!");
             return;
         }
         Log.d(MONITOR_TAG, "Starting wifi game ");
@@ -473,7 +516,7 @@ public class LocalWifiActivity extends AppCompatActivity
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList availablePeers) {
-        logToast("Peers available : " + availablePeers.getDeviceList().size());
+//        logToast("Peers available : " + availablePeers.getDeviceList().size());
         clearPeerList();
         this.wifiDirectPeers.addAll(availablePeers.getDeviceList());
         findViewById(R.id.heading_listview_wifi_players).setVisibility(View.VISIBLE);
@@ -542,6 +585,7 @@ public class LocalWifiActivity extends AppCompatActivity
         }
         if (isGroupOwner && letters == null) {
             populateLetters();
+            activateStartButton();
         }
 
         if (netConnService.isBound) {
@@ -570,7 +614,7 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private void logToast(String msg) {
-        makeToast(msg);
+//        makeToast(msg);
         pLog(msg);
     }
 
