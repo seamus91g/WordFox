@@ -22,12 +22,8 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.Guideline;
 import android.support.v4.app.ActivityCompat;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -104,16 +100,15 @@ public class LocalWifiActivity extends AppCompatActivity
     public static final String INTENT_NEW_PLAYER = "intent_new_player";
     public static final String INTENT_REMOVE_PLAYER = "intent_remove_player";
     private boolean isGroupOwner = false;
-    private ArrayList<String> letters;
+    private ArrayList<String> wifiGameLetters;
     private NavigationBurger navBurger = new NavigationBurger();
     private PlayerIdentityRemote myGroupOwner;
     private WifiConnectedPlayers connectedPlayers;
     private WifiBroadcastReceiver activityReceiver;
     private String myPlayerName;
     private boolean isAnimationAlive;
-    private FrameLayout startGameButtonContainer;
     private int maxButtonWidth;
-    private boolean startActivated = false;
+    private boolean startActivated = true;
 
     class WifiBroadcastReceiver extends android.content.BroadcastReceiver {
         @Override
@@ -123,10 +118,11 @@ public class LocalWifiActivity extends AppCompatActivity
                 String lettersString = intent.getExtras().getString(INTENT_LETTERS);
                 try {
                     JSONArray jArray = new JSONObject(lettersString).getJSONArray(LocalWifiActivity.JSON_LETTERS);
-                    letters = new ArrayList<>();
+                    wifiGameLetters = new ArrayList<>();
                     for (int i = 0; i < jArray.length(); ++i) {
-                        letters.add(jArray.getString(i));
+                        wifiGameLetters.add(jArray.getString(i));
                     }
+                    activateGameStart();
                     Log.d(MONITOR_TAG, "Received jArray: " + jArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -142,7 +138,9 @@ public class LocalWifiActivity extends AppCompatActivity
                     }
                     connectedPlayers.addConnectedPlayer(playerFound);
                     showConnectedPlayerCount(connectedPlayers.size());
-                    activateStartButton();
+                    if (isGroupOwner) {
+                        activateGameStart();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -159,6 +157,9 @@ public class LocalWifiActivity extends AppCompatActivity
                     connectedPlayers.removeConnectedPlayer(playerFound);
                     pLog("Finished attempting to remove connected player ... now at " + connectedPlayers.size());
                     showConnectedPlayerCount(connectedPlayers.size());
+                    if (connectedPlayers.size() == 0) {
+                        connectedPlayers.clear();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -167,35 +168,56 @@ public class LocalWifiActivity extends AppCompatActivity
         }
     }
 
-    // if host, can startGameButtonContainer
-    // if client && letters set, can startGameButtonContainer
+    private void removeLetters() {
 
-    private void activateStartButton() {
-        if(startActivated){
+    }
+
+    // if host, can startGameButtonContainer
+    // if client && wifiGameLetters set, can startGameButtonContainer
+    @Override
+    public void deactivateGameStart() {
+        if (!startActivated) {
             return;
         }
-        startActivated = true;
-        int gameReadyStyle = R.style.wifiButtonsStyleActive;
-        Button newStartButton = new Button(new ContextThemeWrapper(this, gameReadyStyle), null, gameReadyStyle);
-        newStartButton.setWidth(maxButtonWidth);
-        newStartButton.setText("Start");
-        newStartButton.setOnClickListener(v -> startWifiGame());
-        newStartButton.setAllCaps(true);
-        newStartButton.setGravity(Gravity.CENTER);
-        Button searchButton = ((Button) findViewById(R.id.wifiSearchButton));
+        Log.d(MONITOR_TAG, "Disabling start button!");
+        startActivated = false;
+        wifiGameLetters = null;
         Button startButton = ((Button) findViewById(R.id.bStartWifiGame));
-        int sHeight = searchButton.getHeight();
-        int startHeight = newStartButton.getHeight();
-        int textHeight = (int) searchButton.getTextSize();
-        int padHeight = sHeight - textHeight;
+        startButton.setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_light_disabled));
+    }
 
-        pLog("search, new start, diff, padH : " + sHeight + ", " + startHeight + ", " + (sHeight - startHeight) + ", " + padHeight);
-        newStartButton.setLayoutParams(startButton.getLayoutParams());
-        pLog("Padding: " + searchButton.getPaddingLeft() + "," + searchButton.getPaddingTop() + "," + searchButton.getPaddingRight() + "," + searchButton.getPaddingBottom());
-        newStartButton.setPadding(searchButton.getPaddingLeft() * 4, (padHeight / 2) - 4, searchButton.getPaddingRight() * 4, (padHeight / 2) - 4);
-        startGameButtonContainer.removeAllViews();
-        startGameButtonContainer.addView(newStartButton);
-        logToast("Activated start");
+    private void activateGameStart() {
+        if (startActivated) {
+            return;
+        }
+        Log.d(MONITOR_TAG, "Enabling start button!");
+        startActivated = true;
+        Button startButton = ((Button) findViewById(R.id.bStartWifiGame));
+//        startButton.setBackgroundColor(getResources().getColor(R.color.game_font_color));
+        startButton.setBackground(getResources().getDrawable(R.drawable.wifi_buttons_selector));
+//        int gameReadyStyle = R.style.wifiButtonsStyleActive;
+//        Button newStartButton = new Button(new ContextThemeWrapper(this, gameReadyStyle), null, gameReadyStyle);
+//        int startBtnWidth = (maxButtonWidth*2)/10;
+//        newStartButton.setWidth(startBtnWidth);
+//        newStartButton.setText("Start");
+//        newStartButton.setAllCaps(true);
+//        newStartButton.setGravity(Gravity.CENTER);
+//        Button searchButton = ((Button) findViewById(R.id.wifiSearchButton));
+//        startButton.setOnClickListener(v -> startWifiGame());
+
+//        int sHeight = searchButton.getHeight();
+//        int startHeight = newStartButton.getHeight();
+//        int textHeight = (int) searchButton.getTextSize();
+//        int padHeight = sHeight - textHeight;
+//        padHeight = padHeight/4;
+//
+//        pLog("search, new start, diff, padH : " + sHeight + ", " + startHeight + ", " + (sHeight - startHeight) + ", " + padHeight);
+//        newStartButton.setLayoutParams(startButton.getLayoutParams());
+//        pLog("Padding: " + searchButton.getPaddingLeft() + "," + searchButton.getPaddingTop() + "," + searchButton.getPaddingRight() + "," + searchButton.getPaddingBottom());
+//        newStartButton.setPadding(searchButton.getPaddingLeft() * 4, (padHeight / 2) - 4, searchButton.getPaddingRight() * 4, (padHeight / 2) - 4);
+//        startGameButtonContainer.removeAllViews();
+//        startGameButtonContainer.addView(newStartButton);
+//        logToast("Activated start");
     }
 
     private void showConnectedPlayerCount(int count) {
@@ -228,7 +250,6 @@ public class LocalWifiActivity extends AppCompatActivity
         }
         pLog("************* LoWA thread : " + Thread.currentThread().getPriority());
 
-        startGameButtonContainer = findViewById(R.id.bStartWifiGame_container);
         findViewById(R.id.wifiSearchButton).setOnClickListener(view -> discoverPeers());
         connectedPlayers = new WifiConnectedPlayers(this);
         setup();
@@ -384,6 +405,8 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private void setup() {
 
+        deactivateGameStart();
+
         activityIntentFilter.addAction(WifiService.ACTION_SEND_LETTERS);
         activityIntentFilter.addAction(WifiService.ACTION_PLAYER_ADDED);
         activityIntentFilter.addAction(WifiService.ACTION_PLAYER_REMOVED);
@@ -456,14 +479,14 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private void startWifiGame() {
-        if (letters == null) {
+        if (wifiGameLetters == null) {
             Log.d(MONITOR_TAG, "Letters not set ... ");
             makeToast("Game host must start first!");
             return;
         }
         Log.d(MONITOR_TAG, "Starting wifi game ");
         if (isGroupOwner) {
-            JSONArray jsonLetters = new JSONArray(letters);
+            JSONArray jsonLetters = new JSONArray(wifiGameLetters);
             try {
                 JSONObject jObj = new JSONObject();
                 jObj.put(JSON_LETTERS, jsonLetters);
@@ -479,9 +502,9 @@ public class LocalWifiActivity extends AppCompatActivity
 
         PlayerIdentity playerOne = GameData.getPlayer1Identity(this);
         GameInstance playerOneGame = new GameInstance(playerOne.ID, playerOne.username, 0, true, isGroupOwner);
-        playerOneGame.setLetters(letters.get(0));
-        playerOneGame.setLetters(letters.get(1));
-        playerOneGame.setLetters(letters.get(2));
+        playerOneGame.setLetters(wifiGameLetters.get(0));
+        playerOneGame.setLetters(wifiGameLetters.get(1));
+        playerOneGame.setLetters(wifiGameLetters.get(2));
         HomeScreen.allGameInstances.add(playerOneGame);
 
         Intent gameIntent = new Intent(this, GameActivity.class);
@@ -640,9 +663,8 @@ public class LocalWifiActivity extends AppCompatActivity
         } else {
             new Thread(() -> handleConnectionInfo(info)).start();
         }
-        if (isGroupOwner && info.groupFormed && letters == null) {
+        if (isGroupOwner && info.groupFormed && wifiGameLetters == null) {
             populateLetters();
-            activateStartButton();
         }
 
         if (netConnService.isBound && info.groupFormed) {
@@ -694,11 +716,11 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private void populateLetters() {
         DictionaryApplication dictionary = (DictionaryApplication) getApplication();
-        letters = new ArrayList<>();
-        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-        letters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-        Log.d(MONITOR_TAG, "LW : letters as json: " + new JSONArray(letters).toString());
+        wifiGameLetters = new ArrayList<>();
+        wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
+        Log.d(MONITOR_TAG, "LW : wifiGameLetters as json: " + new JSONArray(wifiGameLetters).toString());
     }
 
     @Override
@@ -791,6 +813,7 @@ public class LocalWifiActivity extends AppCompatActivity
                 Log.d(MONITOR_TAG, "Disconnect failed. Reason : ");
             }
         });
+        removeLetters();
     }
 
     @Override
