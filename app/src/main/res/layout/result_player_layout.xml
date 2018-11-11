@@ -24,6 +24,7 @@
             app:civ_border_color="@color/game_font_color"
             app:civ_border_width="2dp"
             app:layout_constraintLeft_toLeftOf="@id/grid_row_grid1"
+
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -107,7 +108,7 @@
             android:text="Word 1"
             app:layout_constraintBottom_toTopOf="@id/grid_row_grid1"
             app:layout_constraintLeft_toLeftOf="@id/grid_row_grid1"
-            app:layout_constraintTop_toBottomOf="@id/result_player_fox_pic" />
+            app:layout_constraintTop_toBottomOf="@id/result_player_section_barrier" />
 
         <TextView
             android:id="@+id/grid_row_bestword2"

@@ -141,8 +141,8 @@ public class RoundnGameResults extends AppCompatActivity
         mAdView.loadAd(adRequestTest);
 
         calculateScreenDimensions();
-        profPicWidth = (int) (screenWidth/6);
-        buttonGridImageWidth = (int) (screenWidth/4);
+        profPicWidth = (int) (screenWidth / 6);
+        buttonGridImageWidth = (int) (screenWidth / 4);
 
         ArrayList<GameInstance> instancesToDisplay = HomeScreen.allGameInstances;
 
@@ -172,21 +172,21 @@ public class RoundnGameResults extends AppCompatActivity
         TextView best1 = findViewById(R.id.bestword_heading_1);
         TextView best2 = findViewById(R.id.bestword_heading_2);
         TextView best3 = findViewById(R.id.bestword_heading_3);
-        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(0).length() + ")" );
-        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase()+ "(" + gameInstance.getRoundLongestPossible(1).length() + ")" );
-        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase()+ "(" + gameInstance.getRoundLongestPossible(2).length() + ")" );
+        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(0).length() + ")");
+        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(1).length() + ")");
+        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(2).length() + ")");
         String winner = "";
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_game_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.gameendsilcoloured, (int) (0.4 * screenWidth),getResources()));
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.gameendsilcoloured, (int) (0.4 * screenWidth), getResources()));
 
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleleft, (int) (0.59 * screenWidth), getResources()));
 
 
-        if(HomeScreen.allGameInstances.size()>1) {
+        if (HomeScreen.allGameInstances.size() > 1) {
             int highScore = -1;
             for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
                 if (HomeScreen.allGameInstances.get(i).getTotalScore() > highScore) {
@@ -195,24 +195,24 @@ public class RoundnGameResults extends AppCompatActivity
                 }
             }
             winner = "Winner is " + winner + "!" + "\n" + "They scored\n" + highScore + "/" + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
-        } else{
+        } else {
             winner = "GAME OVER!\n" + "You scored\n" + HomeScreen.allGameInstances.get(0).getTotalScore() + "/" + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
         }
 
         TextView instructionFoxTV = findViewById(R.id.content_game_end_screen_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV),
-                instructionFoxTV,0.8, winner);
+                instructionFoxTV, 0.8, winner);
 
 
         TextView word1TV = findViewById(R.id.bestword_heading_1);
         TextView word2TV = findViewById(R.id.bestword_heading_2);
         TextView word3TV = findViewById(R.id.bestword_heading_3);
         word1TV.requestLayout();
-        word1TV.getLayoutParams().width = (int) screenWidth/3;
+        word1TV.getLayoutParams().width = (int) screenWidth / 3;
         word2TV.requestLayout();
-        word2TV.getLayoutParams().width = (int) screenWidth/3;
+        word2TV.getLayoutParams().width = (int) screenWidth / 3;
         word3TV.requestLayout();
-        word3TV.getLayoutParams().width = (int) screenWidth/3;
+        word3TV.getLayoutParams().width = (int) screenWidth / 3;
 
 
     }
@@ -228,6 +228,7 @@ public class RoundnGameResults extends AppCompatActivity
     public static int dpToPx(float dp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
+
     public static int dpToSp(float dp, Context context) {
         return (int) (dpToPx(dp, context) / context.getResources().getDisplayMetrics().scaledDensity);
     }
@@ -296,7 +297,19 @@ public class RoundnGameResults extends AppCompatActivity
         Bitmap profPic = null;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            profPic = ImageHandler.getBitmapFromUri(this, myFileUri, ImageHandler.dp2px(this, 60));
+            profPic = ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profPicWidth);
+            int shortSide;
+            int startX, startY;
+            if (profPic.getHeight() < profPic.getWidth()) {
+                shortSide = profPic.getHeight();
+                startX = (profPic.getWidth() - shortSide) / 2;
+                startY = 0;
+            } else {
+                shortSide = profPic.getWidth();
+                startY = (profPic.getHeight() - shortSide) / 2;
+                startX = 0;
+            }
+            profPic = Bitmap.createBitmap(profPic, startX, startY, shortSide, shortSide);
         }
         int maxScore = gameInstance.getHighestPossibleScore();
         int playerScore = gameInstance.getTotalScore();
@@ -307,11 +320,11 @@ public class RoundnGameResults extends AppCompatActivity
         resultPlayerNameView.setText(playerName);
         TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
 
-        if(HomeScreen.allGameInstances.size()>1) {
+        if (HomeScreen.allGameInstances.size() > 1) {
             String playerResult = playerScore + "/" + maxScore + " (" + percentScore + "%)";
             resultPlayerScoreView.setText(playerResult);
-        }else{
-            resultPlayerScoreView.setText( "(" + percentScore + "%)" );
+        } else {
+            resultPlayerScoreView.setText("(" + percentScore + "%)");
         }
 
 
@@ -322,7 +335,7 @@ public class RoundnGameResults extends AppCompatActivity
 
         CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
         if (profPic == null) {
-            if(defaultProfilePic == null){
+            if (defaultProfilePic == null) {
                 defaultProfilePic = ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
             }
             profPic = defaultProfilePic;
