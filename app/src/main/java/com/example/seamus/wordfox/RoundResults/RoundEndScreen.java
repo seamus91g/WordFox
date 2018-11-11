@@ -324,20 +324,11 @@ public class RoundEndScreen extends AppCompatActivity
 
         int foxPercent = (int) (0.35 * screenWidth);
         int foxSpeechPercent = (int) (0.64 * screenWidth);
-        Log.d("roundendscreen", "3: expected foxPercent: " + 504);
-        Log.d("roundendscreen", "3: foxPercent: " + foxPercent);
-        Log.d("roundendscreen", "4: expected foxSpeechPercent: " + 921);
-        Log.d("roundendscreen", "4: foxSpeechPercent: " + foxSpeechPercent);
-
         ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
         instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent, getResources()));
-        Log.d("roundendscreen", "5: expected foxPercent: " + 504);
-        Log.d("roundendscreen", "5: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent, getResources()).getWidth());
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()));
-        Log.d("roundendscreen", "52: expected foxPercent: " + 921);
-        Log.d("roundendscreen", "52: foxPercent: " + ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()).getWidth());
 
     }
 
@@ -349,8 +340,6 @@ public class RoundEndScreen extends AppCompatActivity
         TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
                 instructionFoxTV, 0.8, longestWordHeader);
-        Log.d("roundendscreen", "6: expected instructionFoxTV: " + 0.8 * ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.64 * screenWidth), getResources()).getWidth());
-        Log.d("roundendscreen", "6: instructionFoxTV: " + findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV).getWidth());
 
 
     }
