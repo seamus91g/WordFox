@@ -365,11 +365,12 @@
                 android:paddingBottom="10dp"
                 android:text="Winner: "
                 app:layout_constraintBottom_toTopOf="@id/lastword_you_1"
-                app:layout_constraintLeft_toLeftOf="@id/lastword_you_1"
-                app:layout_constraintRight_toRightOf="@id/lastword_you_1"
+                app:layout_constraintLeft_toLeftOf="@id/recent_game_header"
+                app:layout_constraintRight_toRightOf="@id/recent_game_header"
                 app:layout_constraintTop_toBottomOf="@id/recentgame_grid1" />
 
             <!---->
+
 
 
             <TextView
