@@ -3,6 +3,7 @@ package com.example.seamus.wordfox;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -53,6 +54,15 @@ import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.injection.DictionaryApplication;
 import com.example.seamus.wordfox.profile.ProfileActivity;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,6 +87,7 @@ public class LocalWifiActivity extends AppCompatActivity
     public static final String JSON_REMOVE_PLAYER = "json_remove_player";
     private static final String UNKNOWN_USER = "Unknown User";
     private static final int WIFI_REQUEST_CODE = 101;
+    private static final int REQUEST_CHECK_SETTINGS = 10;
     private final WifiServiceConnection netConnService = new WifiServiceConnection(this);
     private WifiPeersAdapter peersAdapter;
     private List<WifiP2pDevice> wifiDirectPeers = new ArrayList<>();
@@ -101,7 +112,8 @@ public class LocalWifiActivity extends AppCompatActivity
     private String myPlayerName;
     private boolean isAnimationAlive;
     private FrameLayout startGameButtonContainer;
-    int maxButtonWidth;
+    private int maxButtonWidth;
+    private boolean startActivated = false;
 
     class WifiBroadcastReceiver extends android.content.BroadcastReceiver {
         @Override
@@ -115,7 +127,6 @@ public class LocalWifiActivity extends AppCompatActivity
                     for (int i = 0; i < jArray.length(); ++i) {
                         letters.add(jArray.getString(i));
                     }
-                    activateStartButton();
                     Log.d(MONITOR_TAG, "Received jArray: " + jArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -131,6 +142,7 @@ public class LocalWifiActivity extends AppCompatActivity
                     }
                     connectedPlayers.addConnectedPlayer(playerFound);
                     showConnectedPlayerCount(connectedPlayers.size());
+                    activateStartButton();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -159,6 +171,10 @@ public class LocalWifiActivity extends AppCompatActivity
     // if client && letters set, can startGameButtonContainer
 
     private void activateStartButton() {
+        if(startActivated){
+            return;
+        }
+        startActivated = true;
         int gameReadyStyle = R.style.wifiButtonsStyleActive;
         Button newStartButton = new Button(new ContextThemeWrapper(this, gameReadyStyle), null, gameReadyStyle);
         newStartButton.setWidth(maxButtonWidth);
@@ -207,6 +223,9 @@ public class LocalWifiActivity extends AppCompatActivity
             makeToast("Permission not granted. Can not use Wifi-Direct.");
         }
         ensureWifiIsTurnedOn();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            displayLocationSettingsRequest(this);
+        }
         pLog("************* LoWA thread : " + Thread.currentThread().getPriority());
 
         startGameButtonContainer = findViewById(R.id.bStartWifiGame_container);
@@ -216,6 +235,47 @@ public class LocalWifiActivity extends AppCompatActivity
         setupHelperFox();
         new Handler().post(() -> sizeButtons());
         new Handler().post(() -> new Thread(() -> setupWifiPhone()).start());
+    }
+
+    private void displayLocationSettingsRequest(Context context) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i(MONITOR_TAG, "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(MONITOR_TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(LocalWifiActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(MONITOR_TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(MONITOR_TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
     }
 
     private void sizeButtons() {
@@ -351,7 +411,7 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private boolean isStoragePermissionGranted(String permission) {
         Log.v(MONITOR_TAG, "Checking permission " + permission);
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (LocalWifiActivity.this.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
                 Log.v(MONITOR_TAG, "Permission is granted");
                 return true;
@@ -516,7 +576,6 @@ public class LocalWifiActivity extends AppCompatActivity
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList availablePeers) {
-//        logToast("Peers available : " + availablePeers.getDeviceList().size());
         clearPeerList();
         this.wifiDirectPeers.addAll(availablePeers.getDeviceList());
         findViewById(R.id.heading_listview_wifi_players).setVisibility(View.VISIBLE);
@@ -572,23 +631,21 @@ public class LocalWifiActivity extends AppCompatActivity
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
 
-
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
         Log.d(MONITOR_TAG, "Received connection info : " + info.toString());
         isGroupOwner = info.isGroupOwner;
-        // TODO: Check if group formed. if no, return
-        if (netConnService.isBound) {
+        if (netConnService.isBound && info.groupFormed) {
             signalWhoConnectedTo(info);
         } else {
             new Thread(() -> handleConnectionInfo(info)).start();
         }
-        if (isGroupOwner && letters == null) {
+        if (isGroupOwner && info.groupFormed && letters == null) {
             populateLetters();
             activateStartButton();
         }
 
-        if (netConnService.isBound) {
+        if (netConnService.isBound && info.groupFormed) {
 //            PlayerIdentity userIdentity = new PlayerIdentity()
 //            String newPlayerMessage = GameData.getPlayer1Identity(this).username + ", " + GameData.getPlayer1Identity(this).ID;
             JSONObject jObj = new JSONObject();
