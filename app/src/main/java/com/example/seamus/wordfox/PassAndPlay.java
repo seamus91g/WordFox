@@ -28,8 +28,6 @@ import com.example.seamus.wordfox.data.FoxDictionary;
 import com.example.seamus.wordfox.game_screen.GameActivity;
 import com.example.seamus.wordfox.profile.ProfileActivity;
 
-import static com.example.seamus.wordfox.IVmethods.getImageScaleToScreenWidthPercent;
-
 
 public class PassAndPlay extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -95,28 +93,26 @@ public class PassAndPlay extends AppCompatActivity
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_pass_and_play_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcoloured,
-                            getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured),getResources()));
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.woodfoxcoloured, (int) (0.4*screenWidth),getResources()));
 
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_pass_and_play_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleright,
-                getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleright), getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.59*screenWidth),getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_pass_and_play_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.choose_your_number_of_players_using_the_slider);
 
 
-        myBitmap1 = ImageHandler.getScaledBitmap(R.drawable.silverfoxsilcoloured, (int) (0.1*screenWidth),getResources());
-        myBitmap2 = ImageHandler.getScaledBitmap(R.drawable.arcticfoxsilcoloured, (int) (0.1*screenWidth),getResources());
-        myBitmap3 = ImageHandler.getScaledBitmap(R.drawable.gameend_outline, (int) (0.1*screenWidth),getResources());
-        myBitmap33 = ImageHandler.getScaledBitmap(R.drawable.gameendsilcoloured, (int) (0.1*screenWidth),getResources());
-        myBitmap4 = ImageHandler.getScaledBitmap(R.drawable.grayfox_outline, (int) (0.1*screenWidth),getResources());
-        myBitmap44 = ImageHandler.getScaledBitmap(R.drawable.grayfoxsilcoloured, (int) (0.1*screenWidth),getResources());
-        myBitmap5 = ImageHandler.getScaledBitmap(R.drawable.kitfox_outline, (int) (0.1*screenWidth),getResources());
-        myBitmap55 = ImageHandler.getScaledBitmap(R.drawable.kitfoxsilcoloured, (int) (0.1*screenWidth),getResources());
-        myBitmap6 = ImageHandler.getScaledBitmap(R.drawable.redfox_outline, (int) (0.1*screenWidth),getResources());
-        myBitmap66 = ImageHandler.getScaledBitmap(R.drawable.redfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap1 = ImageHandler.getScaledBitmapByWidth(R.drawable.silverfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap2 = ImageHandler.getScaledBitmapByWidth(R.drawable.arcticfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap3 = ImageHandler.getScaledBitmapByWidth(R.drawable.gameend_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap33 = ImageHandler.getScaledBitmapByWidth(R.drawable.gameendsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap4 = ImageHandler.getScaledBitmapByWidth(R.drawable.grayfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap44 = ImageHandler.getScaledBitmapByWidth(R.drawable.grayfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap5 = ImageHandler.getScaledBitmapByWidth(R.drawable.kitfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap55 = ImageHandler.getScaledBitmapByWidth(R.drawable.kitfoxsilcoloured, (int) (0.1*screenWidth),getResources());
+        myBitmap6 = ImageHandler.getScaledBitmapByWidth(R.drawable.redfox_outline, (int) (0.1*screenWidth),getResources());
+        myBitmap66 = ImageHandler.getScaledBitmapByWidth(R.drawable.redfoxsilcoloured, (int) (0.1*screenWidth),getResources());
 
 
         ImageView fox1IV = findViewById(R.id.foxes1);
