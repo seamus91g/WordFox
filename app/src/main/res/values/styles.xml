@@ -73,10 +73,10 @@
         <item name="android:textSize">12dp</item>
         <item name="android:paddingLeft">6dp</item>
         <item name="android:paddingRight">6dp</item>
+        <item name="android:background">@drawable/wifi_buttons_selector</item>
     </style>
 
     <style name="wifiButtonsStyleActive" parent="wifiButtonsStyle">
-        <item name="android:background">@drawable/wifi_buttons_selector</item>
     </style>
 
     <style name="wifiButtonDisabledStyle" parent="wifiButtonsStyle">

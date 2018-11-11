@@ -21,6 +21,7 @@ public class WifiConnectedPlayers {
     public void clear() {
         connectedPlayers.clear();
         peersUpdate.notifyPeersUpdated();
+        peersUpdate.deactivateGameStart();
     }
 
     public PlayerIdentityRemote getGroupOwner(){

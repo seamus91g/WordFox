@@ -157,42 +157,36 @@
 
     <Button
         android:id="@+id/bDisconnect"
-        style="@style/wifiButtonsStyleActive"
+        style="@style/wifiButtonsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Disconnect"
-        app:layout_constraintBottom_toBottomOf="@+id/bStartWifiGame_container"
+        app:layout_constraintBottom_toBottomOf="@+id/bStartWifiGame"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/wifiSearchButton"
-        app:layout_constraintTop_toTopOf="@id/bStartWifiGame_container" />
+        app:layout_constraintTop_toTopOf="@id/bStartWifiGame" />
 
     <Button
         android:id="@+id/wifiSearchButton"
-        style="@style/wifiButtonsStyleActive"
+        style="@style/wifiButtonsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Search"
-        app:layout_constraintBottom_toBottomOf="@id/bStartWifiGame_container"
+        app:layout_constraintBottom_toBottomOf="@id/bStartWifiGame"
         app:layout_constraintLeft_toRightOf="@+id/bDisconnect"
-        app:layout_constraintRight_toLeftOf="@id/bStartWifiGame_container"
-        app:layout_constraintTop_toTopOf="@id/bStartWifiGame_container" />
+        app:layout_constraintRight_toLeftOf="@id/bStartWifiGame"
+        app:layout_constraintTop_toTopOf="@id/bStartWifiGame" />
 
-    <FrameLayout
-        android:id="@+id/bStartWifiGame_container"
+    <Button
+        android:id="@+id/bStartWifiGame"
+        style="@style/wifiButtonsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Start"
         app:layout_constraintBottom_toTopOf="@+id/fox_wifi_helper_top_guideline"
         app:layout_constraintLeft_toRightOf="@id/wifiSearchButton"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/peerListView_container">
-
-        <Button
-            android:id="@+id/bStartWifiGame"
-            style="@style/wifiButtonDisabledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Start" />
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@id/peerListView_container" />
 
     <android.support.constraint.Guideline
         android:id="@+id/fox_wifi_helper_top_guideline"
@@ -216,8 +210,8 @@
             android:id="@+id/fox_wifi_helper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:adjustViewBounds="true" />
 
     </FrameLayout>
 
@@ -259,9 +253,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/game_font_color"
                 android:gravity="center"
-                android:text="Press search to detect players nearby!" />
+                android:text="Press search to detect players nearby!"
+                android:textColor="@color/game_font_color" />
         </FrameLayout>
 
 

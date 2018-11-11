@@ -74,7 +74,7 @@ public class WifiService extends Service implements MessageHandler {
         } catch (IOException e) {
             log("######## Connecting to group failed : threw exception #########");
             try {
-                Thread.sleep(1000);     // Try again after some time
+                Thread.sleep(1500);     // Try again after some time
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
@@ -88,6 +88,8 @@ public class WifiService extends Service implements MessageHandler {
             } catch (IOException e) {
                 log("######## Connecting to group failed again : threw exception #########");
                 e.printStackTrace();
+                deviceActionListener.disconnect();
+                return;
                 // TODO: Disconnect wifi - direct and alert user to try again.
             }
         }
