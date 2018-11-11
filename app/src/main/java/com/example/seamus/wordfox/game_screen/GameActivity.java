@@ -120,14 +120,15 @@ public class GameActivity extends AppCompatActivity
         Collections.shuffle(BGFoxesCopy);
 
         // Randomly add foxes to the background.
-        for (ImageView iv : viewIDs) {
-            Log.d(MONITOR_TAG, "size ~ bg, copy : " + allBGFoxes.size() + ", " + BGFoxesCopy.size());
-            iv.setImageBitmap(BGFoxesCopy.remove(BGFoxesCopy.size() - 1));
-            if (BGFoxesCopy.size() == 0) {
-                BGFoxesCopy.addAll(allBGFoxes);
-                Collections.shuffle(BGFoxesCopy);
+        runOnUiThread(() -> {
+            for (ImageView iv : viewIDs) {
+                iv.setImageBitmap(BGFoxesCopy.remove(BGFoxesCopy.size() - 1));
+                if (BGFoxesCopy.size() == 0) {
+                    BGFoxesCopy.addAll(allBGFoxes);
+                    Collections.shuffle(BGFoxesCopy);
+                }
             }
-        }
+        });
     }
 
     private List<Bitmap> getBGFoxesScaled(int foxHeight) {
