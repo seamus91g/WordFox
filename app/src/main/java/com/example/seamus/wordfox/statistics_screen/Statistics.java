@@ -204,10 +204,17 @@ public class Statistics extends AppCompatActivity
         // Played X round
         allDataItems.add(new TypeStats<>("Rounds played: ", playerGameData.getRoundCount()));
         // Longest word
-        String longestWord = playerGameData.findLongest() + " (" + playerGameData.findLongest().length() + ")";
+        String longestWord;
+        if (playerGameData.findLongest().equals(GameData.NON_EXISTANT)) {
+            longestWord = "None!";
+        } else {
+            longestWord = playerGameData.findLongest() + " (" + playerGameData.findLongest().length() + ")";
+        }
         allDataItems.add(new TypeStats<>("Longest word: ", longestWord));
         // Average word length
-        allDataItems.add(new TypeStats<>("Average word length: ", playerGameData.getAverageWordLength()));
+        allDataItems.add(new TypeStats<>("Average submitted word length: ", playerGameData.getAverageWordLength()));
+        // Average final word length
+        allDataItems.add(new TypeStats<>("Average best word length: ", playerGameData.getAverageFinalWordLength()));
         // Rounds where no word found
         allDataItems.add(new TypeStats<>("Round where no word found: ", playerGameData.getNoneFoundCount()));
         // Times each word length found

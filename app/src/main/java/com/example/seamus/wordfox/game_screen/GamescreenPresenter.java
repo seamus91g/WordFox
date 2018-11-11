@@ -51,7 +51,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         logAnalytic("Started");
     }
 
-    private void logAnalytic(String action){
+    private void logAnalytic(String action) {
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, gameInstance.getID().toString());
@@ -109,13 +109,14 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         return gridCells;
     }
 
-    public ArrayList<String> getArrayFromLetters(String letters){
+    public ArrayList<String> getArrayFromLetters(String letters) {
         return new ArrayList<String>(
                 Arrays.asList(
                         Arrays.copyOfRange(
                                 letters.split(""), 1, letters.length() + 1))
         );
     }
+
     // Finding list of longest words is slow. Run on thread to not block the UI
     private void execBackgroundSetupTasks(String givenLettersSTR) {
         Thread thread = new Thread(() -> {
@@ -234,7 +235,9 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
     // Update the stored data with information on words found during the game  // TODO: .. run this on separate thread
     public void updateData() {
         String longestWord = gameInstance.getLongestWord();
-        gameData.gameCountUp();
+        if (gameInstance.getRound() == 0) {
+            gameData.gameCountUp();
+        }
         gameData.roundCountUp();
         boolean isBlankRound = true;
         for (Map.Entry<String, Boolean> word : allWordsSubmitted.entrySet()) {
@@ -243,6 +246,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             if (word.getKey().toUpperCase().equals(longestWord)) {
                 isFinal = true;
                 isBlankRound = false;
+                gameData.addToBestWordLength(word.getKey());
             }
             // Write word to sql database
             UUID wordId = UUID.randomUUID();
@@ -251,14 +255,16 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             );
             createWordItem(wordFoundByPlayer);
             // Update preferences file
-            gameData.addWord(word.getKey());
             if (word.getValue()) {
+                gameData.addWord(word.getKey());
                 gameData.correctCountUp();
             } else {
                 gameData.incorrectCountUp();
             }
         }
         if (isBlankRound) {
+            gameData.noneFoundCountUp();
+            gameData.addToBestWordLength("");
             WordItem wordFoundByPlayer = new WordItem(
                     UUID.randomUUID(), "<none>", gameInstance.getID(), false, true, gameInstance.getRoundID(gameInstance.getRound())
             );

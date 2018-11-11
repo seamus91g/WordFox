@@ -27,6 +27,7 @@ public class GameData extends AppCompatActivity {
     private static final String DEFAULT_NAME = "Fox";
     private static final String HIGHEST_SCORE_PREFIX = "highest_score_";
     private static final String INTERSTITIAL_COUNT_KEY = "interstitial_count";
+    private String BEST_WORD_TOTAL_COUNT;
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
     private String LONGEST_WORD_KEY;
@@ -81,6 +82,7 @@ public class GameData extends AppCompatActivity {
         RECENT_GAME_ID_KEY = "recent_game_id_" + playerID;
         BEST_WORDS_KEY = "best_words_" + playerID;
         FOX_RANK_KEY = "fox_rank_" + playerID;
+        BEST_WORD_TOTAL_COUNT = "best_total_count_" + playerID;
 
         foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         editor = foxPreferences.edit();
@@ -97,14 +99,14 @@ public class GameData extends AppCompatActivity {
         }
     }
 
-    public static boolean checkIfDisplayInterstitial(Context context){
+    public static boolean checkIfDisplayInterstitial(Context context) {
         SharedPreferences foxPreferencesStatic = context.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         SharedPreferences.Editor editor = foxPreferencesStatic.edit();
         int count = foxPreferencesStatic.getInt(INTERSTITIAL_COUNT_KEY, 0);
         ++count;
         editor.putInt(INTERSTITIAL_COUNT_KEY, count);
         editor.apply();
-        if(count % 3 == 0){
+        if (count % 3 == 0) {
             return true;
         }
         return false;
@@ -345,13 +347,20 @@ public class GameData extends AppCompatActivity {
     public String getAverageWordLength() {
         int totalWordCount = 0;
         double result = 0.0;
-        int rounds = getRoundCount();
+        int timesSubmitted = getSubmittedCorrectCount();
         for (int i = 3; i < 10; i++) {
             totalWordCount += i * findOccurence(i);
         }
-        if (rounds > 0) {
-            result = (double) totalWordCount / rounds;
+        if (timesSubmitted > 0) {
+            result = (double) totalWordCount / timesSubmitted;
         }
+        return String.format("%.2f", result);
+    }
+
+    public String getAverageFinalWordLength() {
+        int rounds = getRoundCount();
+        int totalSoFar = getTotalBestWordLength();
+        float result = ((float) totalSoFar) / rounds;
         return String.format("%.2f", result);
     }
 
@@ -467,6 +476,16 @@ public class GameData extends AppCompatActivity {
         numberOccurences += 1;
         editor.putInt(Integer.toString(len), numberOccurences);
         editor.apply();
+    }
+
+    public void addToBestWordLength(String word) {
+        int count = getTotalBestWordLength();
+        count += word.length();
+        editor.putInt(BEST_WORD_TOTAL_COUNT, count);
+    }
+
+    public int getTotalBestWordLength() {
+        return foxPreferences.getInt(BEST_WORD_TOTAL_COUNT, 0);
     }
 
     public String findLongest() {

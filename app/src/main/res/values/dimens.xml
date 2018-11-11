@@ -8,7 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_above_banner">56dp</dimen>
     <dimen name="big_TextView_height">56dp</dimen>
-    <dimen name="small_TextView_height">56dp</dimen>
+    <dimen name="small_TextView_height">41dp</dimen>
     <dimen name="big_text_size">48dp</dimen>
     <dimen name="medium_text_size">32dp</dimen>
     <dimen name="small_text_size">24dp</dimen>

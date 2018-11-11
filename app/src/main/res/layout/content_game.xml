@@ -1,275 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/screen_margin"
-    android:gravity="center"
-    android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:activity="com.example.seamus.wordfox.game_screen.GameActivity">
+    android:layout_height="match_parent">
 
+    <include layout="@layout/game_background_foxes" />
 
-    <TextView
-        android:id="@+id/givenLettersGameScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/big_TextView_height"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="monospace"
-        android:gravity="center_vertical"
-        android:text="JDUENFISL"
-        android:textColor="@color/game_font_color"
-        android:textSize="@dimen/big_text_size"
-        android:textStyle="bold" />
-
-    <Space
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:activity="com.example.seamus.wordfox.game_screen.GameActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/small_TextView_height">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
 
         <TextView
-            android:id="@+id/currentAttempt"
+            android:id="@+id/givenLettersGameScreen"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            android:layout_height="@dimen/big_TextView_height"
             android:layout_gravity="center_horizontal"
             android:fontFamily="monospace"
             android:gravity="center_vertical"
             android:text=""
             android:textColor="@color/game_font_color"
-            android:textSize="@dimen/small_text_size" />
+            android:textSize="@dimen/big_text_size"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/secondsRemaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_TextView_height">
+
+            <TextView
+                android:id="@+id/currentAttempt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="monospace"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/game_font_color"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/secondsRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="2dp"
             android:textColor="@color/colorPrimary"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="30" />
-    </RelativeLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3" />
-
-    <LinearLayout
-        android:id="@+id/guessGrid"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/grid_height"
-        android:orientation="horizontal">
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="30" />
+        </RelativeLayout>
 
         <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3" />
+
+        <LinearLayout
+            android:id="@+id/guessGrid"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_height"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+            <Space
+                android:layout_width="@dimen/timer_width"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="@dimen/column_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/guessGridCell1"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell1"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell4"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell4"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell7"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell7"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/column_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/guessGridCell2"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell2"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell5"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell5"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell8"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell8"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/column_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/guessGridCell3"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell3"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell6"
+                    style="@style/TextViewButtons"
+                    android:layout_width="match_parent"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell6"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/guessGridCell9"
+                    style="@style/TextViewButtons"
+                    android:onClick="gridCellClicked"
+                    android:tag="guessGridCell9"
+                    android:text="" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+            <LinearLayout
+                android:id="@+id/timeBlock"
+                android:layout_width="@dimen/timer_width"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </LinearLayout>
 
         <Space
-            android:layout_width="@dimen/timer_width"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
-            android:layout_width="@dimen/column_width"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/guessGridCell1"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell1"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell4"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell4"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell7"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell7"
-                android:text="" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/column_width"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/guessGridCell2"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell2"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell5"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell5"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell8"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell8"
-                android:text="" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/column_width"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/guessGridCell3"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell3"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell6"
-                style="@style/TextViewButtons"
-                android:layout_width="match_parent"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell6"
-                android:text="" />
-
-            <Button
-                android:id="@+id/guessGridCell9"
-                style="@style/TextViewButtons"
-                android:onClick="gridCellClicked"
-                android:tag="guessGridCell9"
-                android:text="" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5" />
-
-        <LinearLayout
-            android:id="@+id/timeBlock"
-            android:layout_width="@dimen/timer_width"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3" />
 
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/gameButtons"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/gameButtons"
         android:padding="14dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
-        <Button
-            android:id="@+id/resetButton"
-            style="@style/gameResetButton"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:onClick="clearCurrentAttempt"
-            android:padding="4dp"
-            android:text="RESET"
-            android:textSize="@dimen/action_button_text_size"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/submitButton" />
+            <Button
+                android:id="@+id/resetButton"
+                style="@style/gameResetButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:onClick="clearCurrentAttempt"
+                android:padding="4dp"
+                android:text="RESET"
+                android:textSize="@dimen/action_button_text_size"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/submitButton" />
 
 
-        <Button
-            android:id="@+id/submitButton"
-            style="@style/gameSubmitButton"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:onClick="submitCurrentAttempt"
-            android:padding="4dp"
-            android:text="SUBMIT"
-            android:textSize="@dimen/action_button_text_size"
-            app:layout_constraintLeft_toRightOf="@id/resetButton"
-            app:layout_constraintRight_toLeftOf="@id/shuffleButton" />
+            <Button
+                android:id="@+id/submitButton"
+                style="@style/gameSubmitButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:onClick="submitCurrentAttempt"
+                android:padding="4dp"
+                android:text="SUBMIT"
+                android:textSize="@dimen/action_button_text_size"
+                app:layout_constraintLeft_toRightOf="@id/resetButton"
+                app:layout_constraintRight_toLeftOf="@id/shuffleButton" />
 
 
-        <Button
-            android:id="@+id/shuffleButton"
-            style="@style/gameShuffleButton"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:onClick="shuffleGivenLetters"
-            android:padding="4dp"
-            android:text="SHUFFLE"
-            android:textSize="@dimen/action_button_text_size"
-            app:layout_constraintLeft_toRightOf="@id/submitButton"
-            app:layout_constraintRight_toRightOf="parent" />
+            <Button
+                android:id="@+id/shuffleButton"
+                style="@style/gameShuffleButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:onClick="shuffleGivenLetters"
+                android:padding="4dp"
+                android:text="SHUFFLE"
+                android:textSize="@dimen/action_button_text_size"
+                app:layout_constraintLeft_toRightOf="@id/submitButton"
+                app:layout_constraintRight_toRightOf="parent" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
 
-    </android.support.constraint.ConstraintLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1" />
-
-    <LinearLayout
-        android:id="@+id/bestWordLL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/longestAttempt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
-            android:hint="Your Longest Word"
-            android:text=""
-            android:textColor="#01848f"
-            android:textSize="@dimen/small_text_size" />
+        </android.support.constraint.ConstraintLayout>
 
         <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1" />
 
-        <TextView
-            android:id="@+id/lengthLongestAttempt"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/bestWordLL"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:hint="Length"
-            android:paddingRight="44dp"
-            android:text=""
-            android:textColor="#01848f"
-            android:textSize="@dimen/small_text_size" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/longestAttempt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:hint="Your Longest Word"
+                android:text=""
+                android:textColor="@color/game_font_color"
+                android:textSize="@dimen/small_text_size" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25" />
+
+            <TextView
+                android:id="@+id/lengthLongestAttempt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:hint="Length"
+                android:paddingRight="44dp"
+                android:text=""
+                android:textColor="@color/game_font_color"
+                android:textSize="@dimen/small_text_size" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
-</LinearLayout>
+</FrameLayout>

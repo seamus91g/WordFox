@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/games_header_drop_down_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
             android:src="@drawable/ic_arrow_drop_menu_selector"

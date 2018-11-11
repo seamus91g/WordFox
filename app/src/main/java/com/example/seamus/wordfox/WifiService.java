@@ -276,7 +276,7 @@ public class WifiService extends Service implements MessageHandler {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
         Log.d(WordfoxConstants.MONITOR_TAG, "**************** Service is destroyed *********************");
         closeService();
         if(deviceActionListener != null){
