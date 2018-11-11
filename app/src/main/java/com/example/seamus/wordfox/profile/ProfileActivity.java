@@ -435,7 +435,7 @@ public class ProfileActivity extends AppCompatActivity
                 tv = findViewById(R.id.lastword_you_1);
         }
         gamegrid.setImageBitmap(bmp);
-        tv.setText(s);
+        tv.setText( s + " (" + s.length() + ")" );
 
     }
 
