@@ -244,8 +244,7 @@
             android:id="@+id/fox_wifi_helper_speech_bubble"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            />
+            android:layout_gravity="center" />
 
         <FrameLayout
             android:layout_width="0dp"

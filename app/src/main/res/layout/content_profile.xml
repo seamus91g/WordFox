@@ -190,9 +190,8 @@
                 android:gravity="center"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/recent_game_divider"
-                app:layout_constraintHorizontal_bias="0.1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/best_game_header"
+                app:layout_constraintRight_toRightOf="@id/best_game_header"
                 app:layout_constraintTop_toBottomOf="@id/best_game_header" />
 
             <TextView
@@ -289,8 +288,8 @@
                 android:paddingBottom="10dp"
                 android:text="Winner: "
                 app:layout_constraintBottom_toTopOf="@id/lastword1"
-                app:layout_constraintLeft_toLeftOf="@id/lastword1"
-                app:layout_constraintRight_toRightOf="@id/lastword1"
+                app:layout_constraintLeft_toLeftOf="@id/recent_game_header"
+                app:layout_constraintRight_toRightOf="@id/recent_game_header"
                 app:layout_constraintTop_toBottomOf="@id/recent_game_header" />
 
             <!---->

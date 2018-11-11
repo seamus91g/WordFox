@@ -49,7 +49,7 @@
             android:layout_width="1dp"
             android:layout_height="wrap_content"
             style="@style/explanationTextStyle"
-            android:text="@string/challenge_yourself"
+            android:text="@string/justme_explanation_text"
             app:layout_constraintHorizontal_bias="0" />
 
 

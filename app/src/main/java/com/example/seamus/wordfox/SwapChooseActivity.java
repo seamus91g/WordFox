@@ -1,18 +1,12 @@
 package com.example.seamus.wordfox;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
-import android.view.MenuInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -21,12 +15,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -157,6 +153,17 @@ public class SwapChooseActivity extends AppCompatActivity
         }).start();
     }
 
+    private void hideNoExistingPlayersMessage() {
+//        int numExistingPlayers = GameData.getNamedPlayerList(SwapChooseActivity.this).size();
+//        Log.d("myTag", "showNoExistingPlayersMessage: numExistingPlayers: " + numExistingPlayers);
+
+//        if(numExistingPlayers == 1){
+//            TextView noExistingPlayersTV = findViewById(R.id.existing_player_fragment_noExistingPlayersTV);
+//            noExistingPlayersTV.setWidth(screenWidth/2);
+//            noExistingPlayersTV.setVisibility(View.INVISIBLE);
+//        }
+    }
+
     private ArrayList<Bitmap> loadPlayerProfilePics(ArrayList<PlayerIdentity> players) {
         ArrayList<Bitmap> profilePics = new ArrayList<>();
         Bitmap defaultPicture = null;
@@ -202,7 +209,7 @@ public class SwapChooseActivity extends AppCompatActivity
         return playersAdapter;
     }
 
-    private View.OnClickListener newOrExistingListener = view -> decideFragment((String) view.getTag());
+    private View.OnClickListener newOrExistingListener = view -> decideFragment( (String) view.getTag() );
     private View.OnClickListener startListener = view -> startGame();
 
     private void startGame() {
@@ -231,6 +238,7 @@ public class SwapChooseActivity extends AppCompatActivity
                 .beginTransaction()
                 .add(R.id.player_select_container, fragment, CURRENT_FRAGMENT)
                 .commit();
+//                showNoExistingPlayersMessage();
     }
 
     private void removeExistingFragment() {
@@ -249,6 +257,12 @@ public class SwapChooseActivity extends AppCompatActivity
     }
 
     private void decideFragment(String choice) {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         Log.d(MONITOR_TAG, "Tag is: " + choice);
         if (CURRENT_FRAGMENT.equals(choice)) {
             Log.d(MONITOR_TAG, "Tag is already selected");
