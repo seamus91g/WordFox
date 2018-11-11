@@ -10,6 +10,7 @@ public class WifiServiceConnection implements ServiceConnection {
     private WifiService wifiService;
     private WifiActivityContract wifiActivityContract;
 
+    @Deprecated
     public WifiServiceConnection(){
     }
     public WifiServiceConnection(WifiActivityContract wifiActivityContract) {

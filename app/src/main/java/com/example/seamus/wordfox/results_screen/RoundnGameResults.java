@@ -40,6 +40,7 @@ import com.example.seamus.wordfox.ImageHandler;
 import com.example.seamus.wordfox.NavigationBurger;
 import com.example.seamus.wordfox.R;
 import com.example.seamus.wordfox.SwapActivity;
+import com.example.seamus.wordfox.WifiActivityContract;
 import com.example.seamus.wordfox.WifiGameInstance;
 import com.example.seamus.wordfox.WifiService;
 import com.example.seamus.wordfox.WifiServiceConnection;
@@ -63,6 +64,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        WifiActivityContract,
         ResultsContract.View {
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     public static final String INTENT_GAME_RESULTS = "intent_game_results_key";
@@ -152,7 +154,7 @@ public class RoundnGameResults extends AppCompatActivity
             activityIntentFilter = new IntentFilter();
             activityIntentFilter.addAction(WifiService.ACTION_GAME_RESULTS);
             wifiGameResults = new ArrayDeque<>();
-            netConnService = new WifiServiceConnection();
+            netConnService = new WifiServiceConnection(this);
             resultReceiver = new ResultBroadcastReceiver();
             registerReceiver(resultReceiver, activityIntentFilter);
             activityIntentFilter = new IntentFilter();
@@ -376,8 +378,12 @@ public class RoundnGameResults extends AppCompatActivity
         super.onResume();
         if (isOnline) {
             bindService();
-            new Handler().post(() -> netConnService.getWifiService().declareGameOver());
         }
+    }
+
+    @Override
+    public void onServiceBound() {
+        new Handler().post(() -> netConnService.getWifiService().declareGameOver());
     }
 
     @Override
