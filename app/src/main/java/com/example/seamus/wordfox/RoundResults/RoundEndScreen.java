@@ -121,11 +121,11 @@ public class RoundEndScreen extends AppCompatActivity
         String lets = gameInstance.getRoundLetters();
         setupResults(screenSize.x / 4, Arrays.copyOfRange(lets.split(""), 1, lets.length() + 1), gameInstance.getSuggestedWordsOfRound(round));
 
-        createPlayerResultGrid(screenSize.x/4, Arrays.copyOfRange(lets.split(""), 1, lets.length() + 1), gameInstance.getLongestWord());
+        createPlayerResultGrid(screenSize.x / 4, Arrays.copyOfRange(lets.split(""), 1, lets.length() + 1), gameInstance.getLongestWord());
     }
 
 
-    private void createPlayerResultGrid(int oneGridWidth, String[] letters, String word){
+    private void createPlayerResultGrid(int oneGridWidth, String[] letters, String word) {
 
         int oneCellWidth = ((oneGridWidth * (100 - 10)) / 100) / 3;
         Bitmap pressedCell = ImageHandler.getScaledBitmapByWidth(R.drawable.single_grid_cell_purple, oneCellWidth, getResources());
@@ -159,7 +159,7 @@ public class RoundEndScreen extends AppCompatActivity
         RecyclerView gridView = findViewById(R.id.results_scrollview_grids);
         gridView.setLayoutManager(new GridLayoutManager(this, 3));
         gridView.setAdapter(new GameGridAdapter(suggestedWordsOfRound, gameLetters, oneGridWidth, getResources()));
-        gridView.addItemDecoration(new GridItemDecoration(oneGridWidth/10));
+        gridView.addItemDecoration(new GridItemDecoration(oneGridWidth / 10));
 
     }
 
@@ -443,16 +443,24 @@ public class RoundEndScreen extends AppCompatActivity
     public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
         String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
         if (profPicStr.equals("")) {
-            Log.d("roundendscreen", "7: expected profPic: " + profilePicScreenWidth);
-            Log.d("roundendscreen", "7: expected profPic: w_h " + loadDefaultProfilePic(profilePicScreenWidth).getWidth() + " __ " + loadDefaultProfilePic(profilePicScreenWidth).getHeight());
             return loadDefaultProfilePic(profilePicScreenWidth);
         } else {
             Uri myFileUri = Uri.parse(profPicStr);
             // TODO: Not cropping this image means using more memory than required.
             Bitmap profPic = ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
+            int shortSide;
+            int startX, startY;
+            if (profPic.getHeight() < profPic.getWidth()) {
+                shortSide = profPic.getHeight();
+                startX = (profPic.getWidth() - shortSide) / 2;
+                startY = 0;
+            } else {
+                shortSide = profPic.getWidth();
+                startY = (profPic.getHeight() - shortSide) / 2;
+                startX = 0;
+            }
+            profPic = Bitmap.createBitmap(profPic, startX, startY, shortSide, shortSide);
             if (profPic == null) {
-                Log.d("roundendscreen", "9: expected size: " + 288);
-                Log.d("roundendscreen", "9: actual size: " + profilePicScreenWidth);
                 return loadDefaultProfilePic(profilePicScreenWidth);
             }
             return profPic;

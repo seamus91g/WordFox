@@ -31,7 +31,7 @@ public class ImageHandler {
     private static final int SCALE_BY_WIDTH = 1;
     private static final int SCALE_BY_LONGEST = 2;
     private static final int SCALE_BY_SHORTEST = 3;
-    private static final String MONITOR_TAG = "ImageHandler_tag";
+    private static final String MONITOR_TAG = "myTag_img";
 
     private ImageHandler(){}
 
@@ -155,7 +155,7 @@ public class ImageHandler {
             try {
                 BitmapFactory.Options options;
                 if (scaleToDimension > 0) {
-                    options = getBounds(filePath, scaleToDimension, scaleType);
+                    options = getBounds(filePath, scaleToDimension, scaleType, activity.getResources().getDisplayMetrics().densityDpi);
                 } else {
                     options = new BitmapFactory.Options();
                 }
@@ -179,7 +179,7 @@ public class ImageHandler {
         return myBitmap;
     }
 
-    private static BitmapFactory.Options getBounds(String filePath, int desiredDimensionSize, int scaleType) throws IOException {
+    private static BitmapFactory.Options getBounds(String filePath, int desiredDimensionSize, int scaleType, int density) throws IOException {
         if (desiredDimensionSize <= 0) {
             return null;
         }
@@ -188,13 +188,14 @@ public class ImageHandler {
         FileInputStream fis = new FileInputStream(filePath);
         BitmapFactory.decodeStream(fis, null, bmpopt);
         fis.close();
+        bmpopt.inTargetDensity = density;
         return applyScaleSettings(bmpopt, desiredDimensionSize, scaleType);
     }
 
     private static BitmapFactory.Options applyScaleSettings(BitmapFactory.Options bmpopt, int scaleToDimension, int scaleType) {
         float newDimensionSize = decideDimensionToScale(bmpopt, scaleType);
         int scale = scaleFromOptions(bmpopt, scaleToDimension);
-        bmpopt.inDensity = (int) ((bmpopt.inTargetDensity * (newDimensionSize / scaleToDimension)) / scale);
+        bmpopt.inDensity = (int) (((float) bmpopt.inTargetDensity * ((float) newDimensionSize / scaleToDimension)) / (float) scale);
         bmpopt.inJustDecodeBounds = false;
         bmpopt.inScaled = true;
         bmpopt.inSampleSize = scale;
