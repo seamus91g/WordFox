@@ -10,6 +10,10 @@ public class WordfoxConstants {
     public static final String GRID_TAG_PREFIX = "grid_";
     public static final String TEST_AD_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712";
     public static final String TEST_AD_BANNER = "ca-app-pub-3940256099942544/6300978111";
+    public static final String GAME_END_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/9136484888";
+    public static final String DATA_PAGE_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/9069160957";
+    public static final String END_OF_ROUND3_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/4199977656";
+    public static final String PROFILE_PAGE_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/8686017575";
 
     public static class Analytics{
         public static final String INTERSTITIAL_LOAD_DURATION_ID = "interstitial_load_duration_id";
