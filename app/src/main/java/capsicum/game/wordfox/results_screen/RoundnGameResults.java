@@ -96,14 +96,14 @@ public class RoundnGameResults extends AppCompatActivity
     class ResultBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(MONITOR_TAG, "L : Received any ol thing : " + intent.getAction());
+// Log
             if (intent.getAction().equals(WifiService.ACTION_GAME_RESULTS)) {
                 String resultMessage = intent.getExtras().getString(INTENT_GAME_RESULTS);
                 try {
                     synchronized (RoundnGameResults.this) {
                         wifiGameResults.add(new JSONObject(resultMessage));
                     }
-                    Log.d(MONITOR_TAG, "L : Received result intent. Result: " + new JSONObject(resultMessage).toString());
+// Log
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -154,7 +154,7 @@ public class RoundnGameResults extends AppCompatActivity
 
         isOnline = instancesToDisplay.get(0).isOnline();
         if (isOnline) {
-            Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+// Log
             activityIntentFilter = new IntentFilter();
             activityIntentFilter.addAction(WifiService.ACTION_GAME_RESULTS);
             wifiGameResults = new ArrayDeque<>();
@@ -241,7 +241,7 @@ public class RoundnGameResults extends AppCompatActivity
 
     private void unBindService() {
         if (isOnline && netConnService.isBound) {
-            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+// Log
             unbindService(netConnService);
             netConnService.isBound = false;
         }
@@ -249,7 +249,7 @@ public class RoundnGameResults extends AppCompatActivity
 
     private void bindService() {
         if (isOnline) {
-            Log.d(MONITOR_TAG, "Binding " + this.toString());
+// Log
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
@@ -466,7 +466,7 @@ public class RoundnGameResults extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+// Log
                 Intent profileScreenIntent = new Intent(RoundnGameResults.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;
@@ -489,7 +489,7 @@ public class RoundnGameResults extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 
-        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__MainActivity");
+// Log
         navBurger.navigateTo(item, RoundnGameResults.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

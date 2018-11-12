@@ -49,7 +49,7 @@ public class WifiService extends Service implements MessageHandler {
     private HandlerThread chatThread;
 
     private void sendBroadcast(String message, String intentAction, String key) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "W: Broadcasting: " + intentAction);
+// Log
         Intent intent = new Intent();
         intent.setAction(intentAction);
         intent.putExtra(key, message);
@@ -58,8 +58,8 @@ public class WifiService extends Service implements MessageHandler {
 
     public void connectedTo(WifiP2pInfo info) {
         if (chat != null) {
-            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Not connecting. Already connected to " + info.groupOwnerAddress);
-            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Group owner? : " + ((GroupOwnerRunnable.class.equals(chat.getClass()))));
+// Log
+// Log
             return;
         }
         new Thread(() -> createChat(info)).start();
@@ -104,9 +104,9 @@ public class WifiService extends Service implements MessageHandler {
 //        chatThread.setPriority(Thread.MAX_PRIORITY);
 //        chatThread.start();
         while (!greetingQueue.isEmpty()) {
-            Log.d(WordfoxConstants.MONITOR_TAG, "WS : Is chat null? " + (chat == null));
-            Log.d(WordfoxConstants.MONITOR_TAG, "WS : greetingQueue null?" + (greetingQueue == null));
-            Log.d(WordfoxConstants.MONITOR_TAG, "WS : greetingQueue size: " + greetingQueue.size());
+// Log
+// Log
+// Log
             chat.sendGreeting(greetingQueue.remove());
         }
     }
@@ -148,7 +148,7 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void log(String msg) {
-        Log.d(WordfoxConstants.MONITOR_TAG, msg);
+// Log
     }
 
     @Override
@@ -157,7 +157,7 @@ public class WifiService extends Service implements MessageHandler {
     }
 
     public void sendData(String data) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "WS : Sending data " + data);
+// Log
         chat.sendMessage(data);
         assert chat != null;
     }
@@ -173,7 +173,7 @@ public class WifiService extends Service implements MessageHandler {
 
     @Override
     public void handleReceivedMessage(String message, ChatServer c) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "WS : Handling received message ... " + message);
+// Log
         try {
             JSONObject jso = new JSONObject(message);
 
@@ -266,7 +266,7 @@ public class WifiService extends Service implements MessageHandler {
 //        Message msg = mServiceHandler.obtainMessage();
 //        msg.arg1 = startId;
 //        mServiceHandler.sendMessage(msg);
-        Log.d(WordfoxConstants.MONITOR_TAG, "Finished binding ... ");
+// Log
 
         return START_NOT_STICKY;
     }
@@ -279,10 +279,10 @@ public class WifiService extends Service implements MessageHandler {
     public void onDestroy() {
         super.onDestroy();
 //        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
-        Log.d(WordfoxConstants.MONITOR_TAG, "**************** Service is destroyed *********************");
+// Log
         closeService();
         if(deviceActionListener != null){
-            Log.d(WordfoxConstants.MONITOR_TAG, "Disconnecting the Wifi Action Listener");
+// Log
             deviceActionListener.disconnect();
         }
     }

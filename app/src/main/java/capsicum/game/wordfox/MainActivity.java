@@ -59,7 +59,7 @@
 //        setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-//        Log.d(MONITOR_TAG, "Main activity, END");
+// Log
 //
 //        View parentView = findViewById(R.id.contentMainxml);
 //        parentView.post(() -> startAnimation());
@@ -185,7 +185,7 @@
 //                default:
 //            }
 //
-//            Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+// Log
 //            allGameInstances.clear();
 //        }
 //
@@ -213,7 +213,7 @@
 //
 //            // Wait for dictionary to finish loading
 //            while (!FoxDictionary.isWordListLoaded) {
-//                Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+// Log
 //                try {
 //                    Thread.sleep(100);      // Wait for dictionary to finish loading
 //                } catch (InterruptedException e) {
@@ -268,7 +268,7 @@
 //            switch (item.getItemId()) {
 //                case R.id.action_profile:
 //                    // User chose the "Profile" item, jump to the profile page
-//                    Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+// Log
 //                    Intent profileScreenIntent = new Intent(MainActivity.this, ProfileActivity.class);
 //                    startActivity(profileScreenIntent);
 //                    return true;
@@ -292,7 +292,7 @@
 //        public boolean onNavigationItemSelected (MenuItem item){
 //            // Handle navigation view item clicks here.
 //
-//            Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__MainActivity");
+// Log
 //            navBurger.navigateTo(item, MainActivity.this);
 //
 //

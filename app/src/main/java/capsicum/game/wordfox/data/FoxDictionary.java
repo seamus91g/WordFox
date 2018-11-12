@@ -162,11 +162,11 @@ public class FoxDictionary implements Diction {
             String niner = validWordsAlphabeticalKey.get(givenLetters);
             multipleLengths.add(niner);
             --numberToSave;
-            Log.d(MONITOR_TAG_FOX, "-----------== Found a nine letter word! ==--------------: " + niner);
+// Log
         }
         for (int x = 0; x < 7; ++x) {        // Only go to 7 since 2 letter words are not valid
             if (multipleLengths.size() == 0 || x < 4) {
-                Log.d(MONITOR_TAG_FOX, "=== entering === " + x);
+// Log
                 HashMap<String, Boolean> substringsChecked = new HashMap<String, Boolean>();
                 ArrayList<String> listOfLongest = new ArrayList<String>();
                 listOfLongest = substringSearch(givenLetters, listOfLongest, x, substringsChecked, numberToSave);
@@ -176,7 +176,7 @@ public class FoxDictionary implements Diction {
                     numberToSave = numberToSave < 1 ? 1 : numberToSave;
                 }
             } else {
-                Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + (9 - x) + " letters ---");
+// Log
                 break;
             }
         }
@@ -191,23 +191,23 @@ public class FoxDictionary implements Diction {
             String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
             if (substringsChecked.containsKey(checkWindow)) {
 
-                //  Log.d(MONITOR_TAG_FOX, "Already checked " + checkWindow + ", continuing ...");
+// Log
                 continue;
             } else {
                 substringsChecked.put(checkWindow, 1);
-                //Log.d(MONITOR_TAG_FOX, "Checking " + checkWindow + "!!");
+// Log
             }
             if (Depth == 0) {
                 if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
                     String candidateLongest = validWordsAlphabeticalKey.get(checkWindow);
-//                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest + ", checking if higher index than " + thisLongest + ", end");
+// Log
                     int numberCollected = thisLongest.size();
                     // TODO: This fails to return list of highest index words. First two will be sorted and the winner of this comparison will never be removed from the list, even if several subsequent higher indexes are found
                     if (numberCollected > 0) {
                         String leastIndexWord = thisLongest.get(numberCollected - 1);
                         String result = returnBetterIndex(leastIndexWord, candidateLongest);
                         if (!result.equals(leastIndexWord)) {
-//                            Log.d(MONITOR_TAG_FOX, "LW1> Removing " + thisLongest.get(0) + ", Adding "+ res);
+// Log
                             thisLongest.remove(numberCollected - 1);
                             thisLongest.add(result);
                             if (thisLongest.size() < howMany) {
@@ -218,9 +218,9 @@ public class FoxDictionary implements Diction {
                         }
                     } else {
                         thisLongest.add(candidateLongest);
-//                        Log.d(MONITOR_TAG_FOX, "LW2> Adding " + candidateLongest);
+// Log
                     }
-//                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest);
+// Log
                 }
             } else {
                 thisLongest = substringSearch(checkWindow, thisLongest, Depth - 1, substringsChecked, howMany);

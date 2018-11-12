@@ -217,7 +217,7 @@ public class GameData extends AppCompatActivity {
             SharedPreferences userFoxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
             String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
             FoxRank rank = determineRankValue(userFoxPreferences.getInt(HIGHEST_SCORE_PREFIX + ID, 0));
-            Log.d(MONITOR_TAG, "********* Rank of " + name + " is : " + rank.foxRank + " ***********");
+// Log
             playerList.add(new PlayerIdentity(ID, name, rank));
         }
         if (playerList.size() == 0) {
@@ -462,7 +462,7 @@ public class GameData extends AppCompatActivity {
     }
 
     public void addWord(String newWord) {
-        Log.d(MONITOR_TAG, "GameData: Adding " + newWord + ", END");
+// Log
         // Check if longest word
         int len = newWord.length();
         String currentLongest = foxPreferences.getString(LONGEST_WORD_KEY, "");

@@ -121,10 +121,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
     private boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(MONITOR_TAG, "Permission is granted");
+// Log
                 return true;
             } else {
-                Log.v(MONITOR_TAG, "Permission is revoked");
+// Log
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }

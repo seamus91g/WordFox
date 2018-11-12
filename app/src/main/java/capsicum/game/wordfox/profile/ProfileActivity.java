@@ -181,7 +181,7 @@ public class ProfileActivity extends AppCompatActivity
                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 // Scroll so that the Save button is 1/4 way from the top of the screen
                 int scrollyY = setProfileNameButton.getBottom() - displayMetrics.heightPixels / 4;
-                Log.d(TAG, "start, end" + setProfileNameButton.getBottom() + ":" + scrollyY);
+// Log
                 ScrollView scroll = findViewById(R.id.profile_scrollview);
                 scroll.post(
                         () -> scroll.scrollTo(0, 1500)

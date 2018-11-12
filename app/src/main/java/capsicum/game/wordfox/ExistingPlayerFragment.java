@@ -70,7 +70,7 @@ public class ExistingPlayerFragment extends Fragment {
 
     private void showNoExistingPlayersMessage() {
         int numExistingPlayers = rvAdapter.getItemCount();
-        Log.d("myTag", "showNoExistingPlayersMessage: numExistingPlayers: " + numExistingPlayers);
+// Log
 
 
         if(numExistingPlayers == 0){

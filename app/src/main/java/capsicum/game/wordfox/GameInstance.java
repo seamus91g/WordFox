@@ -59,7 +59,7 @@ public class GameInstance implements GameDetails {
             gameJSON.put(PLAYER_ID, player.ID);
             gameJSON.put(PLAYER_NAME, player.username);
         } catch (JSONException e) {
-            Log.d(MONITOR_TAG, "GameInstance : Failed to create json result");
+// Log
             e.printStackTrace();
         }
         return gameJSON;
@@ -212,7 +212,7 @@ public class GameInstance implements GameDetails {
     public void setLongestPossible(String word) {
         allLongestPossible.add(word);
         highestPossibleScore += word.length();
-        Log.d("Check this out", "highest possible score is " + highestPossibleScore);
+// Log
     }
     public ArrayList<String> getAllLongestPossible(){
         return allLongestPossible;

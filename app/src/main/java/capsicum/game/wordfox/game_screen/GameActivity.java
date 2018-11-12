@@ -336,7 +336,7 @@ public class GameActivity extends AppCompatActivity
         updateHeaderLetters();
         // Quick exit the game by tapping reset button twice
         if (this.resetButtonPressedOnce) {
-            completeGame();
+//            completeGame();
         }
         this.resetButtonPressedOnce = true;
         new Handler().postDelayed(() -> resetButtonPressedOnce = false, 500);

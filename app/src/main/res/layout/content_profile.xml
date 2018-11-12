@@ -499,7 +499,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     ads:adSize="LARGE_BANNER"
-                    ads:adUnitId="@string/test_banner_ad_unit_id" />
+                    ads:adUnitId="@string/profile_page_banner_ad_unit_id" />
 
             </FrameLayout>
 

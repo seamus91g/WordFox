@@ -89,7 +89,7 @@ public class PassAndPlay extends AppCompatActivity
 
 
         numberOfPlayers = 2;
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+// Log
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_pass_and_play_instructionFoxIV);
@@ -181,7 +181,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                 }
 
-                Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+// Log
                 HomeScreen.allGameInstances.clear();
 
 
@@ -217,7 +217,7 @@ public class PassAndPlay extends AppCompatActivity
 
     public void startGame() {
         if (numberOfPlayers < 2 || numberOfPlayers > 6){
-            Log.d(MONITOR_TAG, "Returning. Number of players is: " + numberOfPlayers);
+// Log
             return;
         }
         HomeScreen.allGameInstances.clear();
@@ -237,14 +237,14 @@ public class PassAndPlay extends AppCompatActivity
 
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+// Log
             try {
                 Thread.sleep(100);      // Wait for dictionary to finish loading
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        Log.d(MONITOR_TAG, "Number of players is: " + numberOfPlayers + ". Game instances: " + HomeScreen.allGameInstances.size());
+// Log
         this.startActivity(gameIntent);
     }
 
@@ -278,7 +278,7 @@ public class PassAndPlay extends AppCompatActivity
                 break;
         }
 
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+// Log
     }
 
     private void changeTextTV() {   // TODO: Implement speech

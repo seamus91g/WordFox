@@ -168,6 +168,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/test_banner_ad_unit_id" />
+            ads:adUnitId="@string/game_end_banner_ad_unit_id" />
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

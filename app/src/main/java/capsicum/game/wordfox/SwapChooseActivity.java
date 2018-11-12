@@ -105,9 +105,9 @@ public class SwapChooseActivity extends AppCompatActivity
         Bitmap fox3 = ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, spacePerFox, getResources());
         Bitmap fox4 = ImageHandler.getScaledBitmapByWidth(R.drawable.silverfoxsilcoloured, spacePerFox, getResources());
 
-        Log.d(MONITOR_TAG, "container count: " + foxContainer.getChildCount());
-        Log.d(MONITOR_TAG, "container width: " + foxContainer.getWidth());
-        Log.d(MONITOR_TAG, "container space per fox: " + spacePerFox);
+// Log
+// Log
+// Log
 
         ImageView fox1IV = foxContainer.findViewById(R.id.existing_player_cardview_fox1);
         fox1IV.setImageBitmap(fox1);
@@ -159,7 +159,7 @@ public class SwapChooseActivity extends AppCompatActivity
 
     private void hideNoExistingPlayersMessage() {
 //        int numExistingPlayers = GameData.getNamedPlayerList(SwapChooseActivity.this).size();
-//        Log.d("myTag", "showNoExistingPlayersMessage: numExistingPlayers: " + numExistingPlayers);
+// Log
 
 //        if(numExistingPlayers == 1){
 //            TextView noExistingPlayersTV = findViewById(R.id.existing_player_fragment_noExistingPlayersTV);
@@ -203,7 +203,7 @@ public class SwapChooseActivity extends AppCompatActivity
     public PlayersAdapter getPlayersAdapter() {
         // TODO: Add loading dialog while waiting.
         while (!isAdapterLoaded) {
-            Log.d(MONITOR_TAG, "Waiting for adapter to finish loading ...");
+// Log
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -237,7 +237,7 @@ public class SwapChooseActivity extends AppCompatActivity
     }
 
     private void addFragment(Fragment fragment) {
-        Log.d(MONITOR_TAG, "Creating the fragment: " + CURRENT_FRAGMENT);
+// Log
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.player_select_container, fragment, CURRENT_FRAGMENT)
@@ -247,10 +247,10 @@ public class SwapChooseActivity extends AppCompatActivity
 
     private void removeExistingFragment() {
         if (CURRENT_FRAGMENT.equals("")) {
-            Log.d(MONITOR_TAG, "No fragment already exists");
+// Log
             return;
         }
-        Log.d(MONITOR_TAG, "Removing old fragment: " + CURRENT_FRAGMENT);
+// Log
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
         if (fragment != null) {
             getSupportFragmentManager()
@@ -267,13 +267,13 @@ public class SwapChooseActivity extends AppCompatActivity
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        Log.d(MONITOR_TAG, "Tag is: " + choice);
+// Log
         if (CURRENT_FRAGMENT.equals(choice)) {
-            Log.d(MONITOR_TAG, "Tag is already selected");
+// Log
             return;
         }
         removeExistingFragment();
-        Log.d(MONITOR_TAG, "Adding new fragment");
+// Log
         switch (choice) {
             case NEW_PLAYER_TAG:
                 CURRENT_FRAGMENT = NEW_PLAYER_TAG;
