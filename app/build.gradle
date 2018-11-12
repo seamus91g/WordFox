@@ -9,8 +9,8 @@ android {
         applicationId "capsicum.game.wordfox"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 0
-        versionName "0.5.1"
+        versionCode 1
+        versionName "1.0"
         vectorDrawables.useSupportLibrary = true
     }
     applicationVariants.all { variant ->
