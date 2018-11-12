@@ -7,7 +7,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:activity="com.example.seamus.wordfox.player_switch.PlayerSwitchActivity"
+    tools:activity="capsicum.game.wordfox.player_switch.PlayerSwitchActivity"
     tools:showIn="@layout/app_bar_player_switch">
 
     <TextView

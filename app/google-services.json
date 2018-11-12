@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:551881622117:android:120c01c12b2970ce",
         "android_client_info": {
-          "package_name": "com.example.seamus.wordfox"
+          "package_name": "capsicum.game.wordfox"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "551881622117-scp7tpoefvflfc91df12fk3c6f8acdvg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.seamus.wordfox",
+            "package_name": "capsicum.game.wordfox",
             "certificate_hash": "52fc64c2db6ad9f64ae2eb380cf6ba09490bc58d"
           }
         },
