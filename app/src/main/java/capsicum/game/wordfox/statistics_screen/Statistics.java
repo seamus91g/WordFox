@@ -98,7 +98,7 @@ public class Statistics extends AppCompatActivity
     private AdView loadAdBanner(Context context) {
         AdView mAdView = new AdView(context);
         mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
-        mAdView.setAdUnitId(context.getResources().getString(R.string.test_banner_ad_unit_id));
+        mAdView.setAdUnitId(context.getResources().getString(R.string.data_page_banner_ad_unit_id));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 

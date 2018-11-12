@@ -175,7 +175,7 @@ public class GameActivity extends AppCompatActivity
 
 //    private void unBindService() {
 //        if (isOnline && netConnService.isBound) {
-//            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+// Log
 //            unbindService(netConnService);
 //            netConnService.isBound = false;
 //        }
@@ -183,7 +183,7 @@ public class GameActivity extends AppCompatActivity
 //
 //    private void bindService() {
 //        if (isOnline) {
-//            Log.d(MONITOR_TAG, "Binding " + this.toString());
+// Log
 //            bindService(new Intent(this, WifiService.class), netConnService,
 //                    Context.BIND_AUTO_CREATE);
 //        }
@@ -352,7 +352,7 @@ public class GameActivity extends AppCompatActivity
         updateHeaderLetters();
         // Quick exit the game by tapping reset button twice
         if (this.resetButtonPressedOnce) {
-            completeGame();
+//            completeGame();
         }
         this.resetButtonPressedOnce = true;
         new Handler().postDelayed(() -> resetButtonPressedOnce = false, 500);

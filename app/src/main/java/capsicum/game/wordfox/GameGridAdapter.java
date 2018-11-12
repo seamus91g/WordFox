@@ -102,7 +102,7 @@ public class GameGridAdapter extends RecyclerView.Adapter<GameGridAdapter.GridVi
     }
 
     private void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+// Log
     }
 
     public static class GridViewHolder extends RecyclerView.ViewHolder {

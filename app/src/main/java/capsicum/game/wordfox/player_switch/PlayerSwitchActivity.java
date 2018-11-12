@@ -163,7 +163,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+// Log
                 Intent profileScreenIntent = new Intent(PlayerSwitchActivity.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;
@@ -181,7 +181,7 @@ public class PlayerSwitchActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        Log.d(MONITOR_TAG, "Before_onNavigationItemSelected__MainActivity");
+// Log
         navBurger.navigateTo(item, PlayerSwitchActivity.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

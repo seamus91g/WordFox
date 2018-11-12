@@ -108,7 +108,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
+// Log
                 Intent profileScreenIntent = new Intent(SettingsActivity.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;

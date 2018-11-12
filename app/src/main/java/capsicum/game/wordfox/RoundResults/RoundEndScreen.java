@@ -169,12 +169,12 @@ public class RoundEndScreen extends AppCompatActivity
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
-        Log.d("roundendscreen", "1: expected screenwidth: " + 1440);
-        Log.d("roundendscreen", "1: screenwidth: " + screenWidth);
+// Log
+// Log
     }
 
     private void bindWifiService() {
-        Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+// Log
         netConnService = new WifiServiceConnection(this);
         bindService();
     }
@@ -235,14 +235,14 @@ public class RoundEndScreen extends AppCompatActivity
         if (!isOnline || netConnService == null || !netConnService.isBound) {
             return;
         }
-        Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+// Log
         unbindService(netConnService);
         netConnService.isBound = false;
     }
 
     private void bindService() {
         if (isOnline) {
-            Log.d(MONITOR_TAG, "Binding " + this.toString());
+// Log
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
@@ -319,8 +319,8 @@ public class RoundEndScreen extends AppCompatActivity
         display.getSize(size);
         screenWidth = size.x;
 
-        Log.d("roundendscreen", "2: expected screenwidth: " + 1440);
-        Log.d("roundendscreen", "2: screenwidth: " + screenWidth);
+// Log
+// Log
 
         int foxPercent = (int) (0.35 * screenWidth);
         int foxSpeechPercent = (int) (0.64 * screenWidth);
@@ -486,7 +486,7 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     private static void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+// Log
     }
 
     @Override

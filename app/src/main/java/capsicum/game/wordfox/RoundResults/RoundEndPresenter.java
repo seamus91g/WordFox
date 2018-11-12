@@ -56,7 +56,7 @@ public class RoundEndPresenter {
         this.colorPrimary = colorPrimary;
         this.colorSecondary = colorSecondary;
         this.displayInterstitial = displayInterstitial;
-        Log.d(WordfoxConstants.MONITOR_TAG, ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
+// Log
     }
 
     public void startGame() {
@@ -64,7 +64,7 @@ public class RoundEndPresenter {
             return;
         }
         isStarted = true;
-        Log.d(WordfoxConstants.MONITOR_TAG, "Display interstitial? " + displayInterstitial);
+// Log
         if (displayInterstitial) {
             displayInterstitial();
         } else {
@@ -150,7 +150,7 @@ public class RoundEndPresenter {
     private AdListener interstitialAdListener = new AdListener() {
         @Override
         public void onAdClosed() {
-            Log.d(WordfoxConstants.MONITOR_TAG, "Will start game when ad closes ..");
+// Log
             startGameAfterInterstitial();
         }
 
@@ -177,7 +177,7 @@ public class RoundEndPresenter {
         @Override
         public void onAdFailedToLoad(int errorCode) {
             // Code to be executed when an ad request fails.
-            Log.d(WordfoxConstants.MONITOR_TAG, "Interstitial failed to load!!");
+// Log
             failedToLoadInterstitial = true;
         }
     };
@@ -187,11 +187,11 @@ public class RoundEndPresenter {
             return;
         }
         AdRequest adRequestTest = new AdRequest.Builder()
-                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
+//                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
                 .build();
         mInterstitialAd = view.getInterstitial();
         mInterstitialAd.setAdListener(interstitialAdListener);
-        mInterstitialAd.setAdUnitId(WordfoxConstants.TEST_AD_INTERSTITIAL);
+        mInterstitialAd.setAdUnitId(WordfoxConstants.END_OF_ROUND3_BANNER_AD_UNIT_ID);
         mInterstitialAd.loadAd(adRequestTest);
     }
 

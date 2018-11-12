@@ -60,7 +60,7 @@ public class WifiConnectedPlayers {
     }
 
     private void log(String msg) {
-        Log.d(WordfoxConstants.MONITOR_TAG, msg);
+// Log
     }
 
     private void removePlayer(PlayerIdentityRemote player) {

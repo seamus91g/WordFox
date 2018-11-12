@@ -162,7 +162,7 @@ public class HomeScreen extends AppCompatActivity
     private void waitForDictionaryToLoad(){
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(WordfoxConstants.MONITOR_TAG, "Dictionary word list is not finished loading!");
+// Log
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

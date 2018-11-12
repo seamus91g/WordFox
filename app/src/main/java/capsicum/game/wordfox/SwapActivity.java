@@ -108,18 +108,18 @@ public class SwapActivity extends AppCompatActivity
                    public void run() {
                        view1.getGlobalVisibleRect(myRect);
                        xy1[0] = myRect.right;
-                       Log.d("tagef", "run: xy1 " + xy1[0]);
+// Log
 
                        view2.getGlobalVisibleRect(myRect);
                        xy2[0] = myRect.left;
-                       Log.d("tagef", "run: xy2 " + xy2[0]);
+// Log
 
                        view3.getGlobalVisibleRect(myRect);
                        xy3[0] = myRect.width();
-                       Log.d("tagef", "run: xy3 " + xy3[0]);
+// Log
 
                        distanceBetween = xy2[0] - xy1[0] - xy3[0];
-                       Log.d("tagef", "run: distanceBetween " + distanceBetween);
+// Log
 
                         startAnimation();
 

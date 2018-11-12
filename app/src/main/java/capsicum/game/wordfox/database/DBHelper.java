@@ -23,18 +23,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "onCreate wf DBHelper!!, END");
+// Log
         sqLiteDatabase.execSQL(GameTable.SQL_CREATE);
         sqLiteDatabase.execSQL(WordTable.SQL_CREATE);
         sqLiteDatabase.execSQL(RoundTable.SQL_CREATE);
         sqLiteDatabase.execSQL(OpponentTable.SQL_CREATE);
         sqLiteDatabase.execSQL(PlayerStatsTable.SQL_CREATE);
-        Log.d(WordfoxConstants.MONITOR_TAG, "Finished onCreate wf DBHelper!!, END");
+// Log
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVer, int newVer) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "onUpgrade DBHelper!!, END");
+// Log
         sqLiteDatabase.execSQL(GameTable.SQL_DELETE);
         sqLiteDatabase.execSQL(WordTable.SQL_DELETE);
         sqLiteDatabase.execSQL(RoundTable.SQL_DELETE);

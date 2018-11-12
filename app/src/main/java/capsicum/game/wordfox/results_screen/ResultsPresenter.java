@@ -77,7 +77,7 @@ public class ResultsPresenter {
                 plyrGd.setBestGame(pgi.getLetters(), pgi.getAllFinalWords());
                 plyrGd.setHighestScore(pgi.getTotalScore());
             } else {
-                Log.d(TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
+// Log
             }
         }
         GameItem thisGameDetails = gameitemFromInstances(winners);

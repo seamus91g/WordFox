@@ -93,10 +93,10 @@ public class ImageHandler {
     private static boolean isStoragePermissionGranted(Activity activity) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is granted");
+// Log
                 return true;
             } else {
-                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is revoked");
+// Log
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
@@ -257,7 +257,7 @@ public class ImageHandler {
     }
 
     private static void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+// Log
     }
 
     private static void logBmp(Bitmap bitmap, String id) {
