@@ -5,7 +5,7 @@
     android:id="@+id/detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:activity="com.example.seamus.wordfox.MainActivity"
+    tools:activity="capsicum.game.wordfox.MainActivity"
     tools:showIn="@layout/app_bar_main">
     <!--tools:context=".MainActivity"-->
 

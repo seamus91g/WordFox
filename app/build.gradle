@@ -5,8 +5,8 @@ apply plugin: 'io.fabric'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        testInstrumentationRunner "com.example.seamus.wordfox.test.CustomTestRunner"
-        applicationId "com.example.seamus.wordfox"
+        testInstrumentationRunner "capsicum.game.wordfox.test.CustomTestRunner"
+        applicationId "capsicum.game.wordfox"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 0

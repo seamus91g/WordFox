@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.seamus.wordfox.ScoreScreen1Activity"
+    tools:context="capsicum.game.wordfox.ScoreScreen1Activity"
     tools:showIn="@layout/app_bar_score_screen1">
 
 
