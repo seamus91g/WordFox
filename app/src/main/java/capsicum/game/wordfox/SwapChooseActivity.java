@@ -55,6 +55,10 @@ public class SwapChooseActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            startActivity(new Intent(this, HomeScreen.class));
+            return;
+        }
         setContentView(R.layout.activity_swap_choose);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

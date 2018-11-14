@@ -66,6 +66,11 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            startActivity(new Intent(this, HomeScreen.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.content_game);
 
         View decorView = getWindow().getDecorView();
@@ -168,33 +173,11 @@ public class GameActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         gameInFocus = false;
-//        if(isOnline){
-//            unBindService();
-//        }
     }
-
-//    private void unBindService() {
-//        if (isOnline && netConnService.isBound) {
-//            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
-//            unbindService(netConnService);
-//            netConnService.isBound = false;
-//        }
-//    }
-//
-//    private void bindService() {
-//        if (isOnline) {
-//            Log.d(MONITOR_TAG, "Binding " + this.toString());
-//            bindService(new Intent(this, WifiService.class), netConnService,
-//                    Context.BIND_AUTO_CREATE);
-//        }
-//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if(isOnline && !netConnService.isBound){
-//            bindService();
-//        }
         if (timeUp) {
             completeGame();
         }
@@ -298,6 +281,7 @@ public class GameActivity extends AppCompatActivity
         Intent EndScreenIntent = new Intent(this, RoundEndScreen.class);
         EndScreenIntent.putExtra(GameActivity.GAME_INDEX, index);
         startActivity(EndScreenIntent);
+        finish();
     }
 
     // Display a particular letter to it's respective location on the 3x3 grid
@@ -377,22 +361,6 @@ public class GameActivity extends AppCompatActivity
         inflater.inflate(R.menu.profile, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_profile:
-                // User chose the "Profile" item, jump to the profile page
-                Intent profileScreenIntent = new Intent(GameActivity.this, ProfileActivity.class);
-                startActivity(profileScreenIntent);
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
 
     // Must press back button twice in quick succession to exit the game
     @Override
