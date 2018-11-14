@@ -114,6 +114,10 @@ public class RoundnGameResults extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            startActivity(new Intent(this, HomeScreen.class));
+            return;
+        }
         setContentView(R.layout.activity_end_screen_single_player1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -78,6 +78,10 @@ public class RoundEndScreen extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            startActivity(new Intent(this, HomeScreen.class));
+            return;
+        }
         setContentView(R.layout.activity_round_end_screen);
 
         ///////////////////////  Initialisations
