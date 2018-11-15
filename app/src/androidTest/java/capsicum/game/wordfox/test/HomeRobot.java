@@ -7,32 +7,16 @@ import capsicum.game.wordfox.R;
  */
 
 public class HomeRobot extends ScreenRobot<HomeRobot> {
-    public HomeRobot startGame(){
-        return performClick(R.id.bStartGame);
+    public HomeRobot startGame() {
+        return performClick(R.id.just_me_button);
     }
-    public HomeRobot setPlayerCount(int count){
 
-        switch (count){
-            case 1:
-                performClick(R.id.fox1Button);
-                break;
-            case 2:
-                performClick(R.id.fox2Button);
-                break;
-            case 3:
-                performClick(R.id.fox3Button);
-                break;
-            case 4:
-                performClick(R.id.fox4Button);
-                break;
-            case 5:
-                performClick(R.id.fox5Button);
-                break;
-            case 6:
-                performClick(R.id.fox6Button);
-                break;
-        }
-
-        return this;
+    public HomeRobot startWifiGame() {
+        return performClick(R.id.with_friends_button);
     }
+
+    public HomeRobot startPassPlayGame() {
+        return performClick(R.id.pass_and_play_button);
+    }
+
 }

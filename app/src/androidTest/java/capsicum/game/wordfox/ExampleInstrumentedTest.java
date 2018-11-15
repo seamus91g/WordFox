@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("capsicum.game.wordfox", appContext.getPackageName());
+        assertEquals("capsicum.game.wordfox.debug", appContext.getPackageName());
     }
 }
