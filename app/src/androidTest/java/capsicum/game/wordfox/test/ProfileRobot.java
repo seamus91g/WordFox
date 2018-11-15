@@ -7,9 +7,6 @@ import capsicum.game.wordfox.R;
 
 public class ProfileRobot extends ScreenRobot<ProfileRobot> {
 
-//    public GameRobot currentAttemptIs(String word) {
-//        return checkViewHasText(capsicum.game.wordfox.R.id.currentAttempt, word);
-//    }
     public ProfileRobot enterUsername(String name){
         replaceEditText(R.id.profile_usernameET, name);
         return this;

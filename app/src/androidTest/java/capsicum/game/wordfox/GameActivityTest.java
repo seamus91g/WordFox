@@ -18,8 +18,8 @@ import org.junit.Test;
  */
 public class GameActivityTest {
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<MainActivity>(
-            MainActivity.class, true, true);
+    public ActivityTestRule<HomeScreen> activityRule = new ActivityTestRule<>(
+            HomeScreen.class, true, true);
     @Before
     //// TODO, should load a mock GameInstance class instead of having to start from MainActivity
     public void setUp() throws Exception {
