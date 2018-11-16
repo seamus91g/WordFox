@@ -50,6 +50,7 @@ import capsicum.game.wordfox.WordfoxConstants;
 import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
 import capsicum.game.wordfox.results_screen.RoundnGameResults;
+
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -69,7 +70,6 @@ public class RoundEndScreen extends AppCompatActivity
     private int gameIndexNumber;
     private WifiServiceConnection netConnService;
     private boolean isOnline;
-    private LinearLayout container;
     private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
     private ConstraintLayout cl;
@@ -106,20 +106,12 @@ public class RoundEndScreen extends AppCompatActivity
 
         GameInstance gameInstance = HomeScreen.allGameInstances.get(gameIndexNumber);
 
-//        GameData plyrGd = new GameData(this, gameInstance.getID());
         int maxScore = gameInstance.getLongestPossible().length();
-
         int playerScore = gameInstance.getScore();
 
         String playerResult = playerScore + "/" + maxScore;
         adjustSpeechBubble(playerResult);
 
-
-//        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//        Display display = myWindowManager.getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        screenWidth = size.x;
         int round = gameInstance.getRound();
         calculateScreenWidth();
         String lets = gameInstance.getRoundLetters();
@@ -137,7 +129,6 @@ public class RoundEndScreen extends AppCompatActivity
         int oneCellHeight = pressedCell.getHeight();
         int containerHeight = (((oneCellHeight * 3) * 100) / (100 - 10));
 
-
         View v = LayoutInflater.from(this)
                 .inflate(R.layout.game_grid_xml, null);
         ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
@@ -146,7 +137,6 @@ public class RoundEndScreen extends AppCompatActivity
         clparams.width = oneGridWidth;
         cl.setLayoutParams(clparams);
         log("cl h,w : " + clparams.height + ", " + clparams.width);
-
 
         GameGridAdapter.GridViewHolder gridView = new GameGridAdapter.GridViewHolder(v, letters, notPressedCell, pressedCell);
         gridView.onBind(GameGridAdapter.findClickIndices(word, letters), word);
@@ -164,7 +154,6 @@ public class RoundEndScreen extends AppCompatActivity
         gridView.setLayoutManager(new GridLayoutManager(this, 3));
         gridView.setAdapter(new GameGridAdapter(suggestedWordsOfRound, gameLetters, oneGridWidth, getResources()));
         gridView.addItemDecoration(new GridItemDecoration(oneGridWidth / 10));
-
     }
 
     private void calculateScreenWidth() {
@@ -173,8 +162,6 @@ public class RoundEndScreen extends AppCompatActivity
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
-        Log.d("roundendscreen", "1: expected screenwidth: " + 1440);
-        Log.d("roundendscreen", "1: screenwidth: " + screenWidth);
     }
 
     private void bindWifiService() {
@@ -220,9 +207,7 @@ public class RoundEndScreen extends AppCompatActivity
                 FirebaseAnalytics.getInstance(this));
         presenter.prepareInterstitialAdvert();
         presenter.populatePlayerDetails();
-//        presenter.populatePossibleWords();
-//        presenter.displayWelcomeFox();
-
+        presenter.displayTitle();
     }
 
     private void startGame() {
@@ -278,7 +263,6 @@ public class RoundEndScreen extends AppCompatActivity
             if (this.backButtonPressedOnce) {
                 Intent homeScreenIntent = new Intent(this, HomeScreen.class);
                 startActivity(homeScreenIntent);
-
                 finish();
                 return;
             }
@@ -314,7 +298,6 @@ public class RoundEndScreen extends AppCompatActivity
         }
     }
 
-
     private void setUpRoundEndFox() {
 
         WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -323,9 +306,6 @@ public class RoundEndScreen extends AppCompatActivity
         display.getSize(size);
         screenWidth = size.x;
 
-        Log.d("roundendscreen", "2: expected screenwidth: " + 1440);
-        Log.d("roundendscreen", "2: screenwidth: " + screenWidth);
-
         int foxPercent = (int) (0.35 * screenWidth);
         int foxSpeechPercent = (int) (0.64 * screenWidth);
         ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
@@ -333,19 +313,15 @@ public class RoundEndScreen extends AppCompatActivity
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()));
-
     }
 
     private void adjustSpeechBubble(String playerResult) {
-
         ConstraintLayout winnerBannerCL = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
         String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
 
         TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
         IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
                 instructionFoxTV, 0.8, longestWordHeader);
-
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -366,7 +342,7 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public void displayTitle(String title) {
-
+        this.setTitle(title);
     }
 
     @Override
@@ -394,43 +370,6 @@ public class RoundEndScreen extends AppCompatActivity
         Intent endScreenIntent = new Intent(this, RoundnGameResults.class);
         startActivity(endScreenIntent);
     }
-
-//    @Override
-//    public Bitmap getBlankScaledGrid(int shortestSide) {
-//        return ImageHandler.getScaledBitmapByLongestSide(R.drawable.letter_grid_blank, shortestSide, getResources());
-//
-//    }
-
-//    @Override
-//    public void addRowPossibleWords() {
-//        if (container == null) {
-//            container = findViewById(R.id.suggestions_container);
-//        }
-//        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//        View childLayout = inflater.inflate(R.layout.row_of_grids_with_word, null);
-//        container.addView(childLayout);
-//    }
-
-//    @Override
-//    public void addPossibleWord(Bitmap gridBmp, String word, int count) {
-//        int tagSuffix = (count % 3) + 1;
-//        ConstraintLayout ll = (ConstraintLayout) container.getChildAt(container.getChildCount() - 1);
-//
-//        ImageView grid = ll.findViewWithTag(WordfoxConstants.GRID_TAG_PREFIX + tagSuffix);
-//        grid.setImageBitmap(gridBmp);
-//        grid.setVisibility(View.VISIBLE);
-//
-//        TextView wordTV = ll.findViewWithTag(WordfoxConstants.WORD_TAG_PREFIX + tagSuffix);
-//        wordTV.setText(word);
-//    }
-
-//    @Override
-//    public void hideResultGrid(int count, int width) {
-//        int tagSuffix = (count % 3) + 1;
-//        ConstraintLayout ll = (ConstraintLayout) container.getChildAt(container.getChildCount() - 1);
-//        ImageView grid = ll.findViewWithTag(WordfoxConstants.GRID_TAG_PREFIX + tagSuffix);
-//        grid.getLayoutParams().width = width;
-//    }
 
     @Override
     public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
@@ -463,18 +402,8 @@ public class RoundEndScreen extends AppCompatActivity
     private Bitmap loadDefaultProfilePic(int size) {
         return ImageHandler.getScaledBitmapByLongestSide(
                 GameData.PROFILE_DEFAULT_IMG,
-                size,          // TODO: Will be shortest side, not necessarily width
+                size,
                 getResources());
-
-//        Bitmap bm2 = ImageHandler.getScaledBitmapByWidth(
-//                GameData.PROFILE_DEFAULT_IMG_2,
-//                size,          // TODO: Will be shortest side, not necessarily width
-//                getResources());
-//
-//        Bitmap bm3 = ImageHandler.getScaledBitmapByWidth(
-//                GameData.PROFILE_DEFAULT_IMG_3,
-//                size,          // TODO: Will be shortest side, not necessarily width
-//                getResources());
     }
 
     private static void logBmp(Bitmap bitmap, String id) {
@@ -499,24 +428,6 @@ public class RoundEndScreen extends AppCompatActivity
         resultPlayerNameView.setText(nameAndPercent);
     }
 
-//    @Override
-//    public void setPlayerScoreText(String scoreText) {
-//        TextView resultPlayerScoreView = cl.findViewById(R.id.round_end_result_best_word);
-//        resultPlayerScoreView.setText(scoreText);
-//    }
-
-//    @Override
-//    public void setSpeechBubbleText(String playerBubbleText) {
-//        TextView longestWordView = cl.findViewById(R.id.content_round_end_screen_instructionFoxTV);
-//        longestWordView.setText(playerBubbleText);
-//    }
-
-//    @Override
-//    public void setMyGridResult(Bitmap bmp) {
-////        ImageView roundEndGridBest = cl.findViewById(R.id.round_end_result_grid);
-////        roundEndGridBest.setImageBitmap(bmp);
-//    }
-
     @Override
     public void setPlayerProfilePic(Bitmap profPic) {
         CircleImageView profilePicView = cl.findViewById(R.id.round_end_profile_pic);
@@ -524,5 +435,4 @@ public class RoundEndScreen extends AppCompatActivity
             profilePicView.setImageBitmap(profPic);
         }
     }
-
 }

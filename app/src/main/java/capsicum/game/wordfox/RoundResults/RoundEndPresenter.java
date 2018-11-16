@@ -2,23 +2,14 @@ package capsicum.game.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import capsicum.game.wordfox.GameGridAdapter;
 import capsicum.game.wordfox.GameInstance;
-import capsicum.game.wordfox.GridImage;
-import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.WordfoxConstants;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import java.util.List;
 
 /**
  * Created by Gilroy
@@ -59,6 +50,11 @@ public class RoundEndPresenter {
         Log.d(WordfoxConstants.MONITOR_TAG, ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
     }
 
+    public void displayTitle() {
+        String title = "Round " + (gameInstance.getRound() + 1) + " results";
+        view.displayTitle(title);
+    }
+
     public void startGame() {
         if (isStarted) {
             return;
@@ -89,52 +85,17 @@ public class RoundEndPresenter {
         }
     }
 
-//    public void populatePossibleWords() {
-//        List<String> possibleWords = gameInstance.getSuggestedWordsOfRound(gameInstance.getRound());
-//        if (possibleWords.size() <= 0) {
-//            return;
-//        }
-//        Bitmap gridBmp = view.getBlankScaledGrid(gridWidth);  // TODO: is 1/4 the appropriate amount?
-//
-//        int count = 0;
-//        int requiredRows = ((possibleWords.size() - 1) / 3) + 1;
-//        for (int i = 0; i < requiredRows; ++i) {
-//            view.addRowPossibleWords();         // TODO: Model should add the row itself
-//            for (int j = 0; j < WordfoxConstants.RESULT_GRIDS_PER_ROW; ++j) {
-//                if (count >= possibleWords.size()) {
-//                    view.hideResultGrid(count, gridBmp.getWidth());
-//                    ++count;
-//                    continue;
-//                }
-//                String word = possibleWords.get(count).toUpperCase() + " (" + possibleWords.get(count).length() + ")";
-//                GridImage gridWithText = new GridImage(gridBmp, word, gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
-//                view.addPossibleWord(gridWithText.getBmp(), word, count);
-//                ++count;
-//            }
-//        }
-//    }
-
     public void populatePlayerDetails() {       // TODO:  Tidy this. Use MVP
         Bitmap profPic = view.getPlayerProfPic(profilePicScreenWidth);
         view.setPlayerProfilePic(profPic);
-
         allowWordSearchToFinish();
-
         int maxScore = gameInstance.getLongestPossible().length();
         int playerScore = gameInstance.getScore();
         int percentScore = (100 * playerScore) / (maxScore);
 
         String nameAndPercent = gameInstance.getName() + "\n (" + percentScore + "%)";
         view.setPlayerNameWithPercent(nameAndPercent);
-
-//        String scoreText = gameInstance.getLongestWord() + " (" + gameInstance.getLongestWord().length() + ")";
-//        view.setPlayerScoreText(scoreText);
-
-//        Bitmap gridBmp = view.getBlankScaledGrid(resultGridWidth);
-//        GridImage gridWithText = new GridImage(gridBmp, gameInstance.getLongestWord().toUpperCase(), gameInstance.getRoundLetters(), colorPrimary, colorSecondary);
-//        view.setMyGridResult(gridWithText.getBmp());
     }
-
 
     // Race condition: if user ends game really quickly, longest possible words might not yet be calculated.
     private void allowWordSearchToFinish() {
@@ -157,7 +118,6 @@ public class RoundEndPresenter {
         @Override
         public void onAdLoaded() {
             long durationInMillis = System.currentTimeMillis() - START_TIMESTAMP;
-
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, WordfoxConstants.Analytics.INTERSTITIAL_LOAD_DURATION_ID);
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, WordfoxConstants.Analytics.INTERSTITIAL_LOAD_DURATION_NAME);
@@ -201,8 +161,4 @@ public class RoundEndPresenter {
         }
         mInterstitialAd.show();
     }
-
-//    public void displayWelcomeFox() {
-//        view.displaySpeechBubble(speechBubbleWidth);
-//    }
 }
