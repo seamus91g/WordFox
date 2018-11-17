@@ -25,11 +25,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameDetails;
 import capsicum.game.wordfox.GameInstance;
@@ -50,6 +52,7 @@ import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.FoxRank;
 import capsicum.game.wordfox.profile.ProfileActivity;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import org.json.JSONException;
@@ -140,13 +143,6 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        AdRequest adRequestTest = new AdRequest.Builder()
-                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
-                .build();
-//        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView = findViewById(R.id.adViewEndGame);
-        mAdView.loadAd(adRequestTest);
-
         calculateScreenDimensions();
         profPicWidth = (int) (screenWidth / 6);
         buttonGridImageWidth = (int) (screenWidth / 4);
@@ -221,7 +217,23 @@ public class RoundnGameResults extends AppCompatActivity
         word3TV.requestLayout();
         word3TV.getLayoutParams().width = (int) screenWidth / 3;
 
+        setupBannerAd();
+    }
 
+    private void setupBannerAd() {
+        String adUnit;
+        if (BuildConfig.DEBUG) {
+            adUnit = this.getResources().getString(R.string.test_banner_ad_unit_id);
+        } else {
+            adUnit = this.getResources().getString(R.string.game_end_banner_ad_unit_id);
+        }
+        FrameLayout adviewContainer = findViewById(R.id.advert_container_end_game);
+        AdView mAdView = new AdView(this);
+        mAdView.setAdSize(AdSize.BANNER);
+        mAdView.setAdUnitId(adUnit);
+        adviewContainer.addView(mAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void calculateScreenDimensions() {

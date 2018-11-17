@@ -34,6 +34,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.FoxUtils;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.IVmethods;
@@ -43,6 +44,7 @@ import capsicum.game.wordfox.R;
 import timber.log.Timber;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 public class ProfileActivity extends AppCompatActivity
@@ -81,7 +83,6 @@ public class ProfileActivity extends AppCompatActivity
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -91,11 +92,11 @@ public class ProfileActivity extends AppCompatActivity
         // Set the height of the frame layout surrounding the profile image
         profileChooseImageFL = findViewById(R.id.profile_choose_imageFL);
 //        profileChooseImageFL.setMinimumHeight(screenHeight/4);
-        profileChooseImageFL.setLayoutParams(new ConstraintLayout.LayoutParams(screenWidth, screenHeight/4));
+        profileChooseImageFL.setLayoutParams(new ConstraintLayout.LayoutParams(screenWidth, screenHeight / 4));
 
         // User can click the profile picture to allow them to change the picture
         profileIB = findViewById(R.id.content_profile_profileImageButton);
-        Bitmap defaultProfileImage = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, getResources());
+        Bitmap defaultProfileImage = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight / 4, getResources());
         setProfileImage(defaultProfileImage);
 
         profileIB.setOnClickListener(profileImageListener);
@@ -119,22 +120,29 @@ public class ProfileActivity extends AppCompatActivity
         presenter.displayRank();
         presenter.getFoxRank();
 
-
-        AdView mAdView = findViewById(R.id.ad_view_profile);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
         setUpTalkingFox();
-
-
+        setupBannerAd();
     }
 
+    private void setupBannerAd() {
+        String adUnit;
+        if (BuildConfig.DEBUG) {
+            adUnit = this.getResources().getString(R.string.test_banner_ad_unit_id);
+        } else {
+            adUnit = this.getResources().getString(R.string.profile_page_banner_ad_unit_id);
+        }
+        FrameLayout adviewContainer = findViewById(R.id.banner_ad_container_profile);
+        AdView mAdView = new AdView(this);
+        mAdView.setAdSize(AdSize.LARGE_BANNER);
+        mAdView.setAdUnitId(adUnit);
+        adviewContainer.addView(mAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
 
     private void setUpTalkingFox() {
-
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.64 * ((float) screenWidth)), getResources()));
-
     }
 
     @Override
@@ -183,7 +191,7 @@ public class ProfileActivity extends AppCompatActivity
                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 // Scroll so that the Save button is 1/4 way from the top of the screen
                 int scrollyY = setProfileNameButton.getBottom() - displayMetrics.heightPixels / 4;
-                Timber.d( "start, end" + setProfileNameButton.getBottom() + ":" + scrollyY);
+                Timber.d("start, end" + setProfileNameButton.getBottom() + ":" + scrollyY);
                 ScrollView scroll = findViewById(R.id.profile_scrollview);
                 scroll.post(
                         () -> scroll.scrollTo(0, 1500)
@@ -437,7 +445,7 @@ public class ProfileActivity extends AppCompatActivity
                 tv = findViewById(R.id.lastword_you_1);
         }
         gamegrid.setImageBitmap(bmp);
-        tv.setText( s + " (" + s.length() + ")" );
+        tv.setText(s + " (" + s.length() + ")");
 
     }
 

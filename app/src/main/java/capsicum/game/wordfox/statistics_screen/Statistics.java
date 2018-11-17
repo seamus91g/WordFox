@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.NavigationBurger;
@@ -43,6 +44,7 @@ import capsicum.game.wordfox.dataWordsRecycler.WordDataHeader;
 import capsicum.game.wordfox.database.DataPerGame;
 import capsicum.game.wordfox.profile.FoxRank;
 import capsicum.game.wordfox.profile.ProfileActivity;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -96,9 +98,15 @@ public class Statistics extends AppCompatActivity
     }
 
     private AdView loadAdBanner(Context context) {
+        String adUnit;
+        if (BuildConfig.DEBUG) {
+            adUnit = context.getResources().getString(R.string.test_banner_ad_unit_id);
+        } else {
+            adUnit = context.getResources().getString(R.string.data_page_banner_ad_unit_id);
+        }
         AdView mAdView = new AdView(context);
         mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
-        mAdView.setAdUnitId(context.getResources().getString(R.string.test_banner_ad_unit_id));
+        mAdView.setAdUnitId(adUnit);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 

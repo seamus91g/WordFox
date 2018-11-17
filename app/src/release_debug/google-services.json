@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "551881622117",
+    "firebase_url": "https://wordfoxfirebaseproject.firebaseio.com",
+    "project_id": "wordfoxfirebaseproject",
+    "storage_bucket": "wordfoxfirebaseproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551881622117:android:120c01c12b2970ce",
+        "android_client_info": {
+          "package_name": "capsicum.game.wordfox.rd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "551881622117-scp7tpoefvflfc91df12fk3c6f8acdvg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "capsicum.game.wordfox.rd",
+            "certificate_hash": "52fc64c2db6ad9f64ae2eb380cf6ba09490bc58d"
+          }
+        },
+        {
+          "client_id": "551881622117-vlhe74pghjmb3u3vb9obmm8eojnaq5m1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX1cbl24cpmiKSjVGz8U00SQgoDAexkho"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551881622117-vlhe74pghjmb3u3vb9obmm8eojnaq5m1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-5181377347442835~1259786879"
+    }
+  ],
+  "configuration_version": "1"
+}
