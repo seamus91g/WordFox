@@ -27,6 +27,7 @@ import android.widget.TextView;
 import capsicum.game.wordfox.data.FoxDictionary;
 import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
+import timber.log.Timber;
 
 
 public class PassAndPlay extends AppCompatActivity
@@ -89,7 +90,7 @@ public class PassAndPlay extends AppCompatActivity
 
 
         numberOfPlayers = 2;
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+        Timber.d( "Number of players: " + numberOfPlayers + ", END");
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_pass_and_play_instructionFoxIV);
@@ -181,7 +182,7 @@ public class PassAndPlay extends AppCompatActivity
                         break;
                 }
 
-                Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+                Timber.d( "Number of players: " + numberOfPlayers + ", END");
                 HomeScreen.allGameInstances.clear();
 
 
@@ -217,7 +218,7 @@ public class PassAndPlay extends AppCompatActivity
 
     public void startGame() {
         if (numberOfPlayers < 2 || numberOfPlayers > 6){
-            Log.d(MONITOR_TAG, "Returning. Number of players is: " + numberOfPlayers);
+            Timber.d( "Returning. Number of players is: " + numberOfPlayers);
             return;
         }
         HomeScreen.allGameInstances.clear();
@@ -237,14 +238,14 @@ public class PassAndPlay extends AppCompatActivity
 
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+            Timber.d( "Dictionary word list is not finished loading!");
             try {
                 Thread.sleep(100);      // Wait for dictionary to finish loading
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        Log.d(MONITOR_TAG, "Number of players is: " + numberOfPlayers + ". Game instances: " + HomeScreen.allGameInstances.size());
+        Timber.d( "Number of players is: " + numberOfPlayers + ". Game instances: " + HomeScreen.allGameInstances.size());
         this.startActivity(gameIntent);
     }
 
@@ -278,7 +279,7 @@ public class PassAndPlay extends AppCompatActivity
                 break;
         }
 
-        Log.d(MONITOR_TAG, "Number of players: " + numberOfPlayers + ", END");
+        Timber.d( "Number of players: " + numberOfPlayers + ", END");
     }
 
     private void changeTextTV() {   // TODO: Implement speech

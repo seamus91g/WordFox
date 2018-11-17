@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import capsicum.game.wordfox.profile.ProfileActivity;
 import capsicum.game.wordfox.statistics_screen.Statistics;
+import timber.log.Timber;
 
 /**
  * Created by Seamus
@@ -28,7 +29,7 @@ public class NavigationBurger {
             Intent profileScreenIntent = new Intent(fromContext, ProfileActivity.class);
             fromContext.startActivity(profileScreenIntent);
         } else if (id == R.id.nav_review) {
-            Log.d(MONITOR_TAG, "nav_review");
+            Timber.d( "nav_review");
         }
     }
 }

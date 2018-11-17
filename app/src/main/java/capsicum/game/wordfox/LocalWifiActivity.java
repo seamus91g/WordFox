@@ -48,8 +48,10 @@ import android.widget.Toast;
 
 import capsicum.game.wordfox.data.FoxDictionary;
 import capsicum.game.wordfox.game_screen.GameActivity;
-import capsicum.game.wordfox.injection.DictionaryApplication;
+import capsicum.game.wordfox.injection.WFApplication;
 import capsicum.game.wordfox.profile.ProfileActivity;
+import timber.log.Timber;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -113,7 +115,7 @@ public class LocalWifiActivity extends AppCompatActivity
     class WifiBroadcastReceiver extends android.content.BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(MONITOR_TAG, "L : Received any ol thing : " + intent.getAction() + "// Player count: " + connectedPlayers.size());
+            Timber.d( "L : Received any ol thing : " + intent.getAction() + "// Player count: " + connectedPlayers.size());
             if (intent.getAction().equals(WifiService.ACTION_SEND_LETTERS)) {
                 String lettersString = intent.getExtras().getString(INTENT_LETTERS);
                 try {
@@ -123,11 +125,11 @@ public class LocalWifiActivity extends AppCompatActivity
                         wifiGameLetters.add(jArray.getString(i));
                     }
                     activateGameStart();
-                    Log.d(MONITOR_TAG, "Received jArray: " + jArray.toString());
+                    Timber.d( "Received jArray: " + jArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d(MONITOR_TAG, "L : Received intent in activity from service. Letters: " + lettersString);
+                Timber.d( "L : Received intent in activity from service. Letters: " + lettersString);
             } else if (intent.getAction().equals(WifiService.ACTION_PLAYER_ADDED)) {
                 String newPlayerString = intent.getExtras().getString(INTENT_NEW_PLAYER);
                 try {
@@ -145,7 +147,7 @@ public class LocalWifiActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
 //                makeToast(newPlayerString);
-                Log.d(MONITOR_TAG, "Found new player : " + newPlayerString + ", count is now " + connectedPlayers.size());
+                Timber.d( "Found new player : " + newPlayerString + ", count is now " + connectedPlayers.size());
             } else if (intent.getAction().equals(WifiService.ACTION_PLAYER_REMOVED)) {
                 pLog("Action player removed detected. : " + intent.getAction());
                 String removedPlayerString = intent.getExtras().getString(INTENT_REMOVE_PLAYER);
@@ -179,7 +181,7 @@ public class LocalWifiActivity extends AppCompatActivity
         if (!startActivated) {
             return;
         }
-        Log.d(MONITOR_TAG, "Disabling start button!");
+        Timber.d( "Disabling start button!");
         startActivated = false;
         wifiGameLetters = null;
         Button startButton = ((Button) findViewById(R.id.bStartWifiGame));
@@ -190,7 +192,7 @@ public class LocalWifiActivity extends AppCompatActivity
         if (startActivated) {
             return;
         }
-        Log.d(MONITOR_TAG, "Enabling start button!");
+        Timber.d( "Enabling start button!");
         startActivated = true;
         Button startButton = ((Button) findViewById(R.id.bStartWifiGame));
 //        startButton.setBackgroundColor(getResources().getColor(R.color.game_font_color));
@@ -278,21 +280,21 @@ public class LocalWifiActivity extends AppCompatActivity
                 final Status status = result.getStatus();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i(MONITOR_TAG, "All location settings are satisfied.");
+                        Timber.i( "All location settings are satisfied.");
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(MONITOR_TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+                        Timber.i( "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
 
                         try {
                             // Show the dialog by calling startResolutionForResult(), and check the result
                             // in onActivityResult().
                             status.startResolutionForResult(LocalWifiActivity.this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
-                            Log.i(MONITOR_TAG, "PendingIntent unable to execute request.");
+                            Timber.i( "PendingIntent unable to execute request.");
                         }
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i(MONITOR_TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        Timber.i( "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
                         break;
                 }
             }
@@ -433,13 +435,13 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private boolean isStoragePermissionGranted(String permission) {
-        Log.v(MONITOR_TAG, "Checking permission " + permission);
+        Timber.d( "Checking permission " + permission);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (LocalWifiActivity.this.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(MONITOR_TAG, "Permission is granted");
+                Timber.d( "Permission is granted");
                 return true;
             } else {
-                Log.v(MONITOR_TAG, "Permission is revoked. Requesting ... ");
+                Timber.d( "Permission is revoked. Requesting ... ");
                 ActivityCompat.requestPermissions(LocalWifiActivity.this, new String[]{permission}, 1);
                 return false;
             }
@@ -480,22 +482,22 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private void startWifiGame() {
         if (wifiGameLetters == null) {
-            Log.d(MONITOR_TAG, "Letters not set ... ");
+            Timber.d( "Letters not set ... ");
             makeToast("Game host must start first!");
             return;
         }
-        Log.d(MONITOR_TAG, "Starting wifi game ");
+        Timber.d( "Starting wifi game ");
         if (isGroupOwner) {
             JSONArray jsonLetters = new JSONArray(wifiGameLetters);
             try {
                 JSONObject jObj = new JSONObject();
                 jObj.put(JSON_LETTERS, jsonLetters);
                 netConnService.getWifiService().sendData(jObj.toString());
-                Log.d(MONITOR_TAG, "Starting game. As GO, sending json " + jObj.toString());
+                Timber.d( "Starting game. As GO, sending json " + jObj.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d(MONITOR_TAG, "Starting game. As GO, sending lettersString " + jsonLetters.toString());
+            Timber.d( "Starting game. As GO, sending lettersString " + jsonLetters.toString());
         }
 
         HomeScreen.allGameInstances.clear();
@@ -512,7 +514,7 @@ public class LocalWifiActivity extends AppCompatActivity
 
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(MONITOR_TAG, "Dictionary word list is not finished loading!");
+            Timber.d( "Dictionary word list is not finished loading!");
             try {
                 Thread.sleep(100);      // Wait for dictionary to finish loading
             } catch (InterruptedException e) {
@@ -530,12 +532,12 @@ public class LocalWifiActivity extends AppCompatActivity
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d(MONITOR_TAG, "Discovery started ... ");
+                Timber.d( "Discovery started ... ");
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d(MONITOR_TAG, "Discovery failed. ");
+                Timber.d( "Discovery failed. ");
             }
         });
     }
@@ -548,13 +550,13 @@ public class LocalWifiActivity extends AppCompatActivity
         config.wps.setup = WpsInfo.PBC;
 
         connect(config);
-        Log.d(MONITOR_TAG, "Position clicked: " + position + ", Device: " + device.deviceName + ", " + device.deviceAddress + ", intent :" + config.groupOwnerIntent);
+        Timber.d( "Position clicked: " + position + ", Device: " + device.deviceName + ", " + device.deviceAddress + ", intent :" + config.groupOwnerIntent);
     };
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(MONITOR_TAG, "W : Registering receiver ");
+        Timber.d( "W : Registering receiver ");
         registerReceiver(activityReceiver, activityIntentFilter);
         wifiReceiver = new capsicum.game.wordfox.WifiBroadcastReceiver(manager, channel, this, this, this);
         registerReceiver(wifiReceiver, wifiIntentFilter);
@@ -564,14 +566,14 @@ public class LocalWifiActivity extends AppCompatActivity
 
     private void unBindService() {
         if (netConnService.isBound) {
-            Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+            Timber.d( "Unbinding service in " + this.toString());
             unbindService(netConnService);
             netConnService.isBound = false;
         }
     }
 
     private void bindService() {
-        Log.d(MONITOR_TAG, "Binding " + this.toString());   // TODO: Check if bound
+        Timber.d( "Binding " + this.toString());   // TODO: Check if bound
         bindService(new Intent(this, WifiService.class), netConnService,
                 Context.BIND_AUTO_CREATE);
     }
@@ -579,7 +581,7 @@ public class LocalWifiActivity extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(MONITOR_TAG, "W : unregistering receiver ");
+        Timber.d( "W : unregistering receiver ");
         unregisterReceiver(wifiReceiver);
         unregisterReceiver(activityReceiver);
         unBindService();
@@ -646,7 +648,7 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private void pLog(String msg) {
-        Log.d(MONITOR_TAG, msg);
+        Timber.d( msg);
     }
 
     @Override
@@ -656,7 +658,7 @@ public class LocalWifiActivity extends AppCompatActivity
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
-        Log.d(MONITOR_TAG, "Received connection info : " + info.toString());
+        Timber.d( "Received connection info : " + info.toString());
         isGroupOwner = info.isGroupOwner;
         if (netConnService.isBound && info.groupFormed) {
             signalWhoConnectedTo(info);
@@ -679,7 +681,7 @@ public class LocalWifiActivity extends AppCompatActivity
                 if (netConnService.getWifiService() == null) {
                     logToast("Null service: Cannot message wifiDirectPeers");
                 } else {
-                    Log.d(MONITOR_TAG, "Sending this greeting: " + jObj.toString());
+                    Timber.d( "Sending this greeting: " + jObj.toString());
                     netConnService.getWifiService().greetClient(jObj.toString());
                 }
             } catch (JSONException e) {
@@ -701,7 +703,7 @@ public class LocalWifiActivity extends AppCompatActivity
         try {
             while (!netConnService.isBound) {       // TODO: Improve
                 Thread.sleep(100);
-                Log.d(MONITOR_TAG, "Waiting to be bound ...");
+                Timber.d( "Waiting to be bound ...");
             }
             signalWhoConnectedTo(info);
         } catch (InterruptedException e) {
@@ -715,12 +717,12 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private void populateLetters() {
-        DictionaryApplication dictionary = (DictionaryApplication) getApplication();
+        WFApplication dictionary = (WFApplication) getApplication();
         wifiGameLetters = new ArrayList<>();
         wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
         wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
         wifiGameLetters.add(arrayToLetters(dictionary.getDictionary().getGivenLetters()));
-        Log.d(MONITOR_TAG, "LW : wifiGameLetters as json: " + new JSONArray(wifiGameLetters).toString());
+        Timber.d( "LW : wifiGameLetters as json: " + new JSONArray(wifiGameLetters).toString());
     }
 
     @Override
@@ -764,7 +766,7 @@ public class LocalWifiActivity extends AppCompatActivity
         manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d(MONITOR_TAG, "Aborting connection");
+                Timber.d( "Aborting connection");
             }
 
             @Override
@@ -779,12 +781,12 @@ public class LocalWifiActivity extends AppCompatActivity
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d(MONITOR_TAG, "Connect succeeded ");
+                Timber.d( "Connect succeeded ");
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d(MONITOR_TAG, "Connect failed ");
+                Timber.d( "Connect failed ");
             }
         });
 
@@ -805,12 +807,12 @@ public class LocalWifiActivity extends AppCompatActivity
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d(MONITOR_TAG, "Disconnect succeeded");
+                Timber.d( "Disconnect succeeded");
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d(MONITOR_TAG, "Disconnect failed. Reason : ");
+                Timber.d( "Disconnect failed. Reason : ");
             }
         });
         removeLetters();
@@ -823,10 +825,10 @@ public class LocalWifiActivity extends AppCompatActivity
         if (manager != null && !reTriedChannel) {
             resetData();
             reTriedChannel = true;
-            Log.d(MONITOR_TAG, "Retrying channel. ");
+            Timber.d( "Retrying channel. ");
             manager.initialize(this, getMainLooper(), this);
         } else {
-            Log.d(MONITOR_TAG, "Retry failed. Channel lost");
+            Timber.d( "Retry failed. Channel lost");
         }
     }
 
@@ -889,7 +891,7 @@ public class LocalWifiActivity extends AppCompatActivity
 //                if (peerDevices.size() <= 1) {
 //
 //                }
-//                Log.d(MONITOR_TAG, "!! header ");
+//                Timber.d( "!! header ");
 //                return LayoutInflater.from(LocalWifiActivity.this).inflate(R.layout.list_of_players_heading, parent, false);
 //            }
             if (convertView == null) {
@@ -897,7 +899,7 @@ public class LocalWifiActivity extends AppCompatActivity
             }
             WifiP2pDevice localDevice = getItem(position);
             if (localDevice == null) {
-                Log.d(MONITOR_TAG, "Local device is null?   true");
+                Timber.d( "Local device is null?   true");
                 return convertView;
             }
             String deviceName = localDevice.deviceName;  // Default
@@ -910,10 +912,10 @@ public class LocalWifiActivity extends AppCompatActivity
                 deviceStatus = "Connected!";
             }
 
-            Log.d(MONITOR_TAG, "Address:  " + localDevice.deviceAddress);
-            Log.d(MONITOR_TAG, "Device Name: " + deviceName);
-            Log.d(MONITOR_TAG, "Player Name: " + playerName);
-            Log.d(MONITOR_TAG, "Device says its group owner? : " + localDevice.isGroupOwner());
+            Timber.d( "Address:  " + localDevice.deviceAddress);
+            Timber.d( "Device Name: " + deviceName);
+            Timber.d( "Player Name: " + playerName);
+            Timber.d( "Device says its group owner? : " + localDevice.isGroupOwner());
             pLog("||||||||||||||||||| |||||||||||||||||||");
 
             TextView nameTV = convertView.findViewById(R.id.player_name_wifi_list_item);
@@ -1006,7 +1008,7 @@ public class LocalWifiActivity extends AppCompatActivity
     }
 
     private String getDeviceStatus(int deviceStatus) {
-//        Log.d(MONITOR_TAG, "Peer status :" + deviceStatus);
+//        Timber.d( "Peer status :" + deviceStatus);
         String status;
         switch (deviceStatus) {
             case WifiP2pDevice.AVAILABLE:
@@ -1027,7 +1029,7 @@ public class LocalWifiActivity extends AppCompatActivity
             default:
                 status = "Unknown";
         }
-//        Log.d(MONITOR_TAG, "status " + deviceStatus + " -> " + status);
+//        Timber.d( "status " + deviceStatus + " -> " + status);
         return status;
     }
 }

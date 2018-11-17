@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import timber.log.Timber;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -70,7 +72,7 @@ public class ExistingPlayerFragment extends Fragment {
 
     private void showNoExistingPlayersMessage() {
         int numExistingPlayers = rvAdapter.getItemCount();
-        Log.d("myTag", "showNoExistingPlayersMessage: numExistingPlayers: " + numExistingPlayers);
+        Timber.d("showNoExistingPlayersMessage: numExistingPlayers: " + numExistingPlayers);
 
 
         if(numExistingPlayers == 0){

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import capsicum.game.wordfox.profile.FoxRank;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -217,7 +218,7 @@ public class GameData extends AppCompatActivity {
             SharedPreferences userFoxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
             String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
             FoxRank rank = determineRankValue(userFoxPreferences.getInt(HIGHEST_SCORE_PREFIX + ID, 0));
-            Log.d(MONITOR_TAG, "********* Rank of " + name + " is : " + rank.foxRank + " ***********");
+            Timber.d( "********* Rank of " + name + " is : " + rank.foxRank + " ***********");
             playerList.add(new PlayerIdentity(ID, name, rank));
         }
         if (playerList.size() == 0) {
@@ -462,7 +463,7 @@ public class GameData extends AppCompatActivity {
     }
 
     public void addWord(String newWord) {
-        Log.d(MONITOR_TAG, "GameData: Adding " + newWord + ", END");
+        Timber.d( "GameData: Adding " + newWord + ", END");
         // Check if longest word
         int len = newWord.length();
         String currentLongest = foxPreferences.getString(LONGEST_WORD_KEY, "");

@@ -82,7 +82,7 @@ public class FoxSQLData {
     public void createGameItem(GameItem item) {
         ContentValues values = item.toValues();
         wfDatabase.insert(GameTable.TABLE_GAMES, null, values);
-//        Log.d(MainActivity.MONITOR_TAG, "create Game item!!, END");
+
     }
 
     public void updatePlayerStats(UUID player, String result) {

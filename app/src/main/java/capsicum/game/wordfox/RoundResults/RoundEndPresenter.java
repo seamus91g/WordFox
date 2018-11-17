@@ -6,6 +6,8 @@ import android.util.Log;
 
 import capsicum.game.wordfox.GameInstance;
 import capsicum.game.wordfox.WordfoxConstants;
+import timber.log.Timber;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -47,7 +49,7 @@ public class RoundEndPresenter {
         this.colorPrimary = colorPrimary;
         this.colorSecondary = colorSecondary;
         this.displayInterstitial = displayInterstitial;
-        Log.d(WordfoxConstants.MONITOR_TAG, ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
+        Timber.d( ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
     }
 
     public void displayTitle() {
@@ -60,7 +62,7 @@ public class RoundEndPresenter {
             return;
         }
         isStarted = true;
-        Log.d(WordfoxConstants.MONITOR_TAG, "Display interstitial? " + displayInterstitial);
+        Timber.d( "Display interstitial? " + displayInterstitial);
         if (displayInterstitial) {
             displayInterstitial();
         } else {
@@ -111,7 +113,7 @@ public class RoundEndPresenter {
     private AdListener interstitialAdListener = new AdListener() {
         @Override
         public void onAdClosed() {
-            Log.d(WordfoxConstants.MONITOR_TAG, "Will start game when ad closes ..");
+            Timber.d( "Will start game when ad closes ..");
             startGameAfterInterstitial();
         }
 
@@ -137,7 +139,7 @@ public class RoundEndPresenter {
         @Override
         public void onAdFailedToLoad(int errorCode) {
             // Code to be executed when an ad request fails.
-            Log.d(WordfoxConstants.MONITOR_TAG, "Interstitial failed to load!!");
+            Timber.d( "Interstitial failed to load!!");
             failedToLoadInterstitial = true;
         }
     };

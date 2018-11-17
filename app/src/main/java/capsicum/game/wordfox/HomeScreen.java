@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +23,8 @@ import android.widget.TextView;
 import capsicum.game.wordfox.data.FoxDictionary;
 import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
+import timber.log.Timber;
+
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class HomeScreen extends AppCompatActivity
     private void waitForDictionaryToLoad(){
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
-            Log.d(WordfoxConstants.MONITOR_TAG, "Dictionary word list is not finished loading!");
+            Timber.d("Dictionary word list is not finished loading!");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

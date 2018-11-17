@@ -40,6 +40,8 @@ import capsicum.game.wordfox.IVmethods;
 import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
+import timber.log.Timber;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -181,7 +183,7 @@ public class ProfileActivity extends AppCompatActivity
                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 // Scroll so that the Save button is 1/4 way from the top of the screen
                 int scrollyY = setProfileNameButton.getBottom() - displayMetrics.heightPixels / 4;
-                Log.d(TAG, "start, end" + setProfileNameButton.getBottom() + ":" + scrollyY);
+                Timber.d( "start, end" + setProfileNameButton.getBottom() + ":" + scrollyY);
                 ScrollView scroll = findViewById(R.id.profile_scrollview);
                 scroll.post(
                         () -> scroll.scrollTo(0, 1500)

@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import timber.log.Timber;
+
 public class WifiGameInstance implements GameDetails {
     private ArrayList<String> bestWordsPossible;
     private ArrayList<String> letters;
@@ -35,7 +37,7 @@ public class WifiGameInstance implements GameDetails {
                 wordsFound.add(jArray.getString(i));
             }
         } catch (JSONException e) {
-            Log.d(WordfoxConstants.MONITOR_TAG, "WifiGameInstance : Failed to parse json");
+            Timber.d( "WifiGameInstance : Failed to parse json");
             e.printStackTrace();
         }
     }

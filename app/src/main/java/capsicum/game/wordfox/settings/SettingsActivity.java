@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import capsicum.game.wordfox.AppCompatPreferenceActivity;
 import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.profile.ProfileActivity;
+import timber.log.Timber;
 
 import java.util.List;
 
@@ -108,7 +109,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Log.d(MONITOR_TAG, "Chose des's profile icon, END");
                 Intent profileScreenIntent = new Intent(SettingsActivity.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;

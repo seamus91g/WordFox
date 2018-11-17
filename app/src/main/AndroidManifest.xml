@@ -15,7 +15,7 @@
         android:required="true" />
 
     <application
-        android:name=".injection.DictionaryApplication"
+        android:name=".injection.WFApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

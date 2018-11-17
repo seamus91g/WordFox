@@ -7,6 +7,7 @@ import capsicum.game.wordfox.GameInstance;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.database.PlayerStatsTable;
 import capsicum.game.wordfox.datamodels.GameItem;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,8 +77,6 @@ public class ResultsPresenter {
             if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
                 plyrGd.setBestGame(pgi.getLetters(), pgi.getAllFinalWords());
                 plyrGd.setHighestScore(pgi.getTotalScore());
-            } else {
-                Log.d(TAG, "Not best words found! This score: " + pgi.getTotalScore() + ", Highest: " + plyrGd.getHighestTotalScore());
             }
         }
         GameItem thisGameDetails = gameitemFromInstances(winners);
