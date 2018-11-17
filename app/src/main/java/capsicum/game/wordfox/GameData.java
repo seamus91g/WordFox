@@ -28,6 +28,7 @@ public class GameData extends AppCompatActivity {
     private static final String DEFAULT_NAME = "Fox";
     private static final String HIGHEST_SCORE_PREFIX = "highest_score_";
     private static final String INTERSTITIAL_COUNT_KEY = "interstitial_count";
+    private static final int AD_REGULARITY = 3;
     private String BEST_WORD_TOTAL_COUNT;
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
@@ -107,7 +108,7 @@ public class GameData extends AppCompatActivity {
         ++count;
         editor.putInt(INTERSTITIAL_COUNT_KEY, count);
         editor.apply();
-        if (count % 3 == 0) {
+        if (count % AD_REGULARITY == 0) {
             return true;
         }
         return false;

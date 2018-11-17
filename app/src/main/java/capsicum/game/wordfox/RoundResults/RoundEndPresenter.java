@@ -1,9 +1,11 @@
 package capsicum.game.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameInstance;
 import capsicum.game.wordfox.WordfoxConstants;
 import timber.log.Timber;
@@ -49,7 +51,7 @@ public class RoundEndPresenter {
         this.colorPrimary = colorPrimary;
         this.colorSecondary = colorSecondary;
         this.displayInterstitial = displayInterstitial;
-        Timber.d( ":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
+        Timber.d(":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
     }
 
     public void displayTitle() {
@@ -62,7 +64,7 @@ public class RoundEndPresenter {
             return;
         }
         isStarted = true;
-        Timber.d( "Display interstitial? " + displayInterstitial);
+        Timber.d("Display interstitial? " + displayInterstitial);
         if (displayInterstitial) {
             displayInterstitial();
         } else {
@@ -113,7 +115,7 @@ public class RoundEndPresenter {
     private AdListener interstitialAdListener = new AdListener() {
         @Override
         public void onAdClosed() {
-            Timber.d( "Will start game when ad closes ..");
+            Timber.d("Will start game when ad closes ..");
             startGameAfterInterstitial();
         }
 
@@ -139,7 +141,7 @@ public class RoundEndPresenter {
         @Override
         public void onAdFailedToLoad(int errorCode) {
             // Code to be executed when an ad request fails.
-            Timber.d( "Interstitial failed to load!!");
+            Timber.d("Interstitial failed to load!!");
             failedToLoadInterstitial = true;
         }
     };
@@ -148,13 +150,22 @@ public class RoundEndPresenter {
         if (!displayInterstitial) {
             return;
         }
-        AdRequest adRequestTest = new AdRequest.Builder()
-                .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
-                .build();
+        AdRequest adRequest;
+        String adUnit;
+        if (BuildConfig.DEBUG) {
+            adRequest = new AdRequest.Builder()
+                    .addTestDevice("16930B084D136C6BEFB468B4D1F2919C")
+                    .build();
+            adUnit = WordfoxConstants.TEST_AD_INTERSTITIAL;
+        } else {
+            adRequest = new AdRequest.Builder()
+                    .build();
+            adUnit = WordfoxConstants.END_OF_ROUND3_BANNER_AD_UNIT_ID;
+        }
         mInterstitialAd = view.getInterstitial();
         mInterstitialAd.setAdListener(interstitialAdListener);
-        mInterstitialAd.setAdUnitId(WordfoxConstants.TEST_AD_INTERSTITIAL);
-        mInterstitialAd.loadAd(adRequestTest);
+        mInterstitialAd.setAdUnitId(adUnit);
+        mInterstitialAd.loadAd(adRequest);
     }
 
     private void displayInterstitial() {

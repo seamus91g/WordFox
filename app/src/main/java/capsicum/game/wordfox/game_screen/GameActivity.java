@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.FoxUtils;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameInstance;
@@ -331,7 +332,7 @@ public class GameActivity extends AppCompatActivity
         presenter.clearOnGoingAttempt();
         updateHeaderLetters();
         // Quick exit the game by tapping reset button twice
-        if (this.resetButtonPressedOnce) {
+        if (BuildConfig.DEBUG && this.resetButtonPressedOnce) {
             completeGame();
         }
         this.resetButtonPressedOnce = true;
