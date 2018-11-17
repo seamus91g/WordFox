@@ -1,29 +1,7 @@
 package capsicum.game.wordfox.data;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -32,24 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
 
-
-import android.content.res.AssetManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import capsicum.game.wordfox.data.Diction;
+import timber.log.Timber;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 import static java.util.Collections.shuffle;
 
@@ -63,10 +28,8 @@ public class FoxDictionary implements Diction {
     private static final HashMap<String, String> validWordsAlphabeticalKey = new HashMap<String, String>();     // TODO: shouldn't need to store the list twice .. ?
     private static final HashMap<String, Integer> letterDistributionMap = new HashMap<String, Integer>();
     public static boolean isWordListLoaded = false;
-
     private LetterPool letterPool;
     private Collator col;
-    private static final String MONITOR_TAG_FOX = "myTag";
 
     public FoxDictionary(String validWordsFileName, String letterDistributionFile, AssetManager assetManager) {
         col = Collator.getInstance(new Locale("en", "EN"));
@@ -140,6 +103,7 @@ public class FoxDictionary implements Diction {
         return wordAlphSorted;
     }
 
+    @Override
     public boolean checkWordExists(String checkWord) {
         if (allValidWords.contains(checkWord)) {
             return true;
@@ -149,24 +113,22 @@ public class FoxDictionary implements Diction {
     }
 
     // Find longest word from the random 9 game letters.
+    @Override
     public ArrayList<String> longestWordFromLetters(String givenLetters) {
         return longestWordFromLetters(givenLetters, 7);     // Default is 7
     }
 
     public ArrayList<String> longestWordFromLetters(String givenLetters, int numberToSave) {
         givenLetters = makeStringAlphabetical(givenLetters.toLowerCase());
-
         // Save 'numberToSave' of the longest words that can be found. Also store 1 of each length down to length 5
         ArrayList<String> multipleLengths = new ArrayList<String>();
         if (validWordsAlphabeticalKey.containsKey(givenLetters)) {
             String niner = validWordsAlphabeticalKey.get(givenLetters);
             multipleLengths.add(niner);
             --numberToSave;
-            Log.d(MONITOR_TAG_FOX, "-----------== Found a nine letter word! ==--------------: " + niner);
         }
         for (int x = 0; x < 7; ++x) {        // Only go to 7 since 2 letter words are not valid
             if (multipleLengths.size() == 0 || x < 4) {
-                Log.d(MONITOR_TAG_FOX, "=== entering === " + x);
                 HashMap<String, Boolean> substringsChecked = new HashMap<String, Boolean>();
                 ArrayList<String> listOfLongest = new ArrayList<String>();
                 listOfLongest = substringSearch(givenLetters, listOfLongest, x, substringsChecked, numberToSave);
@@ -176,7 +138,7 @@ public class FoxDictionary implements Diction {
                     numberToSave = numberToSave < 1 ? 1 : numberToSave;
                 }
             } else {
-                Log.d(MONITOR_TAG_FOX, "=== BREAKING === at " + (9 - x) + " letters ---");
+                Timber.d("=== BREAKING === at " + (9 - x) + " letters ---");
                 break;
             }
         }
@@ -190,24 +152,19 @@ public class FoxDictionary implements Diction {
         for (int j = 0; j < len; j++) {
             String checkWindow = givenLetters.substring(0, j) + givenLetters.substring(j + 1, len);    // skip j
             if (substringsChecked.containsKey(checkWindow)) {
-
-                //  Log.d(MONITOR_TAG_FOX, "Already checked " + checkWindow + ", continuing ...");
                 continue;
             } else {
                 substringsChecked.put(checkWindow, 1);
-                //Log.d(MONITOR_TAG_FOX, "Checking " + checkWindow + "!!");
             }
             if (Depth == 0) {
                 if (validWordsAlphabeticalKey.containsKey(checkWindow)) {
                     String candidateLongest = validWordsAlphabeticalKey.get(checkWindow);
-//                    Log.d(MONITOR_TAG_FOX, "Found!!: " + candidateLongest + ", checking if higher index than " + thisLongest + ", end");
                     int numberCollected = thisLongest.size();
                     // TODO: This fails to return list of highest index words. First two will be sorted and the winner of this comparison will never be removed from the list, even if several subsequent higher indexes are found
                     if (numberCollected > 0) {
                         String leastIndexWord = thisLongest.get(numberCollected - 1);
                         String result = returnBetterIndex(leastIndexWord, candidateLongest);
                         if (!result.equals(leastIndexWord)) {
-//                            Log.d(MONITOR_TAG_FOX, "LW1> Removing " + thisLongest.get(0) + ", Adding "+ res);
                             thisLongest.remove(numberCollected - 1);
                             thisLongest.add(result);
                             if (thisLongest.size() < howMany) {
@@ -218,9 +175,7 @@ public class FoxDictionary implements Diction {
                         }
                     } else {
                         thisLongest.add(candidateLongest);
-//                        Log.d(MONITOR_TAG_FOX, "LW2> Adding " + candidateLongest);
                     }
-//                    Log.d(MONITOR_TAG_FOX, "Index winnder is!!: " + thisLongest);
                 }
             } else {
                 thisLongest = substringSearch(checkWindow, thisLongest, Depth - 1, substringsChecked, howMany);
@@ -250,6 +205,7 @@ public class FoxDictionary implements Diction {
     }
 
     // Randomly generate a sequence of 9 letters for the user
+    @Override
     public ArrayList<String> getGivenLetters() {
         int total = 9;
         int[] options = {2, 3, 3, 3, 3, 4};

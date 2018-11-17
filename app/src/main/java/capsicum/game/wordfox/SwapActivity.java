@@ -72,19 +72,19 @@ public class SwapActivity extends AppCompatActivity
         screenHeight = size.y;
 
         ImageView throwingFoxIV = findViewById(R.id.content_swap_throwingFoxIV);
-        throwingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox1silcoloured, (int) (0.15* screenHeight),getResources()));
+        throwingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox1silcoloured, (int) (0.15 * screenHeight), getResources()));
 
         ImageView catchingFoxIV = findViewById(R.id.content_swap_catchingFoxIV);
-        catchingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox2silcoloured, (int) (0.15* screenHeight),getResources()));
+        catchingFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.ppfox2silcoloured, (int) (0.15 * screenHeight), getResources()));
 
         ImageView phoneIV = findViewById(R.id.content_swap_phoneIV);
 
-        calculateDist(throwingFoxIV,catchingFoxIV,phoneIV);
+        calculateDist(throwingFoxIV, catchingFoxIV, phoneIV);
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_swap_instructionFoxIV);
         instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.datafoxsilcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.datafoxsilcoloured),getResources()));
+                getImageScaleToScreenWidthPercent(this, 0.35, R.drawable.datafoxsilcoloured), getResources()));
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_swap_instructionFoxSpeechBubbleIV);
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.speechbubbleleft,
@@ -96,43 +96,27 @@ public class SwapActivity extends AppCompatActivity
     }
 
 
-    public void calculateDist(ImageView view1,ImageView view2, ImageView view3) {
+    public void calculateDist(ImageView view1, ImageView view2, ImageView view3) {
         int[] xy1 = new int[2];
         int[] xy2 = new int[2];
         int[] xy3 = new int[2];
 
         Rect myRect = new Rect();
 
-        view1.post(new Runnable() {
-           @Override
-           public void run() {
+        view1.post(() -> view2.post(() -> {
+            view1.getGlobalVisibleRect(myRect);
+            xy1[0] = myRect.right;
 
-               view2.post(new Runnable() {
-                   @Override
-                   public void run() {
-                       view1.getGlobalVisibleRect(myRect);
-                       xy1[0] = myRect.right;
-                       Log.d("tagef", "run: xy1 " + xy1[0]);
+            view2.getGlobalVisibleRect(myRect);
+            xy2[0] = myRect.left;
 
-                       view2.getGlobalVisibleRect(myRect);
-                       xy2[0] = myRect.left;
-                       Log.d("tagef", "run: xy2 " + xy2[0]);
+            view3.getGlobalVisibleRect(myRect);
+            xy3[0] = myRect.width();
 
-                       view3.getGlobalVisibleRect(myRect);
-                       xy3[0] = myRect.width();
-                       Log.d("tagef", "run: xy3 " + xy3[0]);
+            distanceBetween = xy2[0] - xy1[0] - xy3[0];
 
-                       distanceBetween = xy2[0] - xy1[0] - xy3[0];
-                       Log.d("tagef", "run: distanceBetween " + distanceBetween);
-
-                        startAnimation();
-
-                   }
-               });
-
-           }
-       });
-
+            startAnimation();
+        }));
     }
 
     private void startAnimation() {
@@ -146,12 +130,12 @@ public class SwapActivity extends AppCompatActivity
         animation1.setRepeatCount(ValueAnimator.INFINITE);
         animation1.setRepeatMode(ValueAnimator.RESTART);
 
-        ObjectAnimator animation2 = ObjectAnimator.ofFloat(phoneIV, "translationY", -screenWidth/6);
-        animation2.setDuration(animationDuration/2);
+        ObjectAnimator animation2 = ObjectAnimator.ofFloat(phoneIV, "translationY", -screenWidth / 6);
+        animation2.setDuration(animationDuration / 2);
         animation2.setRepeatCount(ValueAnimator.INFINITE);
         animation2.setRepeatMode(ValueAnimator.REVERSE);
 
-        ObjectAnimator animator = ObjectAnimator.ofFloat(phoneIV, "setRotation", 1,-1); // values from 0 to 1
+        ObjectAnimator animator = ObjectAnimator.ofFloat(phoneIV, "setRotation", 1, -1); // values from 0 to 1
         animator.setDuration(animationDuration); // 2 seconds duration from 0 to 1
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -159,12 +143,12 @@ public class SwapActivity extends AppCompatActivity
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                float value = ((Float) (animation.getAnimatedValue())) .floatValue();
+                float value = ((Float) (animation.getAnimatedValue())).floatValue();
                 // Set translation of your view here. Position can be calculated
                 // relative to value.
 
-                phoneIV.setPivotX(phoneIV.getWidth()/2);
-                phoneIV.setPivotY(phoneIV.getHeight()/2);
+                phoneIV.setPivotX(phoneIV.getWidth() / 2);
+                phoneIV.setPivotY(phoneIV.getHeight() / 2);
                 phoneIV.setRotation(value * 45);
             }
         });
@@ -181,10 +165,11 @@ public class SwapActivity extends AppCompatActivity
 
     View.OnClickListener nextPlayerListener = view -> proceedPlayerReady();
 
-    private void proceedPlayerReady(){
+    private void proceedPlayerReady() {
         Intent proceedIntent = new Intent(this, SwapChooseActivity.class);
         this.startActivity(proceedIntent);
     }// Must press back button twice in quick succession to return to home
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

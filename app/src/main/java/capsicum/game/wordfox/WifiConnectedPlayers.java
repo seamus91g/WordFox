@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 public class WifiConnectedPlayers {
 
     private PeersUpdated peersUpdate;
@@ -60,7 +62,7 @@ public class WifiConnectedPlayers {
     }
 
     private void log(String msg) {
-        Log.d(WordfoxConstants.MONITOR_TAG, msg);
+        Timber.d( msg);
     }
 
     private void removePlayer(PlayerIdentityRemote player) {

@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -35,16 +34,13 @@ import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.RoundResults.RoundEndScreen;
 import capsicum.game.wordfox.database.FoxSQLData;
-import capsicum.game.wordfox.injection.DictionaryApplication;
-import capsicum.game.wordfox.profile.ProfileActivity;
+import capsicum.game.wordfox.injection.WFApplication;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public class GameActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GamescreenContract.View {
@@ -87,7 +83,7 @@ public class GameActivity extends AppCompatActivity
         // Layout og the 3x3 grid of letters
         gridLayout = findViewById(R.id.guessGrid);
 
-        DictionaryApplication dictionary = (DictionaryApplication) getApplication();
+        WFApplication dictionary = (WFApplication) getApplication();
         int gIndex = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
         GameInstance game = HomeScreen.allGameInstances.get(gIndex);
 

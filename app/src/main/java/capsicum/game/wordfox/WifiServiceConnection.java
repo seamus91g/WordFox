@@ -5,6 +5,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import timber.log.Timber;
+
 public class WifiServiceConnection implements ServiceConnection {
     public boolean isBound;
     private WifiService wifiService;
@@ -19,7 +21,7 @@ public class WifiServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "|||||||||| Service starting ... |||||||||| ");
+        Timber.d( "|||||||||| Service starting ... |||||||||| ");
         WifiService.WifiBinder binder = (WifiService.WifiBinder) service;
         wifiService = binder.getService();
         isBound = true;
@@ -35,7 +37,7 @@ public class WifiServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        Log.d(WordfoxConstants.MONITOR_TAG, "|||||||||| Disconnecting service ||||||||||");
+        Timber.d( "|||||||||| Disconnecting service ||||||||||");
         isBound = false;
     }
 }

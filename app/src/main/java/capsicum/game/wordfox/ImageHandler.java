@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import timber.log.Timber;
+
 public class ImageHandler {
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Larger resolutions risk unsupported devices
     private static final int SCALE_BY_HEIGHT = 0;
@@ -93,10 +95,10 @@ public class ImageHandler {
     private static boolean isStoragePermissionGranted(Activity activity) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is granted");
+                Timber.d( "Permission is granted");
                 return true;
             } else {
-                Log.v(WordfoxConstants.MONITOR_TAG, "Permission is revoked");
+                Timber.d( "Permission is revoked");
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
@@ -257,7 +259,7 @@ public class ImageHandler {
     }
 
     private static void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+        Timber.d( msg);
     }
 
     private static void logBmp(Bitmap bitmap, String id) {

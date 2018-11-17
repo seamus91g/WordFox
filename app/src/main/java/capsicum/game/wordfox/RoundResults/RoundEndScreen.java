@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 
 public class RoundEndScreen extends AppCompatActivity
@@ -85,6 +86,7 @@ public class RoundEndScreen extends AppCompatActivity
         setContentView(R.layout.activity_round_end_screen);
 
         ///////////////////////  Initialisations
+        Timber.tag("tag_RoundEnd");
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         boolean isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == WordfoxConstants.NUMBER_ROUNDS - 1;
@@ -165,7 +167,7 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     private void bindWifiService() {
-        Log.d(GameActivity.MONITOR_TAG, "RE: Game is online!");
+        Timber.d( "RE: Game is online!");
         netConnService = new WifiServiceConnection(this);
         bindService();
     }
@@ -224,14 +226,14 @@ public class RoundEndScreen extends AppCompatActivity
         if (!isOnline || netConnService == null || !netConnService.isBound) {
             return;
         }
-        Log.d(MONITOR_TAG, "Unbinding service in " + this.toString());
+        Timber.d( "Unbinding service in " + this.toString());
         unbindService(netConnService);
         netConnService.isBound = false;
     }
 
     private void bindService() {
         if (isOnline) {
-            Log.d(MONITOR_TAG, "Binding " + this.toString());
+            Timber.d( "Binding " + this.toString());
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
@@ -419,7 +421,7 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     private static void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+        Timber.d( msg);
     }
 
     @Override

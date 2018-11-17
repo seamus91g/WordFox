@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public class GameGridAdapter extends RecyclerView.Adapter<GameGridAdapter.GridViewHolder> {
     private static final int GRID_PRESSED_ID = R.drawable.single_grid_cell_purple;
     private static final int GRID_NOT_PRESSED_ID = R.drawable.single_grid_cell_green;
@@ -102,7 +104,7 @@ public class GameGridAdapter extends RecyclerView.Adapter<GameGridAdapter.GridVi
     }
 
     private void log(String msg) {
-        Log.d(MONITOR_TAG, msg);
+        Timber.d( msg);
     }
 
     public static class GridViewHolder extends RecyclerView.ViewHolder {

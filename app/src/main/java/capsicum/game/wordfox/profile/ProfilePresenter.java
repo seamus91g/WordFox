@@ -18,6 +18,7 @@ import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.datamodels.GameItem;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -121,10 +122,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
     private boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(MONITOR_TAG, "Permission is granted");
+                Timber.d( "Permission is granted");
                 return true;
             } else {
-                Log.v(MONITOR_TAG, "Permission is revoked");
+                Timber.d( "Permission is revoked");
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
