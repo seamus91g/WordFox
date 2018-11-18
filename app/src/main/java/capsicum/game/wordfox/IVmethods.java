@@ -3,44 +3,27 @@ package capsicum.game.wordfox;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Created by Desmond
+ */
 public class IVmethods {
 
-    public static void setTVwidthPercentOfIV(ImageView instructionFoxSpeechBubbleIV,
-                                             TextView instructionFoxTV, double percent, int stringResId) {
-
-        int[] xy1 = new int[3];
-        Rect myRect = new Rect();
-
-        instructionFoxSpeechBubbleIV.post(new Runnable() {
+    // Observe one view and use it's laid out width to decide the width of a difference view.
+    public static void setWidthAsPercentOfLaidOutView(View viewToObserve, TextView viewToModify, double percent) {
+        viewToObserve.post(new Runnable() {
             @Override
             public void run() {
-                instructionFoxSpeechBubbleIV.getGlobalVisibleRect(myRect);
-                xy1[2] = myRect.width();
-
-                if (stringResId != 0){
-                    instructionFoxTV.setText(stringResId);
-                }
-
-                instructionFoxTV.requestLayout();
-                instructionFoxTV.setWidth((int) (xy1[2] * percent));
+                viewToModify.setWidth((int) (viewToObserve.getWidth() * percent));
             }
         });
-
     }
 
-
-    public static void setTVwidthPercentOfIV(ImageView instructionFoxSpeechBubbleIV,
-                                             TextView instructionFoxTV, double percent, String myString) {
-        setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV, instructionFoxTV, percent, 0);
-        instructionFoxTV.setText(myString);
-    }
-
+    @Deprecated
     public static int getImageScaleToScreenWidthPercent(Context myContext, double percent, int drawableResId) {
 
         WindowManager myWindowManager = (WindowManager) myContext.getSystemService(Context.WINDOW_SERVICE);
@@ -63,6 +46,5 @@ public class IVmethods {
         }
 
     } // end of getImageScaleToScreenWidthPercent
-
 
 }

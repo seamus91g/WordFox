@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,6 +40,7 @@ import capsicum.game.wordfox.IVmethods;
 import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
+import capsicum.game.wordfox.WordfoxConstants;
 import timber.log.Timber;
 
 import com.google.android.gms.ads.AdRequest;
@@ -300,8 +300,9 @@ public class ProfileActivity extends AppCompatActivity
         ConstraintLayout talkingFoxCL = findViewById(R.id.content_profile_foxWithSpeechCL);
         TextView instructionFoxTV = talkingFoxCL.findViewById(R.id.content_profile_instructionFoxTV);
 
-        IVmethods.setTVwidthPercentOfIV(talkingFoxCL.findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV),
-                instructionFoxTV, 0.8, longestWordSpeechBubble);
+        IVmethods.setWidthAsPercentOfLaidOutView(talkingFoxCL.findViewById(R.id.content_profile_instructionFoxSpeechBubbleIV),
+                instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(longestWordSpeechBubble);
     }
 
     @Override

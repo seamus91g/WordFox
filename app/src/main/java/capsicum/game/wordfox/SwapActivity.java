@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -91,8 +90,8 @@ public class SwapActivity extends AppCompatActivity
                 getImageScaleToScreenWidthPercent(this, 0.64, R.drawable.speechbubbleleft), getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_swap_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV, instructionFoxTV, 0.8, R.string.content_swap_fox_instructions);
-
+        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV, instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(R.string.content_swap_fox_instructions);
     }
 
 

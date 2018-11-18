@@ -49,14 +49,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        release_debug {
-            debuggable false
-            jniDebuggable false
+        mock_release {
+            applicationIdSuffix '.mock'
             signingConfig signingConfigs.config_release_debug
-            renderscriptDebuggable false
-            renderscriptOptimLevel 3
-            minifyEnabled false
-            applicationIdSuffix '.rd'
         }
     }
     dataBinding {

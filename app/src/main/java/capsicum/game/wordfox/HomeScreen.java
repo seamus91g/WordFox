@@ -45,7 +45,7 @@ public class HomeScreen extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -65,15 +65,14 @@ public class HomeScreen extends AppCompatActivity
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display. getSize(size);
-        int width = size. x;
-        int height = size. y;
-
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
 
 
         ImageView instructionFoxIV = findViewById(R.id.content_home_screen_instructionFoxIV);
         instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmap(R.drawable.woodfoxcoloured,
-                getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured),getResources()));
+                getImageScaleToScreenWidthPercent(this, 0.4, R.drawable.woodfoxcoloured), getResources()));
 
 
         ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_home_screen_instructionFoxSpeechBubbleIV);
@@ -81,32 +80,31 @@ public class HomeScreen extends AppCompatActivity
                 getImageScaleToScreenWidthPercent(this, 0.59, R.drawable.speechbubbleright), getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_home_screen_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.content_home_screen_fox_instructions);
+        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV, instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(R.string.content_home_screen_fox_instructions);
 
         TextView justMeTV = findViewById(R.id.just_me_text);
         justMeTV.requestLayout();
-        justMeTV.getLayoutParams().width = (int) width/2 ;
+        justMeTV.getLayoutParams().width = (int) width / 2;
         TextView justMeExplanationTV = findViewById(R.id.just_me_explanation_text);
         justMeExplanationTV.requestLayout();
-        justMeExplanationTV.getLayoutParams().width = (int) width/2 ;
+        justMeExplanationTV.getLayoutParams().width = (int) width / 2;
 
 
         TextView withFriendsTV = findViewById(R.id.with_friends_text);
         withFriendsTV.requestLayout();
-        withFriendsTV.getLayoutParams().width = (int) width/2 ;
+        withFriendsTV.getLayoutParams().width = (int) width / 2;
         TextView withFriendsExplanationTV = findViewById(R.id.with_friends_explanation_text);
         withFriendsExplanationTV.requestLayout();
-        withFriendsExplanationTV.getLayoutParams().width = (int) width/2 ;
+        withFriendsExplanationTV.getLayoutParams().width = (int) width / 2;
 
 
         TextView passPlayTV = findViewById(R.id.pass_and_play_text);
         passPlayTV.requestLayout();
-        passPlayTV.getLayoutParams().width = (int) width/2 ;
+        passPlayTV.getLayoutParams().width = (int) width / 2;
         TextView passPlayExplanationTV = findViewById(R.id.pass_and_play_explanation_text);
         passPlayExplanationTV.requestLayout();
-        passPlayExplanationTV.getLayoutParams().width = (int) width/2 ;
-
-
+        passPlayExplanationTV.getLayoutParams().width = (int) width / 2;
 
 
     }
@@ -118,6 +116,7 @@ public class HomeScreen extends AppCompatActivity
         Thread thread = new Thread(() -> FoxDictionary.loadWords("word_list_with_alphagram.txt", "letterFrequency.txt", getAssets()));
         thread.start();
     }
+
     private void setup() {
         ImageButton justMeButton = findViewById(R.id.just_me_button);
         ImageButton withFriendsButton = findViewById(R.id.with_friends_button);
@@ -145,7 +144,7 @@ public class HomeScreen extends AppCompatActivity
         startActivity(wifiIntent);
     }
 
-    public void startJustMe(){
+    public void startJustMe() {
 
         allGameInstances.clear();
 
@@ -159,8 +158,8 @@ public class HomeScreen extends AppCompatActivity
         waitForDictionaryToLoad();
         this.startActivity(gameIntent);
     }
-    
-    private void waitForDictionaryToLoad(){
+
+    private void waitForDictionaryToLoad() {
         // Wait for dictionary to finish loading
         while (!FoxDictionary.isWordListLoaded) {
             Timber.d("Dictionary word list is not finished loading!");
@@ -181,6 +180,7 @@ public class HomeScreen extends AppCompatActivity
         }
         return false;
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
