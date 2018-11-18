@@ -17,8 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,10 +24,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +51,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -67,109 +63,55 @@ public class RoundEndScreen extends AppCompatActivity
         RoundEndContract.View {
 
     public static final String MONITOR_TAG = "myTag";
+    private ConstraintLayout rootLayout;
     private RoundEndPresenter presenter;
-    private int gameIndexNumber;
     private WifiServiceConnection netConnService;
+    private final NavigationBurger navBurger = new NavigationBurger();
+    private int gameIndexNumber;
     private boolean isOnline;
-    private NavigationBurger navBurger = new NavigationBurger();
     private boolean backButtonPressedOnce = false;
-    private ConstraintLayout cl;
-    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // If activity needs to be re-started, just return to home screen
         if (savedInstanceState != null) {
             startActivity(new Intent(this, HomeScreen.class));
             return;
         }
         setContentView(R.layout.activity_round_end_screen);
 
-        ///////////////////////  Initialisations
-        Timber.tag("tag_RoundEnd");
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        // Initialisations
         boolean isFinalRound = HomeScreen.allGameInstances.get(0).getRound() == WordfoxConstants.NUMBER_ROUNDS - 1;
         gameIndexNumber = getIntent().getExtras().getInt(GameActivity.GAME_INDEX);
-        cl = findViewById(R.id.round_end_root_layout);
+        rootLayout = findViewById(R.id.round_end_root_layout);
         isOnline = HomeScreen.allGameInstances.get(0).isOnline();
 
-        ///////////////////////  Prepare the presenter
-        setUpPresenter(screenSize.x, isFinalRound);
+        // Prepare the presenter
+        setUpPresenter(isFinalRound);
 
-        ///////////////////////  Navigation items
+        //  Navigation items
         setUpNavigationItems();
 
-        ///////////////////////  Broadcast Wifi-Direct game results if applicable
+        // Bind wifi service if it's an online game
         if (isOnline && isFinalRound) {
             bindWifiService();
         }
-        setUpRoundEndFox();
-
-        GameInstance gameInstance = HomeScreen.allGameInstances.get(gameIndexNumber);
-
-        int maxScore = gameInstance.getLongestPossible().length();
-        int playerScore = gameInstance.getScore();
-
-        String playerResult = playerScore + "/" + maxScore;
-        adjustSpeechBubble(playerResult);
-
-        int round = gameInstance.getRound();
-        calculateScreenWidth();
-        String lets = gameInstance.getRoundLetters();
-        setupResults(screenSize.x / 4, Arrays.copyOfRange(lets.split(""), 1, lets.length() + 1), gameInstance.getSuggestedWordsOfRound(round));
-
-        createPlayerResultGrid(screenSize.x / 4, Arrays.copyOfRange(lets.split(""), 1, lets.length() + 1), gameInstance.getLongestWord());
     }
 
-
-    private void createPlayerResultGrid(int oneGridWidth, String[] letters, String word) {
-
-        int oneCellWidth = ((oneGridWidth * (100 - 10)) / 100) / 3;
-        Bitmap pressedCell = ImageHandler.getScaledBitmapByWidth(R.drawable.single_grid_cell_purple, oneCellWidth, getResources());
-        Bitmap notPressedCell = ImageHandler.getScaledBitmapByWidth(R.drawable.single_grid_cell_green, oneCellWidth, getResources());
-        int oneCellHeight = pressedCell.getHeight();
-        int containerHeight = (((oneCellHeight * 3) * 100) / (100 - 10));
-
-        View v = LayoutInflater.from(this)
-                .inflate(R.layout.game_grid_xml, null);
-        ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
-        ViewGroup.LayoutParams clparams = cl.getLayoutParams();
-        clparams.height = containerHeight;
-        clparams.width = oneGridWidth;
-        cl.setLayoutParams(clparams);
-        log("cl h,w : " + clparams.height + ", " + clparams.width);
-
-        GameGridAdapter.GridViewHolder gridView = new GameGridAdapter.GridViewHolder(v, letters, notPressedCell, pressedCell);
-        gridView.onBind(GameGridAdapter.findClickIndices(word, letters), word);
-        FrameLayout fl = findViewById(R.id.round_end_result_grid_container);
-        fl.addView(v);
-
-    }
-
-    private void setupResults(int oneGridWidth, String[] gameLetters, ArrayList<String> suggestedWordsOfRound) {
-        for (int j = 0; j < gameLetters.length; ++j) {
-            log("Letter: " + gameLetters[j]);
-        }
-        log("Expected width : " + oneGridWidth);
-        RecyclerView gridView = findViewById(R.id.results_scrollview_grids);
-        gridView.setLayoutManager(new GridLayoutManager(this, 3));
-        gridView.setAdapter(new GameGridAdapter(suggestedWordsOfRound, gameLetters, oneGridWidth, getResources()));
-        gridView.addItemDecoration(new GridItemDecoration(oneGridWidth / 10));
-    }
-
-    private void calculateScreenWidth() {
-        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display display = myWindowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
-    }
-
-    private void bindWifiService() {
-        Timber.d( "RE: Game is online!");
-        netConnService = new WifiServiceConnection(this);
-        bindService();
+    private void setUpPresenter(boolean isFinalRound) {
+        boolean displayInterstitial = (isFinalRound && GameData.checkIfDisplayInterstitial(this));
+        presenter = new RoundEndPresenter(this,
+                calculateScreenWidth(),
+                HomeScreen.allGameInstances.get(gameIndexNumber),
+                displayInterstitial,
+                FirebaseAnalytics.getInstance(this));
+        presenter.prepareInterstitialAdvert();
+        presenter.displayTitle();
+        presenter.displayerPlayerProfileImage();
+        presenter.createPlayerResultGrid();
+        presenter.populatePlayerResults();
+        presenter.setupPossibleWords();
     }
 
     private void setUpNavigationItems() {
@@ -193,27 +135,19 @@ public class RoundEndScreen extends AppCompatActivity
         });
     }
 
+    private void startGame() {
+        presenter.startGame();
+    }
+
+    private int calculateScreenWidth() {
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        return screenSize.x;
+    }
+
     @Override
     public InterstitialAd getInterstitial() {
         return new InterstitialAd(this);
-    }
-
-    private void setUpPresenter(int screenWidth, boolean isFinalRound) {
-        boolean displayInterstitial = (isFinalRound && GameData.checkIfDisplayInterstitial(this));
-        presenter = new RoundEndPresenter(this,
-                screenWidth,
-                HomeScreen.allGameInstances.get(gameIndexNumber),
-                getResources().getColor(R.color.game_font_color),
-                getResources().getColor(R.color.colorLightAccent),
-                displayInterstitial,
-                FirebaseAnalytics.getInstance(this));
-        presenter.prepareInterstitialAdvert();
-        presenter.populatePlayerDetails();
-        presenter.displayTitle();
-    }
-
-    private void startGame() {
-        presenter.startGame();
     }
 
     @Override
@@ -222,18 +156,24 @@ public class RoundEndScreen extends AppCompatActivity
         unBindService();
     }
 
+    private void bindWifiService() {
+        Timber.d("RE: Game is online!");
+        netConnService = new WifiServiceConnection(this);
+        bindService();
+    }
+
     private void unBindService() {
         if (!isOnline || netConnService == null || !netConnService.isBound) {
             return;
         }
-        Timber.d( "Unbinding service in " + this.toString());
+        Timber.d("Unbinding service in " + this.toString());
         unbindService(netConnService);
         netConnService.isBound = false;
     }
 
     private void bindService() {
         if (isOnline) {
-            Timber.d( "Binding " + this.toString());
+            Timber.d("Binding " + this.toString());
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
@@ -241,17 +181,16 @@ public class RoundEndScreen extends AppCompatActivity
 
     @Override
     public void onServiceBound() {
-        broadcastMyResults(HomeScreen.allGameInstances.get(0));
+        presenter.broadcastMyResults();
     }
 
-    private void broadcastMyResults(GameInstance myGameInstance) {
+    @Override
+    public void broadcastString(String result) {
         WifiService ws = netConnService.getWifiService();
-        String jsString = myGameInstance.resultAsJson().toString();
         if (ws == null) {
-            // Should not be possible, can only be called after service bound.
             throw new IllegalStateException();
         }
-        ws.sendData(jsString);
+        ws.sendData(result);
     }
 
     // Must press back button twice in quick succession to return to home
@@ -263,19 +202,27 @@ public class RoundEndScreen extends AppCompatActivity
         } else {
             // If pressed recently, proceed to home screen
             if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
-                startActivity(homeScreenIntent);
-                finish();
+                returnToHome();
                 return;
             }
             // Pressed once. Inform user a second click will exit the game.
+            toastClickToEndGame();
             this.backButtonPressedOnce = true;
-            Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
-            toastMessage.setGravity(Gravity.TOP, 0, 40);
-            toastMessage.show();
             // Listen for another click for a brief amount of time. If none, reset the flag
             new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
         }
+    }
+
+    private void toastClickToEndGame(){
+        Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
+        toastMessage.setGravity(Gravity.TOP, 0, 40);
+        toastMessage.show();
+    }
+
+    private void returnToHome(){
+        Intent homeScreenIntent = new Intent(this, HomeScreen.class);
+        startActivity(homeScreenIntent);
+        finish();
     }
 
     @Override
@@ -300,40 +247,12 @@ public class RoundEndScreen extends AppCompatActivity
         }
     }
 
-    private void setUpRoundEndFox() {
-
-        WindowManager myWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display display = myWindowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
-
-        int foxPercent = (int) (0.35 * screenWidth);
-        int foxSpeechPercent = (int) (0.64 * screenWidth);
-        ImageView instructionFoxIV = findViewById(R.id.content_round_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxPercent, getResources()));
-
-        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, foxSpeechPercent, getResources()));
-    }
-
-    private void adjustSpeechBubble(String playerResult) {
-        ConstraintLayout winnerBannerCL = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
-        String longestWordHeader = getResources().getString(R.string.you_scored) + "\n" + playerResult;
-
-        TextView instructionFoxTV = winnerBannerCL.findViewById(R.id.content_round_end_screen_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV),
-                instructionFoxTV, 0.8, longestWordHeader);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         navBurger.navigateTo(item, RoundEndScreen.this);
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -374,41 +293,21 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public Bitmap getPlayerProfPic(int profilePicScreenWidth) {
-        String profPicStr = new GameData(this, HomeScreen.allGameInstances.get(gameIndexNumber).getID()).getProfilePicture();
-        if (profPicStr.equals("")) {
-            return loadDefaultProfilePic(profilePicScreenWidth);
-        } else {
-            Uri myFileUri = Uri.parse(profPicStr);
-            // TODO: Not cropping this image means using more memory than required.
-            Bitmap profPic = ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
-            int shortSide;
-            int startX, startY;
-            if (profPic.getHeight() < profPic.getWidth()) {
-                shortSide = profPic.getHeight();
-                startX = (profPic.getWidth() - shortSide) / 2;
-                startY = 0;
-            } else {
-                shortSide = profPic.getWidth();
-                startY = (profPic.getHeight() - shortSide) / 2;
-                startX = 0;
-            }
-            profPic = Bitmap.createBitmap(profPic, startX, startY, shortSide, shortSide);
-            if (profPic == null) {
-                return loadDefaultProfilePic(profilePicScreenWidth);
-            }
-            return profPic;
-        }
+    public Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth) {
+        return ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
     }
 
-    private Bitmap loadDefaultProfilePic(int size) {
-        return ImageHandler.getScaledBitmapByLongestSide(
-                GameData.PROFILE_DEFAULT_IMG,
-                size,
-                getResources());
+    @Override
+    public Bitmap loadDefaultProfilePic(int size) {
+        return ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, size, getResources());
     }
 
-    private static void logBmp(Bitmap bitmap, String id) {
+    @Override
+    public String getProfilePicUriString(UUID playerID) {
+        return new GameData(this, playerID).getProfilePicture();
+    }
+
+    private void logBmp(Bitmap bitmap, String id) {
         log(id + " == bitmap~ h, w, bytes, dens : "
                 + bitmap.getHeight() + ", "
                 + bitmap.getWidth() + ", "
@@ -416,23 +315,80 @@ public class RoundEndScreen extends AppCompatActivity
                 + bitmap.getDensity());
     }
 
-    private static void logBmp(Bitmap bitmap, int id) {
+    private void logBmp(Bitmap bitmap, int id) {
         logBmp(bitmap, String.valueOf(id));
     }
 
-    private static void log(String msg) {
-        Timber.d( msg);
+    @Override
+    public void log(String msg) {
+        Timber.d(msg);
+    }
+
+    @Override
+    public View inflateGameGrid() {
+        return LayoutInflater.from(this).inflate(R.layout.game_grid_xml, rootLayout.findViewById(R.id.round_end_result_grid_container));
+    }
+
+    @Override
+    public Bitmap getPressedCell(int width) {
+        return ImageHandler.getScaledBitmapByWidth(R.drawable.single_grid_cell_purple, width, getResources());
+    }
+
+    @Override
+    public Bitmap getNotPressedCell(int width) {
+        return ImageHandler.getScaledBitmapByWidth(R.drawable.single_grid_cell_green, width, getResources());
+    }
+
+    @Override
+    public void displayPossibleWordsAsGrids(ArrayList<String> possibleWordsOfRound, String[] gameLetters, int gridWidth, float whiteSpacePercent) {
+        RecyclerView gridView = findViewById(R.id.results_scrollview_grids);
+        gridView.setLayoutManager(new GridLayoutManager(this, 3));
+        gridView.setAdapter(new GameGridAdapter(possibleWordsOfRound, gameLetters, gridWidth, getResources()));
+        gridView.addItemDecoration(new GridItemDecoration((int) (gridWidth * whiteSpacePercent)));
+    }
+
+    // A grid is displayed showing the players best word
+    @Override
+    public void displayPlayerResultGrid(Bitmap pressedCell, Bitmap notPressedCell, int gridWidth, int gridHeight, String[] gameLetters, String word) {
+        final View v = inflateGameGrid();
+        final ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
+        final ViewGroup.LayoutParams clparams = cl.getLayoutParams();
+        clparams.width = gridWidth;
+        clparams.height = gridHeight;
+        cl.setLayoutParams(clparams);
+        // Using the same method as displaying a grid in the recycler view used for the results
+        final GameGridAdapter.GridViewHolder gridView = new GameGridAdapter.GridViewHolder(v, gameLetters, notPressedCell, pressedCell);
+        gridView.onBind(GameGridAdapter.findClickIndices(word, gameLetters), word);
+    }
+
+    @Override
+    public void displayRoundEndFox(int foxWidth, int speechWidth, String playerResult) {
+        // Grab the layout since we're about to search the view hierarchy for several of its children
+        ConstraintLayout foxLayoutContainer = findViewById(R.id.content_round_end_screen_foxWithSpeechCL);
+        // Create the fox header and set the text as a percentage of the speech bubble width
+        ImageView instructionFoxIV = foxLayoutContainer.findViewById(R.id.content_round_end_screen_instructionFoxIV);
+        ImageView instructionFoxSpeechBubbleIV = foxLayoutContainer.findViewById(R.id.content_round_end_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, foxWidth, getResources()));
+        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, speechWidth, getResources()));
+        TextView instructionFoxTV = foxLayoutContainer.findViewById(R.id.content_round_end_screen_instructionFoxTV);
+        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV, instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(playerResult);
+    }
+
+    @Override
+    public void runOnUI(Runnable runnable) {
+        runOnUiThread(runnable);
     }
 
     @Override
     public void setPlayerNameWithPercent(String nameAndPercent) {
-        TextView resultPlayerNameView = cl.findViewById(R.id.round_end_result_player_name);
+        TextView resultPlayerNameView = rootLayout.findViewById(R.id.round_end_result_player_name);
         resultPlayerNameView.setText(nameAndPercent);
     }
 
     @Override
     public void setPlayerProfilePic(Bitmap profPic) {
-        CircleImageView profilePicView = cl.findViewById(R.id.round_end_profile_pic);
+        CircleImageView profilePicView = rootLayout.findViewById(R.id.round_end_profile_pic);
         if (profPic != null) {
             profilePicView.setImageBitmap(profPic);
         }

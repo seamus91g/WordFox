@@ -100,17 +100,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/round_end_banner_divider"
         android:layout_height="wrap_content">
-
     </FrameLayout>
-    <!--<ImageView-->
-        <!--android:id="@+id/round_end_result_grid"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/round_end_player_result_divider"-->
-        <!--app:layout_constraintHorizontal_bias="0.92"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/round_end_result_best_word" />-->
 
     <TextView
         android:id="@+id/round_end_player_result_divider"
@@ -123,13 +113,11 @@
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/round_end_result_grid_container" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/results_scrollview_grids"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

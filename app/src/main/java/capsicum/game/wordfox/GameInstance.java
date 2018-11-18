@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import capsicum.game.wordfox.RoundResults.WordPresenter;
 import timber.log.Timber;
 
 /**
@@ -38,6 +39,7 @@ public class GameInstance implements GameDetails {
     private int highestPossibleScore = 0;
     private final int thisGameIndex;
     private PlayerIdentity player;
+    private WordPresenter roundEndWordPresenter;
 
     private final ArrayList<UUID> roundIDs = new ArrayList<>();
     private boolean isGroupOwner;       // TODO: Not required to store this????
@@ -61,7 +63,7 @@ public class GameInstance implements GameDetails {
             gameJSON.put(PLAYER_ID, player.ID);
             gameJSON.put(PLAYER_NAME, player.username);
         } catch (JSONException e) {
-            Timber.d( "GameInstance : Failed to create json result");
+            Timber.d("GameInstance : Failed to create json result");
             e.printStackTrace();
         }
         return gameJSON;
@@ -84,6 +86,7 @@ public class GameInstance implements GameDetails {
         this(playerId, nm, thisGameIndex);
         numberOfPlayers = playerCount;
     }
+
     public GameInstance(UUID playerId, String nm, int thisGameIndex) {
         this(playerId, nm, thisGameIndex, null, false, false);
     }
@@ -177,14 +180,6 @@ public class GameInstance implements GameDetails {
         return thisGameIndex;
     }
 
-    public void addListOfSuggestedWords(ArrayList<String> suggestedWords) {
-        wordForEachLengthPerRound.add(suggestedWords);
-    }
-
-    public ArrayList<String> getSuggestedWordsOfRound(int requestedRound) {
-        return wordForEachLengthPerRound.get(requestedRound);
-    }
-
     @Override
     public int getTotalScore() {
         return totalScore;
@@ -211,17 +206,57 @@ public class GameInstance implements GameDetails {
         return longestWord;
     }
 
-    public void setLongestPossible(String word) {
+    public synchronized void setLongestPossible(String word) {
         allLongestPossible.add(word);
         highestPossibleScore += word.length();
-        Timber.d("highest possible score is " + highestPossibleScore);
+        if (roundEndWordPresenter != null) {
+            roundEndWordPresenter.presentWord(word);
+        }
     }
-    public ArrayList<String> getAllLongestPossible(){
+
+    public ArrayList<String> getAllLongestPossible() {
         return allLongestPossible;
     }
+
     public String getLongestPossible() {
         if (allLongestPossible.size() > round) {
             return allLongestPossible.get(round);
+        }
+        return null;
+    }
+
+    public synchronized String getLongestPossible(WordPresenter presenter) {
+        if (getLongestPossible() == null) {
+            roundEndWordPresenter = presenter;
+            return null;
+        } else {
+            return getLongestPossible();
+        }
+    }
+
+    public ArrayList<String> getSuggestedWordsOfRound(int requestedRound) {
+        return wordForEachLengthPerRound.get(requestedRound);
+    }
+
+    public synchronized void addListOfSuggestedWords(ArrayList<String> suggestedWords) {
+        wordForEachLengthPerRound.add(suggestedWords);
+        if (roundEndWordPresenter != null) {
+            roundEndWordPresenter.presentLongestPossible(suggestedWords);
+        }
+    }
+
+    public synchronized ArrayList<String> getSuggestedWordsOfRound(WordPresenter presenter) {
+        if (getSuggestedWordsOfRound() == null) {
+            roundEndWordPresenter = presenter;
+            return null;
+        } else {
+            return getSuggestedWordsOfRound();
+        }
+    }
+
+    public ArrayList<String> getSuggestedWordsOfRound() {
+        if (wordForEachLengthPerRound.size() > round) {
+            return wordForEachLengthPerRound.get(round);
         }
         return null;
     }
@@ -264,6 +299,7 @@ public class GameInstance implements GameDetails {
     }
 
     public void incrementRound() {
+        roundEndWordPresenter = null;
         round++;
     }
 

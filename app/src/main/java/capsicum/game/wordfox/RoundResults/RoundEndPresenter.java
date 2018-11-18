@@ -1,12 +1,12 @@
 package capsicum.game.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameInstance;
+import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.WordfoxConstants;
 import timber.log.Timber;
 
@@ -15,43 +15,43 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static capsicum.game.wordfox.WordfoxConstants.GRID_LETTERS_PER_COLUMN;
+import static capsicum.game.wordfox.WordfoxConstants.GRID_LETTERS_PER_ROW;
+import static capsicum.game.wordfox.WordfoxConstants.GRID_WHITE_SPACE_PERCENT;
+import static capsicum.game.wordfox.WordfoxConstants.RESULT_GRID_SCREEN_WIDTH_PERCENT;
+
 /**
  * Created by Gilroy
  */
 
-public class RoundEndPresenter {
-    private static final String TAG = "RoundEndPresenter";
-    private static int PROFILE_PIC_SCREEN_WIDTH_PERCENT = 20;
-    private static int PLAYER_RESULT_GRID_SCREEN_WIDTH_PERCENT = 30;
-    private static int SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT = 35;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private RoundEndContract.View view;
-    private GameInstance gameInstance;
-    private int gridWidth;
-    private int profilePicScreenWidth;
-    private int resultGridWidth;
-    private int speechBubbleWidth;
-    private final int colorPrimary;
-    private final int colorSecondary;
+public class RoundEndPresenter implements WordPresenter {
+    private static final float PROFILE_PIC_SCREEN_WIDTH_PERCENT = 0.2f;
+    private static final float SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT = 0.64f;
+    private static final float FOX_SCREEN_WIDTH_PERCENT = 0.35f;
+    private final FirebaseAnalytics mFirebaseAnalytics;
+    private final RoundEndContract.View view;
+    private final GameInstance gameInstance;
+    private final String[] gameLetters;
+    private final long START_TIMESTAMP;
+    private final int screenWidth;
+    private InterstitialAd mInterstitialAd;     // TODO: encapsulate ad handling
     private boolean displayInterstitial;
     private boolean isStarted = false;
-    private InterstitialAd mInterstitialAd;
     private boolean failedToLoadInterstitial = false;
-    private long START_TIMESTAMP;
 
-    public RoundEndPresenter(RoundEndContract.View view, int screenWidth, GameInstance gameInstance, int colorPrimary, int colorSecondary, boolean displayInterstitial, FirebaseAnalytics instance) {
+    public RoundEndPresenter(RoundEndContract.View view, int screenWidth, GameInstance gameInstance, boolean displayInterstitial, FirebaseAnalytics instance) {
         this.mFirebaseAnalytics = instance;
-        START_TIMESTAMP = System.currentTimeMillis();
+        this.START_TIMESTAMP = System.currentTimeMillis();
         this.view = view;
         this.gameInstance = gameInstance;
-        this.gridWidth = (screenWidth * WordfoxConstants.RESULT_GRID_SCREEN_WIDTH_PERCENT) / 100;
-        this.profilePicScreenWidth = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
-        this.resultGridWidth = (screenWidth * PLAYER_RESULT_GRID_SCREEN_WIDTH_PERCENT) / 100;
-        this.speechBubbleWidth = (screenWidth * SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT) / 100;
-        this.colorPrimary = colorPrimary;
-        this.colorSecondary = colorSecondary;
+        this.screenWidth = screenWidth;
         this.displayInterstitial = displayInterstitial;
-        Timber.d(":::: Screen width, grid width, result width, pic, spee : " + screenWidth + ", " + gridWidth + ", " + resultGridWidth + ", " + profilePicScreenWidth + ", " + speechBubbleWidth);
+        this.gameLetters = Arrays.copyOfRange(
+                gameInstance.getRoundLetters().split(""), 1, gameInstance.getRoundLetters().length() + 1
+        );
     }
 
     public void displayTitle() {
@@ -64,12 +64,86 @@ public class RoundEndPresenter {
             return;
         }
         isStarted = true;
-        Timber.d("Display interstitial? " + displayInterstitial);
         if (displayInterstitial) {
             displayInterstitial();
         } else {
             startGameAfterInterstitial();
         }
+    }
+
+    public void createPlayerResultGrid() {
+        // Create two bitmaps, one for each of pressed and not pressed.
+        // They will be re-used to construct each cell in the grid.
+        final int resultGridWidth = (int) (screenWidth * RESULT_GRID_SCREEN_WIDTH_PERCENT);
+        final int oneCellWidth = (int) ((resultGridWidth * (1 - GRID_WHITE_SPACE_PERCENT)) / GRID_LETTERS_PER_ROW);
+        final Bitmap pressedCell = view.getPressedCell(oneCellWidth);
+        final Bitmap notPressedCell = view.getNotPressedCell(oneCellWidth);
+        // The layout parameters are determind based on the created bitmaps
+        final int oneCellHeight = pressedCell.getHeight();
+        final int totalGridHeight = (int) ((oneCellHeight * GRID_LETTERS_PER_COLUMN) / (1 - GRID_WHITE_SPACE_PERCENT));
+        // Using the same method as displaying a grid in the recycler view used for the results
+        view.displayPlayerResultGrid(pressedCell, notPressedCell, resultGridWidth, totalGridHeight, gameLetters, gameInstance.getLongestWord());
+    }
+
+    private void setUpRoundEndFox() {
+        int foxWidth = (int) (FOX_SCREEN_WIDTH_PERCENT * screenWidth);
+        int speechWidth = (int) (SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT * screenWidth);
+        int maxScore = gameInstance.getLongestPossible().length();
+        int playerScore = gameInstance.getScore();
+        String playerResult = "You scored " + playerScore + " out of " + maxScore;
+        view.displayRoundEndFox(foxWidth, speechWidth, playerResult);
+    }
+
+    private Bitmap getPlayerProfilePic() {
+        String profPicStr = view.getProfilePicUriString(gameInstance.getID());
+        int profilePicWidth = (int) (PROFILE_PIC_SCREEN_WIDTH_PERCENT * screenWidth);
+        if (profPicStr.equals("")) {
+            return view.loadDefaultProfilePic(profilePicWidth);
+        } else {
+            Uri myFileUri = Uri.parse(profPicStr);
+            Bitmap profPic = view.profilePicFromUri(myFileUri, profilePicWidth);
+            if (profPic == null) {
+                return view.loadDefaultProfilePic(profilePicWidth);
+            }
+            return ImageHandler.cropToSquare(profPic);
+        }
+    }
+
+    public void displayerPlayerProfileImage() {
+        view.setPlayerProfilePic(getPlayerProfilePic());
+    }
+
+    public void populatePlayerResults() {
+        presentWord(gameInstance.getLongestPossible(this));
+    }
+
+    @Override
+    public void presentWord(String word) {
+        if (word == null) {
+            return;
+        }
+        int maxScore = word.length();
+        int playerScore = gameInstance.getScore();
+        int percentScore = (100 * playerScore) / (maxScore);
+        String nameAndPercent = gameInstance.getName() + "\n (" + percentScore + "%)";
+        view.runOnUI(() -> {
+            setUpRoundEndFox();
+            view.setPlayerNameWithPercent(nameAndPercent);
+        });
+    }
+
+    public void setupPossibleWords() {
+        presentLongestPossible(gameInstance.getSuggestedWordsOfRound(this));
+    }
+
+    @Override
+    public void presentLongestPossible(ArrayList<String> longestPossible) {
+        if (longestPossible == null) {
+            return;
+        }
+        view.runOnUI(() -> {
+            view.displayPossibleWordsAsGrids(longestPossible, gameLetters, (int) (screenWidth * RESULT_GRID_SCREEN_WIDTH_PERCENT), GRID_WHITE_SPACE_PERCENT);
+        });
     }
 
     private void startGameAfterInterstitial() {
@@ -89,29 +163,6 @@ public class RoundEndPresenter {
         }
     }
 
-    public void populatePlayerDetails() {       // TODO:  Tidy this. Use MVP
-        Bitmap profPic = view.getPlayerProfPic(profilePicScreenWidth);
-        view.setPlayerProfilePic(profPic);
-        allowWordSearchToFinish();
-        int maxScore = gameInstance.getLongestPossible().length();
-        int playerScore = gameInstance.getScore();
-        int percentScore = (100 * playerScore) / (maxScore);
-
-        String nameAndPercent = gameInstance.getName() + "\n (" + percentScore + "%)";
-        view.setPlayerNameWithPercent(nameAndPercent);
-    }
-
-    // Race condition: if user ends game really quickly, longest possible words might not yet be calculated.
-    private void allowWordSearchToFinish() {
-        while (gameInstance.getLongestPossible() == null) {     // TODO: Infinite wait? Refactor -> Exit game
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private AdListener interstitialAdListener = new AdListener() {
         @Override
         public void onAdClosed() {
@@ -128,14 +179,6 @@ public class RoundEndPresenter {
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "advert");
             bundle.putLong(WordfoxConstants.Analytics.INTERSTITIAL_LOAD_DURATION_TIME, durationInMillis);
             mFirebaseAnalytics.logEvent(WordfoxConstants.Analytics.Event.INTERSTITIAL_AD_LOAD_DURATION, bundle);
-        }
-
-        private String millisFormatted(long durationInMillis) {
-            long millis = durationInMillis % 1000;
-            long second = (durationInMillis / 1000) % 60;
-            long minute = (durationInMillis / (1000 * 60)) % 60;
-            long hour = (durationInMillis / (1000 * 60 * 60)) % 24;
-            return String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
         }
 
         @Override
@@ -158,8 +201,7 @@ public class RoundEndPresenter {
                     .build();
             adUnit = WordfoxConstants.TEST_AD_INTERSTITIAL;
         } else {
-            adRequest = new AdRequest.Builder()
-                    .build();
+            adRequest = new AdRequest.Builder().build();
             adUnit = WordfoxConstants.END_OF_ROUND3_BANNER_AD_UNIT_ID;
         }
         mInterstitialAd = view.getInterstitial();
@@ -173,5 +215,9 @@ public class RoundEndPresenter {
             startGameAfterInterstitial();
         }
         mInterstitialAd.show();
+    }
+
+    public void broadcastMyResults() {
+        view.broadcastString(gameInstance.resultAsJson().toString());
     }
 }

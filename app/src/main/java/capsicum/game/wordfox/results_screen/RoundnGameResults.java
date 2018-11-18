@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -203,8 +202,9 @@ public class RoundnGameResults extends AppCompatActivity
         }
 
         TextView instructionFoxTV = findViewById(R.id.content_game_end_screen_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV),
-                instructionFoxTV, 0.8, winner);
+        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV,
+                instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(winner);
 
 
         TextView word1TV = findViewById(R.id.bestword_heading_1);

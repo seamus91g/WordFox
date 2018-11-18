@@ -16,12 +16,9 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,7 +32,8 @@ public class ImageHandler {
     private static final int SCALE_BY_SHORTEST = 3;
     private static final String MONITOR_TAG = "myTag_img";
 
-    private ImageHandler(){}
+    private ImageHandler() {
+    }
 
     // Load bitmap from asset contained within the project
     public static Bitmap loadAssetImage(String assetName, Activity activity) {
@@ -84,6 +82,23 @@ public class ImageHandler {
         return image;
     }
 
+    // Centre crop the bitmap by slicing an equal amount off both ends of the longer dimension
+    public static Bitmap cropToSquare(Bitmap bitmap) {
+        int shortSide;
+        int startX, startY;
+        // Determine which dimension needs to be cropped, the width or heigth
+        if (bitmap.getHeight() < bitmap.getWidth()) {
+            shortSide = bitmap.getHeight();
+            startX = (bitmap.getWidth() - shortSide) / 2;
+            startY = 0;
+        } else {
+            shortSide = bitmap.getWidth();
+            startY = (bitmap.getHeight() - shortSide) / 2;
+            startX = 0;
+        }
+        return Bitmap.createBitmap(bitmap, startX, startY, shortSide, shortSide);
+    }
+
     public static int dp2px(Context context, final float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
@@ -95,10 +110,10 @@ public class ImageHandler {
     private static boolean isStoragePermissionGranted(Activity activity) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Timber.d( "Permission is granted");
+                Timber.d("Permission is granted");
                 return true;
             } else {
-                Timber.d( "Permission is revoked");
+                Timber.d("Permission is revoked");
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
@@ -259,7 +274,7 @@ public class ImageHandler {
     }
 
     private static void log(String msg) {
-        Timber.d( msg);
+        Timber.d(msg);
     }
 
     private static void logBmp(Bitmap bitmap, String id) {

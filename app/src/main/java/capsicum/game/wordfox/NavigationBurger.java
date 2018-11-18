@@ -14,11 +14,8 @@ import timber.log.Timber;
  */
 
 public class NavigationBurger {
-    public static final String MONITOR_TAG = "myTag";
-
     public void navigateTo(MenuItem item, Context fromContext) {
         int id = item.getItemId();
-
         if (id == R.id.nav_home) {
             Intent homeScreenIntent = new Intent(fromContext, HomeScreen.class);
             fromContext.startActivity(homeScreenIntent);

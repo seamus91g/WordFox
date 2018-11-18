@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,8 +100,8 @@ public class PassAndPlay extends AppCompatActivity
         instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleright, (int) (0.59*screenWidth),getResources()));
 
         TextView instructionFoxTV = findViewById(R.id.content_pass_and_play_instructionFoxTV);
-        IVmethods.setTVwidthPercentOfIV(instructionFoxSpeechBubbleIV,instructionFoxTV,0.8, R.string.choose_your_number_of_players_using_the_slider);
-
+        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV,instructionFoxTV,WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(R.string.choose_your_number_of_players_using_the_slider);
 
         myBitmap1 = ImageHandler.getScaledBitmapByWidth(R.drawable.silverfoxsilcoloured, (int) (0.1*screenWidth),getResources());
         myBitmap2 = ImageHandler.getScaledBitmapByWidth(R.drawable.arcticfoxsilcoloured, (int) (0.1*screenWidth),getResources());

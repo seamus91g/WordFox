@@ -3,8 +3,13 @@ package capsicum.game.wordfox;
 public class WordfoxConstants {
     public static final String MONITOR_TAG = "myTag";
     public static final int NUMBER_ROUNDS = 3;
+    public static final int GRID_LETTERS_PER_ROW = 3;
+    public static final int GRID_LETTERS_PER_COLUMN = 3;
+    public static final float GRID_WHITE_SPACE_PERCENT = 0.1f;
     public static final int RESULT_GRIDS_PER_ROW = NUMBER_ROUNDS;
-    public static final int RESULT_GRID_SCREEN_WIDTH_PERCENT = 25;
+    public static final float RESULT_GRID_SCREEN_WIDTH_PERCENT = 0.25f;
+    // Can percentage width of the standard speech bubble can be used to display text
+    public static final float TEXT_WIDTH_PERCENT_SPEECH_BUBBLE = 0.8f;
     public static final int MAX_PLAYER_NAME_LENGTH = 12;
     public static final String WORD_TAG_PREFIX = "word_";
     public static final String GRID_TAG_PREFIX = "grid_";

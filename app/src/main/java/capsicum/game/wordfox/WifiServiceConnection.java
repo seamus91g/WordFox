@@ -31,7 +31,6 @@ public class WifiServiceConnection implements ServiceConnection {
     }
 
     public WifiService getWifiService() {
-
         return wifiService;
     }
 
