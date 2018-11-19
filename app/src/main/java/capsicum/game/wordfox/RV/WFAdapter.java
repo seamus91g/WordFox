@@ -1,5 +1,6 @@
 package capsicum.game.wordfox.RV;
 
+import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -91,7 +92,7 @@ public class WFAdapter extends RecyclerView.Adapter<BaseWFViewHolder> {
 
     // Identify the dataset item and proceed to create the appropriate view holder
     @Override
-    public BaseWFViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseWFViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
         switch (viewType) {
             case DataListItem.PLAYER:

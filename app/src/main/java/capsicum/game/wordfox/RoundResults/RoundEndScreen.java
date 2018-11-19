@@ -23,16 +23,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import capsicum.game.wordfox.GameData;
-import capsicum.game.wordfox.GameGridAdapter;
-import capsicum.game.wordfox.GameInstance;
-import capsicum.game.wordfox.GridItemDecoration;
+import capsicum.game.wordfox.GameGrid.GameGridAdapter;
+import capsicum.game.wordfox.GameGrid.GridViewHolder;
+import capsicum.game.wordfox.GameGrid.TypeGrid;
+import capsicum.game.wordfox.GameGrid.GridItemDecoration;
 import capsicum.game.wordfox.HomeScreen;
 import capsicum.game.wordfox.IVmethods;
 import capsicum.game.wordfox.ImageHandler;
@@ -51,6 +50,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -351,14 +351,14 @@ public class RoundEndScreen extends AppCompatActivity
     @Override
     public void displayPlayerResultGrid(Bitmap pressedCell, Bitmap notPressedCell, int gridWidth, int gridHeight, String[] gameLetters, String word) {
         final View v = inflateGameGrid();
-        final ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
-        final ViewGroup.LayoutParams clparams = cl.getLayoutParams();
-        clparams.width = gridWidth;
-        clparams.height = gridHeight;
-        cl.setLayoutParams(clparams);
+//        final ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
+//        final ViewGroup.LayoutParams clparams = cl.getLayoutParams();
+//        clparams.width = gridWidth;
+//        clparams.height = gridHeight;
+//        cl.setLayoutParams(clparams);
         // Using the same method as displaying a grid in the recycler view used for the results
-        final GameGridAdapter.GridViewHolder gridView = new GameGridAdapter.GridViewHolder(v, gameLetters, notPressedCell, pressedCell);
-        gridView.onBind(GameGridAdapter.findClickIndices(word, gameLetters), word);
+        final GridViewHolder gridView = new GridViewHolder(v, Arrays.<String[]>asList(gameLetters), notPressedCell, pressedCell, gridHeight, gridWidth);
+        gridView.onBind(new TypeGrid(GameGridAdapter.findClickIndices(word, gameLetters), word));
     }
 
     @Override
