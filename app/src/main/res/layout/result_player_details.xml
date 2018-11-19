@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <View
+        android:id="@+id/result_player_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/results_screen_profile_pic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/results_screen_profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="6dp"
+        app:civ_border_color="@color/game_font_color"
+        app:civ_border_width="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_player_divider" />
+
+    <LinearLayout
+        android:id="@+id/result_player_layout_scoreLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/results_screen_profile_pic"
+        app:layout_constraintLeft_toRightOf="@id/results_screen_profile_pic"
+        app:layout_constraintTop_toTopOf="@id/results_screen_profile_pic">
+
+        <TextView
+            android:id="@+id/result_player_name"
+            style="@style/headingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Joey" />
+
+        <TextView
+            android:id="@+id/result_player_score"
+            style="@style/headingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(54%)" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/result_player_layout_rankLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/result_player_fox_pic"
+        app:layout_constraintRight_toLeftOf="@id/result_player_fox_pic"
+        app:layout_constraintTop_toTopOf="@id/result_player_fox_pic">
+
+        <TextView
+            android:id="@+id/result_player_rank_heading"
+            style="@style/headingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_rank" />
+
+        <TextView
+            android:id="@+id/result_player_rank_name"
+            style="@style/headingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Silver Fox" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/result_player_fox_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/results_screen_profile_pic" />
+
+</android.support.constraint.ConstraintLayout>

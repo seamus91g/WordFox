@@ -214,7 +214,6 @@
             app:layout_constraintLeft_toLeftOf="@+id/game_grid_cell_9"
             app:layout_constraintRight_toRightOf="@+id/game_grid_cell_9"
             app:layout_constraintTop_toTopOf="@+id/game_grid_cell_9" />
-
-
     </android.support.constraint.ConstraintLayout>
+
 </LinearLayout>

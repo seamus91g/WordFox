@@ -1,14 +1,14 @@
-package capsicum.game.wordfox;
+package capsicum.game.wordfox.GameGrid;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class GridItemDecoration extends RecyclerView.ItemDecoration {
+public class PlayerDetailsItemDecoration extends RecyclerView.ItemDecoration {
 
     private int space;
 
-    public GridItemDecoration(int space) {
+    public PlayerDetailsItemDecoration(int space) {
         this.space = space;
     }
 
@@ -17,7 +17,6 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
                                RecyclerView parent, RecyclerView.State state) {
         outRect.left = space;
         outRect.right = space;
-        outRect.bottom = space*2;
 
         // Add top margin only for the first item to avoid double space between items
 //        if (parent.getChildLayoutPosition(view) == 0) {

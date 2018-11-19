@@ -5,6 +5,7 @@ public class WordfoxConstants {
     public static final int NUMBER_ROUNDS = 3;
     public static final int GRID_LETTERS_PER_ROW = 3;
     public static final int GRID_LETTERS_PER_COLUMN = 3;
+    public static final int GRID_LETTERS_COUNT = GRID_LETTERS_PER_ROW * GRID_LETTERS_PER_COLUMN;
     public static final float GRID_WHITE_SPACE_PERCENT = 0.1f;
     public static final int RESULT_GRIDS_PER_ROW = NUMBER_ROUNDS;
     public static final float RESULT_GRID_SCREEN_WIDTH_PERCENT = 0.25f;
