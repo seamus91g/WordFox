@@ -1,5 +1,6 @@
 package capsicum.game.wordfox;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public interface GameDetails {
@@ -12,6 +13,8 @@ public interface GameDetails {
     String getName();
 
     String getRoundWord(int i);
+
+    ArrayList<String> getAllFinalWords();
 
     String getLetters(int i);
 }
