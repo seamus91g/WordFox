@@ -17,24 +17,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameDetails;
+import capsicum.game.wordfox.GameGrid.GameGridAdapter;
+import capsicum.game.wordfox.GameGrid.PlayerDetailsItemDecoration;
+import capsicum.game.wordfox.GameGrid.PlayerResultPackage;
 import capsicum.game.wordfox.GameInstance;
-import capsicum.game.wordfox.GridImage;
 import capsicum.game.wordfox.HomeScreen;
 import capsicum.game.wordfox.IVmethods;
 import capsicum.game.wordfox.ImageHandler;
@@ -48,8 +47,8 @@ import capsicum.game.wordfox.WifiServiceConnection;
 import capsicum.game.wordfox.WordfoxConstants;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.game_screen.GameActivity;
-import capsicum.game.wordfox.profile.FoxRank;
 import capsicum.game.wordfox.profile.ProfileActivity;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -59,54 +58,47 @@ import org.json.JSONObject;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
 public class RoundnGameResults extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         WifiActivityContract,
+        GameEndWifiContract,
         ResultsContract.View {
-    private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
     public static final String INTENT_GAME_RESULTS = "intent_game_results_key";
-
     private WifiServiceConnection netConnService;
     private IntentFilter activityIntentFilter;
     boolean isOnline;
-
     private NavigationBurger navBurger = new NavigationBurger();
-
-    public static final String MONITOR_TAG = "myTag";
-    private static final String TAG = "RoundnGameResults";
     private boolean backButtonPressedOnce = false;
     public Activity activity;
-
     private ResultsPresenter presenter;
-    private LinearLayout resultContainer;
-
-    private AdView mAdView;
-    private LayoutInflater resultInflater;
     private ResultBroadcastReceiver resultReceiver;
-    private Queue<JSONObject> wifiGameResults;
-    private Bitmap defaultProfilePic;
-    private int screenWidth;
-    private int screenHeight;
-    private int profPicWidth;
-    private int buttonGridImageWidth;
+    private Queue<PlayerResultPackage> wifiGameResults;
+    private GameGridAdapter gameResultsAdapter;
 
     class ResultBroadcastReceiver extends BroadcastReceiver {
+        private GameEndWifiContract gameEndWifiContract;
+
+        ResultBroadcastReceiver(GameEndWifiContract gameEndWifiContact) {
+            this.gameEndWifiContract = gameEndWifiContact;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            Timber.d( "L : Received any ol thing : " + intent.getAction());
+            Timber.d("L : Received action: " + intent.getAction());
             if (intent.getAction().equals(WifiService.ACTION_GAME_RESULTS)) {
                 String resultMessage = intent.getExtras().getString(INTENT_GAME_RESULTS);
                 try {
                     synchronized (RoundnGameResults.this) {
-                        wifiGameResults.add(new JSONObject(resultMessage));
+                        Timber.d("Received player data: " + resultMessage);
+                        gameEndWifiContract.addReceivedWifiPlayerData(new JSONObject(resultMessage));
                     }
-                    Timber.d( "L : Received result intent. Result: " + new JSONObject(resultMessage).toString());
+                    Timber.d("L : Received result intent. Result: " + new JSONObject(resultMessage).toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -142,119 +134,35 @@ public class RoundnGameResults extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        calculateScreenDimensions();
-        profPicWidth = (int) (screenWidth / 6);
-        buttonGridImageWidth = (int) (screenWidth / 4);
-
         ArrayList<GameInstance> instancesToDisplay = HomeScreen.allGameInstances;
-
         isOnline = instancesToDisplay.get(0).isOnline();
         if (isOnline) {
-            Timber.d( "RE: Game is online!");
+            Timber.d("RE: Game is online!");
             activityIntentFilter = new IntentFilter();
             activityIntentFilter.addAction(WifiService.ACTION_GAME_RESULTS);
-            wifiGameResults = new ArrayDeque<>();
             netConnService = new WifiServiceConnection(this);
-            resultReceiver = new ResultBroadcastReceiver();
+            resultReceiver = new ResultBroadcastReceiver(this);
             registerReceiver(resultReceiver, activityIntentFilter);
             activityIntentFilter = new IntentFilter();
-            new Thread(wifiResultFeed).start();
         }
 
-        presenter = new ResultsPresenter(this, HomeScreen.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay);
+        presenter = new ResultsPresenter(this, HomeScreen.allGameInstances.size(), new FoxSQLData(this), instancesToDisplay, calculateScreenWidth());
         presenter.updateData();
-
-        /////////
-        resultContainer = findViewById(R.id.player_results_container);
-        resultInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
-            addResultDetail(HomeScreen.allGameInstances.get(i));
-        }
-        GameInstance gameInstance = HomeScreen.allGameInstances.get(0);
-        TextView best1 = findViewById(R.id.bestword_heading_1);
-        TextView best2 = findViewById(R.id.bestword_heading_2);
-        TextView best3 = findViewById(R.id.bestword_heading_3);
-        best1.setText(gameInstance.getRoundLongestPossible(0).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(0).length() + ")");
-        best2.setText(gameInstance.getRoundLongestPossible(1).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(1).length() + ")");
-        best3.setText(gameInstance.getRoundLongestPossible(2).toUpperCase() + "(" + gameInstance.getRoundLongestPossible(2).length() + ")");
-        String winner = "";
-
-
-        ImageView instructionFoxIV = findViewById(R.id.content_game_end_screen_instructionFoxIV);
-        instructionFoxIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.gameendsilcoloured, (int) (0.4 * screenWidth), getResources()));
-
-
-        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV);
-        instructionFoxSpeechBubbleIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleleft, (int) (0.59 * screenWidth), getResources()));
-
-
-        if (HomeScreen.allGameInstances.size() > 1) {
-            int highScore = -1;
-            for (int i = 0; i < HomeScreen.allGameInstances.size(); ++i) {
-                if (HomeScreen.allGameInstances.get(i).getTotalScore() > highScore) {
-                    highScore = HomeScreen.allGameInstances.get(i).getTotalScore();
-                    winner = HomeScreen.allGameInstances.get(i).getName();
-                }
-            }
-            winner = "Winner is " + winner + "!" + "\n" + "They scored\n" + highScore + "/" + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
-        } else {
-            winner = "GAME OVER!\n" + "You scored\n" + HomeScreen.allGameInstances.get(0).getTotalScore() + "/" + HomeScreen.allGameInstances.get(0).getHighestPossibleScore();
-        }
-
-        TextView instructionFoxTV = findViewById(R.id.content_game_end_screen_instructionFoxTV);
-        IVmethods.setWidthAsPercentOfLaidOutView(instructionFoxSpeechBubbleIV,
-                instructionFoxTV, WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
-        instructionFoxTV.setText(winner);
-
-
-        TextView word1TV = findViewById(R.id.bestword_heading_1);
-        TextView word2TV = findViewById(R.id.bestword_heading_2);
-        TextView word3TV = findViewById(R.id.bestword_heading_3);
-        word1TV.requestLayout();
-        word1TV.getLayoutParams().width = (int) screenWidth / 3;
-        word2TV.requestLayout();
-        word2TV.getLayoutParams().width = (int) screenWidth / 3;
-        word3TV.requestLayout();
-        word3TV.getLayoutParams().width = (int) screenWidth / 3;
-
-        setupBannerAd();
+        presenter.setupEndgameFox();
+        presenter.setupBannerAd();
+        presenter.setupBestwordHeader();
+        presenter.setupResultSection();
     }
 
-    private void setupBannerAd() {
-        String adUnit;
-        if (BuildConfig.DEBUG) {
-            adUnit = this.getResources().getString(R.string.test_banner_ad_unit_id);
-        } else {
-            adUnit = this.getResources().getString(R.string.game_end_banner_ad_unit_id);
-        }
-        FrameLayout adviewContainer = findViewById(R.id.advert_container_end_game);
-        AdView mAdView = new AdView(this);
-        mAdView.setAdSize(AdSize.BANNER);
-        mAdView.setAdUnitId(adUnit);
-        adviewContainer.addView(mAdView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-    }
-
-    private void calculateScreenDimensions() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
-        screenHeight = size.y;
-    }
-
-    public static int dpToPx(float dp, Context context) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
-
-    public static int dpToSp(float dp, Context context) {
-        return (int) (dpToPx(dp, context) / context.getResources().getDisplayMetrics().scaledDensity);
+    private int calculateScreenWidth() {
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        return screenSize.x;
     }
 
     private void unBindService() {
         if (isOnline && netConnService.isBound) {
-            Timber.d( "Unbinding service in " + this.toString());
+            Timber.d("Unbinding service in " + this.toString());
             unbindService(netConnService);
             netConnService.isBound = false;
         }
@@ -262,132 +170,10 @@ public class RoundnGameResults extends AppCompatActivity
 
     private void bindService() {
         if (isOnline) {
-            Timber.d( "Binding " + this.toString());
+            Timber.d("Binding " + this.toString());
             bindService(new Intent(this, WifiService.class), netConnService,
                     Context.BIND_AUTO_CREATE);
         }
-    }
-
-    private void addResultDetail(GameDetails game) {
-        resultContainer.addView(inflatePlayerResult(game));
-    }
-
-    private Runnable wifiResultFeed = new Runnable() {
-        @Override
-        public void run() {
-            // TODO: End loop when results received equals player count
-            while (true) {
-                if (!wifiGameResults.isEmpty()) {
-                    runOnUiThread(wifiResultsToUI);
-                }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
-    private Runnable wifiResultsToUI = new Runnable() {
-        @Override
-        public void run() {
-            JSONObject gameResult;
-            synchronized (RoundnGameResults.this) {
-                // If UI thread is slow runnable may have been triggered more times than there
-                // are elements, so check if empty
-                if (wifiGameResults.isEmpty()) {
-                    return;
-                }
-                gameResult = wifiGameResults.remove();
-            }
-            GameDetails game = new WifiGameInstance(gameResult,
-                    HomeScreen.allGameInstances.get(0).getAllLongestPossible(),
-                    HomeScreen.allGameInstances.get(0).getLetters());
-            addResultDetail(game);
-        }
-    };
-
-    private LinearLayout inflatePlayerResult(GameDetails gameInstance) {
-        LinearLayout cl = (LinearLayout) resultInflater.inflate(R.layout.result_player_layout, null);
-
-        GameData plyrGd = new GameData(this, gameInstance.getID());
-
-        String profPicStr = plyrGd.getProfilePicture();
-        Bitmap profPic = null;
-        if (!profPicStr.equals("")) {
-            Uri myFileUri = Uri.parse(profPicStr);
-            profPic = ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profPicWidth);
-            int shortSide;
-            int startX, startY;
-            if (profPic.getHeight() < profPic.getWidth()) {
-                shortSide = profPic.getHeight();
-                startX = (profPic.getWidth() - shortSide) / 2;
-                startY = 0;
-            } else {
-                shortSide = profPic.getWidth();
-                startY = (profPic.getHeight() - shortSide) / 2;
-                startX = 0;
-            }
-            profPic = Bitmap.createBitmap(profPic, startX, startY, shortSide, shortSide);
-        }
-        int maxScore = gameInstance.getHighestPossibleScore();
-        int playerScore = gameInstance.getTotalScore();
-        int percentScore = (100 * playerScore) / (maxScore);
-
-        TextView resultPlayerNameView = cl.findViewById(R.id.result_player_name);
-        String playerName = gameInstance.getName();
-        resultPlayerNameView.setText(playerName);
-        TextView resultPlayerScoreView = cl.findViewById(R.id.result_player_score);
-
-        if (HomeScreen.allGameInstances.size() > 1) {
-            String playerResult = playerScore + "/" + maxScore + " (" + percentScore + "%)";
-            resultPlayerScoreView.setText(playerResult);
-        } else {
-            resultPlayerScoreView.setText("(" + percentScore + "%)");
-        }
-
-
-        ImageView resultPlayerFoxPicView = cl.findViewById(R.id.result_player_fox_pic);
-        TextView resultPlayerRankNameView = cl.findViewById(R.id.result_player_rank_name);
-        FoxRank foxRank = GameData.determineRankValue(playerScore);
-        resultPlayerRankNameView.setText(foxRank.foxRank);
-
-        CircleImageView profilePicView = cl.findViewById(R.id.results_screen_profile_pic);
-        if (profPic == null) {
-            if (defaultProfilePic == null) {
-                defaultProfilePic = ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
-            }
-            profPic = defaultProfilePic;
-        }
-        profilePicView.setImageBitmap(profPic);
-        profPic = null;
-        Bitmap foxRankImage = ImageHandler.getScaledBitmapByLongestSide(foxRank.imageResource, profPicWidth, getResources());    // TODO: Adjust to screen size
-//        Bitmap foxRankImage = BitmapFactory.decodeResource(getResources(), foxRank.imageResource);      // TODO: Re-use fox pics if players get the same rank
-//        foxRankImage = ImageHandler.getResizedBitmap(foxRankImage, ImageHandler.dp2px(this, 60), ImageHandler.dp2px(this, 60));
-        resultPlayerFoxPicView.setImageBitmap(foxRankImage);
-        for (int i = 0; i < WordfoxConstants.NUMBER_ROUNDS; ++i) {
-            String gridTag = "player_grid" + (i + 1);
-            String wordTag = "player_word" + (i + 1);
-            ImageView gridImage = cl.getChildAt(0).findViewWithTag(gridTag);
-            String bestWord = gameInstance.getRoundWord(i) + " (" + gameInstance.getRoundWord(i).length() + ")";
-            String letters = gameInstance.getLetters(i);
-            TextView wordTV = cl.getChildAt(0).findViewWithTag(wordTag);
-            wordTV.setText(bestWord);
-            gridImage.setImageBitmap(pressedKey(letters, bestWord));
-        }
-        return cl;
-    }
-
-    private Bitmap pressedKey(String letters, String word) {
-        if (letters.equals(GameData.NONE_FOUND)) {    // TODO: Throw exception
-            return null;
-        }
-        if (word.equals(GameData.NONE_FOUND)) {
-            return null;
-        }
-        Bitmap buttongGridImage = ImageHandler.getScaledBitmapByWidth(R.drawable.letter_grid_blank, buttonGridImageWidth, getResources());
-        GridImage grid = new GridImage(buttongGridImage, word, letters, getResources().getColor(R.color.game_font_color), getResources().getColor(R.color.colorLightAccent));
-        return grid.getBmp();
     }
 
     @Override
@@ -408,6 +194,13 @@ public class RoundnGameResults extends AppCompatActivity
         super.onPause();
         if (isOnline) {
             unBindService();
+            // Try to unregister. It may already be unregistered previously
+            try {
+                unregisterReceiver(resultReceiver);
+            } catch (IllegalArgumentException e) {
+                Timber.d("Already unregistered");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -415,7 +208,6 @@ public class RoundnGameResults extends AppCompatActivity
     public void onDestroy() {
         super.onDestroy();
     }
-
 
     @Override
     public void makeToast(String toastMessage) {
@@ -426,9 +218,11 @@ public class RoundnGameResults extends AppCompatActivity
         if (isOnline) {
             netConnService.getWifiService().closeService();
             stopService(new Intent(RoundnGameResults.this, WifiService.class));
+            unBindService();
         }
         Intent MainIntent = new Intent(this, HomeScreen.class);
         startActivity(MainIntent);
+        finish();
     }
 
     @Override
@@ -437,15 +231,117 @@ public class RoundnGameResults extends AppCompatActivity
     }
 
     @Override
-    public void playerSwitch(int index) {
-        Intent gameIntent = new Intent(this, SwapActivity.class);
-        gameIntent.putExtra(GameActivity.GAME_INDEX, index);
-        startActivity(gameIntent);
+    public GameData getPlayerData(UUID playerID) {
+        return new GameData(this, playerID);
     }
 
     @Override
-    public GameData getPlayerData(UUID playerID) {
-        return new GameData(this, playerID);
+    public Bitmap getGameEndFoxBmp(int width) {
+        return ImageHandler.getScaledBitmapByWidth(R.drawable.gameendsilcoloured, width, getResources());
+    }
+
+    @Override
+    public Bitmap getGameEndFoxSpeechBmp(int width) {
+        return ImageHandler.getScaledBitmapByWidth(R.drawable.speechbubbleleft, width, getResources());
+    }
+
+    // Display  the fox which tells the player who won the game
+    @Override
+    public void displayEndgameFox(Bitmap foxBitmap, Bitmap foxSpeechBitmap, String foxMessage) {
+        ImageView instructionFoxIV = findViewById(R.id.content_game_end_screen_instructionFoxIV);
+        instructionFoxIV.setImageBitmap(foxBitmap);
+        ImageView instructionFoxSpeechBubbleIV = findViewById(R.id.content_game_end_screen_instructionFoxSpeechBubbleIV);
+        instructionFoxSpeechBubbleIV.setImageBitmap(foxSpeechBitmap);
+        // Set the textview width relative to the speech bubble imageview width
+        TextView instructionFoxTV = findViewById(R.id.content_game_end_screen_instructionFoxTV);
+        IVmethods.setWidthAsPercentOfLaidOutView(
+                instructionFoxSpeechBubbleIV,
+                instructionFoxTV,
+                WordfoxConstants.TEXT_WIDTH_PERCENT_SPEECH_BUBBLE);
+        instructionFoxTV.setText(foxMessage);
+    }
+
+    @Override
+    public void displayBannerAd(String adUnit) {
+        FrameLayout adviewContainer = findViewById(R.id.advert_container_end_game);
+        AdView mAdView = new AdView(this);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.setAdSize(AdSize.BANNER);
+        mAdView.setAdUnitId(adUnit);
+        mAdView.loadAd(adRequest);
+        adviewContainer.addView(mAdView);
+    }
+
+    @Override
+    public void displayWordHeaders(String[] words, int width) {
+        TextView word1TV = findViewById(R.id.bestword_heading_1);
+        TextView word2TV = findViewById(R.id.bestword_heading_2);
+        TextView word3TV = findViewById(R.id.bestword_heading_3);
+        word1TV.setText(words[0]);
+        word2TV.setText(words[1]);
+        word3TV.setText(words[2]);
+        word1TV.getLayoutParams().width = width;
+        word2TV.getLayoutParams().width = width;
+        word3TV.getLayoutParams().width = width;
+    }
+
+    @Override
+    public Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth) {
+        return ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
+    }
+
+    @Override
+    public Bitmap loadDefaultProfilePic(int size) {
+        return ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, size, getResources());
+    }
+
+    @Override
+    public String getProfilePicUriString(UUID playerID) {
+        return new GameData(this, playerID).getProfilePicture();
+    }
+
+    @Override
+    public Bitmap getRankBmp(int imageResource, int width) {
+        return ImageHandler.getScaledBitmapByLongestSide(imageResource, width, getResources());
+    }
+
+    @Override
+    public synchronized void addReceivedWifiPlayerData(JSONObject newPlayerData) {
+        GameDetails game = new WifiGameInstance(newPlayerData,
+                HomeScreen.allGameInstances.get(0).getAllLongestPossible(),
+                HomeScreen.allGameInstances.get(0).getLetters());
+        if (gameResultsAdapter == null) {
+            if (wifiGameResults == null) {
+                wifiGameResults = new ArrayDeque<>();
+            }
+            wifiGameResults.add(presenter.prepareResultDetail(game));
+        } else {
+            gameResultsAdapter.newPlayer(presenter.prepareResultDetail(game));
+        }
+
+    }
+
+    @Override
+    public synchronized void prepareResultAdapter(List<PlayerResultPackage> players, List<String[]> gameLetters, int highestPossibleScore, int gridWidth, int spacerSize) {
+        // Include any pending results that already arrived
+        while (wifiGameResults != null && wifiGameResults.isEmpty()) {
+            players.add(wifiGameResults.remove());
+        }
+        RecyclerView gridView = findViewById(R.id.gameend_results_rv);
+        // spac of 1 for every fourth item (each player detail)
+        int rowItemCount = WordfoxConstants.RESULT_GRIDS_PER_ROW;
+        GridLayoutManager manager = new GridLayoutManager(this, rowItemCount);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int i) {
+                // Every playerDetails item has a span of 1
+                return (i % (rowItemCount + 1) == 0) ? manager.getSpanCount() : 1;
+            }
+        });
+        gridView.setLayoutManager(manager);
+        gameResultsAdapter = new GameGridAdapter(players, gameLetters, highestPossibleScore, gridWidth, getResources());
+        gridView.setAdapter(gameResultsAdapter);
+        gridView.addItemDecoration(new PlayerDetailsItemDecoration(spacerSize));
     }
 
     @Override
@@ -455,14 +351,11 @@ public class RoundnGameResults extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if (this.backButtonPressedOnce) {
-                Intent homeScreenIntent = new Intent(this, HomeScreen.class);
-                startActivity(homeScreenIntent);
-                finish();
+                navigateToHome();
                 return;
             }
             Toast.makeText(this, "Double tap BACK to exit!", Toast.LENGTH_SHORT).show();
             this.backButtonPressedOnce = true;
-
             new Handler().postDelayed(() -> backButtonPressedOnce = false, 1500);
         }
     }
@@ -479,16 +372,9 @@ public class RoundnGameResults extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_profile:
                 // User chose the "Profile" item, jump to the profile page
-                Timber.d( "Chose des's profile icon, END");
                 Intent profileScreenIntent = new Intent(RoundnGameResults.this, ProfileActivity.class);
                 startActivity(profileScreenIntent);
                 return true;
-
-            // Use this for other action bar items as necessary
-//            case R.id.action_favorite:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -500,11 +386,7 @@ public class RoundnGameResults extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-
-        Timber.d( "Before_onNavigationItemSelected__MainActivity");
         navBurger.navigateTo(item, RoundnGameResults.this);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

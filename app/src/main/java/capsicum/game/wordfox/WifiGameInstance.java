@@ -78,6 +78,11 @@ public class WifiGameInstance implements GameDetails {
     }
 
     @Override
+    public ArrayList<String> getAllFinalWords(){
+        return wordsFound;
+    }
+
+    @Override
     public String getLetters(int i) {
         return letters.get(i);
     }

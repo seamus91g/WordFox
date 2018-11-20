@@ -1,7 +1,12 @@
 package capsicum.game.wordfox.results_screen;
 
-import capsicum.game.wordfox.GameData;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
+import capsicum.game.wordfox.GameData;
+import capsicum.game.wordfox.GameGrid.PlayerResultPackage;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,9 +19,27 @@ public interface ResultsContract {
 
         void displayTitle(String title);
 
-        void playerSwitch(int gameIndex);
-
         GameData getPlayerData(UUID playerID);
+
+        Bitmap getGameEndFoxBmp(int width);
+
+        Bitmap getGameEndFoxSpeechBmp(int width);
+
+        void displayEndgameFox(Bitmap foxBitmap, Bitmap foxSpeechBitmap, String foxMessage);
+
+        void displayBannerAd(String adUnit);
+
+        void displayWordHeaders(String[] longestPossibleWords, int width);
+
+        Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth);
+
+        Bitmap loadDefaultProfilePic(int profilePicWidth);
+
+        String getProfilePicUriString(UUID playerID);
+
+        Bitmap getRankBmp(int imageResource, int width);
+
+        void prepareResultAdapter(List<PlayerResultPackage> players, List<String[]> gameLetters, int highestPossibleScore, int gridWidth, int spacerSize);
     }
 
     interface Listener {

@@ -10,15 +10,14 @@
     tools:context="capsicum.game.wordfox.results_screen.RoundnGameResults"
     tools:showIn="@layout/app_bar_end_screen_single_player1">
 
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_game_end_screen_foxWithSpeechCL"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
+        android:paddingEnd="2dp"
+        android:paddingRight="2dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -67,34 +66,31 @@
 
     <TextView
         android:id="@+id/longestpossible_header_label"
+        style="@style/explanationTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:padding="2dp"
         android:text="@string/longest_words_minor_heading"
-        style="@style/explanationTextStyle"
         app:layout_constraintBottom_toTopOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/best_words_divider" />
 
     <TextView
         android:id="@+id/bestword_heading_1"
+        style="@style/headingTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/headingTextStyle"
-        android:text="BEST 1"
         app:layout_constraintBottom_toTopOf="@id/best_words_divider_2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bestword_heading_2"
-        app:layout_constraintTop_toBottomOf="@id/longestpossible_header_label"
-        />
+        app:layout_constraintTop_toBottomOf="@id/longestpossible_header_label" />
 
     <TextView
         android:id="@+id/bestword_heading_2"
+        style="@style/headingTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/headingTextStyle"
-        android:text="BEST 2"
         app:layout_constraintBottom_toBottomOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toRightOf="@id/bestword_heading_1"
         app:layout_constraintRight_toLeftOf="@id/bestword_heading_3"
@@ -102,10 +98,9 @@
 
     <TextView
         android:id="@+id/bestword_heading_3"
+        style="@style/headingTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/headingTextStyle"
-        android:text="BEST 3"
         app:layout_constraintBottom_toBottomOf="@id/bestword_heading_1"
         app:layout_constraintLeft_toRightOf="@id/bestword_heading_2"
         app:layout_constraintRight_toRightOf="parent"
@@ -116,42 +111,22 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@id/results_scrollview"
+        app:layout_constraintBottom_toTopOf="@id/gameend_results_rv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bestword_heading_1" />
 
-
-    <ScrollView
-        android:id="@+id/results_scrollview"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gameend_results_rv"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:fillViewport="false"
-        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
         ads:layout_constraintBottom_toTopOf="@id/advert_container_end_game"
         ads:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/best_words_divider_2">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/player_results_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@id/best_words_divider_2" />
 
     <FrameLayout
         android:id="@+id/advert_container_end_game"
@@ -160,7 +135,6 @@
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintLeft_toLeftOf="parent"
         ads:layout_constraintRight_toRightOf="parent"
-        ads:layout_constraintTop_toBottomOf="@id/results_scrollview">
-
+        ads:layout_constraintTop_toBottomOf="@id/gameend_results_rv">
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>
