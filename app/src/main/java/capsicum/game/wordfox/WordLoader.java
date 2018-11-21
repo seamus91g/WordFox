@@ -75,7 +75,9 @@ public class WordLoader {
         for (GameItem g : allGs) {
             Map<UUID, ArrayList<String>> wordsPerPlayer = new HashMap<>();
             Set<UUID> playerIDs = new HashSet<>();
-            g.populateRoundData(foxDB);
+            if(!g.populateRoundData(foxDB)){
+                continue;
+            }
             List<UUID> rIDs = g.getRoundIDs();
             List<String> letters = new ArrayList<>();
             List<String> longest = new ArrayList<>();

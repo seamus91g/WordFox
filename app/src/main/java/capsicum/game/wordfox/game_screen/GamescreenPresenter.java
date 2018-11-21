@@ -10,6 +10,7 @@ import capsicum.game.wordfox.data.Diction;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.datamodels.RoundItem;
 import capsicum.game.wordfox.datamodels.WordItem;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -29,15 +30,17 @@ import static capsicum.game.wordfox.game_screen.GameActivity.GAME_TIME_SECONDS;
 public class GamescreenPresenter implements GamescreenContract.Listener {
     private static final String MONITOR_TAG = "game_presenter";
     private final GamescreenContract.View view;
-    private GameInstance gameInstance;
-    private GameData gameData;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private FoxSQLData foxData;
-    private Diction dictionary;
-    private Map<String, Boolean> allWordsSubmitted = new HashMap<>();
-    private LinkedList<SingleCell> alreadyClicked = new LinkedList<>(); //TODO: LinkedHashMap so can search quickly
-    private ArrayList<SingleCell> listOfGridCells;
+    private final GameInstance gameInstance;
+    private final GameData gameData;
+    private final FirebaseAnalytics mFirebaseAnalytics;
+    private final FoxSQLData foxData;
+    private final Diction dictionary;
+    private final Map<String, Boolean> allWordsSubmitted = new HashMap<>();
+    private final LinkedList<SingleCell> alreadyClicked = new LinkedList<>(); //TODO: LinkedHashMap so can search quickly
+    private final ArrayList<SingleCell> listOfGridCells;
     private String onGoingAttempt = "";
+    private volatile boolean areBGTasksComplete = false;
+    private volatile boolean userWantsToProgress = false;
 
     GamescreenPresenter(GamescreenContract.View view, GameInstance gameInstance, Diction dictionary, FoxSQLData data, GameData gameData, FirebaseAnalytics mFirebaseAnalytics) {
         this.view = view;
@@ -122,6 +125,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         Thread thread = new Thread(() -> {
             calculateLongestPossibleWords(givenLettersSTR);
             createRoundItem(givenLettersSTR);
+            BGTasksComplete();
         });
         thread.start();
     }
@@ -168,8 +172,19 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
         return false;
     }
 
-    private void goToRoundEndScreen() {
-        view.startRoundEnd(gameInstance.getThisGameIndex());
+    private synchronized void BGTasksComplete() {
+        areBGTasksComplete = true;
+        if (userWantsToProgress) {
+            goToRoundEndScreen();
+        }
+    }
+
+    private synchronized void goToRoundEndScreen() {
+        if (areBGTasksComplete) {
+            view.startRoundEnd(gameInstance.getThisGameIndex());
+        } else {
+            userWantsToProgress = true;
+        }
     }
 
     public int getRound() {
