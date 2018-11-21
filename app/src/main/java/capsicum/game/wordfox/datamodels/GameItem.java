@@ -93,16 +93,20 @@ public class GameItem {
         return letters;
     }
 
-    public void populateRoundData(FoxSQLData myDB) {
+    public boolean populateRoundData(FoxSQLData myDB) {
         RoundItem thisRound1 = myDB.getRound(round1Id);
         RoundItem thisRound2 = myDB.getRound(round2Id);
         RoundItem thisRound3 = myDB.getRound(round3Id);
+        if (thisRound1 == null || thisRound2 == null || thisRound3 == null){
+            return false;
+        }
         longestPossible.add(thisRound1.getLongestPossible());
         longestPossible.add(thisRound2.getLongestPossible());
         longestPossible.add(thisRound3.getLongestPossible());
         letters.add(thisRound1.getLetters());
         letters.add(thisRound2.getLetters());
         letters.add(thisRound3.getLetters());
+        return true;
     }
 
     public ContentValues toValues() {
