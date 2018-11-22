@@ -1,9 +1,10 @@
 package capsicum.game.wordfox.ui;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
+import android.graphics.Point;
 
 import capsicum.game.wordfox.GameData;
+import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.profile.ProfileActivity;
 import capsicum.game.wordfox.profile.ProfileContract;
 import capsicum.game.wordfox.profile.ProfilePresenter;
@@ -11,7 +12,6 @@ import capsicum.game.wordfox.profile.ProfilePresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
@@ -24,14 +24,16 @@ public class ProfilePresenterTest {
     private Activity activity;
     private ProfileContract.View view;
     private ProfilePresenter presenter;
+    private FoxSQLData foxDb;
 
     @Before
     public void setup(){
         myGameData = Mockito.mock(GameData.class);
         ProfileActivity profile = Mockito.mock(ProfileActivity.class);
+        foxDb = Mockito.mock(FoxSQLData.class);
         activity = profile;
         view = profile;
-        presenter = new ProfilePresenter(profile, myGameData);
+        presenter = new ProfilePresenter(profile, myGameData, foxDb, new Point(100, 100));
     }
 
     @Test

@@ -33,6 +33,7 @@ import timber.log.Timber;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class PlayerSwitchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         PlayerSwitchContract.View {

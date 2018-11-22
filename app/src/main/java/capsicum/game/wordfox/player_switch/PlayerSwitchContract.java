@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by Gilroy
  */
 
+@Deprecated
 public interface PlayerSwitchContract {
     interface View {
         void displayMessage(String message);

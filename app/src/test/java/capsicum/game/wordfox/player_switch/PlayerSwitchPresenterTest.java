@@ -14,6 +14,7 @@ import java.util.UUID;
 /**
  * Created by Gilroy
  */
+@Deprecated
 public class PlayerSwitchPresenterTest {
     private PlayerSwitchContract.View view;
     private int index = 1;
