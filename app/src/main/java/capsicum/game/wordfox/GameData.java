@@ -429,11 +429,13 @@ public class GameData extends AppCompatActivity {
         editor.apply();
     }
 
+    @Deprecated
     public void setProfilePicture(String picture) {
         editor.putString(PROFILE_PIC_KEY, picture);
         editor.apply();
     }
 
+    @Deprecated
     public String getProfilePicture() {
         return foxPreferences.getString(PROFILE_PIC_KEY, "");
     }

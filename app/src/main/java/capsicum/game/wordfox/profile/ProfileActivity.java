@@ -41,6 +41,7 @@ import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.WordfoxConstants;
+import capsicum.game.wordfox.database.FoxSQLData;
 import timber.log.Timber;
 
 import com.google.android.gms.ads.AdRequest;
@@ -52,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener,
         ProfileContract.View {
     static final int SELECT_PICTURE = 0;
+    public static final int DEFAULT_PROFILE_PIC_RESOURCE = R.drawable.chooseprofilepicwhite;
     private static final String TAG = "profile_tag";
     private NavigationBurger navBurger = new NavigationBurger();
     private ProfilePresenter presenter;
@@ -111,10 +113,10 @@ public class ProfileActivity extends AppCompatActivity
         setProfileNameButton.setOnClickListener(usernameButtonListener);
 
         // The presenter handles preparing relevant data to display
-        presenter = new ProfilePresenter(this, new GameData(this, GameData.getPlayer1Identity(this).ID));
+        presenter = new ProfilePresenter(this, new GameData(this, GameData.getPlayer1Identity(this).ID), new FoxSQLData(this), size);
         presenter.displayLongestWord();
         presenter.displayProfileName();
-        presenter.displayProfileImage(screenHeight, getResources());
+        presenter.displayProfileImage();
         presenter.bestGameWords();
         presenter.recentGameWords();
         presenter.displayRank();
@@ -148,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void setRankImage(Bitmap rankImage) {
         ImageView rankIV = findViewById(R.id.content_profile_instructionFoxIV);
-        rankIV.setImageBitmap(ImageHandler.getScaledBitmapByWidth(presenter.getFoxRank(), (int) (0.35 * ((float) screenWidth)), getResources()));
+        rankIV.setImageBitmap(rankImage);
     }
 
     @Override
@@ -222,7 +224,7 @@ public class ProfileActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // if permission has been granted resume tasks needing this permission
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            presenter.permissionGrantedDisplayImage(screenHeight, getResources());
+            presenter.permissionGrantedDisplayImage("");
         } else {
             // permission not granted so can't do anything with the image
             Toast.makeText(this, "Default profile icon will remain", Toast.LENGTH_SHORT).show();
@@ -234,7 +236,7 @@ public class ProfileActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
-            presenter.activityResult(data, screenHeight);
+            presenter.activityResult(data);
         }
     }
 
@@ -322,28 +324,6 @@ public class ProfileActivity extends AppCompatActivity
         return buttongGridImage;
     }
 
-    private int dp2px(final float dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
-    }
-
-    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {     // TODO: Use ImageHandler
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = newWidth / width;
-        float scaleHeight = newHeight / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                bm, 0, 0, width, height, matrix, false);
-        bm.recycle();
-        return resizedBitmap;
-    }
-
-
     @Override
     public int getNotPressedButtonColor() {
         return getResources().getColor(R.color.game_font_color);
@@ -365,7 +345,6 @@ public class ProfileActivity extends AppCompatActivity
         TextView yourMessage = findViewById(R.id.recent_game_you);
         yourMessage.setText(msg);
     }
-
 
     @Override
     public int getPressedButtonColorSecondary() {
@@ -395,7 +374,6 @@ public class ProfileActivity extends AppCompatActivity
         }
         gamegrid.setImageBitmap(bmp);
         tv.setText(s);
-
     }
 
     @Override

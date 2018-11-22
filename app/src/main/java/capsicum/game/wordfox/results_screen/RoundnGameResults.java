@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,14 +38,12 @@ import capsicum.game.wordfox.IVmethods;
 import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
-import capsicum.game.wordfox.SwapActivity;
 import capsicum.game.wordfox.WifiActivityContract;
 import capsicum.game.wordfox.WifiGameInstance;
 import capsicum.game.wordfox.WifiService;
 import capsicum.game.wordfox.WifiServiceConnection;
 import capsicum.game.wordfox.WordfoxConstants;
 import capsicum.game.wordfox.database.FoxSQLData;
-import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
 
 import com.google.android.gms.ads.AdRequest;
@@ -286,18 +283,11 @@ public class RoundnGameResults extends AppCompatActivity
     }
 
     @Override
-    public Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth) {
-        return ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
-    }
-
-    @Override
     public Bitmap loadDefaultProfilePic(int size) {
-        return ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, size, getResources());
-    }
-
-    @Override
-    public String getProfilePicUriString(UUID playerID) {
-        return new GameData(this, playerID).getProfilePicture();
+        return ImageHandler.cropToSquare(
+                ImageHandler.getScaledBitmapByShortestSide(GameData.PROFILE_DEFAULT_IMG,
+                        size,
+                        getResources()));
     }
 
     @Override
@@ -318,7 +308,6 @@ public class RoundnGameResults extends AppCompatActivity
         } else {
             gameResultsAdapter.newPlayer(presenter.prepareResultDetail(game));
         }
-
     }
 
     @Override

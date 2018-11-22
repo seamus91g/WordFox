@@ -1,11 +1,8 @@
 package capsicum.game.wordfox.results_screen;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
-
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameGrid.PlayerResultPackage;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -31,11 +28,7 @@ public interface ResultsContract {
 
         void displayWordHeaders(String[] longestPossibleWords, int width);
 
-        Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth);
-
         Bitmap loadDefaultProfilePic(int profilePicWidth);
-
-        String getProfilePicUriString(UUID playerID);
 
         Bitmap getRankBmp(int imageResource, int width);
 

@@ -103,8 +103,24 @@ public class ImageHandler {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 
-    public static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {
+    private static Bitmap getResizedBitmap(Bitmap bm, float newWidth, float newHeight) {
         return Bitmap.createScaledBitmap(bm, (int) newWidth, (int) newHeight, false);
+    }
+
+    public static Bitmap getResizedBitmapByLongest(Bitmap image, int max) {
+        return getResizedBitmapConditional(image, max, image.getHeight() > image.getWidth());
+    }
+
+    public static Bitmap getResizedBitmapByShortest(Bitmap image, int max) {
+        return getResizedBitmapConditional(image, max, image.getHeight() < image.getWidth());
+    }
+
+    private static Bitmap getResizedBitmapConditional(Bitmap image, int max, boolean scaleByHeight) {
+        if (scaleByHeight) {
+            return scaleHeightDownTo(image, max);
+        } else {
+            return scaleWidthDownTo(image, max);
+        }
     }
 
     private static boolean isStoragePermissionGranted(Activity activity) {
@@ -258,16 +274,20 @@ public class ImageHandler {
         return applyScaleSettings(bmpopt, desiredDimensionSize, scaleType);
     }
 
-    private static float decideDimensionToScale(BitmapFactory.Options bmpopt, int scaleType) {
+    private static int decideDimensionToScale(BitmapFactory.Options bmpopt, int scaleType) {
+        return decideDimensionToScale(bmpopt.outHeight, bmpopt.outWidth, scaleType);
+    }
+
+    private static int decideDimensionToScale(int height, int width, int scaleType) {
         switch (scaleType) {
             case SCALE_BY_HEIGHT:
-                return bmpopt.outHeight;
+                return height;
             case SCALE_BY_WIDTH:
-                return bmpopt.outWidth;
+                return width;
             case SCALE_BY_SHORTEST:
-                return (bmpopt.outHeight < bmpopt.outWidth ? bmpopt.outHeight : bmpopt.outWidth);
+                return (height < width ? height : width);
             case SCALE_BY_LONGEST:
-                return (bmpopt.outHeight > bmpopt.outWidth ? bmpopt.outHeight : bmpopt.outWidth);
+                return (height > width ? height : width);
             default:
                 throw new IllegalArgumentException();
         }
@@ -311,22 +331,6 @@ public class ImageHandler {
     private static Bitmap scaleWidthDownTo(Bitmap bitmap, int width) {
         float aspect = (((float) width) / bitmap.getWidth());
         return getResizedBitmap(bitmap, width, bitmap.getHeight() * aspect);
-    }
-
-    private static Bitmap scaleLongestDownTo(Bitmap bmp, int scaleToDimension) {
-        if (bmp.getWidth() < bmp.getHeight()) {
-            return scaleHeightDownTo(bmp, scaleToDimension);
-        } else {
-            return scaleWidthDownTo(bmp, scaleToDimension);
-        }
-    }
-
-    private static Bitmap scaleShortestDownTo(Bitmap bmp, int scaleToDimension) {
-        if (bmp.getWidth() > bmp.getHeight()) {
-            return scaleHeightDownTo(bmp, scaleToDimension);
-        } else {
-            return scaleWidthDownTo(bmp, scaleToDimension);
-        }
     }
 
     // Calculate factor by which we should scale the image down by

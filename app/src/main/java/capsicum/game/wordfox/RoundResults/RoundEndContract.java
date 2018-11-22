@@ -1,12 +1,8 @@
 package capsicum.game.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
-
 import com.google.android.gms.ads.InterstitialAd;
-
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Gilroy
@@ -46,11 +42,7 @@ public interface RoundEndContract {
 
         void displayRoundEndFox(int foxWidth, int speechWidth, String playerResult);
 
-        Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth);
-
         Bitmap loadDefaultProfilePic(int profilePicWidth);
-
-        String getProfilePicUriString(UUID playerID);
 
         void runOnUI(Runnable action);
     }

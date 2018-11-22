@@ -87,6 +87,7 @@ public class GamescreenPresenter implements GamescreenContract.Listener {
             gameInstance.setLetters(givenLettersSTR);
             execBackgroundSetupTasks(givenLettersSTR);
         } else if (gameInstance.getRoundLetters() == null) {
+            areBGTasksComplete = true;
             GameInstance playerOneInstance = HomeScreen.allGameInstances.get(0);
             givenLettersSTR = playerOneInstance.getLetters(gameInstance.getRound());
             ArrayList<String> longestWordsPossibleForRound = playerOneInstance.getSuggestedWordsOfRound(gameInstance.getRound());
