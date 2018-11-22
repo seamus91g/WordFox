@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,8 +40,10 @@ import capsicum.game.wordfox.WordLoader;
 import capsicum.game.wordfox.WordfoxConstants;
 import capsicum.game.wordfox.dataWordsRecycler.WordDataHeader;
 import capsicum.game.wordfox.database.DataPerGame;
+import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.profile.FoxRank;
 import capsicum.game.wordfox.profile.ProfileActivity;
+import timber.log.Timber;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -57,7 +57,6 @@ import java.util.UUID;
 public class Statistics extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static int PROFILE_PIC_SCREEN_WIDTH_PERCENT = 20;
     private static int DATA_FOX_SCREEN_WIDTH_PERCENT = 30;
     protected RecyclerView mRecyclerView;
     private ArrayList<DataListItem> gameData = new ArrayList<>();
@@ -128,7 +127,8 @@ public class Statistics extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.data_list);
 
         ArrayList<PlayerIdentity> allPlayers = GameData.getPlayerList(this);
-        final List<DataPerGame> allGameData = WordLoader.getGames(this);
+        FoxSQLData foxDB = new FoxSQLData(this);
+        final List<DataPerGame> allGameData = WordLoader.getGames(this, foxDB);
         for (PlayerIdentity identity : allPlayers) {
             GameData playerGameData = new GameData(this, identity.ID);
             // Don't display players with no data, except player one
@@ -136,7 +136,7 @@ public class Statistics extends AppCompatActivity
                 continue;
             }
             ArrayList<DataListItem> allCategories = new ArrayList<>();
-            Bitmap profPic = loadPlayerBitmap(playerGameData.getProfilePicture());
+            Bitmap profPic = loadPlayerBitmap(foxDB, playerGameData.getPlayerID());
             FoxRank foxRank = playerGameData.getHighRank();
             DataListItem playerHeader = new TypePlayer(playerGameData.getUsername(), allCategories, profPic, foxRank.foxRank);
             gameData.add(playerHeader);
@@ -242,17 +242,18 @@ public class Statistics extends AppCompatActivity
         return allDataItems;
     }
 
-    private Bitmap loadPlayerBitmap(String profPicStr) {
-        int profPicWidth = (screenWidth * PROFILE_PIC_SCREEN_WIDTH_PERCENT) / 100;
-        if (!profPicStr.equals("")) {
-            Uri myFileUri = Uri.parse(profPicStr);
-            return ImageHandler.getBitmapFromUriScaleWidth(this, myFileUri, profPicWidth);    // TODO: Set as percent
-        } else {
-            if (defaultPicture == null) {     // Only load if needed
-                defaultPicture = ImageHandler.getScaledBitmapByWidth(GameData.PROFILE_DEFAULT_IMG, profPicWidth, getResources());
+    private Bitmap loadPlayerBitmap(FoxSQLData foxDB, UUID id) {
+        Bitmap profPic = foxDB.getProfileIcon(id);
+        if (profPic == null) {
+            if (defaultPicture == null) {
+                defaultPicture = ImageHandler.cropToSquare(
+                        ImageHandler.getScaledBitmapByShortestSide(GameData.PROFILE_DEFAULT_IMG,
+                                (int) (WordfoxConstants.PROFILE_ICON_SCREEN_WIDTH_PERCENT * screenWidth),
+                                getResources()));
             }
-            return defaultPicture;
+            profPic = defaultPicture;
         }
+        return profPic;
     }
 
     @Override

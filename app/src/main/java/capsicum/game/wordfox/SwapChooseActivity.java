@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.design.widget.NavigationView;
@@ -16,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
 import timber.log.Timber;
@@ -49,9 +48,6 @@ public class SwapChooseActivity extends AppCompatActivity
     private boolean isAdapterLoaded = false;
     private NavigationBurger navBurger = new NavigationBurger();
     private int screenWidth;
-    private int screenHeight;
-    private int profPicWidth;
-    private int buttonGridImageWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +69,7 @@ public class SwapChooseActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
         calculateScreenDimensions();
-        profPicWidth = (screenWidth/10);
-        buttonGridImageWidth = (screenWidth/4);
-
         setup();
 
         LinearLayout foxContainer = findViewById(R.id.existing_player_cardview_images);
@@ -106,10 +97,6 @@ public class SwapChooseActivity extends AppCompatActivity
         Bitmap fox3 = ImageHandler.getScaledBitmapByWidth(R.drawable.roundendsilcoloured, spacePerFox, getResources());
         Bitmap fox4 = ImageHandler.getScaledBitmapByWidth(R.drawable.silverfoxsilcoloured, spacePerFox, getResources());
 
-        Timber.d( "container count: " + foxContainer.getChildCount());
-        Timber.d( "container width: " + foxContainer.getWidth());
-        Timber.d( "container space per fox: " + spacePerFox);
-
         ImageView fox1IV = foxContainer.findViewById(R.id.existing_player_cardview_fox1);
         fox1IV.setImageBitmap(fox1);
         ImageView fox2IV = foxContainer.findViewById(R.id.existing_player_cardview_fox2);
@@ -126,20 +113,16 @@ public class SwapChooseActivity extends AppCompatActivity
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
-        screenHeight = size.y;
     }
 
     private void setup() {
         CardView npCardView = findViewById(R.id.fragment_select_cardview_new_player);
         CardView epCardView = findViewById(R.id.fragment_select_cardview_existing_player);
-//        Button npButton = findViewById(R.id.choice_new_player_button);
-//        Button epButton = findViewById(R.id.choice_existing_player_button);
         npCardView.setOnClickListener(newOrExistingListener);
         epCardView.setOnClickListener(newOrExistingListener);
 
         Button startButton = findViewById(R.id.nextPlayerStart);
         startButton.setOnClickListener(startListener);
-
         currentPlayerTV = findViewById(R.id.current_playing_as_choice);
 
         new Thread(() -> {
@@ -158,30 +141,18 @@ public class SwapChooseActivity extends AppCompatActivity
         }).start();
     }
 
-    private void hideNoExistingPlayersMessage() {
-//        int numExistingPlayers = GameData.getNamedPlayerList(SwapChooseActivity.this).size();
-
-
-//        if(numExistingPlayers == 1){
-//            TextView noExistingPlayersTV = findViewById(R.id.existing_player_fragment_noExistingPlayersTV);
-//            noExistingPlayersTV.setWidth(screenWidth/2);
-//            noExistingPlayersTV.setVisibility(View.INVISIBLE);
-//        }
-    }
-
     private ArrayList<Bitmap> loadPlayerProfilePics(ArrayList<PlayerIdentity> players) {
+        FoxSQLData foxDatabase = new FoxSQLData(this);
         ArrayList<Bitmap> profilePics = new ArrayList<>();
         Bitmap defaultPicture = null;
         for (PlayerIdentity p : players) {
-            GameData plyrGd = new GameData(this, p.ID);
-            Bitmap profPic;
-            if (!plyrGd.getProfilePicture().equals("")) {
-                Uri myFileUri = Uri.parse(plyrGd.getProfilePicture());
-                profPic = ImageHandler.getBitmapFromUri(this, myFileUri, 120);
-            } else {
+            Bitmap profPic = foxDatabase.getProfileIcon(p.ID);
+            if (profPic == null) {
                 if (defaultPicture == null) {     // Only load if needed
-                    defaultPicture = ImageHandler.getScaledBitmapByHeight(GameData.PROFILE_DEFAULT_IMG, 120, getResources());
-
+                    defaultPicture = ImageHandler.cropToSquare(
+                            ImageHandler.getScaledBitmapByShortestSide(GameData.PROFILE_DEFAULT_IMG,
+                                    (int) (WordfoxConstants.PROFILE_ICON_SCREEN_WIDTH_PERCENT * screenWidth),
+                                    getResources()));
                 }
                 profPic = defaultPicture;
             }
@@ -204,7 +175,6 @@ public class SwapChooseActivity extends AppCompatActivity
     public PlayersAdapter getPlayersAdapter() {
         // TODO: Add loading dialog while waiting.
         while (!isAdapterLoaded) {
-            Timber.d( "Waiting for adapter to finish loading ...");
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -214,7 +184,7 @@ public class SwapChooseActivity extends AppCompatActivity
         return playersAdapter;
     }
 
-    private View.OnClickListener newOrExistingListener = view -> decideFragment( (String) view.getTag() );
+    private View.OnClickListener newOrExistingListener = view -> decideFragment((String) view.getTag());
     private View.OnClickListener startListener = view -> startGame();
 
     private void startGame() {
@@ -238,7 +208,6 @@ public class SwapChooseActivity extends AppCompatActivity
     }
 
     private void addFragment(Fragment fragment) {
-        Timber.d( "Creating the fragment: " + CURRENT_FRAGMENT);
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.player_select_container, fragment, CURRENT_FRAGMENT)
@@ -248,10 +217,8 @@ public class SwapChooseActivity extends AppCompatActivity
 
     private void removeExistingFragment() {
         if (CURRENT_FRAGMENT.equals("")) {
-            Timber.d( "No fragment already exists");
             return;
         }
-        Timber.d( "Removing old fragment: " + CURRENT_FRAGMENT);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
         if (fragment != null) {
             getSupportFragmentManager()
@@ -264,17 +231,14 @@ public class SwapChooseActivity extends AppCompatActivity
     private void decideFragment(String choice) {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        Timber.d( "Tag is: " + choice);
         if (CURRENT_FRAGMENT.equals(choice)) {
-            Timber.d( "Tag is already selected");
             return;
         }
         removeExistingFragment();
-        Timber.d( "Adding new fragment");
         switch (choice) {
             case NEW_PLAYER_TAG:
                 CURRENT_FRAGMENT = NEW_PLAYER_TAG;

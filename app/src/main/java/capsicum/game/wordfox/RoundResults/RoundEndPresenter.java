@@ -1,23 +1,18 @@
 package capsicum.game.wordfox.RoundResults;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-
 import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameInstance;
-import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.WordfoxConstants;
+import capsicum.game.wordfox.database.FoxSQLData;
 import timber.log.Timber;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import static capsicum.game.wordfox.WordfoxConstants.GRID_LETTERS_PER_COLUMN;
 import static capsicum.game.wordfox.WordfoxConstants.GRID_LETTERS_PER_ROW;
 import static capsicum.game.wordfox.WordfoxConstants.GRID_WHITE_SPACE_PERCENT;
@@ -28,7 +23,6 @@ import static capsicum.game.wordfox.WordfoxConstants.RESULT_GRID_SCREEN_WIDTH_PE
  */
 
 public class RoundEndPresenter implements WordPresenter {
-    private static final float PROFILE_PIC_SCREEN_WIDTH_PERCENT = 0.2f;
     private static final float SPEECH_BUBBLE_SCREEN_WIDTH_PERCENT = 0.64f;
     private static final float FOX_SCREEN_WIDTH_PERCENT = 0.35f;
     private final FirebaseAnalytics mFirebaseAnalytics;
@@ -41,8 +35,10 @@ public class RoundEndPresenter implements WordPresenter {
     private boolean displayInterstitial;
     private boolean isStarted = false;
     private boolean failedToLoadInterstitial = false;
+    private FoxSQLData foxDatabase;
 
-    public RoundEndPresenter(RoundEndContract.View view, int screenWidth, GameInstance gameInstance, boolean displayInterstitial, FirebaseAnalytics instance) {
+    public RoundEndPresenter(RoundEndContract.View view, int screenWidth, GameInstance gameInstance, FoxSQLData foxDatabase, boolean displayInterstitial, FirebaseAnalytics instance) {
+        this.foxDatabase = foxDatabase;
         this.mFirebaseAnalytics = instance;
         this.START_TIMESTAMP = System.currentTimeMillis();
         this.view = view;
@@ -95,18 +91,11 @@ public class RoundEndPresenter implements WordPresenter {
     }
 
     private Bitmap getPlayerProfilePic() {
-        String profPicStr = view.getProfilePicUriString(gameInstance.getID());
-        int profilePicWidth = (int) (PROFILE_PIC_SCREEN_WIDTH_PERCENT * screenWidth);
-        if (profPicStr.equals("")) {
-            return view.loadDefaultProfilePic(profilePicWidth);
-        } else {
-            Uri myFileUri = Uri.parse(profPicStr);
-            Bitmap profPic = view.profilePicFromUri(myFileUri, profilePicWidth);
-            if (profPic == null) {
-                return view.loadDefaultProfilePic(profilePicWidth);
-            }
-            return ImageHandler.cropToSquare(profPic);
+        Bitmap profPic = foxDatabase.getProfileIcon(gameInstance.getID());
+        if (profPic == null) {
+            profPic = view.loadDefaultProfilePic((int) (WordfoxConstants.PROFILE_ICON_SCREEN_WIDTH_PERCENT * screenWidth));
         }
+        return profPic;
     }
 
     public void displayerPlayerProfileImage() {

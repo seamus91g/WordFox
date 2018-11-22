@@ -9,6 +9,7 @@ public class WordfoxConstants {
     public static final float GRID_WHITE_SPACE_PERCENT = 0.1f;
     public static final int RESULT_GRIDS_PER_ROW = NUMBER_ROUNDS;
     public static final float RESULT_GRID_SCREEN_WIDTH_PERCENT = 0.25f;
+    public static final float PROFILE_ICON_SCREEN_WIDTH_PERCENT = 0.2f;
     // Can percentage width of the standard speech bubble can be used to display text
     public static final float TEXT_WIDTH_PERCENT_SPEECH_BUBBLE = 0.8f;
     public static final int MAX_PLAYER_NAME_LENGTH = 12;
@@ -20,6 +21,7 @@ public class WordfoxConstants {
     public static final String DATA_PAGE_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/9069160957";
     public static final String END_OF_ROUND3_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/4199977656";
     public static final String PROFILE_PAGE_BANNER_AD_UNIT_ID = "ca-app-pub-5181377347442835/8686017575";
+    public static final String NONE_FOUND = "<none>";
 
     public static class Analytics{
         public static final String INTERSTITIAL_LOAD_DURATION_ID = "interstitial_load_duration_id";

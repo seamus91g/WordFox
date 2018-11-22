@@ -65,9 +65,7 @@ public class WordLoader {
         return dataPerHeader;
     }
 
-    public static List<DataPerGame> getGames(Context context) {
-
-        FoxSQLData foxDB = new FoxSQLData(context);
+    public static List<DataPerGame> getGames(Context context, FoxSQLData foxDB) {
         List<GameItem> allGs = foxDB.getAllGames();
         List<DataPerGame> allGameData = new ArrayList<>();
 
@@ -107,7 +105,7 @@ public class WordLoader {
             int winScore = 0;
             if (!wordsPerPlayer.isEmpty()) {
                 for (String word : wordsPerPlayer.get(g.getWinner(0))) {     // All 'winners' have same score
-                    if (word.equals("<none>")) {
+                    if (word.equals(WordfoxConstants.NONE_FOUND)) {
                         continue;
                     }
                     winScore += word.length();

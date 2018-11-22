@@ -4,26 +4,21 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GridImage;
 import capsicum.game.wordfox.ImageHandler;
-import capsicum.game.wordfox.R;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.datamodels.GameItem;
 import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.UUID;
-
-import static capsicum.game.wordfox.ImageHandler.resize;
 import static capsicum.game.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
 
 /**
@@ -31,18 +26,21 @@ import static capsicum.game.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
  */
 
 public class ProfilePresenter implements ProfileContract.Listener {
-    private static final String DEFAULT_PROFILE_IMAGE_ASSET = "profile_pic_default.png";
-    private static final String MONITOR_TAG = "myTag";
     private static final int MAX_RESOLUTION_IMAGE = 2048;   // Max allowed picture resolution
+    private static final float PROF_PIC_HEIGHT_PERCENT = 0.25f;
 
     private final GameData myGameData;
+    private FoxSQLData foxSqldb;
+    private Point screenSize;
     private final Activity activity;
     private final ProfileContract.View view;
 
-    public ProfilePresenter(ProfileActivity activity, GameData data) {
+    public ProfilePresenter(ProfileActivity activity, GameData data, FoxSQLData foxSqldb, Point screenSize) {
         this.activity = activity;
         this.view = activity;
         this.myGameData = data;
+        this.foxSqldb = foxSqldb;
+        this.screenSize = screenSize;
     }
 
     // Find longest word and display it on the profile screen
@@ -70,43 +68,41 @@ public class ProfilePresenter implements ProfileContract.Listener {
     }
 
     // Attempt to load and display the profile image.
-    public void displayProfileImage(int screenHeight, Resources myResources) {
-        Bitmap bitmap;
-        if (isStoragePermissionGranted()) {
-            bitmap = permissionGrantedDisplayImage(screenHeight, myResources);
-        } else {
-            bitmap = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, myResources);
-    }
+    public void displayProfileImage() {
+        Bitmap bitmap = foxSqldb.getProfileImage(myGameData.getPlayerID());
+        if (bitmap == null) {
+            bitmap = ImageHandler.getScaledBitmapByHeight(ProfileActivity.DEFAULT_PROFILE_PIC_RESOURCE, (int) (screenSize.y * PROF_PIC_HEIGHT_PERCENT), activity.getResources());
+        }
         view.setProfileImage(bitmap);
     }
 
     // permission granted so get the image
-    public Bitmap permissionGrantedDisplayImage(int screenHeight, Resources myResources) {
-        String profPicStr = myGameData.getProfilePicture();
+    public Bitmap permissionGrantedDisplayImage(String profPicStr) {
         Bitmap bitmap = null;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            metrics.heightPixels = (screenHeight/4);
-            bitmap = resize(ImageHandler.getBitmapFromUri(activity, myFileUri), metrics);
+            bitmap = ImageHandler.getBitmapFromUriScaleHeight(activity, myFileUri,  (int) (screenSize.y * PROF_PIC_HEIGHT_PERCENT));
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
             view.setAdjustViewBounds(true);     // TODO: ... this should work even for default
         } else {
-            bitmap = ImageHandler.getScaledBitmapByHeight(R.drawable.chooseprofilepicwhite, screenHeight/4, myResources);
+            bitmap = ImageHandler.getScaledBitmapByHeight(ProfileActivity.DEFAULT_PROFILE_PIC_RESOURCE, (int) (screenSize.y * PROF_PIC_HEIGHT_PERCENT), activity.getResources());
         }
         return bitmap;
     }
 
-
     // When user is finished choosing a picture from the image gallery
-    public void activityResult(Intent data, int screenHeight) {
+    public void activityResult(Intent data) {
         Uri selectedImage = data.getData();
-        assert selectedImage != null;
-        myGameData.setProfilePicture(selectedImage.toString());     // Save path to chosen pic for future loading
-        displayProfileImage(screenHeight, activity.getResources());
+        if (selectedImage == null) {
+            return;
+        }
+        if (isStoragePermissionGranted()) {
+            Bitmap bitmap = permissionGrantedDisplayImage(selectedImage.toString());
+            foxSqldb.addProfileImage(myGameData.getPlayerID(), bitmap, screenSize.x);
+        }
+        displayProfileImage();
     }
 
     // Allow user to choose image from their phone when the profile image is clicked
@@ -122,10 +118,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
     private boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Timber.d( "Permission is granted");
+                Timber.d("Permission is granted");
                 return true;
             } else {
-                Timber.d( "Permission is revoked");
+                Timber.d("Permission is revoked");
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
@@ -156,7 +152,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         if (winners.contains(myGameData.getPlayerID())) {
             // Hide 'you' section
             // Create message: 'You won'
-            winnerMsg = (recentGame.getPlayerCount() == 1)? "Just me!" :  "You won!";
+            winnerMsg = (recentGame.getPlayerCount() == 1) ? "Just me!" : "You won!";
             view.setRecentGameYourWordsInvisible();
             winnerWords = yourWords;
         } else {
@@ -172,7 +168,6 @@ public class ProfilePresenter implements ProfileContract.Listener {
             view.setRecentGameWinnerYourMessage(msg);
             winnerWords = recentGame.getWinnerWords().get(0);
         }
-
         int winnerScore = 0;
         for (int i = 0; i < winnerWords.size(); ++i) {
             Bitmap bmp = pressedKey(recentLetters.get(i), words.get(0).get(i));
@@ -193,7 +188,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
 
         for (int i = 0; i < bestWords.size(); ++i) {
             Bitmap bmp = pressedKey(bestLetters.get(i), bestWords.get(i));
-            view.setBestWord(bmp, i, bestWords.get(i) + " (" + bestWords.get(i).length() + ")" );
+            view.setBestWord(bmp, i, bestWords.get(i) + " (" + bestWords.get(i).length() + ")");
         }
     }
 
@@ -204,7 +199,6 @@ public class ProfilePresenter implements ProfileContract.Listener {
         if (word.equals(GameData.NONE_FOUND)) {
             return null;
         }
-
         GridImage grid = new GridImage(view.getButtonGridImage(), word, letters, view.getNotPressedButtonColor(), view.getPressedButtonColorSecondary());
         return grid.getBmp();
     }
@@ -212,10 +206,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
     public void displayRank() {
         FoxRank foxRank = myGameData.getHighRank();
         view.setRankText(foxRank.foxRank);
-        view.setRankImage(ImageHandler.getScaledBitmap(foxRank.imageResource, 120, activity.getResources()));
+        view.setRankImage(ImageHandler.getScaledBitmapByWidth(foxRank.imageResource, (int) (0.35 * ((float) screenSize.x)), activity.getResources()));
     }
 
-    public int getFoxRank(){
+    public int getFoxRank() {
         FoxRank foxRank = myGameData.getHighRank();
         return foxRank.imageResource;
     }

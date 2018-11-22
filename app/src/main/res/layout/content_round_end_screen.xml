@@ -9,7 +9,6 @@
     tools:context=".RoundResults.RoundEndScreen"
     tools:showIn="@layout/app_bar_round_end_screen">
 
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_round_end_screen_foxWithSpeechCL"
         android:layout_width="match_parent"
@@ -21,7 +20,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <ImageView
             android:id="@+id/content_round_end_screen_instructionFoxIV"
@@ -53,7 +51,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 
     <View
@@ -64,7 +61,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/content_round_end_screen_foxWithSpeechCL" />
-
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/round_end_profile_pic"
@@ -122,27 +118,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider" />
-
-
-    <!--<ScrollView-->
-        <!--android:id="@+id/results_scrollview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:fillViewport="false"-->
-        <!--android:orientation="vertical"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/round_end_player_result_divider">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/suggestions_container"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-
-    <!--</LinearLayout>-->
-    <!--</ScrollView>-->
 
 </android.support.constraint.ConstraintLayout>

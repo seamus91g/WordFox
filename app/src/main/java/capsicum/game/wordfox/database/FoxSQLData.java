@@ -7,14 +7,14 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-
+import org.jetbrains.annotations.Nullable;
 import capsicum.game.wordfox.datamodels.GameItem;
 import capsicum.game.wordfox.datamodels.ImageItem;
 import capsicum.game.wordfox.datamodels.OpponentItem;
 import capsicum.game.wordfox.datamodels.PlayerStatsItem;
+import capsicum.game.wordfox.datamodels.ProfileImageItem;
 import capsicum.game.wordfox.datamodels.RoundItem;
 import capsicum.game.wordfox.datamodels.WordItem;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,14 +24,13 @@ import java.util.UUID;
  */
 
 public class FoxSQLData {
-    private static final String PROFILE_PICTURE_ID = "player_profile_picture";
     private Context mContext;
     private SQLiteDatabase wfDatabase;
     private SQLiteOpenHelper wfDbHelper;
 
     public FoxSQLData(Context context) {
         this.mContext = context;
-        wfDbHelper = new DBHelper(mContext, true);
+        wfDbHelper = new DBHelper(mContext);
         wfDatabase = wfDbHelper.getWritableDatabase();
     }
 
@@ -69,18 +68,39 @@ public class FoxSQLData {
         return gameCount;
     }
 
-    public void addProfileImage(UUID player, Bitmap profileImage) {
-        ImageItem profileImageItem = new ImageItem(player, PROFILE_PICTURE_ID, profileImage);
-        ContentValues imageValues = profileImageItem.toValues();
-        wfDatabase.insert(ImageTable.TABLE_IMAGES, null, imageValues);
+    public void addProfileImage(UUID player, Bitmap profileImage, int screenWidth) {
+        deleteProfileImage(player);
+        ProfileImageItem profileImageItem = new ProfileImageItem(player, profileImage, screenWidth);
+        wfDatabase.insert(ImageTable.TABLE_IMAGES, null, profileImageItem.toValues());
+        wfDatabase.insert(ImageTable.TABLE_IMAGES, null, profileImageItem.toValuesSmall());
     }
 
+    public void deleteProfileImage(UUID playerId) {
+        wfDatabase.delete(ImageTable.TABLE_IMAGES,
+                ImageTable.COLUMN_IMAGE_ID + " = '" + ProfileImageItem.PROFILE_PICTURE_ID + "' AND " +
+                        ImageTable.COLUMN_PLAYER_ID + " = '" + playerId.toString() + "'", null);
+        wfDatabase.delete(ImageTable.TABLE_IMAGES,
+                ImageTable.COLUMN_IMAGE_ID + " = '" + ProfileImageItem.PROFILE_PICTURE_ID_SMALL + "' AND " +
+                        ImageTable.COLUMN_PLAYER_ID + " = '" + playerId.toString() + "'", null);
+    }
+
+    @Nullable
+    public Bitmap getProfileIcon(UUID player) {
+        return getImageByPlayer(player, ProfileImageItem.PROFILE_PICTURE_ID_SMALL);
+    }
+
+    @Nullable
     public Bitmap getProfileImage(UUID player) {
+        return getImageByPlayer(player, ProfileImageItem.PROFILE_PICTURE_ID);
+    }
+
+    @Nullable
+    public Bitmap getImageByPlayer(UUID player, String imageID) {
         ImageItem imageItem;
         Cursor cursor = wfDatabase.query(
                 ImageTable.TABLE_IMAGES,
                 ImageTable.ALL_COLUMNS,
-                ImageTable.COLUMN_IMAGE_ID + " = '" + PROFILE_PICTURE_ID + "' AND " +
+                ImageTable.COLUMN_IMAGE_ID + " = '" + imageID + "' AND " +
                         ImageTable.COLUMN_PLAYER_ID + " = '" + player.toString() + "'",
                 null, null, null, null);
         if (cursor.getCount() == 0) {
@@ -96,6 +116,10 @@ public class FoxSQLData {
         }
         cursor.close();
         return imageItem.getImage();
+    }
+
+    public void deleteAllImages() {
+        wfDatabase.delete(ImageTable.TABLE_IMAGES, null, null);
     }
 
     public void createWordItem(WordItem item) {

@@ -1,13 +1,11 @@
 package capsicum.game.wordfox.results_screen;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import capsicum.game.wordfox.BuildConfig;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameDetails;
 import capsicum.game.wordfox.GameGrid.PlayerResultPackage;
 import capsicum.game.wordfox.GameInstance;
-import capsicum.game.wordfox.ImageHandler;
 import capsicum.game.wordfox.WordfoxConstants;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.database.PlayerStatsTable;
@@ -28,7 +26,7 @@ public class ResultsPresenter {
     private static final float GAME_END_FOX_WIDTH_PERCENT = 0.4f;
     private static final float GAME_END_SPEECH_WIDTH_PERCENT = 0.59f;
     private static final float GRID_SPACER_PERCENT = 0.1f;
-    private final FoxSQLData foxData;
+    private final FoxSQLData foxDatabase;
     private final ArrayList<GameInstance> gameInstances;
     private final ResultsContract.View view;
     private final HashMap<Boolean, ArrayList<GameInstance>> playerGroups;
@@ -37,15 +35,15 @@ public class ResultsPresenter {
     private final int playerCount;
 
     public ResultsPresenter(ResultsContract.View view, int playerCount,
-                            FoxSQLData foxData,
+                            FoxSQLData foxDatabase,
                             ArrayList<GameInstance> gameInstances,
                             int screenWidth) {
         this.view = view;
         this.playerCount = playerCount;
-        this.foxData = foxData;
+        this.foxDatabase = foxDatabase;
         this.gameInstances = gameInstances;
         this.screenWidth = screenWidth;
-        foxData.open();
+        foxDatabase.open();
         playerGroups = sortWinnersLosers(gameInstances);
     }
 
@@ -111,24 +109,11 @@ public class ResultsPresenter {
     }
 
     private Bitmap getPlayerProfilePic(UUID id) {
-        String profPicStr = view.getProfilePicUriString(id);
-        int profilePicWidth = (int) (PROFILE_PIC_SCREEN_WIDTH_PERCENT * screenWidth);
-        if (profPicStr.equals("")) {
-            if (defaultProfilePic == null) {
-                defaultProfilePic = view.loadDefaultProfilePic(profilePicWidth);
-            }
-            return defaultProfilePic;
-        } else {
-            Uri myFileUri = Uri.parse(profPicStr);
-            Bitmap profPic = view.profilePicFromUri(myFileUri, profilePicWidth);
-            if (profPic == null) {
-                if (defaultProfilePic == null) {
-                    defaultProfilePic = view.loadDefaultProfilePic(profilePicWidth);
-                }
-                return defaultProfilePic;
-            }
-            return ImageHandler.cropToSquare(profPic);
+        Bitmap profPic = foxDatabase.getProfileIcon(id);
+        if (profPic == null) {
+            profPic = view.loadDefaultProfilePic((int) (WordfoxConstants.PROFILE_ICON_SCREEN_WIDTH_PERCENT * screenWidth));
         }
+        return profPic;
     }
 
     public void updateData() {
@@ -139,14 +124,14 @@ public class ResultsPresenter {
             if (winners.size() > 1) {
                 // Game was a draw if the winner group contains more than one player
                 for (GameInstance player : winners) {
-                    foxData.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_DRAWS);
+                    foxDatabase.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_DRAWS);
                 }
             } else {
-                foxData.updatePlayerStats(winners.get(0).getID(), PlayerStatsTable.COLUMN_WINS);
+                foxDatabase.updatePlayerStats(winners.get(0).getID(), PlayerStatsTable.COLUMN_WINS);
             }
             // Increment lose counters
             for (GameInstance player : playerGroups.get(Boolean.FALSE)) {
-                foxData.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_LOSES);
+                foxDatabase.updatePlayerStats(player.getID(), PlayerStatsTable.COLUMN_LOSES);
             }
             // Loop through player and register win/lose/draw respective to every other player
             for (GameInstance player : gameInstances) {
@@ -162,7 +147,7 @@ public class ResultsPresenter {
                         winner = opponent.getID();
                         loser = player.getID();
                     }
-                    foxData.updateOpponentItem(winner, loser, draw);
+                    foxDatabase.updateOpponentItem(winner, loser, draw);
                 }
             }
         }
@@ -176,7 +161,7 @@ public class ResultsPresenter {
             }
         }
         GameItem thisGameDetails = gameitemFromInstances(winners);
-        foxData.createGameItem(thisGameDetails);
+        foxDatabase.createGameItem(thisGameDetails);
     }
 
     // Create GameItem classes, to facilitate storing relevant data to the sql database

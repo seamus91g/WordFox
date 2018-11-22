@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -26,7 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameGrid.GameGridAdapter;
 import capsicum.game.wordfox.GameGrid.GridViewHolder;
@@ -42,17 +40,14 @@ import capsicum.game.wordfox.WifiActivityContract;
 import capsicum.game.wordfox.WifiService;
 import capsicum.game.wordfox.WifiServiceConnection;
 import capsicum.game.wordfox.WordfoxConstants;
+import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.game_screen.GameActivity;
 import capsicum.game.wordfox.profile.ProfileActivity;
 import capsicum.game.wordfox.results_screen.RoundnGameResults;
-
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -104,6 +99,7 @@ public class RoundEndScreen extends AppCompatActivity
         presenter = new RoundEndPresenter(this,
                 calculateScreenWidth(),
                 HomeScreen.allGameInstances.get(gameIndexNumber),
+                new FoxSQLData(this),
                 displayInterstitial,
                 FirebaseAnalytics.getInstance(this));
         presenter.prepareInterstitialAdvert();
@@ -213,13 +209,13 @@ public class RoundEndScreen extends AppCompatActivity
         }
     }
 
-    private void toastClickToEndGame(){
+    private void toastClickToEndGame() {
         Toast toastMessage = Toast.makeText(this, "Double tap BACK to exit the game", Toast.LENGTH_SHORT);
         toastMessage.setGravity(Gravity.TOP, 0, 40);
         toastMessage.show();
     }
 
-    private void returnToHome(){
+    private void returnToHome() {
         Intent homeScreenIntent = new Intent(this, HomeScreen.class);
         startActivity(homeScreenIntent);
         finish();
@@ -293,18 +289,11 @@ public class RoundEndScreen extends AppCompatActivity
     }
 
     @Override
-    public Bitmap profilePicFromUri(Uri myFileUri, int profilePicScreenWidth) {
-        return ImageHandler.getBitmapFromUriScaleShortestSide(this, myFileUri, profilePicScreenWidth);
-    }
-
-    @Override
     public Bitmap loadDefaultProfilePic(int size) {
-        return ImageHandler.getScaledBitmapByLongestSide(GameData.PROFILE_DEFAULT_IMG, size, getResources());
-    }
-
-    @Override
-    public String getProfilePicUriString(UUID playerID) {
-        return new GameData(this, playerID).getProfilePicture();
+        return ImageHandler.cropToSquare(
+                ImageHandler.getScaledBitmapByShortestSide(GameData.PROFILE_DEFAULT_IMG,
+                        size,
+                        getResources()));
     }
 
     private void logBmp(Bitmap bitmap, String id) {
@@ -351,11 +340,6 @@ public class RoundEndScreen extends AppCompatActivity
     @Override
     public void displayPlayerResultGrid(Bitmap pressedCell, Bitmap notPressedCell, int gridWidth, int gridHeight, String[] gameLetters, String word) {
         final View v = inflateGameGrid();
-//        final ConstraintLayout cl = v.findViewWithTag(GameGridAdapter.GRID_CONTAINER_TAG);
-//        final ViewGroup.LayoutParams clparams = cl.getLayoutParams();
-//        clparams.width = gridWidth;
-//        clparams.height = gridHeight;
-//        cl.setLayoutParams(clparams);
         // Using the same method as displaying a grid in the recycler view used for the results
         final GridViewHolder gridView = new GridViewHolder(v, Arrays.<String[]>asList(gameLetters), notPressedCell, pressedCell, gridHeight, gridWidth);
         gridView.onBind(new TypeGrid(GameGridAdapter.findClickIndices(word, gameLetters), word));
