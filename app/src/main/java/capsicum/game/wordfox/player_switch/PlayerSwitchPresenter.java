@@ -15,6 +15,7 @@ import java.util.UUID;
  * Created by Gilroy
  */
 
+@Deprecated
 public class PlayerSwitchPresenter implements PlayerSwitchContract.Listener {
     private int gameIndex;
     private PlayerSwitchContract.View view;

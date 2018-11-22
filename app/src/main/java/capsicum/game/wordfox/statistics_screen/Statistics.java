@@ -224,7 +224,7 @@ public class Statistics extends AppCompatActivity
         // Average final word length
         allDataItems.add(new TypeStats<>("Average best word length: ", playerGameData.getAverageFinalWordLength()));
         // Rounds where no word found
-        allDataItems.add(new TypeStats<>("Round where no word found: ", playerGameData.getNoneFoundCount()));
+        allDataItems.add(new TypeStats<>("Rounds where no word found: ", playerGameData.getNoneFoundCount()));
         // Times each word length found
         for (int i = 3; i <= 9; ++i) {
             allDataItems.add(new TypeStats<>("Length " + i + " words found: ", playerGameData.findOccurence(i)));

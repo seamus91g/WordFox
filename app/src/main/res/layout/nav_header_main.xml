@@ -27,26 +27,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wordfox"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/game_grid_font_color" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" Version "
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/game_grid_font_color" />
 
         <TextView
             android:id="@+id/nav_header_app_version_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/versionName"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/game_grid_font_color" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Checkout your profile and data." />
+        android:text="Checkout your profile and data."
+        android:textColor="@color/lighter_gray" />
+    <!--@android:color/darker_gray-->
 
 </LinearLayout>
