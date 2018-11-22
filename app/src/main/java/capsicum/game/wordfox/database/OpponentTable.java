@@ -29,4 +29,6 @@ public class OpponentTable {
     // Delete SQL table containing round information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_OPPONENTS;
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_OPPONENTS + "'";
 }

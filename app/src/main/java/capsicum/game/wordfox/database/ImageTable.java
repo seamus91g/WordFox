@@ -19,4 +19,7 @@ public class ImageTable {
     // Delete SQL table containing image information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_IMAGES;
+    // Delete SQL table containing image information if it exists
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_IMAGES + "'";
 }

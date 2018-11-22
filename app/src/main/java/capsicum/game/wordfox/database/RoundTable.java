@@ -22,4 +22,6 @@ public class RoundTable {
     // Delete SQL table containing round information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_ROUNDS;
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_ROUNDS + "'";
 }

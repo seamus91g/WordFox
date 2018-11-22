@@ -7,7 +7,9 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+
 import org.jetbrains.annotations.Nullable;
+
 import capsicum.game.wordfox.datamodels.GameItem;
 import capsicum.game.wordfox.datamodels.ImageItem;
 import capsicum.game.wordfox.datamodels.OpponentItem;
@@ -15,6 +17,7 @@ import capsicum.game.wordfox.datamodels.PlayerStatsItem;
 import capsicum.game.wordfox.datamodels.ProfileImageItem;
 import capsicum.game.wordfox.datamodels.RoundItem;
 import capsicum.game.wordfox.datamodels.WordItem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -351,23 +354,29 @@ public class FoxSQLData {
         return games;
     }
 
+    @Nullable
     public GameItem getGame(String gameId) {
         GameItem game;
         Cursor cursor = wfDatabase.query(GameTable.TABLE_GAMES, GameTable.ALL_COLUMNS, GameTable.COLUMN_R1_ID + " = '" + gameId + "'", null, null, null, null);
         if (gameId.equals("")) {
             return null;        // TODO: Throw exception
         }
-        cursor.moveToNext();
-        game = new GameItem(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R1_ID))),
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R2_ID))),
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R3_ID))),
-                cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W1_ID)),
-                cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W2_ID)),
-                cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W3_ID)),
-                cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_WINNER)),
-                cursor.getInt(cursor.getColumnIndex(GameTable.COLUMN_PLAYER_COUNT))
-        );
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return null;
+        } else {
+            cursor.moveToNext();
+            game = new GameItem(
+                    UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R1_ID))),
+                    UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R2_ID))),
+                    UUID.fromString(cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_R3_ID))),
+                    cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W1_ID)),
+                    cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W2_ID)),
+                    cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_W3_ID)),
+                    cursor.getString(cursor.getColumnIndex(GameTable.COLUMN_WINNER)),
+                    cursor.getInt(cursor.getColumnIndex(GameTable.COLUMN_PLAYER_COUNT))
+            );
+        }
         cursor.close();
         return game;
     }

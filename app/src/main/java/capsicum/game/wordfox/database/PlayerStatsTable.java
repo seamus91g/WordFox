@@ -29,4 +29,6 @@ public class PlayerStatsTable {
     // Delete SQL table containing round information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_PLAYER_STATS;
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_PLAYER_STATS + "'";
 }

@@ -30,4 +30,6 @@ public class WordTable {
     // Delete SQL table containing word information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_WORDS;
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_WORDS + "'";
 }
