@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 
 import capsicum.game.wordfox.datamodels.GameItem;
+import capsicum.game.wordfox.datamodels.ImageItem;
 import capsicum.game.wordfox.datamodels.OpponentItem;
 import capsicum.game.wordfox.datamodels.PlayerStatsItem;
 import capsicum.game.wordfox.datamodels.RoundItem;
@@ -22,13 +24,14 @@ import java.util.UUID;
  */
 
 public class FoxSQLData {
+    private static final String PROFILE_PICTURE_ID = "player_profile_picture";
     private Context mContext;
     private SQLiteDatabase wfDatabase;
-    SQLiteOpenHelper wfDbHelper;
+    private SQLiteOpenHelper wfDbHelper;
 
     public FoxSQLData(Context context) {
         this.mContext = context;
-        wfDbHelper = new DBHelper(mContext);
+        wfDbHelper = new DBHelper(mContext, true);
         wfDatabase = wfDbHelper.getWritableDatabase();
     }
 
@@ -64,6 +67,35 @@ public class FoxSQLData {
         long gameCount = cursor.getInt(0);
         cursor.close();
         return gameCount;
+    }
+
+    public void addProfileImage(UUID player, Bitmap profileImage) {
+        ImageItem profileImageItem = new ImageItem(player, PROFILE_PICTURE_ID, profileImage);
+        ContentValues imageValues = profileImageItem.toValues();
+        wfDatabase.insert(ImageTable.TABLE_IMAGES, null, imageValues);
+    }
+
+    public Bitmap getProfileImage(UUID player) {
+        ImageItem imageItem;
+        Cursor cursor = wfDatabase.query(
+                ImageTable.TABLE_IMAGES,
+                ImageTable.ALL_COLUMNS,
+                ImageTable.COLUMN_IMAGE_ID + " = '" + PROFILE_PICTURE_ID + "' AND " +
+                        ImageTable.COLUMN_PLAYER_ID + " = '" + player.toString() + "'",
+                null, null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return null;
+        } else {
+            cursor.moveToNext();
+            imageItem = new ImageItem(
+                    UUID.fromString(cursor.getString(cursor.getColumnIndex(ImageTable.COLUMN_PLAYER_ID))),
+                    cursor.getString(cursor.getColumnIndex(ImageTable.COLUMN_IMAGE_ID)),
+                    cursor.getBlob(cursor.getColumnIndex(ImageTable.COLUMN_IMAGE_BLOB))
+            );
+        }
+        cursor.close();
+        return imageItem.getImage();
     }
 
     public void createWordItem(WordItem item) {
