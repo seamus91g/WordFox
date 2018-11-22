@@ -19,6 +19,7 @@ import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.UUID;
+
 import static capsicum.game.wordfox.WordfoxConstants.MAX_PLAYER_NAME_LENGTH;
 
 /**
@@ -81,7 +82,7 @@ public class ProfilePresenter implements ProfileContract.Listener {
         Bitmap bitmap = null;
         if (!profPicStr.equals("")) {
             Uri myFileUri = Uri.parse(profPicStr);
-            bitmap = ImageHandler.getBitmapFromUriScaleHeight(activity, myFileUri,  (int) (screenSize.y * PROF_PIC_HEIGHT_PERCENT));
+            bitmap = ImageHandler.getBitmapFromUriScaleHeight(activity, myFileUri, (int) (screenSize.y * PROF_PIC_HEIGHT_PERCENT));
         }
         // Check exists even if string exists. Could be null if user has deleted the image
         if (bitmap != null) {
@@ -140,6 +141,10 @@ public class ProfilePresenter implements ProfileContract.Listener {
         FoxSQLData foxData = new FoxSQLData(activity);
         foxData.open();
         GameItem recentGame = foxData.getGame(rgID);
+        if (recentGame == null) {
+            view.hideRecentGame();
+            return;
+        }
         // Load data for player. Use this to find recent words and Game ID. Use Game ID to load Game from SQL DB
         ArrayList<ArrayList<String>> words = recentGame.getWinnerWords();
         ArrayList<String> recentLetters = recentGame.getLetters(foxData);

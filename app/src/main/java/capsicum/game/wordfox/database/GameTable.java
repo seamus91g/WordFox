@@ -33,4 +33,6 @@ public class GameTable {
     // Delete SQL table containing game information
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_GAMES;
+    public static final String SQL_DELETE_IF_EXIST =
+            "DROP TABLE IF EXISTS '" + TABLE_GAMES + "'";
 }

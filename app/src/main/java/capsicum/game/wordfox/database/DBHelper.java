@@ -34,12 +34,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVer, int newVer) {
-        sqLiteDatabase.execSQL(GameTable.SQL_DELETE);
-        sqLiteDatabase.execSQL(WordTable.SQL_DELETE);
-        sqLiteDatabase.execSQL(RoundTable.SQL_DELETE);
-        sqLiteDatabase.execSQL(OpponentTable.SQL_DELETE);
-        sqLiteDatabase.execSQL(PlayerStatsTable.SQL_DELETE);
-        sqLiteDatabase.execSQL(ImageTable.SQL_DELETE);
+        sqLiteDatabase.execSQL(GameTable.SQL_DELETE_IF_EXIST);
+        sqLiteDatabase.execSQL(WordTable.SQL_DELETE_IF_EXIST);
+        sqLiteDatabase.execSQL(RoundTable.SQL_DELETE_IF_EXIST);
+        sqLiteDatabase.execSQL(OpponentTable.SQL_DELETE_IF_EXIST);
+        sqLiteDatabase.execSQL(PlayerStatsTable.SQL_DELETE_IF_EXIST);
+        sqLiteDatabase.execSQL(ImageTable.SQL_DELETE_IF_EXIST);
         onCreate(sqLiteDatabase);
     }
 }
