@@ -6,7 +6,7 @@ import android.content.Intent;
 import capsicum.game.wordfox.GameData;
 import capsicum.game.wordfox.GameInstance;
 import capsicum.game.wordfox.PlayerIdentity;
-import capsicum.game.wordfox.game_screen.GameActivity;
+import capsicum.game.wordfox.screen_game.GameActivity;
 
 import java.util.ArrayList;
 import java.util.UUID;

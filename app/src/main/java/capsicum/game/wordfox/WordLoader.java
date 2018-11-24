@@ -2,8 +2,8 @@ package capsicum.game.wordfox;
 
 import android.content.Context;
 
-import capsicum.game.wordfox.dataWordsRecycler.WordData;
-import capsicum.game.wordfox.dataWordsRecycler.WordDataHeader;
+import capsicum.game.wordfox.recyclerview_game_data.datamodels.WordData;
+import capsicum.game.wordfox.recyclerview_game_data.datamodels.WordDataHeader;
 import capsicum.game.wordfox.database.DataPerGame;
 import capsicum.game.wordfox.database.FoxSQLData;
 import capsicum.game.wordfox.datamodels.GameItem;

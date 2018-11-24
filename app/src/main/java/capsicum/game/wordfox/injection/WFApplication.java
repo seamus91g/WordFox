@@ -3,8 +3,8 @@ package capsicum.game.wordfox.injection;
 import android.app.Application;
 
 import capsicum.game.wordfox.BuildConfig;
-import capsicum.game.wordfox.data.FoxDictionary;
-import capsicum.game.wordfox.data.Diction;
+import capsicum.game.wordfox.dictionary.FoxDictionary;
+import capsicum.game.wordfox.dictionary.Diction;
 import timber.log.Timber;
 
 /**

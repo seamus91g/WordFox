@@ -18,15 +18,13 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import capsicum.game.wordfox.AppCompatPreferenceActivity;
 import capsicum.game.wordfox.R;
-import capsicum.game.wordfox.profile.ProfileActivity;
-import timber.log.Timber;
+import capsicum.game.wordfox.screen_profile.ProfileActivity;
 
 import java.util.List;
 
@@ -41,6 +39,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
+@Deprecated
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
 

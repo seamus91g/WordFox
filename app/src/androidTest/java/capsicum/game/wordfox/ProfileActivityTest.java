@@ -1,9 +1,8 @@
 package capsicum.game.wordfox;
 
-import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 
-import capsicum.game.wordfox.profile.ProfileActivity;
+import capsicum.game.wordfox.screen_profile.ProfileActivity;
 import capsicum.game.wordfox.test.ProfileRobot;
 
 import org.junit.Before;

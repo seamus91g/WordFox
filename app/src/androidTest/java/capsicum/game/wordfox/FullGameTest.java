@@ -2,9 +2,9 @@ package capsicum.game.wordfox;
 
 import android.support.test.rule.ActivityTestRule;
 
+import capsicum.game.wordfox.screen_home.HomeScreen;
 import capsicum.game.wordfox.test.GameRobot;
 import capsicum.game.wordfox.test.HomeRobot;
-import capsicum.game.wordfox.test.PlayerSwitchRobot;
 import capsicum.game.wordfox.test.ScoreScreenRobot;
 
 import org.junit.Rule;

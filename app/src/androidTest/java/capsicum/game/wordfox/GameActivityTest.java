@@ -1,11 +1,9 @@
 package capsicum.game.wordfox;
 
-import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
-import android.widget.TextView;
 
-import capsicum.game.wordfox.injection.TestDictionaryApplication;
+import capsicum.game.wordfox.screen_home.HomeScreen;
 import capsicum.game.wordfox.test.GameRobot;
 import capsicum.game.wordfox.test.HomeRobot;
 

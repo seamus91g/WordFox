@@ -3,11 +3,6 @@ package capsicum.game.wordfox.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import capsicum.game.wordfox.HomeScreen;
-import capsicum.game.wordfox.WordfoxConstants;
-import timber.log.Timber;
 
 /**
  * Created by spgilroy

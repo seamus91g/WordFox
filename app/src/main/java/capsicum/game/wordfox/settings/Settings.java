@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
 
+@Deprecated
 public class Settings extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
