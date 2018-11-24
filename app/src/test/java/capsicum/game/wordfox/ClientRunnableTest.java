@@ -1,7 +1,5 @@
 package capsicum.game.wordfox;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +13,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.function.Predicate;
 
-import io.fabric.sdk.android.Fabric;
+import capsicum.game.wordfox.screen_local_wifi.wifi_direct_service.ClientRunnable;
+import capsicum.game.wordfox.screen_local_wifi.wifi_direct_service.MessageHandler;
 
 import static org.junit.Assert.assertTrue;
 

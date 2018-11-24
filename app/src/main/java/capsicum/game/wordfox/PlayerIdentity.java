@@ -1,10 +1,8 @@
 package capsicum.game.wordfox;
 
-import capsicum.game.wordfox.profile.FoxRank;
+import capsicum.game.wordfox.screen_profile.FoxRank;
 
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.UUID;
 

@@ -1,10 +1,6 @@
 package capsicum.game.wordfox;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
-import capsicum.game.wordfox.RoundResults.WordPresenter;
+import capsicum.game.wordfox.screen_results_round.WordPresenter;
 import timber.log.Timber;
 
 /**

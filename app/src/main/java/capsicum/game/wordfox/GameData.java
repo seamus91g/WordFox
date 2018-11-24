@@ -3,9 +3,8 @@ package capsicum.game.wordfox;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import capsicum.game.wordfox.profile.FoxRank;
+import capsicum.game.wordfox.screen_profile.FoxRank;
 import timber.log.Timber;
 
 import java.util.ArrayList;

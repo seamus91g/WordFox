@@ -1,7 +1,7 @@
 package capsicum.game.wordfox.injection;
 
-import capsicum.game.wordfox.data.Diction;
-import capsicum.game.wordfox.data.local.InMemoryDictionary;
+import capsicum.game.wordfox.dictionary.Diction;
+import capsicum.game.wordfox.dictionary.local.InMemoryDictionary;
 
 /**
  * Created by Gilroy

@@ -2,11 +2,11 @@ package capsicum.game.wordfox;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.MenuItem;
 
-import capsicum.game.wordfox.profile.ProfileActivity;
-import capsicum.game.wordfox.statistics_screen.Statistics;
+import capsicum.game.wordfox.screen_home.HomeScreen;
+import capsicum.game.wordfox.screen_profile.ProfileActivity;
+import capsicum.game.wordfox.screen_statistics.Statistics;
 import timber.log.Timber;
 
 /**

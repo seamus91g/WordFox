@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,12 +23,11 @@ import android.widget.Toast;
 
 import capsicum.game.wordfox.FoxUtils;
 import capsicum.game.wordfox.GameData;
-import capsicum.game.wordfox.HomeScreen;
+import capsicum.game.wordfox.screen_home.HomeScreen;
 import capsicum.game.wordfox.NavigationBurger;
 import capsicum.game.wordfox.R;
-import capsicum.game.wordfox.game_screen.GameActivity;
-import capsicum.game.wordfox.profile.ProfileActivity;
-import timber.log.Timber;
+import capsicum.game.wordfox.screen_game.GameActivity;
+import capsicum.game.wordfox.screen_profile.ProfileActivity;
 
 import java.util.ArrayList;
 

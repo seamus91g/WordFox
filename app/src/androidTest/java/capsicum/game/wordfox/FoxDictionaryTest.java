@@ -3,7 +3,7 @@ package capsicum.game.wordfox;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
-import capsicum.game.wordfox.data.FoxDictionary;
+import capsicum.game.wordfox.dictionary.FoxDictionary;
 
 import static org.junit.Assert.*;
 

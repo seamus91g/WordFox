@@ -5,7 +5,7 @@
     android:id="@+id/existing_player_fragment_rootCL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExistingPlayerFragment">
+    tools:context=".screen_swap_choose.ExistingPlayerFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

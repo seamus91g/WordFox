@@ -2,8 +2,8 @@ package capsicum.game.wordfox;
 
 import android.os.CountDownTimer;
 
-import capsicum.game.wordfox.game_screen.GameActivity;
-import capsicum.game.wordfox.game_screen.GamescreenContract;
+import capsicum.game.wordfox.screen_game.GameActivity;
+import capsicum.game.wordfox.screen_game.GamescreenContract;
 
 /**
  * Created by Desmond
