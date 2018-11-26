@@ -14,6 +14,7 @@ import timber.log.Timber;
  * Created by Seamus
  */
 
+
 public class NavigationBurger {
     public void navigateTo(MenuItem item, Context fromContext) {
         int id = item.getItemId();
@@ -26,8 +27,8 @@ public class NavigationBurger {
         } else if (id == R.id.nav_profile) {
             Intent profileScreenIntent = new Intent(fromContext, ProfileActivity.class);
             fromContext.startActivity(profileScreenIntent);
-        } else if (id == R.id.nav_review) {
-            Timber.d("nav_review");
+//        } else if (id == R.id.nav_review) {
+//            Timber.d("nav_review");
         } else if (id == R.id.nav_ranks) {
             Intent rankScreenIntent = new Intent(fromContext, RankDetailActivity.class);
             fromContext.startActivity(rankScreenIntent);

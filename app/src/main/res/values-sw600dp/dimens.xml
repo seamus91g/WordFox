@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="results_scrolling_screen_height">500dp</dimen>
     <dimen name="grid_snapshot_size">100dp</dimen>
     <dimen name="large_heading_fontsize">22sp</dimen>
     <dimen name="heading_fontsize">20sp</dimen>

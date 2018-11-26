@@ -22,7 +22,6 @@
     <dimen name="grid_button_text_size">38dp</dimen>
     <dimen name="action_button_text_size">8dp</dimen>
 
-    <dimen name="results_scrolling_screen_height">500dp</dimen>
     <dimen name="grid_snapshot_size">100dp</dimen>
     <dimen name="large_heading_fontsize">18sp</dimen>
     <dimen name="heading_fontsize">16sp</dimen>

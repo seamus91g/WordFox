@@ -10,7 +10,6 @@
     <dimen name="big_TextView_height">56dp</dimen>
     <dimen name="small_TextView_height">41dp</dimen>
     <dimen name="big_text_size">48dp</dimen>
-    <dimen name="medium_text_size">32dp</dimen>
     <dimen name="small_text_size">24dp</dimen>
     <dimen name="heading_2_text_size">14dp</dimen>
 
@@ -20,7 +19,6 @@
 
     <dimen name="column_width">62dp</dimen>
     <dimen name="grid_button_height">72dp</dimen>
-    <dimen name="standard_button_height">40dp</dimen>
     <dimen name="action_button_dimension">76dp</dimen>
 
     <dimen name="grid_button_text_size">38dp</dimen>
