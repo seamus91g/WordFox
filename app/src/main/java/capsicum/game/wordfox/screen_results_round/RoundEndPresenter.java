@@ -51,7 +51,7 @@ public class RoundEndPresenter implements WordPresenter {
     }
 
     public void displayTitle() {
-        String title = "Round " + (gameInstance.getRound() + 1) + " results";
+        String title = "Round " + (gameInstance.getRound() + 1) + " Results";
         view.displayTitle(title);
     }
 

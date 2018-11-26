@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
-    <group
-        android:id="@+id/menu_top"
-        android:checkableBehavior="none"
-        >
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
@@ -20,21 +18,17 @@
             android:title="Profile" />
         <item
             android:id="@+id/nav_ranks"
-            android:icon="@drawable/ic_rank_nav_icon"
-            android:title="Ranks" />
+            android:icon="@drawable/ic_face_black_24dp"
+            android:title="Profile" />
     </group>
 
-
-
-    <!--<group-->
-        <!--android:id="@+id/menu_bottom"-->
-        <!--android:checkableBehavior="none">-->
-
-        <!--<item-->
-            <!--android:id="@+id/nav_review"-->
-            <!--android:icon="@drawable/ic_star_black_24dp"-->
-            <!--android:title="Review" />-->
-
-    <!--</group>-->
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_review"
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="Review" />
+        </menu>
+    </item>
 
 </menu>

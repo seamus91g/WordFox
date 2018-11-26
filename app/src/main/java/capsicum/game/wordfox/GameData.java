@@ -9,6 +9,7 @@ import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,6 +29,14 @@ public class GameData extends AppCompatActivity {
     private static final String HIGHEST_SCORE_PREFIX = "highest_score_";
     private static final String INTERSTITIAL_COUNT_KEY = "interstitial_count";
     private static final int AD_REGULARITY = 3;
+    private static final String WOOD_FOX = "Wood Fox";
+    private static final String PALE_FOX = "Pale Fox";
+    private static final String KIT_FOX = "Kit Fox";
+    private static final String GRAY_FOX = "Gray Fox";
+    private static final String ARCTIC_FOX = "Arctic Fox";
+    private static final String SILVER_FOX = "Silver Fox";
+    private static final String RED_FOX = "Red Fox";
+    private static final String RANK_COUNT_PREFIX = "count_";
     private String BEST_WORD_TOTAL_COUNT;
     private String GAME_COUNT_KEY;
     private String ROUND_COUNT_KEY;
@@ -177,30 +186,6 @@ public class GameData extends AppCompatActivity {
         return new PlayerIdentity(playerID, name);
     }
 
-    // Start the game with some generic identities
-//    public static ArrayList<PlayerIdentity> fetchSomeIdentities(int amount, Context context) {
-//        ArrayList<PlayerIdentity> identities = new ArrayList<>();
-//        ArrayList<PlayerIdentity> existingPlayers = getPlayerList(context);
-//        for (int i = 0; i < amount; ++i) {
-//            String expectantName = "Player " + (i + 2);     // We start from player 2, player 1 is fox
-//            PlayerIdentity expectantPlayer = null;
-//            for (PlayerIdentity pi : existingPlayers) {
-//                if (pi.username.equals(expectantName)) {
-//                    expectantPlayer = pi;
-//                    break;
-//                }
-//            }
-//            // If player hasn't been found in existing players, create him.
-//            if (expectantPlayer == null) {
-//                GameData newPlayer = new GameData(context);
-//                expectantPlayer = new PlayerIdentity(newPlayer.playerID, newPlayer.getUsername());
-//            }
-//            identities.add(expectantPlayer);
-//        }
-//
-//        return identities;
-//    }
-
     public static ArrayList<PlayerIdentity> getPlayerList(Context myContext) {
         SharedPreferences foxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME_STATIC, MODE_PRIVATE);
         ArrayList<PlayerIdentity> playerList = new ArrayList<>();
@@ -218,7 +203,7 @@ public class GameData extends AppCompatActivity {
             SharedPreferences userFoxPreferences = myContext.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
             String name = userFoxPreferences.getString(USERNAME_PREFIX + ID.toString(), NON_EXISTANT);
             FoxRank rank = determineRankValue(userFoxPreferences.getInt(HIGHEST_SCORE_PREFIX + ID, 0));
-            Timber.d( "********* Rank of " + name + " is : " + rank.foxRank + " ***********");
+            Timber.d("********* Rank of " + name + " is : " + rank.foxRank + " ***********");
             playerList.add(new PlayerIdentity(ID, name, rank));
         }
         if (playerList.size() == 0) {
@@ -407,6 +392,23 @@ public class GameData extends AppCompatActivity {
         }
     }
 
+    public void incrementRankCount(int submittedScore) {
+        String rank = determineRankValue(submittedScore).foxRank;
+        int count = getRankCount(rank);
+        setRankCount(rank, ++count);
+    }
+
+    private void setRankCount(String rank, int count) {
+        String rankCountKey = RANK_COUNT_PREFIX + rank;
+        editor.putInt(rankCountKey, count);
+        editor.apply();
+    }
+
+    public int getRankCount(String rank) {
+        String rankCountKey = RANK_COUNT_PREFIX + rank;
+        return foxPreferences.getInt(rankCountKey, 0);
+    }
+
     public void correctCountUp() {
         int countCorrect = foxPreferences.getInt(SUBMITTED_CORRECT_COUNT_KEY, 0);
         countCorrect += 1;
@@ -465,7 +467,7 @@ public class GameData extends AppCompatActivity {
     }
 
     public void addWord(String newWord) {
-        Timber.d( "GameData: Adding " + newWord + ", END");
+        Timber.d("GameData: Adding " + newWord + ", END");
         // Check if longest word
         int len = newWord.length();
         String currentLongest = foxPreferences.getString(LONGEST_WORD_KEY, "");
@@ -499,21 +501,92 @@ public class GameData extends AppCompatActivity {
         return foxPreferences.getInt(Integer.toString(requestLength), 0); // Find number of occurences of a particular length
     }
 
+    public static List<FoxRank> getFoxRanks() {
+        List<FoxRank> ranks = new ArrayList<>();
+        for (int i = 0; i < 7; ++i) {
+            ranks.add(getFoxRank(i));
+        }
+        return ranks;
+    }
+
     public static FoxRank determineRankValue(int score) {
-        if (score < 12) {
-            return new FoxRank(R.drawable.woodfoxcoloured, "Wood Fox");
-        } else if (score < 15) {
-            return new FoxRank(R.drawable.palefoxsilcoloured, "Pale Fox");
-        } else if (score < 17) {
-            return new FoxRank(R.drawable.kitfoxsilcoloured, "Kit Fox");
-        } else if (score < 20) {
-            return new FoxRank(R.drawable.grayfoxsilcoloured, "Gray Fox");
-        } else if (score < 23) {
-            return new FoxRank(R.drawable.arcticfoxsilcoloured, "Arctic Fox");
-        } else if (score < 24) {
-            return new FoxRank(R.drawable.silverfoxsilcoloured, "Silver Fox");
+        if (score >= rankScoreMin(RED_FOX)) {
+            return getFoxRank(6);
+        } else if (score >= rankScoreMin(SILVER_FOX)) {
+            return getFoxRank(5);
+        } else if (score >= rankScoreMin(ARCTIC_FOX)) {
+            return getFoxRank(4);
+        } else if (score >= rankScoreMin(GRAY_FOX)) {
+            return getFoxRank(3);
+        } else if (score >= rankScoreMin(KIT_FOX)) {
+            return getFoxRank(2);
+        } else if (score >= rankScoreMin(PALE_FOX)) {
+            return getFoxRank(1);
         } else {
-            return new FoxRank(R.drawable.redfoxsilcoloured, "Red Fox");
+            return getFoxRank(0);
+        }
+    }
+
+    public static int rankScoreMin(String rank) {
+        switch (rank) {
+            case WOOD_FOX:
+                return 0;
+            case PALE_FOX:
+                return 12;
+            case KIT_FOX:
+                return 15;
+            case GRAY_FOX:
+                return 17;
+            case ARCTIC_FOX:
+                return 20;
+            case SILVER_FOX:
+                return 22;
+            case RED_FOX:
+                return 24;
+            default:
+                return 0;
+        }
+    }
+
+    public static FoxRank getFoxRank(int rankNumber) {
+        switch (rankNumber) {
+            case 0:
+                return new FoxRank(R.drawable.woodfoxcoloured, WOOD_FOX);
+            case 1:
+                return new FoxRank(R.drawable.palefoxsilcoloured, PALE_FOX);
+            case 2:
+                return new FoxRank(R.drawable.kitfoxsilcoloured, KIT_FOX);
+            case 3:
+                return new FoxRank(R.drawable.grayfoxsilcoloured, GRAY_FOX);
+            case 4:
+                return new FoxRank(R.drawable.arcticfoxsilcoloured, ARCTIC_FOX);
+            case 5:
+                return new FoxRank(R.drawable.silverfoxsilcoloured, SILVER_FOX);
+            case 6:
+                return new FoxRank(R.drawable.redfoxsilcoloured, RED_FOX);
+            default:
+                return new FoxRank(R.drawable.woodfoxcoloured, WOOD_FOX);
+        }
+    }
+
+    public static int getOutlineResource(String fox) {
+        switch (fox) {
+            case WOOD_FOX:
+                return R.drawable.woodfox_outline;
+            case PALE_FOX:
+                return R.drawable.palefox_outline;
+            case KIT_FOX:
+                return R.drawable.kitfox_outline;
+            case GRAY_FOX:
+                return R.drawable.grayfox_outline;
+            case ARCTIC_FOX:
+                return R.drawable.arcticfox_outline;
+            case SILVER_FOX:
+                return R.drawable.silverfox_outline;
+            case RED_FOX:
+                return R.drawable.redfox_outline;
+            default:
+                return 0;
         }
     }
 

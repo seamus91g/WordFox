@@ -141,4 +141,5 @@
     <string name="game_rank">Game Rank:</string>
     <string name="data">Data</string>
     <string name="no_existing_players">There are no existing players to choose from.</string>
+    <string name="title_activity_rank_detail">Game Ranks</string>
 </resources>
