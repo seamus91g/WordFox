@@ -78,10 +78,6 @@
 
     <style name="wifiButtonsStyleActive" parent="wifiButtonsStyle"></style>
 
-    <style name="wifiButtonDisabledStyle" parent="wifiButtonsStyle">
-        <item name="android:background">@color/common_google_signin_btn_text_light_disabled</item>
-    </style>
-
     <!-- Style for the TextView displaying the letters to be chosen during the game-->
     <style name="TextViewButtons">
         <item name="android:textColor">@android:color/white
@@ -231,16 +227,6 @@
 
 
     <!-- Style for the fox buttons on the home screen for choosing number of players-->
-    <style name="homeNumPLayersButtons">
-        <item name="android:gravity">center
-        </item>
-        <item name="android:layout_width">58dp
-        </item>
-        <item name="android:textColor">@color/game_font_color
-        </item>
-        <item name="android:background">@drawable/selector_foxbuttons
-        </item>
-    </style>
 
 
     <!-- Text style for the fox speech bubbles-->

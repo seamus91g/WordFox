@@ -4,14 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="reset">RESET</string>
     <string name="title_activity_game">GameActivity</string>
-    <string name="submit">SUBMIT</string>
-    <string name="shuffle">SHUFFLE</string>
-    <string name="Users_best_guess">Your Guess</string>
-    <string name="word_length">Word Length</string>
-    <string name="title_activity_score_screen1">ScoreScreen1Activity</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_profile">Profile</string>
 
@@ -61,20 +54,6 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
@@ -86,30 +65,11 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_score_screen2">ScoreScreen2Activity</string>
-    <string name="title_activity_data_screen">Profile Data</string>
     <string name="profile">Profile</string>
-    <string name="ScoreScreen2ActivityLabel">Result Summary</string>
-    <string name="DataScreenActivityLabel">Profile Data</string>
     <string name="SettingsActivityLabel">Settings</string>
     <string name="title_activity_player_switch">PlayerSwitchActivity</string>
     <string name="title_activity_end_screen_single_player1">Final Results</string>
-    <string name="title_activity_data">DataActivity</string>
-    <string name="title_activity_data_page">DataPageActivity</string>
-    <string name="home_button_text">Home</string>
-    <string name="next_button_text">Next</string>
-    <string name="title_activity_statistics">Statistics</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="Tag6player">6players</string>
-    <string name="Tag4player">4players</string>
-    <string name="Tag5player">5players</string>
-    <string name="Tag3player">3players</string>
-    <string name="Tag1player">1players</string>
-    <string name="Tag2player">2players</string>
     <string name="title_activity_round_end_screen">Results</string>
-    <string name="you_scored">You scored</string>
     <string name="no_games_played_profile">No games played!</string>
     <string name="title_activity_local_wifi">Local Wifi</string>
     <string name="test_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
@@ -128,7 +88,6 @@
     <string name="title_activity_swap_choose">Pass and Play</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="justme_explanation_text">Race against the clock to find the longest word</string>
     <string name="with_friends_explanation_text">Play with your friends using wifi direct even without an internet connection</string>
     <string name="pass_and_play_explanation_text">Play with up to 5 friends all sharing this phone</string>

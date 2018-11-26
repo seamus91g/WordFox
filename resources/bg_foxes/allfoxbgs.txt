@@ -1,0 +1,23 @@
+allfoxbgs.txt
+arcticfoxsil_background.png
+datafoxsil_background.png
+gameendsil_background.png
+gryfoxsil_background.png
+kitfoxsil_background.png
+palefoxsil_background.png
+ppfox1sil_background.png
+ppfox2sil_background.png
+redfoxsil_background.png
+roundendsil_background.png
+silverfoxsil_background.png
+woodfox_background.png
+
+
+~~ round/game count 
+~~ rounds where no word found 
+~~ non_existant 
+~~ grey text wifi fox 
+~~ longest word can be invalid 
+~~ avg word len 
+~~ avg sub 
+disconnect button 
