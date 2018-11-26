@@ -155,6 +155,7 @@ public class ResultsPresenter {
             GameData plyrGd = view.getPlayerData(pgi.getID());
             plyrGd.setRecentGame(pgi.getRoundID(0));
             plyrGd.setRecentWords(pgi.getAllFinalWords());
+            plyrGd.incrementRankCount(pgi.getTotalScore());
             if (plyrGd.getHighestTotalScore() <= pgi.getTotalScore()) {
                 plyrGd.setBestGame(pgi.getLetters(), pgi.getAllFinalWords());
                 plyrGd.setHighestScore(pgi.getTotalScore());

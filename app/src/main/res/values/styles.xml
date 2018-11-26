@@ -76,8 +76,7 @@
         <item name="android:background">@drawable/wifi_buttons_selector</item>
     </style>
 
-    <style name="wifiButtonsStyleActive" parent="wifiButtonsStyle">
-    </style>
+    <style name="wifiButtonsStyleActive" parent="wifiButtonsStyle"></style>
 
     <style name="wifiButtonDisabledStyle" parent="wifiButtonsStyle">
         <item name="android:background">@color/common_google_signin_btn_text_light_disabled</item>
